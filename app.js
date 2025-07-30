@@ -17,6 +17,10 @@ app.get("/", (request, response) => {
   response.render("index");
 });
 
+<<<<<<< HEAD
 app.listen(PORT, "10.62.0.77", () => {
+=======
+app.listen(PORT, "0.0.0.0", () => {
+>>>>>>> 595585f8130b7dd6a7c14247628ea2d005253390
   console.log(`👋 Started server on port ${PORT}`);
 });
