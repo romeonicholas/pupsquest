@@ -1,0 +1,33 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  touch-action: none;
+  overscroll-behavior: none;
+  height: 100%;
+  width: 100%;
+  position: fixed;
+}
+
+button {
+  background: transparent;
+  border: none !important;
+  font-size: 0;
+}
+
+.fixed-element {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.slideable {
+  transition: transform 0.3s ease;
+}
+
+.hide-on-tap {
+  display: block;
+}
