@@ -1,3 +1,21 @@
+//Scale container to fit viewport while maintaining aspect ratio
+function scaleContainer() {
+  const container = document.getElementById("container");
+  if (container) {
+    const scaleX = window.innerWidth / 1080;
+    const scaleY = window.innerHeight / 1920;
+    const scale = Math.min(scaleX, scaleY);
+    container.style.transform = `scale(${scale})`;
+    console.log(
+      `Scaling to: ${scale}, viewport: ${window.innerWidth}x${window.innerHeight}`
+    );
+  }
+}
+
+window.addEventListener("resize", scaleContainer);
+window.addEventListener("load", scaleContainer);
+document.addEventListener("DOMContentLoaded", scaleContainer);
+
 //when user taps on element with hide-on-tap, hide it
 document.addEventListener("DOMContentLoaded", function () {
   document.querySelectorAll(".hide-on-tap").forEach(function (element) {

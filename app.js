@@ -17,10 +17,14 @@ app.get("/", (request, response) => {
   response.render("index");
 });
 
-app.listen(PORT, "10.62.0.77", () => {
+// app.listen(PORT, "10.62.0.77", () => {
+//   console.log(`👋 Started server on port ${PORT}`);
+// });
+
+app.listen(PORT, () => {
   console.log(`👋 Started server on port ${PORT}`);
 });
 
-// app.listen(PORT, () => {
+// app.listen(PORT, "192.168.68.111", () => {
 //   console.log(`👋 Started server on port ${PORT}`);
 // });
