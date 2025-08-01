@@ -1,3 +1,36 @@
+const startScreenDiv = document.getElementById("start-screen");
+const startGameButton = document.getElementById("start-new-game-button");
+
+const createUserButton = document.getElementById("create-user-button");
+const createNewUserDiv = document.getElementById("create-new-user");
+const colorsHeader = document.querySelector(".follows-colors-slider");
+const animalsHeader = document.querySelector(".follows-animals-slider");
+const colorsSlider = document.getElementById("colors-slider");
+const animalsSlider = document.getElementById("animals-slider");
+
+const selectionIcon2 = document.getElementById("selection-icon-2");
+const selectionIcon2Clickable = document.getElementById(
+  "selection-icon-2-clickable"
+);
+const selectionIcon3 = document.getElementById("selection-icon-3");
+const selectionIcon3Clickable = document.getElementById(
+  "selection-icon-3-clickable"
+);
+const selectionIcon4 = document.getElementById("selection-icon-4");
+const selectionIcon4Clickable = document.getElementById(
+  "selection-icon-4-clickable"
+);
+const riddleSolution = document.getElementById("riddle-solution");
+const hintCountForeground = document.getElementById("hint-count-foreground");
+
+const backToStartButton = document.getElementById("back-to-start-button");
+
+const nextRiddleButton = document.getElementById("next-riddle-button");
+const riddleContainer = document.getElementById("riddle-container");
+const riddleTextLayer = document.getElementById("riddle-text-layer");
+const statusWheel = document.getElementById("status-wheel");
+const selectionLayer = document.getElementById("selection-layer");
+
 function scaleContainer() {
   const container = document.getElementById("container");
   if (container) {
@@ -55,9 +88,6 @@ document.addEventListener("DOMContentLoaded", function () {
 let movedColors = false;
 let movedAnimals = false;
 let isAnimating = false;
-
-let colorsHeader = document.querySelector(".follows-colors-slider");
-let animalsHeader = document.querySelector(".follows-animals-slider");
 
 document.addEventListener("DOMContentLoaded", function () {
   document.querySelectorAll(".slide-on-tap").forEach(function (element) {
@@ -127,10 +157,8 @@ function getTranslateX(element) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-  const createUserButton = document.getElementById("create-user-button");
   if (createUserButton) {
     createUserButton.addEventListener("click", function () {
-      const createNewUserDiv = document.getElementById("create-new-user");
       if (createNewUserDiv) {
         createNewUserDiv.style.display = "none";
       }
@@ -167,33 +195,22 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
-  const startGameButton = document.getElementById("start-new-game-button");
   if (startGameButton) {
     startGameButton.addEventListener("click", function () {
-      const createNewUserDiv = document.getElementById("start-screen");
-
-      createNewUserDiv.style.display = "none";
+      startScreenDiv.style.display = "none";
     });
   }
 });
 
 document.addEventListener("DOMContentLoaded", function () {
-  const backToStartButton = document.getElementById("back-to-start-button");
   if (backToStartButton) {
     backToStartButton.addEventListener("click", function () {
-      const startScreenDiv = document.getElementById("start-screen");
       if (startScreenDiv) {
         startScreenDiv.style.display = "block";
       }
     });
   }
 });
-
-const nextRiddleButton = document.getElementById("next-riddle-button");
-const riddleContainer = document.getElementById("riddle-container");
-const riddleTextLayer = document.getElementById("riddle-text-layer");
-const statusWheel = document.getElementById("status-wheel");
-const selectionLayer = document.getElementById("selection-layer");
 
 document.addEventListener("DOMContentLoaded", function () {
   nextRiddleButton.addEventListener("click", function () {
@@ -211,13 +228,6 @@ document.addEventListener("DOMContentLoaded", function () {
 let guess = 1;
 
 document.addEventListener("DOMContentLoaded", function () {
-  const selectionIcon4 = document.getElementById("selection-icon-4");
-  const selectionIcon4Clickable = document.getElementById(
-    "selection-icon-4-clickable"
-  );
-
-  const hintCountForeground = document.getElementById("hint-count-foreground");
-
   selectionIcon4Clickable.addEventListener("click", function () {
     console.log("Selection icon 4 clicked");
 
@@ -241,13 +251,6 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
-  const selectionIcon3 = document.getElementById("selection-icon-3");
-  const selectionIcon3Clickable = document.getElementById(
-    "selection-icon-3-clickable"
-  );
-
-  const hintCountForeground = document.getElementById("hint-count-foreground");
-
   selectionIcon3Clickable.addEventListener("click", function () {
     console.log("Selection icon 3 clicked");
 
@@ -271,23 +274,12 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
-  const selectionIcon2 = document.getElementById("selection-icon-2");
-  const selectionIcon2Clickable = document.getElementById(
-    "selection-icon-2-clickable"
-  );
-  const riddleSolution = document.getElementById("riddle-solution");
-
-  const hintCountForeground = document.getElementById("hint-count-foreground");
-
   selectionIcon2Clickable.addEventListener("click", function () {
     console.log("Selection icon 2 clicked");
 
     if (guess === 3) {
       const currentY = getTranslateY(selectionLayer);
       const currentX = getTranslateX(hintCountForeground);
-      //   selectionLayer.style.transition =
-      //     "transform 1s cubic-bezier(0.36, 0, 0.66, -0.56)";
-      //   selectionLayer.style.transform = `translateY(${currentY + 222}px)`;
 
       selectionIcon2.style.transition =
         "transform 1s cubic-bezier(0.54, -0.16, 0.735, 0.045)";
@@ -304,19 +296,40 @@ document.addEventListener("DOMContentLoaded", function () {
       }, 1500);
       guess = 1;
 
-      const nextRiddleButton = document.getElementById("next-riddle-button");
+      const tempButton = document.createElement("button");
+      tempButton.id = "temp-next-riddle-button";
+      tempButton.style.position = "absolute";
+      tempButton.style.left = "351px";
+      tempButton.style.top = "1758px";
+      tempButton.style.width = "382px";
+      tempButton.style.height = "106px";
+      tempButton.style.background = "transparent";
+      tempButton.style.border = "none";
+      tempButton.style.zIndex = "85";
+      tempButton.style.cursor = "pointer";
 
-      const newNextRiddleButton = nextRiddleButton.cloneNode(true);
-      nextRiddleButton.parentNode.replaceChild(
-        newNextRiddleButton,
-        nextRiddleButton
-      );
+      nextRiddleButton.parentNode.appendChild(tempButton);
 
-      newNextRiddleButton.addEventListener("click", function () {
+      tempButton.addEventListener("click", function () {
         console.log("Clicked on after riddle solution");
         document.querySelectorAll(".show-again").forEach(function (element) {
           element.style.display = "block";
         });
+
+        animalsHeader.style.transform = "translateX(0px)";
+        colorsHeader.style.transform = "translateX(0px)";
+        colorsSlider.style.transform = "translateX(0px)";
+        animalsSlider.style.transform = "translateX(0px)";
+
+        riddleContainer.style.transform = "translateY(0px)";
+        riddleTextLayer.style.transform = "translateY(0px)";
+        selectionLayer.style.transform = "translateY(0px)";
+        riddleSolution.style.display = "none";
+        selectionIcon2.style.transform = "translateY(0px)";
+        selectionIcon3.style.transform = "translateY(0px)";
+        selectionIcon4.style.transform = "translateY(0px)";
+        hintCountForeground.style.transform = "translateX(0px)";
+        statusWheel.style.transform = "rotate(0deg)";
 
         const message = document.createElement("div");
         message.textContent =
@@ -336,6 +349,8 @@ document.addEventListener("DOMContentLoaded", function () {
         setTimeout(() => {
           document.body.removeChild(message);
         }, 2000);
+
+        tempButton.remove();
       });
     }
   });
