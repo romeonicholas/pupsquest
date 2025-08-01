@@ -1,4 +1,36 @@
-//Scale container to fit viewport while maintaining aspect ratio
+const startScreenDiv = document.getElementById("start-screen");
+const startGameButton = document.getElementById("start-new-game-button");
+
+const createUserButton = document.getElementById("create-user-button");
+const createNewUserDiv = document.getElementById("create-new-user");
+const colorsHeader = document.querySelector(".follows-colors-slider");
+const animalsHeader = document.querySelector(".follows-animals-slider");
+const colorsSlider = document.getElementById("colors-slider");
+const animalsSlider = document.getElementById("animals-slider");
+
+const selectionIcon2 = document.getElementById("selection-icon-2");
+const selectionIcon2Clickable = document.getElementById(
+  "selection-icon-2-clickable"
+);
+const selectionIcon3 = document.getElementById("selection-icon-3");
+const selectionIcon3Clickable = document.getElementById(
+  "selection-icon-3-clickable"
+);
+const selectionIcon4 = document.getElementById("selection-icon-4");
+const selectionIcon4Clickable = document.getElementById(
+  "selection-icon-4-clickable"
+);
+const riddleSolution = document.getElementById("riddle-solution");
+const hintCountForeground = document.getElementById("hint-count-foreground");
+
+const backToStartButton = document.getElementById("back-to-start-button");
+
+const nextRiddleButton = document.getElementById("next-riddle-button");
+const riddleContainer = document.getElementById("riddle-container");
+const riddleTextLayer = document.getElementById("riddle-text-layer");
+const statusWheel = document.getElementById("status-wheel");
+const selectionLayer = document.getElementById("selection-layer");
+
 function scaleContainer() {
   const container = document.getElementById("container");
   if (container) {
@@ -16,7 +48,6 @@ window.addEventListener("resize", scaleContainer);
 window.addEventListener("load", scaleContainer);
 document.addEventListener("DOMContentLoaded", scaleContainer);
 
-//when user taps on element with hide-on-tap, hide it
 document.addEventListener("DOMContentLoaded", function () {
   document.querySelectorAll(".hide-on-tap").forEach(function (element) {
     element.addEventListener("click", function () {
@@ -29,7 +60,6 @@ function makeElementsInvisible() {
   this.style.display = "none";
 }
 
-//if element with hide-on-empty is tapped and has no visible children, hide it
 document.addEventListener("DOMContentLoaded", function () {
   document.querySelectorAll(".hide-on-empty").forEach(function (element) {
     element.addEventListener("click", function () {
@@ -45,7 +75,6 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-//if element has final-page class, unhide all elements on page
 document.addEventListener("DOMContentLoaded", function () {
   document.querySelectorAll(".final-page").forEach(function (element) {
     element.addEventListener("click", function () {
@@ -60,14 +89,9 @@ let movedColors = false;
 let movedAnimals = false;
 let isAnimating = false;
 
-let colorsHeader = document.querySelector(".follows-colors-slider");
-let animalsHeader = document.querySelector(".follows-animals-slider");
-
-//user creation sliders
 document.addEventListener("DOMContentLoaded", function () {
   document.querySelectorAll(".slide-on-tap").forEach(function (element) {
     element.addEventListener("click", function (event) {
-      // Prevent multiple clicks during animation
       if (isAnimating) return;
 
       const screenMidpoint = window.innerWidth / 2;
@@ -112,11 +136,10 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       }
 
-      // Reset the flag after animation completes (adjust timing as needed)
       if (shouldMove) {
         setTimeout(() => {
           isAnimating = false;
-        }, 300); // Adjust this duration to match your CSS transition duration
+        }, 300);
       }
     });
   });
@@ -133,12 +156,9 @@ function getTranslateX(element) {
   return translateX;
 }
 
-// when create-user-button is tapped, hide entire create-new-user div
 document.addEventListener("DOMContentLoaded", function () {
-  const createUserButton = document.getElementById("create-user-button");
   if (createUserButton) {
     createUserButton.addEventListener("click", function () {
-      const createNewUserDiv = document.getElementById("create-new-user");
       if (createNewUserDiv) {
         createNewUserDiv.style.display = "none";
       }
@@ -146,7 +166,6 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
-// when rejoin-game-button or use-phone-button are tapped, display text for 2 seconds that says the feature is unavailable
 document.addEventListener("DOMContentLoaded", function () {
   const unavailableButtons = document.querySelectorAll(
     "#rejoin-game-button, #use-phone-button"
@@ -175,24 +194,17 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-//if start-game-button is tapped, hide the create-new-user div and display the riddle div
 document.addEventListener("DOMContentLoaded", function () {
-  const startGameButton = document.getElementById("start-new-game-button");
   if (startGameButton) {
     startGameButton.addEventListener("click", function () {
-      const createNewUserDiv = document.getElementById("start-screen");
-
-      createNewUserDiv.style.display = "none";
+      startScreenDiv.style.display = "none";
     });
   }
 });
 
-//if back-to-start-button is tapped, display the start-screen div
 document.addEventListener("DOMContentLoaded", function () {
-  const backToStartButton = document.getElementById("back-to-start-button");
   if (backToStartButton) {
     backToStartButton.addEventListener("click", function () {
-      const startScreenDiv = document.getElementById("start-screen");
       if (startScreenDiv) {
         startScreenDiv.style.display = "block";
       }
@@ -200,15 +212,6 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
-const nextRiddleButton = document.getElementById("next-riddle-button");
-const riddleContainer = document.getElementById("riddle-container");
-const riddleTextLayer = document.getElementById("riddle-text-layer");
-const statusWheel = document.getElementById("status-wheel");
-const selectionLayer = document.getElementById("selection-layer");
-
-//when next-riddle-button is tapped, slide riddle-container and riddle-text-layer up 1294px
-//after sliding animation is finished (1s), rotate status-wheel 36 degrees
-//after rotating animation is finished (1s), slide selection-layer down 300px
 document.addEventListener("DOMContentLoaded", function () {
   nextRiddleButton.addEventListener("click", function () {
     riddleContainer.style.transform = "translateY(-1294px)";
@@ -224,21 +227,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
 let guess = 1;
 
-//when user clicks on selection-icon-4 with guess 1, slide selection-layer down
-//222px with ease-in back animation
 document.addEventListener("DOMContentLoaded", function () {
-  const selectionIcon4 = document.getElementById("selection-icon-4");
-  const selectionIcon4Clickable = document.getElementById(
-    "selection-icon-4-clickable"
-  );
-
-  const hintCountForeground = document.getElementById("hint-count-foreground");
-
   selectionIcon4Clickable.addEventListener("click", function () {
     console.log("Selection icon 4 clicked");
 
     if (guess === 1) {
-      // Get current translateY position and add 222px to it
       const currentY = getTranslateY(selectionLayer);
       const currentX = getTranslateX(hintCountForeground);
       selectionLayer.style.transition =
@@ -257,21 +250,11 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-//when user clicks on selection-icon-3 with guess 2, slide selection-layer down
-//222px with ease-in back animation
 document.addEventListener("DOMContentLoaded", function () {
-  const selectionIcon3 = document.getElementById("selection-icon-3");
-  const selectionIcon3Clickable = document.getElementById(
-    "selection-icon-3-clickable"
-  );
-
-  const hintCountForeground = document.getElementById("hint-count-foreground");
-
   selectionIcon3Clickable.addEventListener("click", function () {
     console.log("Selection icon 3 clicked");
 
     if (guess === 2) {
-      // Get current translateY position and add 222px to it
       const currentY = getTranslateY(selectionLayer);
       const currentX = getTranslateX(hintCountForeground);
       selectionLayer.style.transition =
@@ -291,31 +274,17 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
-  const selectionIcon2 = document.getElementById("selection-icon-2");
-  const selectionIcon2Clickable = document.getElementById(
-    "selection-icon-2-clickable"
-  );
-  const riddleSolution = document.getElementById("riddle-solution");
-
-  const hintCountForeground = document.getElementById("hint-count-foreground");
-
   selectionIcon2Clickable.addEventListener("click", function () {
     console.log("Selection icon 2 clicked");
 
     if (guess === 3) {
-      // Get current translateY position and add 222px to it
       const currentY = getTranslateY(selectionLayer);
       const currentX = getTranslateX(hintCountForeground);
-      //   selectionLayer.style.transition =
-      //     "transform 1s cubic-bezier(0.36, 0, 0.66, -0.56)";
-      //   selectionLayer.style.transform = `translateY(${currentY + 222}px)`;
 
       selectionIcon2.style.transition =
         "transform 1s cubic-bezier(0.54, -0.16, 0.735, 0.045)";
       selectionIcon2.style.transform = `translateY(${currentY + 234}px)`;
 
-      //after 1 second waiting for last animation to finish, riddle text layer
-      // starts at translateY(-1294px) and moves to translateY(-1072px)
       setTimeout(() => {
         riddleTextLayer.style.transition = "transform 1s ease-in";
         riddleTextLayer.style.transform = "translateY(0px)";
@@ -327,22 +296,43 @@ document.addEventListener("DOMContentLoaded", function () {
       }, 1500);
       guess = 1;
 
-      // Change next-riddle-button click action to make all layers visible again
-      const nextRiddleButton = document.getElementById("next-riddle-button");
+      // Create a temporary overlay button on top of the original
+      const tempButton = document.createElement("button");
+      tempButton.id = "temp-next-riddle-button";
+      tempButton.style.position = "absolute";
+      tempButton.style.left = "351px";
+      tempButton.style.top = "1758px";
+      tempButton.style.width = "382px";
+      tempButton.style.height = "106px";
+      tempButton.style.background = "transparent";
+      tempButton.style.border = "none";
+      tempButton.style.zIndex = "85";
+      tempButton.style.cursor = "pointer";
 
-      // Remove existing event listeners by cloning the button
-      const newNextRiddleButton = nextRiddleButton.cloneNode(true);
-      nextRiddleButton.parentNode.replaceChild(
-        newNextRiddleButton,
-        nextRiddleButton
-      );
+      // Add the temporary button to the same parent as the original
+      nextRiddleButton.parentNode.appendChild(tempButton);
 
-      // Add the new event listener
-      newNextRiddleButton.addEventListener("click", function () {
+      // Reset everything to start over when temp button is clicked
+      tempButton.addEventListener("click", function () {
         console.log("Clicked on after riddle solution");
         document.querySelectorAll(".show-again").forEach(function (element) {
           element.style.display = "block";
         });
+
+        animalsHeader.style.transform = "translateX(0px)";
+        colorsHeader.style.transform = "translateX(0px)";
+        colorsSlider.style.transform = "translateX(0px)";
+        animalsSlider.style.transform = "translateX(0px)";
+
+        riddleContainer.style.transform = "translateY(0px)";
+        riddleTextLayer.style.transform = "translateY(0px)";
+        selectionLayer.style.transform = "translateY(0px)";
+        riddleSolution.style.display = "none";
+        selectionIcon2.style.transform = "translateY(0px)";
+        selectionIcon3.style.transform = "translateY(0px)";
+        selectionIcon4.style.transform = "translateY(0px)";
+        hintCountForeground.style.transform = "translateX(0px)";
+        statusWheel.style.transform = "rotate(0deg)";
 
         const message = document.createElement("div");
         message.textContent =
@@ -362,6 +352,9 @@ document.addEventListener("DOMContentLoaded", function () {
         setTimeout(() => {
           document.body.removeChild(message);
         }, 2000);
+
+        // Remove the temporary button to restore original functionality
+        tempButton.remove();
       });
     }
   });
