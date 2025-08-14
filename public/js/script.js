@@ -20,22 +20,32 @@ const couplet1 = document.querySelector(".couplet-1");
 const couplet2 = document.querySelector(".couplet-2");
 const couplet3 = document.querySelector(".couplet-3");
 
+// Icons
 const selectionIcon1 = document.getElementById("selection-icon-1");
+const selectionIcon2 = document.getElementById("selection-icon-2");
+const selectionIcon3 = document.getElementById("selection-icon-3");
+const selectionIcon4 = document.getElementById("selection-icon-4");
+
+// Clickables
 const selectionIcon1Clickable = document.getElementById(
   "selection-icon-1-clickable"
 );
-const selectionIcon2 = document.getElementById("selection-icon-2");
 const selectionIcon2Clickable = document.getElementById(
   "selection-icon-2-clickable"
 );
-const selectionIcon3 = document.getElementById("selection-icon-3");
 const selectionIcon3Clickable = document.getElementById(
   "selection-icon-3-clickable"
 );
-const selectionIcon4 = document.getElementById("selection-icon-4");
 const selectionIcon4Clickable = document.getElementById(
   "selection-icon-4-clickable"
 );
+
+// Texts
+const selectionText1 = document.getElementById("selection-text-1");
+const selectionText2 = document.getElementById("selection-text-2");
+const selectionText3 = document.getElementById("selection-text-3");
+const selectionText4 = document.getElementById("selection-text-4");
+
 const riddleSolution = document.getElementById("riddle-solution");
 const hintCountForeground = document.getElementById("hint-count-foreground");
 
@@ -280,6 +290,11 @@ function updateRiddleElements(riddle) {
   selectionIcon2.src = shuffledChoices[1].image;
   selectionIcon3.src = shuffledChoices[2].image;
   selectionIcon4.src = shuffledChoices[3].image;
+
+  selectionText1.innerText = shuffledChoices[0].text;
+  selectionText2.innerText = shuffledChoices[1].text;
+  selectionText3.innerText = shuffledChoices[2].text;
+  selectionText4.innerText = shuffledChoices[3].text;
 
   window.currentShuffledChoices = shuffledChoices;
 }

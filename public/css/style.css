@@ -260,13 +260,6 @@ button {
   left: 794px;
 }
 
-/* .selection-icon {
-  position: relative;
-  top: -2195px;
-  left: 66px;
-  z-index: 75;
-} */
-
 .selection-icon {
   position: absolute;
   top: -731px;
@@ -291,6 +284,30 @@ button {
 
 .icon-backing {
   z-index: 74;
+}
+
+#selection-text-layer {
+  position: absolute;
+  top: -503px;
+  left: 65px;
+  width: 87%;
+  height: 300px;
+  display: flex;
+  justify-content: space-between;
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+.selection-text {
+  top: -731px;
+  width: 230px;
+  height: 144px;
+  font-family: "Enriqueta";
+  font-size: 36px;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  z-index: 76;
+  text-align: center;
 }
 
 #hint-count-layer {
