@@ -3,6 +3,7 @@
 let currentRiddleIndex = Math.floor(Math.random() * 5);
 let riddlesData = null;
 let currentRiddleData = null;
+let remainingHints = 7;
 
 const correctAnswerBacking = "/images/riddles/ui/answer_backing_correct.png";
 const incorrectAnswerBackings = [
@@ -286,52 +287,94 @@ function incrementRiddleIndex() {
 }
 
 function updateRiddleElements(riddle) {
-  riddleHeadline.children[0].innerText = riddle.headline;
+  updateRiddleContent(riddle);
+  const shuffledChoices = shuffleAnswerChoices(riddle.answerChoices);
+  const correctAnswerIndex = findCorrectAnswerIndex(shuffledChoices);
 
-  couplet1.children[0].innerText = riddle.couplets[0][0];
-  couplet1.children[1].innerText = riddle.couplets[0][1];
-  couplet2.children[0].innerText = riddle.couplets[1][0];
-  couplet2.children[1].innerText = riddle.couplets[1][1];
-  couplet3.children[0].innerText = riddle.couplets[2][0];
-  couplet3.children[1].innerText = riddle.couplets[2][1];
-
-  const shuffledChoices = [...riddle.answerChoices].sort(
-    () => Math.random() - 0.5
-  );
-
-  let correctAnswerIndex = shuffledChoices.findIndex(
-    (choice) => choice.is_correct
-  );
-
-  selectionIcon1.src = shuffledChoices[0].image;
-  selectionIcon2.src = shuffledChoices[1].image;
-  selectionIcon3.src = shuffledChoices[2].image;
-  selectionIcon4.src = shuffledChoices[3].image;
-
-  selectionText1.innerText = shuffledChoices[0].text;
-  selectionText2.innerText = shuffledChoices[1].text;
-  selectionText3.innerText = shuffledChoices[2].text;
-  selectionText4.innerText = shuffledChoices[3].text;
-
-  let incorrectIconIndex = 0;
-  iconBacking1.src =
-    correctAnswerIndex === 0
-      ? correctAnswerBacking
-      : incorrectAnswerBackings[incorrectIconIndex++];
-  iconBacking2.src =
-    correctAnswerIndex === 1
-      ? correctAnswerBacking
-      : incorrectAnswerBackings[incorrectIconIndex++];
-  iconBacking3.src =
-    correctAnswerIndex === 2
-      ? correctAnswerBacking
-      : incorrectAnswerBackings[incorrectIconIndex++];
-  iconBacking4.src =
-    correctAnswerIndex === 3
-      ? correctAnswerBacking
-      : incorrectAnswerBackings[incorrectIconIndex++];
+  updateSelectionIcons(shuffledChoices);
+  updateSelectionTexts(shuffledChoices);
+  updateIconBackings(correctAnswerIndex);
+  attachClickHandlers(correctAnswerIndex);
 
   window.currentShuffledChoices = shuffledChoices;
+}
+
+function updateRiddleContent(riddle) {
+  riddleHeadline.children[0].innerText = riddle.headline;
+
+  // Update couplets
+  const couplets = [couplet1, couplet2, couplet3];
+  couplets.forEach((couplet, index) => {
+    couplet.children[0].innerText = riddle.couplets[index][0];
+    couplet.children[1].innerText = riddle.couplets[index][1];
+  });
+}
+
+function shuffleAnswerChoices(answerChoices) {
+  return [...answerChoices].sort(() => Math.random() - 0.5);
+}
+
+function findCorrectAnswerIndex(shuffledChoices) {
+  return shuffledChoices.findIndex((choice) => choice.is_correct);
+}
+
+function updateSelectionIcons(shuffledChoices) {
+  const icons = [
+    selectionIcon1,
+    selectionIcon2,
+    selectionIcon3,
+    selectionIcon4,
+  ];
+  icons.forEach((icon, index) => {
+    icon.src = shuffledChoices[index].image;
+  });
+}
+
+function updateSelectionTexts(shuffledChoices) {
+  const texts = [
+    selectionText1,
+    selectionText2,
+    selectionText3,
+    selectionText4,
+  ];
+  texts.forEach((text, index) => {
+    text.innerText = shuffledChoices[index].text;
+  });
+}
+
+function updateIconBackings(correctAnswerIndex) {
+  const backings = [iconBacking1, iconBacking2, iconBacking3, iconBacking4];
+  let incorrectIconIndex = 0;
+
+  backings.forEach((backing, index) => {
+    if (index === correctAnswerIndex) {
+      backing.src = correctAnswerBacking;
+    } else {
+      backing.src = incorrectAnswerBackings[incorrectIconIndex++];
+    }
+  });
+}
+
+function attachClickHandlers(correctAnswerIndex) {
+  const clickables = [
+    selectionIcon1Clickable,
+    selectionIcon2Clickable,
+    selectionIcon3Clickable,
+    selectionIcon4Clickable,
+  ];
+
+  clickables.forEach((clickable, index) => {
+    const newClickable = replaceElementToRemoveListeners(clickable);
+    const handler =
+      index === correctAnswerIndex ? handleCorrectGuess : handleIncorrectGuess;
+    newClickable.addEventListener("click", handler);
+  });
+}
+
+function replaceElementToRemoveListeners(element) {
+  const newElement = element.cloneNode(true);
+  element.parentNode.replaceChild(newElement, element);
+  return newElement;
 }
 
 function showNewRiddle() {
@@ -355,28 +398,30 @@ document.addEventListener("DOMContentLoaded", function () {
 
 let guess = 1;
 
-document.addEventListener("DOMContentLoaded", function () {
-  selectionIcon4Clickable.addEventListener("click", function () {
-    console.log("Selection icon 4 clicked");
+function handleIncorrectGuess() {
+  remainingHints--;
+  //update remaining hints element
+  const currentY = getTranslateY(selectionLayer);
+  const currentX = getTranslateX(hintCountForeground);
+  selectionLayer.style.transition =
+    "transform 1s cubic-bezier(0.54, -0.16, 0.735, 0.045)";
+  selectionLayer.style.transform = `translateY(${currentY + 222}px)`;
 
-    if (guess === 1) {
-      const currentY = getTranslateY(selectionLayer);
-      const currentX = getTranslateX(hintCountForeground);
-      selectionLayer.style.transition =
-        "transform 1s cubic-bezier(0.54, -0.16, 0.735, 0.045)";
-      selectionLayer.style.transform = `translateY(${currentY + 222}px)`;
+  selectionIcon4.style.transition =
+    "transform 1s cubic-bezier(0.54, -0.16, 0.735, 0.045)";
+  selectionIcon4.style.transform = `translateY(${currentY + 234}px)`;
 
-      selectionIcon4.style.transition =
-        "transform 1s cubic-bezier(0.54, -0.16, 0.735, 0.045)";
-      selectionIcon4.style.transform = `translateY(${currentY + 234}px)`;
+  hintCountForeground.style.transition = "transform 1s ease-in";
+  hintCountForeground.style.transform = `translateX(${currentX - 45}px)`;
 
-      hintCountForeground.style.transition = "transform 1s ease-in";
-      hintCountForeground.style.transform = `translateX(${currentX - 45}px)`;
+  if (remainingHints === 0) {
+    //end game
+  }
+}
 
-      guess++;
-    }
-  });
-});
+function handleCorrectGuess() {
+  console.log("This guess was correct");
+}
 
 document.addEventListener("DOMContentLoaded", function () {
   selectionIcon3Clickable.addEventListener("click", function () {
