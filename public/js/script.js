@@ -35,7 +35,7 @@ const backToStartButton = document.getElementById("back-to-start-button");
 
 const nextRiddleButton = document.getElementById("next-riddle-button");
 const riddleContainer = document.getElementById("riddle-container");
-const riddleTextLayer = document.getElementById("riddle-text-layer");
+const riddleTextLayerBackground = document.getElementById("riddle-text");
 let currentStatusText = document.getElementById("status-text-current");
 let nextStatusText = document.getElementById("status-text-next");
 const selectionLayer = document.getElementById("selection-layer");
@@ -60,8 +60,11 @@ document.addEventListener("DOMContentLoaded", scaleContainer);
 async function loadRiddles() {
   try {
     const response = await fetch("/js/riddles.json");
-    riddlesData = await response.json().data;
+    const jsonData = await response.json();
+    riddlesData = jsonData.data;
+
     console.log("Riddles loaded:", riddlesData);
+    console.log("Number of riddles:", riddlesData.length);
   } catch (error) {
     console.error("Error loading riddles:", error);
   }
@@ -237,19 +240,32 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function closeRiddleContainerFromBottom() {
   riddleContainer.style.transform = "translateY(-1294px)";
-  riddleTextLayer.style.transform = "translateY(-1294px)";
+  riddleTextLayerBackground.style.transform = "translateY(-1294px)";
 }
 
 function showFirstCouplet() {
   selectionLayer.style.transform = "translateY(276px)";
 }
 
-function showNewRiddle() {
+function incrementRiddleIndex() {
   currentRiddleIndex++;
+  if (currentRiddleIndex >= riddlesData.length) {
+    currentRiddleIndex = 0;
+  }
+}
+
+function updateRiddleElements(riddle) {
+  console.log("Updating riddle elements");
+  console.log(riddle);
+}
+
+function showNewRiddle() {
+  incrementRiddleIndex();
+  updateRiddleElements(riddlesData[currentRiddleIndex]);
   closeRiddleContainerFromBottom();
 
   setTimeout(() => {
-    updateStatusWheel();
+    updateStatusWheel(`RIDDLE ${currentRiddleIndex + 1}`);
   }, 1000);
   setTimeout(() => {
     showFirstCouplet();
@@ -323,8 +339,8 @@ document.addEventListener("DOMContentLoaded", function () {
       selectionIcon2.style.transform = `translateY(${currentY + 234}px)`;
 
       setTimeout(() => {
-        riddleTextLayer.style.transition = "transform 1s ease-in";
-        riddleTextLayer.style.transform = "translateY(0px)";
+        riddleTextLayerBackground.style.transition = "transform 1s ease-in";
+        riddleTextLayerBackground.style.transform = "translateY(0px)";
 
         selectionLayer.style.transition = "transform 1s ease-in";
         selectionLayer.style.transform = "translateY(1298px)";
@@ -362,7 +378,7 @@ document.addEventListener("DOMContentLoaded", function () {
         animalsSlider.style.transform = "translateX(0px)";
 
         riddleContainer.style.transform = "translateY(0px)";
-        riddleTextLayer.style.transform = "translateY(0px)";
+        riddleTextLayerBackground.style.transform = "translateY(0px)";
         selectionLayer.style.transform = "translateY(0px)";
         riddleSolution.style.display = "none";
         selectionIcon2.style.transform = "translateY(0px)";
@@ -419,8 +435,8 @@ function updateNextStatusText(nextText) {
   nextStatusText.firstChild.innerText = nextText;
 }
 
-function updateStatusWheel() {
-  updateNextStatusText(`RIDDLE ${currentRiddleIndex}`);
+function updateStatusWheel(wheelText) {
+  updateNextStatusText(wheelText);
   currentStatusText.classList.remove("current-text");
   currentStatusText.classList.add("previous-text");
   nextStatusText.classList.remove("next-text");
