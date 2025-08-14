@@ -4,6 +4,13 @@ let currentRiddleIndex = Math.floor(Math.random() * 5);
 let riddlesData = null;
 let currentRiddleData = null;
 
+const correctAnswerBacking = "/images/riddles/ui/answer_backing_correct.png";
+const incorrectAnswerBackings = [
+  "/images/riddles/ui/answer_backing_wrong_1.png",
+  "/images/riddles/ui/answer_backing_wrong_2.png",
+  "/images/riddles/ui/answer_backing_wrong_3.png",
+];
+
 const startScreenDiv = document.getElementById("start-screen");
 const startGameButton = document.getElementById("start-new-game-button");
 
@@ -25,6 +32,12 @@ const selectionIcon1 = document.getElementById("selection-icon-1");
 const selectionIcon2 = document.getElementById("selection-icon-2");
 const selectionIcon3 = document.getElementById("selection-icon-3");
 const selectionIcon4 = document.getElementById("selection-icon-4");
+
+// Icon backings
+const iconBacking1 = document.getElementById("icon-backing-1");
+const iconBacking2 = document.getElementById("icon-backing-2");
+const iconBacking3 = document.getElementById("icon-backing-3");
+const iconBacking4 = document.getElementById("icon-backing-4");
 
 // Clickables
 const selectionIcon1Clickable = document.getElementById(
@@ -286,6 +299,10 @@ function updateRiddleElements(riddle) {
     () => Math.random() - 0.5
   );
 
+  let correctAnswerIndex = shuffledChoices.findIndex(
+    (choice) => choice.is_correct
+  );
+
   selectionIcon1.src = shuffledChoices[0].image;
   selectionIcon2.src = shuffledChoices[1].image;
   selectionIcon3.src = shuffledChoices[2].image;
@@ -295,6 +312,24 @@ function updateRiddleElements(riddle) {
   selectionText2.innerText = shuffledChoices[1].text;
   selectionText3.innerText = shuffledChoices[2].text;
   selectionText4.innerText = shuffledChoices[3].text;
+
+  let incorrectIconIndex = 0;
+  iconBacking1.src =
+    correctAnswerIndex === 0
+      ? correctAnswerBacking
+      : incorrectAnswerBackings[incorrectIconIndex++];
+  iconBacking2.src =
+    correctAnswerIndex === 1
+      ? correctAnswerBacking
+      : incorrectAnswerBackings[incorrectIconIndex++];
+  iconBacking3.src =
+    correctAnswerIndex === 2
+      ? correctAnswerBacking
+      : incorrectAnswerBackings[incorrectIconIndex++];
+  iconBacking4.src =
+    correctAnswerIndex === 3
+      ? correctAnswerBacking
+      : incorrectAnswerBackings[incorrectIconIndex++];
 
   window.currentShuffledChoices = shuffledChoices;
 }
