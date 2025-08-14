@@ -238,17 +238,36 @@ button {
   left: 794px;
 }
 
-.selection-icon {
+/* .selection-icon {
   position: relative;
   top: -2195px;
   left: 66px;
   z-index: 75;
+} */
+
+.selection-icon {
+  position: absolute;
+  top: -731px;
+  z-index: 75;
 }
 
-#selection-icon-backing {
-  position: relative;
-  top: -2432px;
-  left: 68px;
+.icon-1 {
+  left: 71px;
+}
+
+.icon-2 {
+  left: 307px;
+}
+
+.icon-3 {
+  left: 543px;
+}
+
+.icon-4 {
+  left: 782px;
+}
+
+.icon-backing {
   z-index: 74;
 }
 
