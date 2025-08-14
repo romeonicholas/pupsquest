@@ -1,129 +1,36 @@
-<div id="riddle" style="z-index: 79">
-  <img
-    src="/images/riddle/headerPanel.png"
-    class=""
-    style="position: absolute; top: 0px; left: 0px; z-index: 79"
-  />
+<div id="riddle-screen">
+  <img src="/images/riddle/headerPanel.png" id="header-panel" />
 
-  <img
-    id="save-exit-panel"
-    src="/images/riddle/saveExitPanel.png"
-    class=""
-    style="position: absolute; top: 0px; left: 0px; z-index: 78"
-  />
+  <img id="save-exit-panel" src="/images/riddle/saveExitPanel.png" />
 
-  <img
-    id="status-wheel"
-    src="/images/riddle/statusWheel.png"
-    class=""
-    style="
-      position: absolute;
-      top: -707px;
-      left: -200px;
-      width: 1495px;
-      height: 1495px;
-      transition: transform 1s ease-in;
-      rotate: -36deg;
-      z-index: 77;
-    "
-  />
+  <img id="status-wheel" src="/images/riddle/statusWheel.png" />
   <!-- -80, -36, 0 -->
-  <img
-    src="/images/riddle/headerPanelShadow.png"
-    class=""
-    style="position: absolute; top: 516px; left: 0px; z-index: 75"
-  />
 
-  <img
-    src="/images/riddle/saveExitPanel.png"
-    class=""
-    style="position: absolute; top: 0px; left: 0px; z-index: 70"
-  />
+  <img id="header-panel-shadow" src="/images/riddle/headerPanelShadow.png" />
 
-  <img
-    id="riddle-text-layer"
-    src="/images/riddle/riddleTextLayer.png"
-    style="
-      position: relative;
-      top: 1750px;
-      left: 0px;
-      transition: transform 1s ease-in;
-      z-index: 73;
-    "
-  />
+  <img id="riddle-text-layer" src="/images/riddle/riddleTextLayer.png" />
 
-  <div
-    id="riddle-container"
-    style="position: absolute; transition: transform 1s ease-in; z-index: 75"
-  >
-    <div
-      id="selection-layer"
-      style="
-        top: 1268px;
-        position: relative;
-        transition: transform 800ms ease-in;
-        z-index: 77;
-      "
-    >
-      <img
-        src="/images/riddle/selectionPanel.png"
-        class=""
-        style="position: relative; top: -926px; left: -10px; z-index: 76"
-      />
+  <div id="riddle-container">
+    <div id="selection-layer">
+      <img id="selection-panel" src="/images/riddle/selectionPanel.png" />
 
       <!-- Clickable Selection Icons -->
       <div id="clickable-selection-layer">
         <button
           id="selection-icon-1-clickable"
-          style="
-            position: absolute;
-            top: -728px;
-            left: 80px;
-            width: 207px;
-            height: 318px;
-            background: transparent;
-            z-index: 90;
-            /* cursor: pointer; */
-          "
+          class="selection-icon-clickable selection-icon-1-clickable"
         ></button>
         <button
           id="selection-icon-2-clickable"
-          style="
-            position: absolute;
-            top: -728px;
-            left: 317px;
-            width: 207px;
-            height: 318px;
-            background: transparent;
-            z-index: 90;
-            /* cursor: pointer; */
-          "
+          class="selection-icon-clickable selection-icon-2-clickable"
         ></button>
         <button
           id="selection-icon-3-clickable"
-          style="
-            position: absolute;
-            top: -728px;
-            left: 556px;
-            width: 207px;
-            height: 318px;
-            background: transparent;
-            z-index: 90;
-            /* cursor: pointer; */
-          "
+          class="selection-icon-clickable selection-icon-3-clickable"
         ></button>
         <button
           id="selection-icon-4-clickable"
-          style="
-            position: absolute;
-            top: -728px;
-            left: 794px;
-            width: 207px;
-            height: 318px;
-            background: transparent;
-            z-index: 90;
-            /* cursor: pointer; */
-          "
+          class="selection-icon-clickable selection-icon-4-clickable"
         ></button>
       </div>
 
@@ -132,87 +39,42 @@
         <img
           id="selection-icon-1"
           src="/images/riddle/selectionIcon1.png"
-          style="position: relative; top: -2195px; left: 66px; z-index: 75"
+          class="selection-icon"
         />
         <img
           id="selection-icon-2"
           src="/images/riddle/selectionIcon2.png"
-          style="position: relative; top: -2195px; left: 66px; z-index: 75"
+          class="selection-icon"
         />
         <img
           id="selection-icon-3"
           src="/images/riddle/selectionIcon3.png"
-          style="position: relative; top: -2195px; left: 66px; z-index: 75"
+          class="selection-icon"
         />
         <img
           id="selection-icon-4"
           src="/images/riddle/selectionIcon4.png"
-          style="position: relative; top: -2195px; left: 66px; z-index: 75"
+          class="selection-icon"
         />
       </div>
 
       <!-- Icon Backing Layer -->
       <img
-        id="selection-icon-backs"
+        id="selection-icon-backing"
         src="/images/riddle/selectionIconsBack.png"
-        style="position: relative; top: -2432px; left: 68px; z-index: 74"
       />
 
-      <div
-        id="hint-count-layer"
-        style="
-          top: -2273px;
-          position: relative;
-          background-color: white;
-          z-index: 75;
-        "
-      >
+      <div id="hint-count-layer">
         <img
           id="hint-count-foreground"
           src="/images/riddle/hintCountForeground.png"
-          style="position: relative; top: 0px; left: 439px"
         />
       </div>
     </div>
   </div>
 
-  <img
-    id="riddle-solution"
-    src="/images/riddle/riddleSolution.png"
-    style="
-      position: absolute;
-      top: 0px;
-      left: 0px;
-      width: 100%;
-      height: 100%;
-      display: none;
-      z-index: 71;
-    "
-  />
-  <img
-    src="/images/riddle/howToPlay.png"
-    class=""
-    style="
-      position: absolute;
-      top: 0px;
-      left: 0px;
-      z-index: 70;
-      pointer-events: none;
-    "
-  />
+  <img id="riddle-solution" src="/images/riddle/riddleSolution.png" />
+  <img id="how-to-play" src="/images/riddle/howToPlay.png" />
 
-  <button
-    id="next-riddle-button"
-    style="
-      background: transparent;
-      border: none !important;
-      font-size: 0;
-      position: absolute;
-      left: 351px;
-      top: 1758px;
-      width: 382px;
-      height: 106px;
-      z-index: 80;
-    "
-  ></button>
+  <button id="next-riddle-button"></button>
 </div>
