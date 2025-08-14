@@ -99,22 +99,22 @@
       "answerChoices": [
         {
           "text": "Blue",
-          "image": "images/riddles/icons/painted_bunting.png",
+          "image": "images/riddles/icons/bunting_blue.png",
           "is_correct": true
         },
         {
-          "text": "Brown",
-          "image": "images/riddles/icons/painted_bunting.png",
+          "text": "Red",
+          "image": "images/riddles/icons/bunting_red.png",
           "is_correct": false
         },
         {
           "text": "Green",
-          "image": "images/riddles/icons/painted_bunting.png",
+          "image": "images/riddles/icons/bunting_green.png",
           "is_correct": false
         },
         {
           "text": "Yellow",
-          "image": "images/riddles/icons/painted_bunting.png",
+          "image": "images/riddles/icons/bunting_yellow.png",
           "is_correct": false
         }
       ],
@@ -177,22 +177,22 @@
       "answerChoices": [
         {
           "text": "4",
-          "image": "images/riddles/icons/bat.png",
+          "image": "images/riddles/icons/4.png",
           "is_correct": false
         },
         {
           "text": "2",
-          "image": "images/riddles/icons/bat.png",
+          "image": "images/riddles/icons/2.png",
           "is_correct": false
         },
         {
           "text": "3",
-          "image": "images/riddles/icons/bat.png",
+          "image": "images/riddles/icons/3.png",
           "is_correct": false
         },
         {
           "text": "5",
-          "image": "images/riddles/icons/bat.png",
+          "image": "images/riddles/icons/5.png",
           "is_correct": true
         }
       ],
