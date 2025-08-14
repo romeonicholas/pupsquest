@@ -15,6 +15,9 @@ const colorsSlider = document.getElementById("colors-slider");
 const animalsSlider = document.getElementById("animals-slider");
 
 const riddleScreen = document.getElementById("riddle-screen");
+const couplet1 = document.querySelector(".couplet-1");
+const couplet2 = document.querySelector(".couplet-2");
+const couplet3 = document.querySelector(".couplet-3");
 
 const selectionIcon2 = document.getElementById("selection-icon-2");
 const selectionIcon2Clickable = document.getElementById(
@@ -255,8 +258,12 @@ function incrementRiddleIndex() {
 }
 
 function updateRiddleElements(riddle) {
-  console.log("Updating riddle elements");
-  console.log(riddle);
+  couplet1.children[0].innerText = riddle.couplets[0][0];
+  couplet1.children[1].innerText = riddle.couplets[0][1];
+  couplet2.children[0].innerText = riddle.couplets[1][0];
+  couplet2.children[1].innerText = riddle.couplets[1][1];
+  couplet3.children[0].innerText = riddle.couplets[2][0];
+  couplet3.children[1].innerText = riddle.couplets[2][1];
 }
 
 function showNewRiddle() {
