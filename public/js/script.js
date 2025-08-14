@@ -4,6 +4,7 @@ let currentRiddleIndex = Math.floor(Math.random() * 5);
 let riddlesData = null;
 let currentRiddleData = null;
 let remainingHints = 7;
+let incorrectGuesses = 0;
 
 const correctAnswerBacking = "/images/riddles/ui/answer_backing_correct.png";
 const incorrectAnswerBackings = [
@@ -60,7 +61,12 @@ const selectionText2 = document.getElementById("selection-text-2");
 const selectionText3 = document.getElementById("selection-text-3");
 const selectionText4 = document.getElementById("selection-text-4");
 
-const riddleSolution = document.getElementById("riddle-solution");
+const riddleAnswer = document.getElementById("riddle-answer");
+const answerCorrectText = document.getElementById("answer-correct-text");
+const answerIncorrectText = document.getElementById("answer-incorrect-text");
+const answerChoiceText = document.getElementById("answer-choice-text");
+const answerDetailsText = document.getElementById("answer-details");
+
 const hintCountForeground = document.getElementById("hint-count-foreground");
 
 const backToStartButton = document.getElementById("back-to-start-button");
@@ -295,6 +301,10 @@ function updateRiddleElements(riddle) {
   updateSelectionTexts(shuffledChoices);
   updateIconBackings(correctAnswerIndex);
   attachClickHandlers(correctAnswerIndex);
+  updateRiddleAnswer(
+    shuffledChoices[correctAnswerIndex].text,
+    riddle.answerDetails
+  );
 
   window.currentShuffledChoices = shuffledChoices;
 }
@@ -302,7 +312,6 @@ function updateRiddleElements(riddle) {
 function updateRiddleContent(riddle) {
   riddleHeadline.children[0].innerText = riddle.headline;
 
-  // Update couplets
   const couplets = [couplet1, couplet2, couplet3];
   couplets.forEach((couplet, index) => {
     couplet.children[0].innerText = riddle.couplets[index][0];
@@ -365,10 +374,18 @@ function attachClickHandlers(correctAnswerIndex) {
 
   clickables.forEach((clickable, index) => {
     const newClickable = replaceElementToRemoveListeners(clickable);
-    const handler =
-      index === correctAnswerIndex ? handleCorrectGuess : handleIncorrectGuess;
-    newClickable.addEventListener("click", handler);
+
+    if (index === correctAnswerIndex) {
+      newClickable.addEventListener("click", () => handleCorrectGuess(index));
+    } else {
+      newClickable.addEventListener("click", () => handleIncorrectGuess(index));
+    }
   });
+}
+
+function updateRiddleAnswer(answerChoice, answerDetails) {
+  answerChoiceText.innerText = answerChoice;
+  answerDetailsText.innerText = answerDetails;
 }
 
 function replaceElementToRemoveListeners(element) {
@@ -398,53 +415,96 @@ document.addEventListener("DOMContentLoaded", function () {
 
 let guess = 1;
 
-function handleIncorrectGuess() {
+function handleIncorrectGuess(iconIndex) {
   remainingHints--;
-  //update remaining hints element
+  incorrectGuesses++;
+
   const currentY = getTranslateY(selectionLayer);
   const currentX = getTranslateX(hintCountForeground);
-  selectionLayer.style.transition =
+  const icons = [
+    selectionIcon1,
+    selectionIcon2,
+    selectionIcon3,
+    selectionIcon4,
+  ];
+  const clickedIcon = icons[iconIndex];
+
+  clickedIcon.style.transition =
     "transform 1s cubic-bezier(0.54, -0.16, 0.735, 0.045)";
-  selectionLayer.style.transform = `translateY(${currentY + 222}px)`;
+  clickedIcon.style.transform = `translateY(${currentY + 234}px)`;
 
-  selectionIcon4.style.transition =
-    "transform 1s cubic-bezier(0.54, -0.16, 0.735, 0.045)";
-  selectionIcon4.style.transform = `translateY(${currentY + 234}px)`;
+  if (remainingHints <= 0) {
+    console.log("No more hints left");
+    //move on to next riddle and update remainingHints to 7
+  } else if (incorrectGuesses >= 3) {
+    setTimeout(() => {
+      riddleTextLayerBackground.style.transition = "transform 1s ease-in";
+      riddleTextLayerBackground.style.transform = "translateY(0px)";
 
-  hintCountForeground.style.transition = "transform 1s ease-in";
-  hintCountForeground.style.transform = `translateX(${currentX - 45}px)`;
+      selectionLayer.style.transition = "transform 1s ease-in";
+      selectionLayer.style.transform = "translateY(1298px)";
 
-  if (remainingHints === 0) {
-    //end game
+      riddleAnswer.style.display = "flex";
+      answerIncorrectText.style.display = "block";
+    }, 1500);
+    //move on to next riddle
+  } else {
+    selectionLayer.style.transition =
+      "transform 1s cubic-bezier(0.54, -0.16, 0.735, 0.045)";
+    selectionLayer.style.transform = `translateY(${currentY + 222}px)`;
+
+    hintCountForeground.style.transition = "transform 1s ease-in";
+    hintCountForeground.style.transform = `translateX(${currentX - 45}px)`;
   }
 }
 
-function handleCorrectGuess() {
-  console.log("This guess was correct");
+function handleCorrectGuess(iconIndex) {
+  const currentY = getTranslateY(selectionLayer);
+  const icons = [
+    selectionIcon1,
+    selectionIcon2,
+    selectionIcon3,
+    selectionIcon4,
+  ];
+  const clickedIcon = icons[iconIndex];
+  clickedIcon.style.transition =
+    "transform 1s cubic-bezier(0.54, -0.16, 0.735, 0.045)";
+  clickedIcon.style.transform = `translateY(${currentY + 234}px)`;
+
+  setTimeout(() => {
+    riddleTextLayerBackground.style.transition = "transform 1s ease-in";
+    riddleTextLayerBackground.style.transform = "translateY(0px)";
+
+    selectionLayer.style.transition = "transform 1s ease-in";
+    selectionLayer.style.transform = "translateY(1298px)";
+
+    riddleAnswer.style.display = "flex";
+    answerCorrectText.style.display = "block";
+  }, 1500);
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-  selectionIcon3Clickable.addEventListener("click", function () {
-    console.log("Selection icon 3 clicked");
+// document.addEventListener("DOMContentLoaded", function () {
+//   selectionIcon3Clickable.addEventListener("click", function () {
+//     console.log("Selection icon 3 clicked");
 
-    if (guess === 2) {
-      const currentY = getTranslateY(selectionLayer);
-      const currentX = getTranslateX(hintCountForeground);
-      selectionLayer.style.transition =
-        "transform 1s cubic-bezier(0.54, -0.16, 0.735, 0.045)";
-      selectionLayer.style.transform = `translateY(${currentY + 222}px)`;
+//     if (guess === 2) {
+//       const currentY = getTranslateY(selectionLayer);
+//       const currentX = getTranslateX(hintCountForeground);
+//       selectionLayer.style.transition =
+//         "transform 1s cubic-bezier(0.54, -0.16, 0.735, 0.045)";
+//       selectionLayer.style.transform = `translateY(${currentY + 222}px)`;
 
-      selectionIcon3.style.transition =
-        "transform 1s cubic-bezier(0.54, -0.16, 0.735, 0.045)";
-      selectionIcon3.style.transform = `translateY(${currentY + 234}px)`;
+//       selectionIcon3.style.transition =
+//         "transform 1s cubic-bezier(0.54, -0.16, 0.735, 0.045)";
+//       selectionIcon3.style.transform = `translateY(${currentY + 234}px)`;
 
-      hintCountForeground.style.transition = "transform 1s ease-in";
-      hintCountForeground.style.transform = `translateX(${currentX - 45}px)`;
+//       hintCountForeground.style.transition = "transform 1s ease-in";
+//       hintCountForeground.style.transform = `translateX(${currentX - 45}px)`;
 
-      guess++;
-    }
-  });
-});
+//       guess++;
+//     }
+//   });
+// });
 
 document.addEventListener("DOMContentLoaded", function () {
   selectionIcon2Clickable.addEventListener("click", function () {
@@ -452,7 +512,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (guess === 3) {
       const currentY = getTranslateY(selectionLayer);
-      const currentX = getTranslateX(hintCountForeground);
 
       selectionIcon2.style.transition =
         "transform 1s cubic-bezier(0.54, -0.16, 0.735, 0.045)";
@@ -465,7 +524,7 @@ document.addEventListener("DOMContentLoaded", function () {
         selectionLayer.style.transition = "transform 1s ease-in";
         selectionLayer.style.transform = "translateY(1298px)";
 
-        riddleSolution.style.display = "block";
+        riddleAnswer.style.display = "block";
       }, 1500);
       guess = 1;
 
@@ -500,7 +559,7 @@ document.addEventListener("DOMContentLoaded", function () {
         riddleContainer.style.transform = "translateY(0px)";
         riddleTextLayerBackground.style.transform = "translateY(0px)";
         selectionLayer.style.transform = "translateY(0px)";
-        riddleSolution.style.display = "none";
+        riddleAnswer.style.display = "none";
         selectionIcon2.style.transform = "translateY(0px)";
         selectionIcon3.style.transform = "translateY(0px)";
         selectionIcon4.style.transform = "translateY(0px)";
