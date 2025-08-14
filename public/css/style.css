@@ -16,6 +16,15 @@
     url("/fonts/Enriqueta-Regular.ttf") format("truetype");
 }
 
+@font-face {
+  font-family: "Enriqueta SemiBold";
+  src: url("/fonts/Enriqueta SemiBold.eot");
+  src: url("/fonts/Enriqueta SemiBold.eot") format("embedded-opentype"),
+    url("/fonts/Enriqueta SemiBold.woff2") format("woff2"),
+    url("/fonts/Enriqueta SemiBold.woff") format("woff"),
+    url("/fonts/Enriqueta SemiBold.ttf") format("truetype");
+}
+
 html,
 body {
   margin: 0;
@@ -204,6 +213,19 @@ button {
   position: relative;
   transition: transform 800ms ease-in;
   z-index: 77;
+}
+
+#riddle-headline {
+  position: absolute;
+  top: -841px;
+  width: 100%;
+  font-family: "Enriqueta SemiBold";
+  font-size: 58px;
+  letter-spacing: 0em;
+  color: #e43d34;
+  z-index: 77;
+  display: flex;
+  justify-content: center;
 }
 
 #selection-panel {
