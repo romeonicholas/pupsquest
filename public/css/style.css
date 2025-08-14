@@ -1,3 +1,12 @@
+@font-face {
+  font-family: "Gotham";
+  src: url("/fonts/Gotham-Medium.eot");
+  src: url("/fonts/Gotham-Medium.eot") format("embedded-opentype"),
+    url("/fonts/Gotham-Medium.woff2") format("woff2"),
+    url("/fonts/Gotham-Medium.woff") format("woff"),
+    url("/fonts/Gotham-Medium.ttf") format("truetype");
+}
+
 html,
 body {
   margin: 0;
@@ -48,4 +57,150 @@ button {
 
 .hide-on-tap {
   display: block;
+}
+
+#riddle-screen {
+  z-index: 79;
+}
+
+#header-panel {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  z-index: 79;
+}
+
+#save-exit-panel {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  z-index: 78;
+}
+
+#status-wheel {
+  position: absolute;
+  top: -707px;
+  left: -200px;
+  width: 1495px;
+  height: 1495px;
+  transition: transform 1s ease-in;
+  rotate: -36deg;
+  z-index: 77;
+}
+
+#header-panel-shadow {
+  position: absolute;
+  top: 516px;
+  left: 0px;
+  z-index: 75;
+}
+
+#riddle-text-layer {
+  position: relative;
+  top: 1750px;
+  left: 0px;
+  transition: transform 1s ease-in;
+  z-index: 73;
+}
+
+#riddle-container {
+  position: absolute;
+  transition: transform 1s ease-in;
+  z-index: 75;
+}
+
+#selection-layer {
+  top: 1268px;
+  position: relative;
+  transition: transform 800ms ease-in;
+  z-index: 77;
+}
+
+#selection-panel {
+  position: relative;
+  top: -926px;
+  left: -10px;
+  z-index: 76;
+}
+
+.selection-icon-clickable {
+  position: absolute;
+  top: -728px;
+  width: 207px;
+  height: 318px;
+  background: transparent;
+  z-index: 90;
+}
+
+.selection-icon-1-clickable {
+  left: 80px;
+}
+
+.selection-icon-2-clickable {
+  left: 317px;
+}
+
+.selection-icon-3-clickable {
+  left: 556px;
+}
+
+.selection-icon-4-clickable {
+  left: 794px;
+}
+
+.selection-icon {
+  position: relative;
+  top: -2195px;
+  left: 66px;
+  z-index: 75;
+}
+
+#selection-icon-backing {
+  position: relative;
+  top: -2432px;
+  left: 68px;
+  z-index: 74;
+}
+
+#hint-count-layer {
+  top: -2273px;
+  position: relative;
+  background-color: white;
+  z-index: 75;
+}
+
+#hint-count-foreground {
+  position: relative;
+  top: 0px;
+  left: 439px;
+}
+
+#riddle-solution {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  display: none;
+  z-index: 71;
+}
+
+#how-to-play {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  z-index: 70;
+  pointer-events: none;
+}
+
+#next-riddle-button {
+  background: transparent;
+  border: none !important;
+  font-size: 0;
+  position: absolute;
+  left: 351px;
+  top: 1758px;
+  width: 382px;
+  height: 106px;
+  z-index: 80;
 }
