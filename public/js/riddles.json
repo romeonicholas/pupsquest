@@ -1,0 +1,202 @@
+{
+  "data": [
+    {
+      "id": 0,
+      "headline": "Which one am I?",
+      "couplets": [
+        [
+          "You'll find me in the brush to the East,",
+          "hunting for a termite feast."
+        ],
+        [
+          "Other critters you'll see nearby,",
+          "have quills and feathers—but not I."
+        ],
+        [
+          "Look for me on the big red ledge,",
+          "I'm a little too close to the edge!"
+        ]
+      ],
+      "visibleCouplet": 0,
+      "answerChoices": [
+        {
+          "text": "Armadillo",
+          "image": "images/riddles/icons/armadillo.png",
+          "is_correct": true
+        },
+        {
+          "text": "Porcupine",
+          "image": "images/riddles/icons/porcupine.png",
+          "is_correct": false
+        },
+        {
+          "text": "Swift Fox",
+          "image": "images/riddles/icons/swift_fox.png",
+          "is_correct": false
+        },
+        {
+          "text": "Prairie Dog",
+          "image": "images/riddles/icons/prairie_dog.png",
+          "is_correct": false
+        }
+      ],
+      "answerDetails": "In Cherokee, I'm called ᎤᏯᏍᎦᎳ(uyasgatli). I'm known as a symbol of strong protection and healthy personal boundaries."
+    },
+    {
+      "id": 1,
+      "headline": "Which one am I?",
+      "couplets": [
+        [
+          "Everyone knows I'm great:",
+          "I'm the official wildflower of our state!"
+        ],
+        [
+          "You may find me by a star of blue,",
+          "or near the tail of a cat, it's true."
+        ],
+        [
+          "If you'd like to see me even more, ",
+          "go ask the rabbit at the front door."
+        ]
+      ],
+      "visibleCouplet": 0,
+      "answerChoices": [
+        {
+          "text": "Indian Blanket",
+          "image": "images/riddles/icons/indian_blanket.png",
+          "is_correct": true
+        },
+        {
+          "text": "False Dandelion",
+          "image": "images/riddles/icons/false_dandelion.png",
+          "is_correct": false
+        },
+        {
+          "text": "Coreopsis",
+          "image": "images/riddles/icons/coreopsis.png",
+          "is_correct": false
+        },
+        {
+          "text": "Purple Coneflower",
+          "image": "images/riddles/icons/purple_coneflower.png",
+          "is_correct": false
+        }
+      ],
+      "answerDetails": "My name comes from a Native American story about a girl lost in the forest who is kept warm by a blanket of red and yellow flowers."
+    },
+    {
+      "id": 2,
+      "headline": "What color is my head?",
+      "couplets": [
+        ["Painted Bunting is my name,", "My many colors are my fame!"],
+        ["My body has four different hues:", "yellow, red, green, and blue."],
+        [
+          "Usually I try to hide from y'all",
+          "but today I'm out near the waterfall!"
+        ]
+      ],
+      "visibleCouplet": 0,
+      "answerChoices": [
+        {
+          "text": "Blue",
+          "image": "images/riddles/icons/painted_bunting.png",
+          "is_correct": true
+        },
+        {
+          "text": "Brown",
+          "image": "images/riddles/icons/painted_bunting.png",
+          "is_correct": false
+        },
+        {
+          "text": "Green",
+          "image": "images/riddles/icons/painted_bunting.png",
+          "is_correct": false
+        },
+        {
+          "text": "Yellow",
+          "image": "images/riddles/icons/painted_bunting.png",
+          "is_correct": false
+        }
+      ],
+      "answerDetails": "A traditional story explains that when the Great Spirit was giving birds their colors, the Painted Bunting was the last in line—so it just got leftovers."
+    },
+    {
+      "id": 3,
+      "headline": "Which one am I?",
+      "couplets": [
+        ["What, haven't you heard?", "I'm the Oklahoma state bird."],
+        ["You can find me flying high,", "above the herd, up in the sky."],
+        [
+          "I see a snake below me here,",
+          "And also, I see … a little blue deer?"
+        ]
+      ],
+      "visibleCouplet": 0,
+      "answerChoices": [
+        {
+          "text": "Scissor-tailed Flycatcher",
+          "image": "images/riddles/icons/scissor_tailed_flycatcher.png",
+          "is_correct": true
+        },
+        {
+          "text": "Red-tailed Hawk",
+          "image": "images/riddles/icons/red_tailed_hawk.png",
+          "is_correct": false
+        },
+        {
+          "text": "Ruby-throated Hummingbird",
+          "image": "images/riddles/icons/ruby_throated_hummingbird.png",
+          "is_correct": false
+        },
+        {
+          "text": "Prairie Falcon",
+          "image": "images/riddles/icons/prairie_falcon.png",
+          "is_correct": false
+        }
+      ],
+      "answerDetails": "In a Choctaw story, the Scissor-tailed Flycatcher was one of only two birds to survive a catastrophic flood, but the churning waters split its tail in half."
+    },
+    {
+      "id": 4,
+      "headline": "How many are there?",
+      "couplets": [
+        [
+          "If you look up (but not at high noon),",
+          "we're in the light of the hunter's moon."
+        ],
+        [
+          "After a story inside the cave walls,",
+          "gaze up to the sky as darkness falls."
+        ],
+        [
+          "From inside her den, Coyote can see,",
+          "and you can too—how many are we?"
+        ]
+      ],
+      "visibleCouplet": 0,
+      "answerChoices": [
+        {
+          "text": "4",
+          "image": "images/riddles/icons/bat.png",
+          "is_correct": false
+        },
+        {
+          "text": "2",
+          "image": "images/riddles/icons/bat.png",
+          "is_correct": false
+        },
+        {
+          "text": "3",
+          "image": "images/riddles/icons/bat.png",
+          "is_correct": false
+        },
+        {
+          "text": "5",
+          "image": "images/riddles/icons/bat.png",
+          "is_correct": true
+        }
+      ],
+      "answerDetails": "A Muscogee tale explains how the bat was given its teeth by other mammals during a ball game against the birds—so it could hold the ball!"
+    }
+  ]
+}

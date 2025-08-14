@@ -1,5 +1,8 @@
 // State
-let currentRiddle = 1;
+
+let currentRiddleIndex = Math.floor(Math.random() * 5);
+let riddlesData = null;
+let currentRiddleData = null;
 
 const startScreenDiv = document.getElementById("start-screen");
 const startGameButton = document.getElementById("start-new-game-button");
@@ -53,6 +56,20 @@ function scaleContainer() {
 window.addEventListener("resize", scaleContainer);
 window.addEventListener("load", scaleContainer);
 document.addEventListener("DOMContentLoaded", scaleContainer);
+
+async function loadRiddles() {
+  try {
+    const response = await fetch("/js/riddles.json");
+    riddlesData = await response.json().data;
+    console.log("Riddles loaded:", riddlesData);
+  } catch (error) {
+    console.error("Error loading riddles:", error);
+  }
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  loadRiddles();
+});
 
 document.addEventListener("DOMContentLoaded", function () {
   document.querySelectorAll(".hide-on-tap").forEach(function (element) {
@@ -218,23 +235,30 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
+function closeRiddleContainerFromBottom() {
+  riddleContainer.style.transform = "translateY(-1294px)";
+  riddleTextLayer.style.transform = "translateY(-1294px)";
+}
+
+function showFirstCouplet() {
+  selectionLayer.style.transform = "translateY(276px)";
+}
+
+function showNewRiddle() {
+  currentRiddleIndex++;
+  closeRiddleContainerFromBottom();
+
+  setTimeout(() => {
+    updateStatusWheel();
+  }, 1000);
+  setTimeout(() => {
+    showFirstCouplet();
+  }, 2000);
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   nextRiddleButton.addEventListener("click", function () {
-    currentRiddle++;
-    riddleContainer.style.transform = "translateY(-1294px)";
-    riddleTextLayer.style.transform = "translateY(-1294px)";
-    setTimeout(() => {
-      updateStatusWheel();
-      // updateNextStatusText(`RIDDLE ${currentRiddle}`);
-
-      // currentStatusText.classList.remove("current-text");
-      // currentStatusText.classList.add("previous-text");
-      // nextStatusText.classList.remove("next-text");
-      // nextStatusText.classList.add("current-text");
-    }, 1000);
-    setTimeout(() => {
-      selectionLayer.style.transform = "translateY(276px)";
-    }, 2000);
+    showNewRiddle();
   });
 });
 
@@ -396,7 +420,7 @@ function updateNextStatusText(nextText) {
 }
 
 function updateStatusWheel() {
-  updateNextStatusText(`RIDDLE ${currentRiddle}`);
+  updateNextStatusText(`RIDDLE ${currentRiddleIndex}`);
   currentStatusText.classList.remove("current-text");
   currentStatusText.classList.add("previous-text");
   nextStatusText.classList.remove("next-text");
