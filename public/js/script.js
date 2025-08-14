@@ -19,6 +19,10 @@ const couplet1 = document.querySelector(".couplet-1");
 const couplet2 = document.querySelector(".couplet-2");
 const couplet3 = document.querySelector(".couplet-3");
 
+const selectionIcon1 = document.getElementById("selection-icon-1");
+const selectionIcon1Clickable = document.getElementById(
+  "selection-icon-1-clickable"
+);
 const selectionIcon2 = document.getElementById("selection-icon-2");
 const selectionIcon2Clickable = document.getElementById(
   "selection-icon-2-clickable"
@@ -264,6 +268,17 @@ function updateRiddleElements(riddle) {
   couplet2.children[1].innerText = riddle.couplets[1][1];
   couplet3.children[0].innerText = riddle.couplets[2][0];
   couplet3.children[1].innerText = riddle.couplets[2][1];
+
+  const shuffledChoices = [...riddle.answerChoices].sort(
+    () => Math.random() - 0.5
+  );
+
+  selectionIcon1.src = shuffledChoices[0].image;
+  selectionIcon2.src = shuffledChoices[1].image;
+  selectionIcon3.src = shuffledChoices[2].image;
+  selectionIcon4.src = shuffledChoices[3].image;
+
+  window.currentShuffledChoices = shuffledChoices;
 }
 
 function showNewRiddle() {
