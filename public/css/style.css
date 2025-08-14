@@ -77,7 +77,7 @@ button {
   z-index: 78;
 }
 
-#status-wheel {
+/* #status-wheel {
   position: absolute;
   top: -707px;
   left: -200px;
@@ -86,6 +86,50 @@ button {
   transition: transform 1s ease-in;
   rotate: -36deg;
   z-index: 77;
+} */
+
+#status-wheel {
+  background-color: #faf8f2;
+  position: absolute;
+  top: 463px;
+  left: 359px;
+  width: 360px;
+  height: 91px;
+  z-index: 77;
+}
+
+.status-text-wrapper {
+  display: flex;
+  top: -459px;
+  left: 362px;
+  position: absolute;
+  z-index: 78;
+  width: 355px;
+  height: 1003px;
+  justify-content: center;
+  transform: rotate(0deg);
+}
+
+.status-text {
+  font-family: "Gotham";
+  font-size: 30px;
+  letter-spacing: 0.02em;
+  text-align: center;
+  white-space: nowrap;
+  align-self: flex-end;
+  justify-content: center;
+  padding: 22px 82px 22px 82px;
+}
+
+.red-background {
+  background-color: red;
+  border-radius: 60px;
+}
+
+.current-text {
+}
+
+.next-text {
 }
 
 #header-panel-shadow {
