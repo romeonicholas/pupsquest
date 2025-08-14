@@ -1,3 +1,6 @@
+// State
+let currentRiddle = 1;
+
 const startScreenDiv = document.getElementById("start-screen");
 const startGameButton = document.getElementById("start-new-game-button");
 
@@ -7,6 +10,8 @@ const colorsHeader = document.querySelector(".follows-colors-slider");
 const animalsHeader = document.querySelector(".follows-animals-slider");
 const colorsSlider = document.getElementById("colors-slider");
 const animalsSlider = document.getElementById("animals-slider");
+
+const riddleScreen = document.getElementById("riddle-screen");
 
 const selectionIcon2 = document.getElementById("selection-icon-2");
 const selectionIcon2Clickable = document.getElementById(
@@ -28,7 +33,8 @@ const backToStartButton = document.getElementById("back-to-start-button");
 const nextRiddleButton = document.getElementById("next-riddle-button");
 const riddleContainer = document.getElementById("riddle-container");
 const riddleTextLayer = document.getElementById("riddle-text-layer");
-const statusWheel = document.getElementById("status-wheel");
+let currentStatusText = document.getElementById("status-text-current");
+let nextStatusText = document.getElementById("status-text-next");
 const selectionLayer = document.getElementById("selection-layer");
 
 function scaleContainer() {
@@ -214,10 +220,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
 document.addEventListener("DOMContentLoaded", function () {
   nextRiddleButton.addEventListener("click", function () {
+    currentRiddle++;
     riddleContainer.style.transform = "translateY(-1294px)";
     riddleTextLayer.style.transform = "translateY(-1294px)";
     setTimeout(() => {
-      statusWheel.style.transform = "rotate(36deg)";
+      updateStatusWheel();
+      // updateNextStatusText(`RIDDLE ${currentRiddle}`);
+
+      // currentStatusText.classList.remove("current-text");
+      // currentStatusText.classList.add("previous-text");
+      // nextStatusText.classList.remove("next-text");
+      // nextStatusText.classList.add("current-text");
     }, 1000);
     setTimeout(() => {
       selectionLayer.style.transform = "translateY(276px)";
@@ -332,7 +345,6 @@ document.addEventListener("DOMContentLoaded", function () {
         selectionIcon3.style.transform = "translateY(0px)";
         selectionIcon4.style.transform = "translateY(0px)";
         hintCountForeground.style.transform = "translateX(0px)";
-        statusWheel.style.transform = "rotate(0deg)";
 
         const message = document.createElement("div");
         message.textContent =
@@ -371,4 +383,29 @@ function getTranslateY(element) {
   const values = matrix.match(/matrix.*\((.+)\)/)[1].split(", ");
   const translateY = Math.round(parseFloat(values[5]));
   return translateY;
+}
+
+function updateNextStatusText(nextText) {
+  const spanElement = nextStatusText.querySelector(".status-text");
+  if (spanElement) {
+    spanElement.innerText = nextText;
+  } else {
+    console.error("Could not find .status-text inside nextStatusText");
+  }
+  nextStatusText.firstChild.innerText = nextText;
+}
+
+function updateStatusWheel() {
+  updateNextStatusText(`RIDDLE ${currentRiddle}`);
+  currentStatusText.classList.remove("current-text");
+  currentStatusText.classList.add("previous-text");
+  nextStatusText.classList.remove("next-text");
+  nextStatusText.classList.add("current-text");
+
+  currentStatusText = nextStatusText;
+  nextStatusText = document.createElement("div");
+  nextStatusText.id = "status-text-next";
+  nextStatusText.className = "status-text-wrapper next-text";
+  nextStatusText.innerHTML = '<span class="status-text"></span>';
+  riddleScreen.appendChild(nextStatusText);
 }

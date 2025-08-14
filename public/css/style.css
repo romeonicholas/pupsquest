@@ -107,7 +107,7 @@ button {
   width: 355px;
   height: 1003px;
   justify-content: center;
-  transform: rotate(0deg);
+  transition: transform 1s ease-in;
 }
 
 .status-text {
@@ -127,9 +127,15 @@ button {
 }
 
 .current-text {
+  transform: rotate(0deg);
+}
+
+.previous-text {
+  transform: rotate(36deg);
 }
 
 .next-text {
+  transform: rotate(-36deg);
 }
 
 #header-panel-shadow {
