@@ -144,7 +144,7 @@
           "is_correct": false
         },
         {
-          "text": "Ruby-throated Hummingbird",
+          "text": "Hummingbird",
           "image": "images/riddles/icons/ruby_throated_hummingbird.png",
           "is_correct": false
         },
@@ -176,24 +176,24 @@
       "visibleCouplet": 0,
       "answerChoices": [
         {
-          "text": "4",
+          "text": "Four",
           "image": "images/riddles/icons/4.png",
-          "is_correct": false
+          "is_correct": true
         },
         {
-          "text": "2",
+          "text": "Two",
           "image": "images/riddles/icons/2.png",
           "is_correct": false
         },
         {
-          "text": "3",
+          "text": "Three",
           "image": "images/riddles/icons/3.png",
           "is_correct": false
         },
         {
-          "text": "5",
+          "text": "Five",
           "image": "images/riddles/icons/5.png",
-          "is_correct": true
+          "is_correct": false
         }
       ],
       "answerDetails": "A Muscogee tale explains how the bat was given its teeth by other mammals during a ball game against the birds—so it could hold the ball!"
