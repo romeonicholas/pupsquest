@@ -7,6 +7,15 @@
     url("/fonts/Gotham-Medium.ttf") format("truetype");
 }
 
+@font-face {
+  font-family: "Enriqueta";
+  src: url("/fonts/Enriqueta-Regular.eot");
+  src: url("/fonts/Enriqueta-Regular.eot") format("embedded-opentype"),
+    url("/fonts/Enriqueta-Regular.woff2") format("woff2"),
+    url("/fonts/Enriqueta-Regular.woff") format("woff"),
+    url("/fonts/Enriqueta-Regular.ttf") format("truetype");
+}
+
 html,
 body {
   margin: 0;
@@ -145,12 +154,43 @@ button {
   z-index: 75;
 }
 
-#riddle-text-layer {
+#riddle-text {
+  align-items: center;
   position: relative;
   top: 1750px;
   left: 0px;
   transition: transform 1s ease-in;
   z-index: 73;
+  display: flex;
+  flex-direction: column;
+}
+
+#riddle-couplets-container {
+  position: absolute;
+  top: 175px;
+  z-index: 73;
+}
+
+.couplet {
+  font-family: "Enriqueta";
+  font-size: 46px;
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+  display: flex;
+  flex-direction: column;
+}
+
+.couplet-1 {
+  align-items: center;
+}
+
+.couplet-2 {
+  align-items: center;
+  margin-top: 77px;
+}
+.couplet-3 {
+  align-items: center;
+  margin-top: 77px;
 }
 
 #riddle-container {
