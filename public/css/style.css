@@ -272,16 +272,19 @@ button {
 }
 
 #hint-count-layer {
-  top: -2273px;
-  position: relative;
+  position: absolute;
+  top: -336px;
+  left: 440px;
+  width: 393px;
+  height: 40px;
   background-color: white;
   z-index: 75;
 }
 
 #hint-count-foreground {
-  position: relative;
+  position: absolute;
   top: 0px;
-  left: 439px;
+  left: 0px;
 }
 
 #riddle-solution {
