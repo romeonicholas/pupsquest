@@ -34,33 +34,25 @@ const couplet1 = document.querySelector(".couplet-1");
 const couplet2 = document.querySelector(".couplet-2");
 const couplet3 = document.querySelector(".couplet-3");
 
-const selectionIcon1 = document.getElementById("selection-icon-1");
-const selectionIcon2 = document.getElementById("selection-icon-2");
-const selectionIcon3 = document.getElementById("selection-icon-3");
-const selectionIcon4 = document.getElementById("selection-icon-4");
+const iconFront1 = document.getElementById("icon-front-1");
+const iconFront2 = document.getElementById("icon-front-2");
+const iconFront3 = document.getElementById("icon-front-3");
+const iconFront4 = document.getElementById("icon-front-4");
 
-const iconBacking1 = document.getElementById("icon-backing-1");
-const iconBacking2 = document.getElementById("icon-backing-2");
-const iconBacking3 = document.getElementById("icon-backing-3");
-const iconBacking4 = document.getElementById("icon-backing-4");
+const iconBack1 = document.getElementById("icon-back-1");
+const iconBack2 = document.getElementById("icon-back-2");
+const iconBack3 = document.getElementById("icon-back-3");
+const iconBack4 = document.getElementById("icon-back-4");
 
-const selectionIcon1Clickable = document.getElementById(
-  "selection-icon-1-clickable"
-);
-const selectionIcon2Clickable = document.getElementById(
-  "selection-icon-2-clickable"
-);
-const selectionIcon3Clickable = document.getElementById(
-  "selection-icon-3-clickable"
-);
-const selectionIcon4Clickable = document.getElementById(
-  "selection-icon-4-clickable"
-);
+const clickAreaOption1 = document.getElementById("option-click-area-1");
+const clickAreaOption2 = document.getElementById("option-click-area-2");
+const clickAreaOption3 = document.getElementById("option-click-area-3");
+const clickAreaOption4 = document.getElementById("option-click-area-4");
 
-const selectionText1 = document.getElementById("selection-text-1");
-const selectionText2 = document.getElementById("selection-text-2");
-const selectionText3 = document.getElementById("selection-text-3");
-const selectionText4 = document.getElementById("selection-text-4");
+const optionText1 = document.getElementById("option-text-1");
+const optionText2 = document.getElementById("option-text-2");
+const optionText3 = document.getElementById("option-text-3");
+const optionText4 = document.getElementById("option-text-4");
 
 const riddleAnswer = document.getElementById("riddle-answer");
 const answerCorrectText = document.getElementById("answer-correct-text");
@@ -111,7 +103,7 @@ document.addEventListener("DOMContentLoaded", function () {
   loadRiddles();
 });
 
-//Temporary random badge for demo
+//Temporary random badge and animal for demo
 window.addEventListener("load", function () {
   const badgeColorOptions = [
     {
@@ -377,31 +369,21 @@ function findCorrectAnswerIndex(shuffledChoices) {
 }
 
 function updateSelectionIcons(shuffledChoices) {
-  const icons = [
-    selectionIcon1,
-    selectionIcon2,
-    selectionIcon3,
-    selectionIcon4,
-  ];
+  const icons = [iconFront1, iconFront2, iconFront3, iconFront4];
   icons.forEach((icon, index) => {
     icon.src = shuffledChoices[index].image;
   });
 }
 
 function updateSelectionTexts(shuffledChoices) {
-  const texts = [
-    selectionText1,
-    selectionText2,
-    selectionText3,
-    selectionText4,
-  ];
+  const texts = [optionText1, optionText2, optionText3, optionText4];
   texts.forEach((text, index) => {
     text.innerText = shuffledChoices[index].text;
   });
 }
 
 function updateIconBackings(correctAnswerIndex) {
-  const iconBackings = [iconBacking1, iconBacking2, iconBacking3, iconBacking4];
+  const iconBackings = [iconBack1, iconBack2, iconBack3, iconBack4];
 
   const shuffledIncorrectBackings = [...incorrectAnswerBackings].sort(
     () => Math.random() - 0.5
@@ -419,10 +401,10 @@ function updateIconBackings(correctAnswerIndex) {
 
 function attachClickHandlers(correctAnswerIndex) {
   const clickables = [
-    document.getElementById("selection-icon-1-clickable"),
-    document.getElementById("selection-icon-2-clickable"),
-    document.getElementById("selection-icon-3-clickable"),
-    document.getElementById("selection-icon-4-clickable"),
+    document.getElementById("option-click-area-1"),
+    document.getElementById("option-click-area-2"),
+    document.getElementById("option-click-area-3"),
+    document.getElementById("option-click-area-4"),
   ];
 
   clickables.forEach((clickable, index) => {
@@ -434,9 +416,13 @@ function attachClickHandlers(correctAnswerIndex) {
     const newClickable = replaceElementToRemoveListeners(clickable);
 
     if (index === correctAnswerIndex) {
-      newClickable.addEventListener("click", () => handleCorrectGuess(index));
+      newClickable.addEventListener("click", (event) =>
+        handleCorrectGuess(event.currentTarget, index)
+      );
     } else {
-      newClickable.addEventListener("click", () => handleIncorrectGuess(index));
+      newClickable.addEventListener("click", (event) =>
+        handleIncorrectGuess(event.currentTarget, index)
+      );
     }
   });
 }
@@ -456,17 +442,12 @@ function replaceElementToRemoveListeners(element) {
   }
 
   const newElement = element.cloneNode(true);
-  element.parentNode.replaceChild(newElement, element);
+  element.replaceWith(newElement);
   return newElement;
 }
 
 function resetIconPositions() {
-  const icons = [
-    selectionIcon1,
-    selectionIcon2,
-    selectionIcon3,
-    selectionIcon4,
-  ];
+  const icons = [iconFront1, iconFront2, iconFront3, iconFront4];
   icons.forEach((icon) => {
     icon.style.transition = "none";
     icon.style.transform = "translateY(0)";
@@ -505,7 +486,7 @@ function decreaseHints() {
   const currentX = getTranslateX(hintCountForeground);
   remainingHints--;
   hintCountForeground.style.transition = "transform 1s ease-in";
-  hintCountForeground.style.transform = `translateX(${currentX - 48}px)`;
+  hintCountForeground.style.transform = `translateX(${currentX - 45}px)`;
 }
 
 function resetHints() {
@@ -522,12 +503,7 @@ function showNextHint() {
 }
 
 function showIconBacking(iconIndex) {
-  const icons = [
-    selectionIcon1,
-    selectionIcon2,
-    selectionIcon3,
-    selectionIcon4,
-  ];
+  const icons = [iconFront1, iconFront2, iconFront3, iconFront4];
   const clickedIcon = icons[iconIndex];
   const currentY = getTranslateY(clickedIcon);
 
@@ -535,15 +511,30 @@ function showIconBacking(iconIndex) {
     "transform 1s cubic-bezier(0.54, -0.16, 0.735, 0.045)";
   clickedIcon.style.transform = `translateY(${currentY + 234}px)`;
 }
-function handleIncorrectGuess(iconIndex) {
+
+function disableAllInput() {
+  const container = document.getElementById("container");
+  if (container) {
+    container.style.pointerEvents = "none";
+  }
+}
+
+function enableAllInput() {
+  const container = document.getElementById("container");
+  if (container) {
+    container.style.pointerEvents = "auto";
+  }
+}
+
+function handleIncorrectGuess(clickedArea, iconIndex) {
+  disableAllInput();
+  replaceElementToRemoveListeners(clickedArea);
+
   incorrectGuesses++;
   decreaseHints();
-
   showIconBacking(iconIndex);
 
-  if (remainingHints < 0) {
-    resetHints();
-  } else if (incorrectGuesses >= 3) {
+  if (incorrectGuesses >= 3) {
     incorrectGuesses = 0;
     setTimeout(() => {
       riddleTextLayerBackground.style.transition = "transform 1s ease-in";
@@ -554,26 +545,22 @@ function handleIncorrectGuess(iconIndex) {
 
       riddleAnswer.style.display = "flex";
       answerIncorrectText.style.display = "block";
+      enableAllInput();
     }, 1500);
   } else {
     showNextHint();
+    setTimeout(() => {
+      enableAllInput();
+    }, 1000);
   }
 }
 
-function handleCorrectGuess(iconIndex) {
-  incorrectGuesses = 0;
+function handleCorrectGuess(clickedArea, iconIndex) {
+  disableAllInput();
+  replaceElementToRemoveListeners(clickedArea);
 
-  const currentY = getTranslateY(selectionLayer);
-  const icons = [
-    selectionIcon1,
-    selectionIcon2,
-    selectionIcon3,
-    selectionIcon4,
-  ];
-  const clickedIcon = icons[iconIndex];
-  clickedIcon.style.transition =
-    "transform 1s cubic-bezier(0.54, -0.16, 0.735, 0.045)";
-  clickedIcon.style.transform = `translateY(${currentY + 234}px)`;
+  incorrectGuesses = 0;
+  showIconBacking(iconIndex);
 
   setTimeout(() => {
     riddleTextLayerBackground.style.transition = "transform 1s ease-in";
@@ -584,11 +571,13 @@ function handleCorrectGuess(iconIndex) {
 
     riddleAnswer.style.display = "flex";
     answerCorrectText.style.display = "block";
+
+    enableAllInput();
   }, 1500);
 }
 
 // document.addEventListener("DOMContentLoaded", function () {
-//   selectionIcon3Clickable.addEventListener("click", function () {
+//   clickAreaOption3.addEventListener("click", function () {
 //     console.log("Selection icon 3 clicked");
 
 //     if (guess === 2) {
@@ -598,9 +587,9 @@ function handleCorrectGuess(iconIndex) {
 //         "transform 1s cubic-bezier(0.54, -0.16, 0.735, 0.045)";
 //       selectionLayer.style.transform = `translateY(${currentY + 222}px)`;
 
-//       selectionIcon3.style.transition =
+//       iconFront3.style.transition =
 //         "transform 1s cubic-bezier(0.54, -0.16, 0.735, 0.045)";
-//       selectionIcon3.style.transform = `translateY(${currentY + 234}px)`;
+//       iconFront3.style.transform = `translateY(${currentY + 234}px)`;
 
 //       hintCountForeground.style.transition = "transform 1s ease-in";
 //       hintCountForeground.style.transform = `translateX(${currentX - 45}px)`;
@@ -611,15 +600,15 @@ function handleCorrectGuess(iconIndex) {
 // });
 
 // document.addEventListener("DOMContentLoaded", function () {
-//   selectionIcon2Clickable.addEventListener("click", function () {
+//   clickAreaOption2.addEventListener("click", function () {
 //     console.log("Selection icon 2 clicked");
 
 //     if (guess === 3) {
 //       const currentY = getTranslateY(selectionLayer);
 
-//       selectionIcon2.style.transition =
+//       iconFront2.style.transition =
 //         "transform 1s cubic-bezier(0.54, -0.16, 0.735, 0.045)";
-//       selectionIcon2.style.transform = `translateY(${currentY + 234}px)`;
+//       iconFront2.style.transform = `translateY(${currentY + 234}px)`;
 
 //       setTimeout(() => {
 //         riddleTextLayerBackground.style.transition = "transform 1s ease-in";
@@ -664,9 +653,9 @@ function handleCorrectGuess(iconIndex) {
 //         riddleTextLayerBackground.style.transform = "translateY(0px)";
 //         selectionLayer.style.transform = "translateY(0px)";
 //         riddleAnswer.style.display = "none";
-//         selectionIcon2.style.transform = "translateY(0px)";
-//         selectionIcon3.style.transform = "translateY(0px)";
-//         selectionIcon4.style.transform = "translateY(0px)";
+//         iconFront2.style.transform = "translateY(0px)";
+//         iconFront3.style.transform = "translateY(0px)";
+//         iconFront4.style.transform = "translateY(0px)";
 //         hintCountForeground.style.transform = "translateX(0px)";
 
 //         const message = document.createElement("div");
