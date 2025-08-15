@@ -392,3 +392,30 @@ button {
   height: 106px;
   z-index: 80;
 }
+
+/* .flight-path {
+  position: absolute;
+  top: 200px;
+  left: 0;
+  width: 10%;
+  animation: leftRight 6s infinite linear;
+  z-index: 100;
+}
+
+.flyer {
+  position: absolute;
+  animation: upDown 1.5s alternate infinite ease-in-out;
+  width: 200%;
+  z-index: 100;
+}
+
+@keyframes upDown {
+  to {
+    transform: translatey(100px);
+  }
+}
+@keyframes leftRight {
+  to {
+    transform: translatex(900%);
+  }
+} */
