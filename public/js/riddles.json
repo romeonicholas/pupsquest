@@ -5,6 +5,48 @@
       "headline": "Which one am I?",
       "couplets": [
         [
+          "Everyone knows I'm so great:",
+          "I'm the official wildflower of our state!"
+        ],
+        [
+          "You may find me by a star of blue,",
+          "or near the tail of a cat, it's true."
+        ],
+        [
+          "If you'd like to see me even more, ",
+          "go ask the rabbit at the front door."
+        ]
+      ],
+      "answerChoices": [
+        {
+          "text": "Indian Blanket",
+          "image": "images/riddles/icons/indian_blanket.png",
+          "is_correct": true
+        },
+        {
+          "text": "False Dandelion",
+          "image": "images/riddles/icons/false_dandelion.png",
+          "is_correct": false
+        },
+        {
+          "text": "Coreopsis",
+          "image": "images/riddles/icons/coreopsis.png",
+          "is_correct": false
+        },
+        {
+          "text": "Purple Coneflower",
+          "image": "images/riddles/icons/purple_coneflower.png",
+          "is_correct": false
+        }
+      ],
+      "answerDetails": "My name comes from a Native American story about a girl lost in the forest who is kept warm by a blanket of red and yellow flowers.",
+      "answerImgPath": "images/riddles/answers/answer_image_temp_indian_blanket.png"
+    },
+    {
+      "id": 1,
+      "headline": "Which one am I?",
+      "couplets": [
+        [
           "You'll find me in the brush to the East,",
           "hunting for a termite feast."
         ],
@@ -41,48 +83,6 @@
       ],
       "answerDetails": "In Cherokee, I'm called <span class=\"cherokee\">ᎤᏯᏍᎦᎳ</span> (uyasgatli). I'm known as a symbol of strong protection and healthy personal boundaries.",
       "answerImgPath": "images/riddles/answers/armadillo.png"
-    },
-    {
-      "id": 1,
-      "headline": "Which one am I?",
-      "couplets": [
-        [
-          "Everyone knows I'm great:",
-          "I'm the official wildflower of our state!"
-        ],
-        [
-          "You may find me by a star of blue,",
-          "or near the tail of a cat, it's true."
-        ],
-        [
-          "If you'd like to see me even more, ",
-          "go ask the rabbit at the front door."
-        ]
-      ],
-      "answerChoices": [
-        {
-          "text": "Indian Blanket",
-          "image": "images/riddles/icons/indian_blanket.png",
-          "is_correct": true
-        },
-        {
-          "text": "False Dandelion",
-          "image": "images/riddles/icons/false_dandelion.png",
-          "is_correct": false
-        },
-        {
-          "text": "Coreopsis",
-          "image": "images/riddles/icons/coreopsis.png",
-          "is_correct": false
-        },
-        {
-          "text": "Purple Coneflower",
-          "image": "images/riddles/icons/purple_coneflower.png",
-          "is_correct": false
-        }
-      ],
-      "answerDetails": "My name comes from a Native American story about a girl lost in the forest who is kept warm by a blanket of red and yellow flowers.",
-      "answerImgPath": "images/riddles/answers/answer_image_temp_indian_blanket.png"
     },
     {
       "id": 2,
@@ -153,50 +153,50 @@
           "is_correct": false
         }
       ],
-      "answerDetails": "In a Choctaw story, the Scissor-tailed Flycatcher was one of only two birds to survive a catastrophic flood, but the churning waters split its tail in half.",
+      "answerDetails": "Scissor-tailed flycatchers have special meanings for many tribes, and their feathers are often worn in the regalia of male Comanche dancers.",
       "answerImgPath": "images/riddles/answers/answer_image_temp_swallowtail.png"
     },
     {
       "id": 4,
-      "headline": "How many are there?",
+      "headline": "What color is my tail?",
       "couplets": [
         [
-          "If you look up (but not at high noon),",
-          "we're in the light of the hunter's moon."
+          "I'm not your pet but I do have a collar,",
+          "You call me Boomer, but I don't holler."
         ],
         [
-          "After a story inside the cave walls,",
-          "gaze up to the sky as darkness falls."
+          "There are no other lizards you'll see,",
+          "as bright and colorful as me!"
         ],
         [
-          "From inside her den, Coyote can see,",
-          "and you can too—how many are we?"
+          "I'm out on a rock soaking up sun.",
+          "Uh-oh, there's a snake—I'd better run!"
         ]
       ],
       "answerChoices": [
         {
-          "text": "Four",
-          "image": "images/riddles/icons/4.png",
+          "text": "Blue",
+          "image": "images/riddles/icons/collared_lizard_blue.png",
           "is_correct": true
         },
         {
-          "text": "Two",
-          "image": "images/riddles/icons/2.png",
+          "text": "Red",
+          "image": "images/riddles/icons/collared_lizard_red.png",
           "is_correct": false
         },
         {
-          "text": "Three",
-          "image": "images/riddles/icons/3.png",
+          "text": "Orange",
+          "image": "images/riddles/icons/collared_lizard_orange.png",
           "is_correct": false
         },
         {
-          "text": "Five",
-          "image": "images/riddles/icons/5.png",
+          "text": "Green",
+          "image": "images/riddles/icons/collared_lizard_green.png",
           "is_correct": false
         }
       ],
-      "answerDetails": "A Muscogee tale explains how the bat was given its teeth by other mammals during a ball game against the birds—so it could hold the ball!",
-      "answerImgPath": "images/riddles/answers/bats.png"
+      "answerDetails": "People may have named this lizard “Mountain Boomer” by mistake—the noises they heard echoing in the hills were more likely from Barking Frogs.",
+      "answerImgPath": "images/riddles/answers/collared_lizard.png"
     }
   ]
 }
