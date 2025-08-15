@@ -13,17 +13,18 @@ const incorrectAnswerBackings = [
   "/images/riddles/ui/answer_backing_wrong_3.png",
 ];
 
-const startScreenDiv = document.getElementById("start-screen");
-const startGameButton = document.getElementById("start-new-game-button");
+// const startScreenDiv = document.getElementById("start-screen");
+// const startGameButton = document.getElementById("start-new-game-button");
 
-const createUserButton = document.getElementById("create-user-button");
-const createNewUserDiv = document.getElementById("create-new-user");
-const colorsHeader = document.querySelector(".follows-colors-slider");
-const animalsHeader = document.querySelector(".follows-animals-slider");
-const colorsSlider = document.getElementById("colors-slider");
-const animalsSlider = document.getElementById("animals-slider");
+// const createUserButton = document.getElementById("create-user-button");
+// const createNewUserDiv = document.getElementById("create-new-user");
+// const colorsHeader = document.querySelector(".follows-colors-slider");
+// const animalsHeader = document.querySelector(".follows-animals-slider");
+// const colorsSlider = document.getElementById("colors-slider");
+// const animalsSlider = document.getElementById("animals-slider");
 
 const riddleScreen = document.getElementById("riddle-screen");
+const statusWheelContainer = document.getElementById("status-wheel-container");
 const riddleHeadline = document.getElementById("riddle-headline");
 const couplet1 = document.querySelector(".couplet-1");
 const couplet2 = document.querySelector(".couplet-2");
@@ -667,5 +668,5 @@ function updateStatusWheel(wheelText) {
   nextStatusText.id = "status-text-next";
   nextStatusText.className = "status-text-wrapper next-text";
   nextStatusText.innerHTML = '<span class="status-text"></span>';
-  riddleScreen.appendChild(nextStatusText);
+  statusWheelContainer.appendChild(nextStatusText);
 }

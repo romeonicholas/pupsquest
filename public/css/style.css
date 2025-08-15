@@ -96,23 +96,70 @@ button {
   z-index: 79;
 }
 
+#header-panel-base {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  z-index: 79;
+}
+
+#badge-container {
+  position: absolute;
+  top: 115px;
+  left: 561px;
+  z-index: 79;
+}
+
+#badge-icon {
+  position: absolute;
+  top: 119px;
+  left: 37px;
+}
+
+#badge-text-container {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  top: 149px;
+  left: 218px;
+  height: 150px;
+  width: 225px;
+  transform: rotate(6.05deg);
+}
+
+/* #badge-text-container-copy {
+  position: absolute;
+  top: 139px;
+  left: 44px;
+  height: 150px;
+  width: 394px;
+  transform: rotate(6.05deg);
+  background-color: rgba(0, 0, 0, 0.3);
+} */
+
+#color-animal-text {
+  font-family: "Gotham";
+  font-size: 30px;
+  line-height: 1.15;
+  letter-spacing: 1.01px;
+  color: white;
+}
+
+#scout-text {
+  font-family: "Gotham";
+  font-size: 24px;
+  line-height: 1.6;
+  letter-spacing: 1.03px;
+  color: #1f2d30;
+}
+
 #save-exit-panel {
   position: absolute;
   top: 0px;
   left: 0px;
   z-index: 78;
 }
-
-/* #status-wheel {
-  position: absolute;
-  top: -707px;
-  left: -200px;
-  width: 1495px;
-  height: 1495px;
-  transition: transform 1s ease-in;
-  rotate: -36deg;
-  z-index: 77;
-} */
 
 #status-wheel {
   background-color: #faf8f2;
