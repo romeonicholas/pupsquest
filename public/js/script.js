@@ -93,6 +93,9 @@ function scaleContainer() {
 window.addEventListener("resize", scaleContainer);
 window.addEventListener("load", scaleContainer);
 document.addEventListener("DOMContentLoaded", scaleContainer);
+document.addEventListener("contextmenu", function (e) {
+  e.preventDefault();
+});
 
 async function loadRiddles() {
   try {
@@ -138,8 +141,6 @@ window.addEventListener("load", function () {
   ];
   const randomColorIndex = Math.floor(Math.random() * badgeColorOptions.length);
 
-  badgeBase.src = badgeColorOptions[randomColorIndex].image;
-
   const badgeAnimalOptions = [
     {
       animal: "Hummingbird",
@@ -157,10 +158,18 @@ window.addEventListener("load", function () {
       animal: "Fox",
       image: "images/userCreation/badge_fox.png",
     },
+    {
+      animal: "Prairie Dog",
+      image: "images/userCreation/badge_prairie_dog.png",
+    },
   ];
   const randomAnimalIndex = Math.floor(
     Math.random() * badgeAnimalOptions.length
   );
+
+  badgeBase.src = badgeColorOptions[randomColorIndex].image;
+  badgeIcon.src = badgeAnimalOptions[randomAnimalIndex].image;
+
   colorAnimalText.innerText = `${badgeColorOptions[randomColorIndex].color} ${badgeAnimalOptions[randomAnimalIndex].animal}`;
 });
 
