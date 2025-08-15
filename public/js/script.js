@@ -433,12 +433,27 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-function handleIncorrectGuess(iconIndex) {
-  remainingHints--;
-  incorrectGuesses++;
-
-  const currentY = getTranslateY(selectionLayer);
+function decreaseHints() {
   const currentX = getTranslateX(hintCountForeground);
+  remainingHints--;
+  hintCountForeground.style.transition = "transform 1s ease-in";
+  hintCountForeground.style.transform = `translateX(${currentX - 48}px)`;
+}
+
+function resetHints() {
+  remainingHints = 7;
+  hintCountForeground.style.transition = "transform 1s ease-in";
+  hintCountForeground.style.transform = "translateX(0)";
+}
+
+function showNextHint() {
+  const currentY = getTranslateY(selectionLayer);
+  selectionLayer.style.transition =
+    "transform 1s cubic-bezier(0.54, -0.16, 0.735, 0.045)";
+  selectionLayer.style.transform = `translateY(${currentY + 222}px)`;
+}
+
+function showIconBacking(iconIndex) {
   const icons = [
     selectionIcon1,
     selectionIcon2,
@@ -446,15 +461,22 @@ function handleIncorrectGuess(iconIndex) {
     selectionIcon4,
   ];
   const clickedIcon = icons[iconIndex];
+  const currentY = getTranslateY(clickedIcon);
 
   clickedIcon.style.transition =
     "transform 1s cubic-bezier(0.54, -0.16, 0.735, 0.045)";
   clickedIcon.style.transform = `translateY(${currentY + 234}px)`;
+}
+function handleIncorrectGuess(iconIndex) {
+  incorrectGuesses++;
+  decreaseHints();
 
-  if (remainingHints <= 0) {
-    console.log("No more hints left");
-    //move on to next riddle and update remainingHints to 7
+  showIconBacking(iconIndex);
+
+  if (remainingHints < 0) {
+    resetHints();
   } else if (incorrectGuesses >= 3) {
+    incorrectGuesses = 0;
     setTimeout(() => {
       riddleTextLayerBackground.style.transition = "transform 1s ease-in";
       riddleTextLayerBackground.style.transform = "translateY(0px)";
@@ -465,14 +487,8 @@ function handleIncorrectGuess(iconIndex) {
       riddleAnswer.style.display = "flex";
       answerIncorrectText.style.display = "block";
     }, 1500);
-    //move on to next riddle
   } else {
-    selectionLayer.style.transition =
-      "transform 1s cubic-bezier(0.54, -0.16, 0.735, 0.045)";
-    selectionLayer.style.transform = `translateY(${currentY + 222}px)`;
-
-    hintCountForeground.style.transition = "transform 1s ease-in";
-    hintCountForeground.style.transform = `translateX(${currentX - 45}px)`;
+    showNextHint();
   }
 }
 
