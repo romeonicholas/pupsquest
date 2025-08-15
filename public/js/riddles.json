@@ -40,7 +40,8 @@
           "is_correct": false
         }
       ],
-      "answerDetails": "In Cherokee, I'm called ᎤᏯᏍᎦᎳ(uyasgatli). I'm known as a symbol of strong protection and healthy personal boundaries."
+      "answerDetails": "In Cherokee, I'm called <span class=\"cherokee\">ᎤᏯᏍᎦᎳ</span> (uyasgatli). I'm known as a symbol of strong protection and healthy personal boundaries.",
+      "answerImgPath": "images/riddles/answers/armadillo.png"
     },
     {
       "id": 1,
@@ -82,7 +83,8 @@
           "is_correct": false
         }
       ],
-      "answerDetails": "My name comes from a Native American story about a girl lost in the forest who is kept warm by a blanket of red and yellow flowers."
+      "answerDetails": "My name comes from a Native American story about a girl lost in the forest who is kept warm by a blanket of red and yellow flowers.",
+      "answerImgPath": "images/riddles/answers/indian_blanket.png"
     },
     {
       "id": 2,
@@ -118,7 +120,8 @@
           "is_correct": false
         }
       ],
-      "answerDetails": "A traditional story explains that when the Great Spirit was giving birds their colors, the Painted Bunting was the last in line—so it just got leftovers."
+      "answerDetails": "A traditional story explains that when the Great Spirit was giving birds their colors, the Painted Bunting was the last in line—so it just got leftovers.",
+      "answerImgPath": "images/riddles/answers/bunting.png"
     },
     {
       "id": 3,
@@ -154,7 +157,8 @@
           "is_correct": false
         }
       ],
-      "answerDetails": "In a Choctaw story, the Scissor-tailed Flycatcher was one of only two birds to survive a catastrophic flood, but the churning waters split its tail in half."
+      "answerDetails": "In a Choctaw story, the Scissor-tailed Flycatcher was one of only two birds to survive a catastrophic flood, but the churning waters split its tail in half.",
+      "answerImgPath": "images/riddles/answers/scissor_tail.png"
     },
     {
       "id": 4,
@@ -196,7 +200,8 @@
           "is_correct": false
         }
       ],
-      "answerDetails": "A Muscogee tale explains how the bat was given its teeth by other mammals during a ball game against the birds—so it could hold the ball!"
+      "answerDetails": "A Muscogee tale explains how the bat was given its teeth by other mammals during a ball game against the birds—so it could hold the ball!",
+      "answerImgPath": "images/riddles/answers/bats.png"
     }
   ]
 }

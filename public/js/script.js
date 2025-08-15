@@ -65,6 +65,7 @@ const answerCorrectText = document.getElementById("answer-correct-text");
 const answerIncorrectText = document.getElementById("answer-incorrect-text");
 const answerChoiceText = document.getElementById("answer-choice-text");
 const answerDetailsText = document.getElementById("answer-details");
+const answerImg = document.getElementById("answer-img");
 
 const hintCountForeground = document.getElementById("hint-count-foreground");
 
@@ -302,7 +303,8 @@ function updateRiddleElements(riddle) {
   attachClickHandlers(correctAnswerIndex);
   updateRiddleAnswer(
     shuffledChoices[correctAnswerIndex].text,
-    riddle.answerDetails
+    riddle.answerDetails,
+    riddle.answerImgPath
   );
 
   window.currentShuffledChoices = shuffledChoices;
@@ -382,9 +384,10 @@ function attachClickHandlers(correctAnswerIndex) {
   });
 }
 
-function updateRiddleAnswer(answerChoice, answerDetails) {
-  answerChoiceText.innerText = answerChoice;
-  answerDetailsText.innerText = answerDetails;
+function updateRiddleAnswer(answerChoice, answerDetails, answerImgPath) {
+  answerChoiceText.innerText = `${answerChoice}!`;
+  answerDetailsText.innerHTML = answerDetails;
+  answerImg.src = answerImgPath;
 }
 
 function replaceElementToRemoveListeners(element) {
