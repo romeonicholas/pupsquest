@@ -33,6 +33,10 @@
   src: url(/fonts/NotoSansCherokee-Regular.ttf) format("truetype");
 }
 
+* {
+  user-select: none;
+}
+
 html,
 body {
   margin: 0;
