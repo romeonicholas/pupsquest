@@ -25,6 +25,14 @@
     url("/fonts/Enriqueta SemiBold.ttf") format("truetype");
 }
 
+@font-face {
+  font-family: "Noto Sans Cherokee";
+  font-stretch: 100% to 200%;
+  font-style: normal;
+  font-weight: 400 to 700;
+  src: url(/fonts/NotoSansCherokee-Regular.ttf) format("truetype");
+}
+
 html,
 body {
   margin: 0;
@@ -262,7 +270,7 @@ button {
 
 .selection-icon {
   position: absolute;
-  top: -731px;
+  top: -740px;
   z-index: 75;
 }
 
@@ -373,6 +381,28 @@ button {
   margin-top: 44px;
 }
 
+#answer-frame {
+  position: absolute;
+  left: 148px;
+  top: 1193px;
+  width: 760px;
+  height: 485px;
+  transform: rotate(-2deg);
+  background-color: #faf8f2;
+  border-radius: 5px;
+  box-shadow: 4px 6px 10px rgba(0, 0, 0, 0.25);
+}
+
+#answer-img {
+  position: absolute;
+  left: 175px;
+  top: 1222px;
+  width: 707px;
+  height: 430px;
+  transform: rotate(-2deg);
+  border-radius: 5px;
+}
+
 #how-to-play {
   position: absolute;
   top: 0px;
@@ -391,6 +421,10 @@ button {
   width: 382px;
   height: 106px;
   z-index: 80;
+}
+
+.cherokee {
+  font-family: "Noto Sans Cherokee";
 }
 
 /* .flight-path {
