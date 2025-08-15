@@ -23,6 +23,10 @@ const incorrectAnswerBackings = [
 // const colorsSlider = document.getElementById("colors-slider");
 // const animalsSlider = document.getElementById("animals-slider");
 
+const badgeBase = document.getElementById("badge-base");
+const badgeIcon = document.getElementById("badge-icon");
+const colorAnimalText = document.getElementById("color-animal-text");
+
 const riddleScreen = document.getElementById("riddle-screen");
 const statusWheelContainer = document.getElementById("status-wheel-container");
 const riddleHeadline = document.getElementById("riddle-headline");
@@ -102,6 +106,62 @@ async function loadRiddles() {
 
 document.addEventListener("DOMContentLoaded", function () {
   loadRiddles();
+});
+
+//Temporary random badge for demo
+window.addEventListener("load", function () {
+  const badgeColorOptions = [
+    {
+      color: "Yellow",
+      image: "images/userCreation/badge_yellow.png",
+    },
+    {
+      color: "Blue",
+      image: "images/userCreation/badge_blue.png",
+    },
+    {
+      color: "Green",
+      image: "images/userCreation/badge_green.png",
+    },
+    {
+      color: "Purple",
+      image: "images/userCreation/badge_purple.png",
+    },
+    {
+      color: "Orange",
+      image: "images/userCreation/badge_orange.png",
+    },
+    {
+      color: "Pink",
+      image: "images/userCreation/badge_pink.png",
+    },
+  ];
+  const randomColorIndex = Math.floor(Math.random() * badgeColorOptions.length);
+
+  badgeBase.src = badgeColorOptions[randomColorIndex].image;
+
+  const badgeAnimalOptions = [
+    {
+      animal: "Hummingbird",
+      image: "images/userCreation/badge_hummingbird.png",
+    },
+    {
+      animal: "Porcupine",
+      image: "images/userCreation/badge_porcupine.png",
+    },
+    {
+      animal: "Armadillo",
+      image: "images/userCreation/badge_armadillo.png",
+    },
+    {
+      animal: "Fox",
+      image: "images/userCreation/badge_fox.png",
+    },
+  ];
+  const randomAnimalIndex = Math.floor(
+    Math.random() * badgeAnimalOptions.length
+  );
+  colorAnimalText.innerText = `${badgeColorOptions[randomColorIndex].color} ${badgeAnimalOptions[randomAnimalIndex].animal}`;
 });
 
 // document.addEventListener("DOMContentLoaded", function () {
