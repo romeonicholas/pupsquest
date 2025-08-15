@@ -132,16 +132,6 @@ button {
   transform: rotate(6.05deg);
 }
 
-/* #badge-text-container-copy {
-  position: absolute;
-  top: 139px;
-  left: 44px;
-  height: 150px;
-  width: 394px;
-  transform: rotate(6.05deg);
-  background-color: rgba(0, 0, 0, 0.3);
-} */
-
 #color-animal-text {
   font-family: "Gotham";
   font-size: 30px;
@@ -196,11 +186,6 @@ button {
   align-self: flex-end;
   justify-content: center;
   padding: 22px 82px 22px 82px;
-}
-
-.red-background {
-  background-color: red;
-  border-radius: 60px;
 }
 
 .current-text {
@@ -263,13 +248,14 @@ button {
 
 #riddle-container {
   position: absolute;
-  /* top: 1487px; */
+  width: 100%;
   transition: transform 1s ease-in;
   z-index: 75;
 }
 
 #selection-layer {
-  top: 1268px;
+  top: 1282px;
+  width: 100%;
   position: relative;
   transition: transform 800ms ease-in;
   z-index: 77;
@@ -291,75 +277,52 @@ button {
 #selection-panel {
   position: relative;
   top: -926px;
-  left: -10px;
   z-index: 76;
 }
 
-.selection-icon-clickable {
+#answer-options-container {
+  width: 100%;
   position: absolute;
-  top: -728px;
-  width: 207px;
-  height: 318px;
-  background: transparent;
-  z-index: 90;
+  top: -750px;
 }
 
-.selection-icon-1-clickable {
-  left: 80px;
-}
-
-.selection-icon-2-clickable {
-  left: 317px;
-}
-
-.selection-icon-3-clickable {
-  left: 556px;
-}
-
-.selection-icon-4-clickable {
-  left: 794px;
-}
-
-.selection-icon {
+#option-1 {
+  width: 234px;
   position: absolute;
-  top: -740px;
-  z-index: 75;
+  left: 66px;
 }
 
-.icon-1 {
-  left: 71px;
+#option-2 {
+  width: 234px;
+  position: absolute;
+  left: 304px;
 }
 
-.icon-2 {
-  left: 307px;
+#option-3 {
+  width: 234px;
+  position: absolute;
+  left: 544px;
 }
 
-.icon-3 {
-  left: 543px;
-}
-
-.icon-4 {
+#option-4 {
+  width: 234px;
+  position: absolute;
   left: 782px;
 }
 
-.icon-backing {
+.icon-back {
+  position: absolute;
   z-index: 74;
 }
 
-#selection-text-layer {
+.icon-front {
   position: absolute;
-  top: -503px;
-  left: 65px;
-  width: 87%;
-  height: 300px;
-  display: flex;
-  justify-content: space-between;
-  padding-left: 0px;
-  padding-right: 0px;
+  z-index: 75;
 }
 
-.selection-text {
-  top: -731px;
+.option-text {
+  position: absolute;
+  top: 227px;
   width: 230px;
   height: 144px;
   font-family: "Enriqueta";
@@ -370,10 +333,19 @@ button {
   text-align: center;
 }
 
+.option-click-area {
+  position: absolute;
+  width: 100%;
+  height: 318px;
+  padding: 0px;
+  background: transparent;
+  z-index: 90;
+}
+
 #hint-count-layer {
   position: absolute;
-  top: -336px;
-  left: 440px;
+  top: -350px;
+  left: 434px;
   width: 393px;
   height: 40px;
   background-color: white;
