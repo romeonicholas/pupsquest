@@ -212,6 +212,7 @@ button {
 
 #riddle-container {
   position: absolute;
+  /* top: 1487px; */
   transition: transform 1s ease-in;
   z-index: 75;
 }

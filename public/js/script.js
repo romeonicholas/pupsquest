@@ -29,19 +29,16 @@ const couplet1 = document.querySelector(".couplet-1");
 const couplet2 = document.querySelector(".couplet-2");
 const couplet3 = document.querySelector(".couplet-3");
 
-// Icons
 const selectionIcon1 = document.getElementById("selection-icon-1");
 const selectionIcon2 = document.getElementById("selection-icon-2");
 const selectionIcon3 = document.getElementById("selection-icon-3");
 const selectionIcon4 = document.getElementById("selection-icon-4");
 
-// Icon backings
 const iconBacking1 = document.getElementById("icon-backing-1");
 const iconBacking2 = document.getElementById("icon-backing-2");
 const iconBacking3 = document.getElementById("icon-backing-3");
 const iconBacking4 = document.getElementById("icon-backing-4");
 
-// Clickables
 const selectionIcon1Clickable = document.getElementById(
   "selection-icon-1-clickable"
 );
@@ -55,7 +52,6 @@ const selectionIcon4Clickable = document.getElementById(
   "selection-icon-4-clickable"
 );
 
-// Texts
 const selectionText1 = document.getElementById("selection-text-1");
 const selectionText2 = document.getElementById("selection-text-2");
 const selectionText3 = document.getElementById("selection-text-3");
@@ -86,9 +82,6 @@ function scaleContainer() {
     const scaleY = window.innerHeight / 1920;
     const scale = Math.min(scaleX, scaleY);
     container.style.transform = `scale(${scale})`;
-    console.log(
-      `Scaling to: ${scale}, viewport: ${window.innerWidth}x${window.innerHeight}`
-    );
   }
 }
 
@@ -101,9 +94,6 @@ async function loadRiddles() {
     const response = await fetch("/js/riddles.json");
     const jsonData = await response.json();
     riddlesData = jsonData.data;
-
-    console.log("Riddles loaded:", riddlesData);
-    console.log("Number of riddles:", riddlesData.length);
   } catch (error) {
     console.error("Error loading riddles:", error);
   }
@@ -113,171 +103,161 @@ document.addEventListener("DOMContentLoaded", function () {
   loadRiddles();
 });
 
-document.addEventListener("DOMContentLoaded", function () {
-  document.querySelectorAll(".hide-on-tap").forEach(function (element) {
-    element.addEventListener("click", function () {
-      makeElementsInvisible.call(this);
-    });
-  });
-});
+// document.addEventListener("DOMContentLoaded", function () {
+//   document.querySelectorAll(".hide-on-tap").forEach(function (element) {
+//     element.addEventListener("click", function () {
+//       makeElementsInvisible.call(this);
+//     });
+//   });
+// });
 
-function makeElementsInvisible() {
-  this.style.display = "none";
-}
+// function makeElementsInvisible() {
+//   this.style.display = "none";
+// }
 
-document.addEventListener("DOMContentLoaded", function () {
-  document.querySelectorAll(".hide-on-empty").forEach(function (element) {
-    element.addEventListener("click", function () {
-      if (
-        this.children.length === 0 ||
-        Array.from(this.children).every(
-          (child) => child.offsetWidth === 0 && child.offsetHeight === 0
-        )
-      ) {
-        this.style.display = "none";
-      }
-    });
-  });
-});
+// document.addEventListener("DOMContentLoaded", function () {
+//   document.querySelectorAll(".hide-on-empty").forEach(function (element) {
+//     element.addEventListener("click", function () {
+//       if (
+//         this.children.length === 0 ||
+//         Array.from(this.children).every(
+//           (child) => child.offsetWidth === 0 && child.offsetHeight === 0
+//         )
+//       ) {
+//         this.style.display = "none";
+//       }
+//     });
+//   });
+// });
 
-document.addEventListener("DOMContentLoaded", function () {
-  document.querySelectorAll(".final-page").forEach(function (element) {
-    element.addEventListener("click", function () {
-      document.querySelectorAll(".hide-on-tap").forEach(function (el) {
-        el.style.display = "block";
-      });
-    });
-  });
-});
+// document.addEventListener("DOMContentLoaded", function () {
+//   document.querySelectorAll(".final-page").forEach(function (element) {
+//     element.addEventListener("click", function () {
+//       document.querySelectorAll(".hide-on-tap").forEach(function (el) {
+//         el.style.display = "block";
+//       });
+//     });
+//   });
+// });
 
 let movedColors = false;
 let movedAnimals = false;
 let isAnimating = false;
 
-document.addEventListener("DOMContentLoaded", function () {
-  document.querySelectorAll(".slide-on-tap").forEach(function (element) {
-    element.addEventListener("click", function (event) {
-      if (isAnimating) return;
+// document.addEventListener("DOMContentLoaded", function () {
+//   document.querySelectorAll(".slide-on-tap").forEach(function (element) {
+//     element.addEventListener("click", function (event) {
+//       if (isAnimating) return;
 
-      const screenMidpoint = window.innerWidth / 2;
-      const clickX = event.clientX;
+//       const screenMidpoint = window.innerWidth / 2;
+//       const clickX = event.clientX;
 
-      let slider = element;
-      let header = slider.id === "colors-slider" ? colorsHeader : animalsHeader;
+//       let slider = element;
+//       let header = slider.id === "colors-slider" ? colorsHeader : animalsHeader;
 
-      let sliderTranslate = getTranslateX(slider);
-      let headerTranslate = getTranslateX(header);
+//       let sliderTranslate = getTranslateX(slider);
+//       let headerTranslate = getTranslateX(header);
 
-      let colorSliderMaxTranslate = -500;
-      let colorSliderMinTranslate = 125;
+//       let colorSliderMaxTranslate = -500;
+//       let colorSliderMinTranslate = 125;
 
-      let animalSliderMaxTranslate = -375;
-      let animalSliderMinTranslate = 375;
+//       let animalSliderMaxTranslate = -375;
+//       let animalSliderMinTranslate = 375;
 
-      let maxTranslate =
-        slider.id === "colors-slider"
-          ? colorSliderMaxTranslate
-          : animalSliderMaxTranslate;
-      let minTranslate =
-        slider.id === "colors-slider"
-          ? colorSliderMinTranslate
-          : animalSliderMinTranslate;
+//       let maxTranslate =
+//         slider.id === "colors-slider"
+//           ? colorSliderMaxTranslate
+//           : animalSliderMaxTranslate;
+//       let minTranslate =
+//         slider.id === "colors-slider"
+//           ? colorSliderMinTranslate
+//           : animalSliderMinTranslate;
 
-      let shouldMove = false;
+//       let shouldMove = false;
 
-      if (clickX > screenMidpoint) {
-        if (sliderTranslate > maxTranslate) {
-          isAnimating = true;
-          shouldMove = true;
-          slider.style.transform = `translateX(${sliderTranslate - 125}px)`;
-          header.style.transform = `translateX(${headerTranslate - 510}px)`;
-        }
-      } else {
-        if (sliderTranslate < minTranslate) {
-          isAnimating = true;
-          shouldMove = true;
-          slider.style.transform = `translateX(${sliderTranslate + 125}px)`;
-          header.style.transform = `translateX(${headerTranslate + 510}px)`;
-        }
-      }
+//       if (clickX > screenMidpoint) {
+//         if (sliderTranslate > maxTranslate) {
+//           isAnimating = true;
+//           shouldMove = true;
+//           slider.style.transform = `translateX(${sliderTranslate - 125}px)`;
+//           header.style.transform = `translateX(${headerTranslate - 510}px)`;
+//         }
+//       } else {
+//         if (sliderTranslate < minTranslate) {
+//           isAnimating = true;
+//           shouldMove = true;
+//           slider.style.transform = `translateX(${sliderTranslate + 125}px)`;
+//           header.style.transform = `translateX(${headerTranslate + 510}px)`;
+//         }
+//       }
 
-      if (shouldMove) {
-        setTimeout(() => {
-          isAnimating = false;
-        }, 300);
-      }
-    });
-  });
-});
+//       if (shouldMove) {
+//         setTimeout(() => {
+//           isAnimating = false;
+//         }, 300);
+//       }
+//     });
+//   });
+// });
 
-function getTranslateX(element) {
-  const style = window.getComputedStyle(element);
-  const matrix = style.transform;
+// document.addEventListener("DOMContentLoaded", function () {
+//   if (createUserButton) {
+//     createUserButton.addEventListener("click", function () {
+//       if (createNewUserDiv) {
+//         createNewUserDiv.style.display = "none";
+//       }
+//     });
+//   }
+// });
 
-  if (matrix === "none") return 0;
+// document.addEventListener("DOMContentLoaded", function () {
+//   const unavailableButtons = document.querySelectorAll(
+//     "#rejoin-game-button, #use-phone-button"
+//   );
 
-  const values = matrix.match(/matrix.*\((.+)\)/)[1].split(", ");
-  const translateX = Math.round(parseFloat(values[4]));
-  return translateX;
-}
+//   unavailableButtons.forEach(function (button) {
+//     button.addEventListener("click", function () {
+//       const message = document.createElement("div");
+//       message.textContent = "Unavailable in this hardware-validation build";
+//       message.style.position = "fixed";
+//       message.style.top = "50%";
+//       message.style.left = "50%";
+//       message.style.transform = "translate(-50%, -50%)";
+//       message.style.backgroundColor = "rgba(0, 0, 0, 0.8)";
+//       message.style.color = "white";
+//       message.style.padding = "100px";
+//       message.style.borderRadius = "50px";
+//       message.style.fontSize = "2.5em";
+//       message.style.zIndex = "1000";
+//       document.body.appendChild(message);
 
-document.addEventListener("DOMContentLoaded", function () {
-  if (createUserButton) {
-    createUserButton.addEventListener("click", function () {
-      if (createNewUserDiv) {
-        createNewUserDiv.style.display = "none";
-      }
-    });
-  }
-});
+//       setTimeout(() => {
+//         document.body.removeChild(message);
+//       }, 2000);
+//     });
+//   });
+// });
 
-document.addEventListener("DOMContentLoaded", function () {
-  const unavailableButtons = document.querySelectorAll(
-    "#rejoin-game-button, #use-phone-button"
-  );
+// document.addEventListener("DOMContentLoaded", function () {
+//   if (startGameButton) {
+//     startGameButton.addEventListener("click", function () {
+//       startScreenDiv.style.display = "none";
+//     });
+//   }
+// });
 
-  unavailableButtons.forEach(function (button) {
-    button.addEventListener("click", function () {
-      const message = document.createElement("div");
-      message.textContent = "Unavailable in this hardware-validation build";
-      message.style.position = "fixed";
-      message.style.top = "50%";
-      message.style.left = "50%";
-      message.style.transform = "translate(-50%, -50%)";
-      message.style.backgroundColor = "rgba(0, 0, 0, 0.8)";
-      message.style.color = "white";
-      message.style.padding = "100px";
-      message.style.borderRadius = "50px";
-      message.style.fontSize = "2.5em";
-      message.style.zIndex = "1000";
-      document.body.appendChild(message);
-
-      setTimeout(() => {
-        document.body.removeChild(message);
-      }, 2000);
-    });
-  });
-});
-
-document.addEventListener("DOMContentLoaded", function () {
-  if (startGameButton) {
-    startGameButton.addEventListener("click", function () {
-      startScreenDiv.style.display = "none";
-    });
-  }
-});
-
-document.addEventListener("DOMContentLoaded", function () {
-  if (backToStartButton) {
-    backToStartButton.addEventListener("click", function () {
-      if (startScreenDiv) {
-        startScreenDiv.style.display = "block";
-      }
-    });
-  }
-});
+// document.addEventListener("DOMContentLoaded", function () {
+//   if (backToStartButton) {
+//     backToStartButton.addEventListener("click", function () {
+//       if (startScreenDiv) {
+//         startScreenDiv.style.display = "block";
+//       }
+//     });
+//   }
+// });
 
 function closeRiddleContainerFromBottom() {
+  selectionLayer.style.transform = "translateY(0)";
   riddleContainer.style.transform = "translateY(-1294px)";
   riddleTextLayerBackground.style.transform = "translateY(-1294px)";
 }
@@ -302,13 +282,10 @@ function updateRiddleElements(riddle) {
   updateSelectionTexts(shuffledChoices);
   updateIconBackings(correctAnswerIndex);
   attachClickHandlers(correctAnswerIndex);
-  updateRiddleAnswer(
-    shuffledChoices[correctAnswerIndex].text,
-    riddle.answerDetails,
-    riddle.answerImgPath
-  );
 
-  window.currentShuffledChoices = shuffledChoices;
+  currentShuffledChoices = shuffledChoices;
+  currentCorrectAnswerIndex = correctAnswerIndex;
+  currentRiddle = riddle;
 }
 
 function updateRiddleContent(riddle) {
@@ -368,13 +345,18 @@ function updateIconBackings(correctAnswerIndex) {
 
 function attachClickHandlers(correctAnswerIndex) {
   const clickables = [
-    selectionIcon1Clickable,
-    selectionIcon2Clickable,
-    selectionIcon3Clickable,
-    selectionIcon4Clickable,
+    document.getElementById("selection-icon-1-clickable"),
+    document.getElementById("selection-icon-2-clickable"),
+    document.getElementById("selection-icon-3-clickable"),
+    document.getElementById("selection-icon-4-clickable"),
   ];
 
   clickables.forEach((clickable, index) => {
+    if (!clickable) {
+      console.warn(`Clickable element at index ${index} not found`);
+      return;
+    }
+
     const newClickable = replaceElementToRemoveListeners(clickable);
 
     if (index === correctAnswerIndex) {
@@ -389,22 +371,57 @@ function updateRiddleAnswer(answerChoice, answerDetails, answerImgPath) {
   answerChoiceText.innerText = `${answerChoice}!`;
   answerDetailsText.innerHTML = answerDetails;
   answerImg.src = answerImgPath;
+  answerCorrectText.style.display = "none";
+  answerIncorrectText.style.display = "none";
 }
 
 function replaceElementToRemoveListeners(element) {
+  if (!element || !element.parentNode) {
+    console.error("Element or parent node is null:", element);
+    return null;
+  }
+
   const newElement = element.cloneNode(true);
   element.parentNode.replaceChild(newElement, element);
   return newElement;
 }
 
+function resetIconPositions() {
+  const icons = [
+    selectionIcon1,
+    selectionIcon2,
+    selectionIcon3,
+    selectionIcon4,
+  ];
+  icons.forEach((icon) => {
+    icon.style.transition = "none";
+    icon.style.transform = "translateY(0)";
+  });
+}
+
+function resetSelectionLayerPosition() {
+  selectionLayer.style.transition = "none";
+  selectionLayer.style.transform = "translateY(0)";
+}
+
 function showNewRiddle() {
+  //reset all icon position, selection layer position
+  resetIconPositions();
+  // resetSelectionLayerPosition();
+
   incrementRiddleIndex();
-  updateRiddleElements(riddlesData[currentRiddleIndex]);
   closeRiddleContainerFromBottom();
+  updateRiddleElements(riddlesData[currentRiddleIndex]);
 
   setTimeout(() => {
+    updateRiddleAnswer(
+      currentShuffledChoices[currentCorrectAnswerIndex].text,
+      currentRiddle.answerDetails,
+      currentRiddle.answerImgPath
+    );
     updateStatusWheel(`RIDDLE ${currentRiddleIndex + 1}`);
   }, 1000);
+
   setTimeout(() => {
     showFirstCouplet();
   }, 2000);
@@ -415,8 +432,6 @@ document.addEventListener("DOMContentLoaded", function () {
     showNewRiddle();
   });
 });
-
-let guess = 1;
 
 function handleIncorrectGuess(iconIndex) {
   remainingHints--;
@@ -462,6 +477,8 @@ function handleIncorrectGuess(iconIndex) {
 }
 
 function handleCorrectGuess(iconIndex) {
+  incorrectGuesses = 0;
+
   const currentY = getTranslateY(selectionLayer);
   const icons = [
     selectionIcon1,
@@ -509,92 +526,103 @@ function handleCorrectGuess(iconIndex) {
 //   });
 // });
 
-document.addEventListener("DOMContentLoaded", function () {
-  selectionIcon2Clickable.addEventListener("click", function () {
-    console.log("Selection icon 2 clicked");
+// document.addEventListener("DOMContentLoaded", function () {
+//   selectionIcon2Clickable.addEventListener("click", function () {
+//     console.log("Selection icon 2 clicked");
 
-    if (guess === 3) {
-      const currentY = getTranslateY(selectionLayer);
+//     if (guess === 3) {
+//       const currentY = getTranslateY(selectionLayer);
 
-      selectionIcon2.style.transition =
-        "transform 1s cubic-bezier(0.54, -0.16, 0.735, 0.045)";
-      selectionIcon2.style.transform = `translateY(${currentY + 234}px)`;
+//       selectionIcon2.style.transition =
+//         "transform 1s cubic-bezier(0.54, -0.16, 0.735, 0.045)";
+//       selectionIcon2.style.transform = `translateY(${currentY + 234}px)`;
 
-      setTimeout(() => {
-        riddleTextLayerBackground.style.transition = "transform 1s ease-in";
-        riddleTextLayerBackground.style.transform = "translateY(0px)";
+//       setTimeout(() => {
+//         riddleTextLayerBackground.style.transition = "transform 1s ease-in";
+//         riddleTextLayerBackground.style.transform = "translateY(0px)";
 
-        selectionLayer.style.transition = "transform 1s ease-in";
-        selectionLayer.style.transform = "translateY(1298px)";
+//         selectionLayer.style.transition = "transform 1s ease-in";
+//         selectionLayer.style.transform = "translateY(1298px)";
 
-        riddleAnswer.style.display = "block";
-      }, 1500);
-      guess = 1;
+//         riddleAnswer.style.display = "block";
+//       }, 1500);
+//       guess = 1;
 
-      // Create a temporary overlay button on top of the original
-      const tempButton = document.createElement("button");
-      tempButton.id = "temp-next-riddle-button";
-      tempButton.style.position = "absolute";
-      tempButton.style.left = "351px";
-      tempButton.style.top = "1758px";
-      tempButton.style.width = "382px";
-      tempButton.style.height = "106px";
-      tempButton.style.background = "transparent";
-      tempButton.style.border = "none";
-      tempButton.style.zIndex = "85";
-      tempButton.style.cursor = "pointer";
+//       // Create a temporary overlay button on top of the original
+//       const tempButton = document.createElement("button");
+//       tempButton.id = "temp-next-riddle-button";
+//       tempButton.style.position = "absolute";
+//       tempButton.style.left = "351px";
+//       tempButton.style.top = "1758px";
+//       tempButton.style.width = "382px";
+//       tempButton.style.height = "106px";
+//       tempButton.style.background = "transparent";
+//       tempButton.style.border = "none";
+//       tempButton.style.zIndex = "85";
+//       tempButton.style.cursor = "pointer";
 
-      // Add the temporary button to the same parent as the original
-      nextRiddleButton.parentNode.appendChild(tempButton);
+//       // Add the temporary button to the same parent as the original
+//       nextRiddleButton.parentNode.appendChild(tempButton);
 
-      // Reset everything to start over when temp button is clicked
-      tempButton.addEventListener("click", function () {
-        console.log("Clicked on after riddle solution");
-        document.querySelectorAll(".show-again").forEach(function (element) {
-          element.style.display = "block";
-        });
+//       // Reset everything to start over when temp button is clicked
+//       tempButton.addEventListener("click", function () {
+//         console.log("Clicked on after riddle solution");
+//         document.querySelectorAll(".show-again").forEach(function (element) {
+//           element.style.display = "block";
+//         });
 
-        animalsHeader.style.transform = "translateX(0px)";
-        colorsHeader.style.transform = "translateX(0px)";
-        colorsSlider.style.transform = "translateX(0px)";
-        animalsSlider.style.transform = "translateX(0px)";
+//         animalsHeader.style.transform = "translateX(0px)";
+//         colorsHeader.style.transform = "translateX(0px)";
+//         colorsSlider.style.transform = "translateX(0px)";
+//         animalsSlider.style.transform = "translateX(0px)";
 
-        riddleContainer.style.transform = "translateY(0px)";
-        riddleTextLayerBackground.style.transform = "translateY(0px)";
-        selectionLayer.style.transform = "translateY(0px)";
-        riddleAnswer.style.display = "none";
-        selectionIcon2.style.transform = "translateY(0px)";
-        selectionIcon3.style.transform = "translateY(0px)";
-        selectionIcon4.style.transform = "translateY(0px)";
-        hintCountForeground.style.transform = "translateX(0px)";
+//         riddleContainer.style.transform = "translateY(0px)";
+//         riddleTextLayerBackground.style.transform = "translateY(0px)";
+//         selectionLayer.style.transform = "translateY(0px)";
+//         riddleAnswer.style.display = "none";
+//         selectionIcon2.style.transform = "translateY(0px)";
+//         selectionIcon3.style.transform = "translateY(0px)";
+//         selectionIcon4.style.transform = "translateY(0px)";
+//         hintCountForeground.style.transform = "translateX(0px)";
 
-        const message = document.createElement("div");
-        message.textContent =
-          "Continuing unavailable in this hardware-validation build, returning to start screen";
-        message.style.position = "fixed";
-        message.style.top = "50%";
-        message.style.left = "50%";
-        message.style.transform = "translate(-50%, -50%)";
-        message.style.backgroundColor = "rgba(0, 0, 0, 0.8)";
-        message.style.color = "white";
-        message.style.padding = "100px";
-        message.style.borderRadius = "50px";
-        message.style.fontSize = "2.5em";
-        message.style.zIndex = "1000";
-        document.body.appendChild(message);
+//         const message = document.createElement("div");
+//         message.textContent =
+//           "Continuing unavailable in this hardware-validation build, returning to start screen";
+//         message.style.position = "fixed";
+//         message.style.top = "50%";
+//         message.style.left = "50%";
+//         message.style.transform = "translate(-50%, -50%)";
+//         message.style.backgroundColor = "rgba(0, 0, 0, 0.8)";
+//         message.style.color = "white";
+//         message.style.padding = "100px";
+//         message.style.borderRadius = "50px";
+//         message.style.fontSize = "2.5em";
+//         message.style.zIndex = "1000";
+//         document.body.appendChild(message);
 
-        setTimeout(() => {
-          document.body.removeChild(message);
-        }, 2000);
+//         setTimeout(() => {
+//           document.body.removeChild(message);
+//         }, 2000);
 
-        // Remove the temporary button to restore original functionality
-        tempButton.remove();
-      });
-    }
-  });
-});
+//         // Remove the temporary button to restore original functionality
+//         tempButton.remove();
+//       });
+//     }
+//   });
+// });
 
 //when save-exit-panel is tapped, lower
+
+function getTranslateX(element) {
+  const style = window.getComputedStyle(element);
+  const matrix = style.transform;
+
+  if (matrix === "none") return 0;
+
+  const values = matrix.match(/matrix.*\((.+)\)/)[1].split(", ");
+  const translateX = Math.round(parseFloat(values[4]));
+  return translateX;
+}
 
 function getTranslateY(element) {
   const style = window.getComputedStyle(element);
