@@ -82,7 +82,7 @@
         }
       ],
       "answerDetails": "My name comes from a Native American story about a girl lost in the forest who is kept warm by a blanket of red and yellow flowers.",
-      "answerImgPath": "images/riddles/answers/indian_blanket.png"
+      "answerImgPath": "images/riddles/answers/answer_image_temp_indian_blanket.png"
     },
     {
       "id": 2,
@@ -118,7 +118,7 @@
         }
       ],
       "answerDetails": "A traditional story explains that when the Great Spirit was giving birds their colors, the Painted Bunting was the last in line—so it just got leftovers.",
-      "answerImgPath": "images/riddles/answers/bunting.png"
+      "answerImgPath": "images/riddles/answers/answer_image_temp_painted_bunting.png"
     },
     {
       "id": 3,
@@ -154,7 +154,7 @@
         }
       ],
       "answerDetails": "In a Choctaw story, the Scissor-tailed Flycatcher was one of only two birds to survive a catastrophic flood, but the churning waters split its tail in half.",
-      "answerImgPath": "images/riddles/answers/scissor_tail.png"
+      "answerImgPath": "images/riddles/answers/answer_image_temp_swallowtail.png"
     },
     {
       "id": 4,
