@@ -384,10 +384,10 @@ button {
 
 #answer-frame {
   position: absolute;
-  left: 148px;
+  left: 145px;
   top: 1193px;
-  width: 760px;
-  height: 485px;
+  width: 770px;
+  height: 500px;
   transform: rotate(-2deg);
   background-color: #faf8f2;
   border-radius: 5px;
@@ -396,10 +396,10 @@ button {
 
 #answer-img {
   position: absolute;
-  left: 175px;
+  left: 171px;
   top: 1222px;
-  width: 707px;
-  height: 430px;
+  width: 720px;
+  height: 450px;
   transform: rotate(-2deg);
   border-radius: 5px;
 }
