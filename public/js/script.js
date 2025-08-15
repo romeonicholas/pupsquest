@@ -399,14 +399,9 @@ function resetIconPositions() {
   });
 }
 
-function resetSelectionLayerPosition() {
-  selectionLayer.style.transition = "none";
-  selectionLayer.style.transform = "translateY(0)";
-}
-
 function showNewRiddle() {
+  resetHints(); // temporary, only for this demo deliverable
   resetIconPositions();
-  // resetSelectionLayerPosition();
 
   incrementRiddleIndex();
   closeRiddleContainerFromBottom();
