@@ -401,14 +401,18 @@ function updateSelectionTexts(shuffledChoices) {
 }
 
 function updateIconBackings(correctAnswerIndex) {
-  const backings = [iconBacking1, iconBacking2, iconBacking3, iconBacking4];
+  const iconBackings = [iconBacking1, iconBacking2, iconBacking3, iconBacking4];
+
+  const shuffledIncorrectBackings = [...incorrectAnswerBackings].sort(
+    () => Math.random() - 0.5
+  );
   let incorrectIconIndex = 0;
 
-  backings.forEach((backing, index) => {
+  iconBackings.forEach((iconBacking, index) => {
     if (index === correctAnswerIndex) {
-      backing.src = correctAnswerBacking;
+      iconBacking.src = correctAnswerBacking;
     } else {
-      backing.src = incorrectAnswerBackings[incorrectIconIndex++];
+      iconBacking.src = shuffledIncorrectBackings[incorrectIconIndex++];
     }
   });
 }
