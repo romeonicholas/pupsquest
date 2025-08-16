@@ -239,6 +239,48 @@
       ],
       "answerDetails": "A kangaroo rat’s strong hind legs allow it to jump nine feet in one bound to escape fast and sneaky animals. Its long tail acts like a rudder for steering.",
       "answerImgPath": "images/riddles/answers/answer_image_temp_kangaroo_rat.png"
+    },
+    {
+      "id": 6,
+      "headline": "Which one am I?",
+      "couplets": [
+        [
+          "Wait until dark to see me alight:",
+          "of these four, only I love the night."
+        ],
+        [
+          "The open field is where I’m at ease.",
+          "The other three seem to like the trees."
+        ],
+        [
+          "I’m all out of hints, except for this one:",
+          "Coyote’s quite near me—should I run?"
+        ]
+      ],
+      "answerChoices": [
+        {
+          "text": "Jackrabbit",
+          "image": "images/riddles/icons/jackrabbit.png",
+          "is_correct": true
+        },
+        {
+          "text": "Bobcat",
+          "image": "images/riddles/icons/bobcat.png",
+          "is_correct": false
+        },
+        {
+          "text": "Black Bear",
+          "image": "images/riddles/icons/black_bear.png",
+          "is_correct": false
+        },
+        {
+          "text": "Pileated Woodpecker",
+          "image": "images/riddles/icons/pileated_woodpecker.png",
+          "is_correct": false
+        }
+      ],
+      "answerDetails": "The English name \"Jackrabbit\" is shortened from \"Jackass Rabbit\"—so named because its ears look like those of a donkey!",
+      "answerImgPath": "images/riddles/answers/answer_image_temp_jackrabbit.png"
     }
   ]
 }
