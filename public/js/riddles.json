@@ -325,6 +325,48 @@
       "answerImgPath": "images/riddles/answers/answer_image_temp_bullfrog.png"
     },
     {
+      "id": 8,
+      "headline": "How many legs do I have?",
+      "couplets": [
+        [
+          "I’m a “Giant,” or so they say,",
+          "yet I’m tricky to see, especially by day."
+        ],
+        [
+          "I may be “Walking,” but only at dark,",
+          "By day I’m asleep, hidden on bark."
+        ],
+        [
+          "I’m on a tree, but who knows where?",
+          "Look by the mink, not by the bear."
+        ]
+      ],
+      "answerChoices": [
+        {
+          "text": "Four",
+          "image": "images/riddles/icons/4.png",
+          "is_correct": true
+        },
+        {
+          "text": "Six",
+          "image": "images/riddles/icons/6.png",
+          "is_correct": false
+        },
+        {
+          "text": "Eight",
+          "image": "images/riddles/icons/8.png",
+          "is_correct": false
+        },
+        {
+          "text": "Ten",
+          "image": "images/riddles/icons/10.png",
+          "is_correct": false
+        }
+      ],
+      "answerDetails": "They're called Giant Walking Sticks for a reason: these are the longest insects in North America, growing up to 7 inches in length.",
+      "answerImgPath": "images/riddles/answers/answer_image_temp_giant_walking_stick.png"
+    },
+    {
       "id": 9,
       "headline": "Which one am I?",
       "couplets": [
@@ -367,48 +409,5 @@
       "answerImgPath": "images/riddles/answers/answer_image_temp_beaver.png"
     }
   ],
-  "unimplemented": [
-    {
-      "id": 8,
-      "headline": "Which tree am I on?",
-      "couplets": [
-        [
-          "I’m a “Giant,” or so they say,",
-          "yet I’m tricky to see, especially by day."
-        ],
-        [
-          "I may be “Walking,” but only at dark,",
-          "By day I’m asleep, hidden on bark."
-        ],
-        [
-          "I’m on a tree, but who knows where?",
-          "Look by the mink, not by the bear."
-        ]
-      ],
-      "answerChoices": [
-        {
-          "text": "White Ash",
-          "image": "images/riddles/icons/white_ash.png",
-          "is_correct": false
-        },
-        {
-          "text": "Lace Bark Elm",
-          "image": "images/riddles/icons/lace_bark_elm.png",
-          "is_correct": false
-        },
-        {
-          "text": "Blackjack Oak",
-          "image": "images/riddles/icons/blackjack_oak.png",
-          "is_correct": false
-        },
-        {
-          "text": "Caddo Maple",
-          "image": "images/riddles/icons/caddo_maple.png",
-          "is_correct": false
-        }
-      ],
-      "answerDetails": "They're called \"giant\" for a reason: these are the longest insects in North America, growing up to 7 inches in length.",
-      "answerImgPath": "images/riddles/answers/answer_image_temp_giant_walking_stick.png"
-    }
-  ]
+  "unimplemented": []
 }
