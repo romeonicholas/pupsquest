@@ -281,6 +281,134 @@
       ],
       "answerDetails": "The English name \"Jackrabbit\" is shortened from \"Jackass Rabbit\"—so named because its ears look like those of a donkey!",
       "answerImgPath": "images/riddles/answers/answer_image_temp_jackrabbit.png"
+    },
+    {
+      "id": 7,
+      "headline": "Which one am I?",
+      "couplets": [
+        [
+          "We’re so loud you can’t ignore us,",
+          "and in a group we’re called a “chorus.”"
+        ],
+        [
+          "After dark is when you’ll hear my song,",
+          "so look at night, you can’t go wrong."
+        ],
+        [
+          "I’m out in the open, just for a minute,",
+          "go see the waterfall, I’m nearly in it!"
+        ]
+      ],
+      "answerChoices": [
+        {
+          "text": "Bullfrog",
+          "image": "images/riddles/icons/bullfrog.png",
+          "is_correct": true
+        },
+        {
+          "text": "\"Mountain Boomer\"",
+          "image": "images/riddles/icons/collared_lizard.png",
+          "is_correct": false
+        },
+        {
+          "text": "Bison",
+          "image": "images/riddles/icons/bison.png",
+          "is_correct": false
+        },
+        {
+          "text": "Goldfinch",
+          "image": "images/riddles/icons/goldfinch.png",
+          "is_correct": false
+        }
+      ],
+      "answerDetails": "The Bullfrog is the largest frog in North America and can weigh as much as a football. They're loud, too, and can be heard up to a half-mile away.",
+      "answerImgPath": "images/riddles/answers/answer_image_temp_bullfrog.png"
+    },
+    {
+      "id": 9,
+      "headline": "Which one am I?",
+      "couplets": [
+        [
+          "I don’t eat meat like these other guys,",
+          "but I have big teeth, do you know why?"
+        ],
+        [
+          "I’m not in the woods but I am by a tree,",
+          "Is it confusing? Come find me and see."
+        ],
+        [
+          "I’m not in the prairie or the desert heat.",
+          "I’m over by the cattails I so love to eat."
+        ]
+      ],
+      "answerChoices": [
+        {
+          "text": "Beaver",
+          "image": "images/riddles/icons/beaver.png",
+          "is_correct": true
+        },
+        {
+          "text": "Black Bear",
+          "image": "images/riddles/icons/black_bear.png",
+          "is_correct": false
+        },
+        {
+          "text": "Bobcat",
+          "image": "images/riddles/icons/bobcat.png",
+          "is_correct": false
+        },
+        {
+          "text": "Boar",
+          "image": "images/riddles/icons/boar.png",
+          "is_correct": false
+        }
+      ],
+      "answerDetails": "In addition to making dams, beavers build their own lodges. To keep other animals out, the only entrances are underwater tunnels.",
+      "answerImgPath": "images/riddles/answers/answer_image_temp_beaver.png"
+    }
+  ],
+  "unimplemented": [
+    {
+      "id": 8,
+      "headline": "Which tree am I on?",
+      "couplets": [
+        [
+          "I’m a “Giant,” or so they say,",
+          "yet I’m tricky to see, especially by day."
+        ],
+        [
+          "I may be “Walking,” but only at dark,",
+          "By day I’m asleep, hidden on bark."
+        ],
+        [
+          "I’m on a tree, but who knows where?",
+          "Look by the mink, not by the bear."
+        ]
+      ],
+      "answerChoices": [
+        {
+          "text": "White Ash",
+          "image": "images/riddles/icons/white_ash.png",
+          "is_correct": false
+        },
+        {
+          "text": "Lace Bark Elm",
+          "image": "images/riddles/icons/lace_bark_elm.png",
+          "is_correct": false
+        },
+        {
+          "text": "Blackjack Oak",
+          "image": "images/riddles/icons/blackjack_oak.png",
+          "is_correct": false
+        },
+        {
+          "text": "Caddo Maple",
+          "image": "images/riddles/icons/caddo_maple.png",
+          "is_correct": false
+        }
+      ],
+      "answerDetails": "They're called \"giant\" for a reason: these are the longest insects in North America, growing up to 7 inches in length.",
+      "answerImgPath": "images/riddles/answers/answer_image_temp_giant_walking_stick.png"
     }
   ]
 }
