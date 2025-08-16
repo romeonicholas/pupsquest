@@ -451,6 +451,15 @@ button {
   font-family: "Noto Sans Cherokee";
 }
 
+#fox-cub {
+  position: absolute;
+  top: 36px;
+  left: 0px;
+  transform: scale(0.68);
+  z-index: 76;
+  pointer-events: none;
+}
+
 /* .flight-path {
   position: absolute;
   top: 200px;
