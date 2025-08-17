@@ -244,6 +244,7 @@ function incrementRiddleIndex() {
 
 function updateRiddleElements(riddle) {
   updateRiddleContent(riddle);
+  console.log(riddle);
   const shuffledChoices = shuffleAnswerChoices(riddle.answerChoices);
   const correctAnswerIndex = findCorrectAnswerIndex(shuffledChoices);
 

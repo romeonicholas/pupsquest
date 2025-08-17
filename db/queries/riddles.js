@@ -8,7 +8,7 @@ export function getAllRiddlesWithChoices() {
       r.id, r.riddleKey, r.headline, r.body, r.answerDetails, r.answerImgPath,
       rac.slotIndex,
       ac.id   AS answerChoiceId,
-      ac.name AS answerName,
+      ac.display AS answerName,
       ac.imgPath AS answerChoiceImgPath
     FROM riddles r
     LEFT JOIN riddleAnswerChoices rac ON rac.riddleId = r.id

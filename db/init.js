@@ -27,10 +27,12 @@ export function openAndMigrate(path = "./database.db") {
       );
 
       CREATE TABLE IF NOT EXISTS answerChoices (
-        id      INTEGER PRIMARY KEY AUTOINCREMENT,
-        name    TEXT NOT NULL,
-        imgPath TEXT NOT NULL
+        id       INTEGER PRIMARY KEY AUTOINCREMENT,
+        key      TEXT    NOT NULL UNIQUE,
+        display  TEXT    NOT NULL,
+        imgPath  TEXT    NOT NULL
       );
+      CREATE INDEX IF NOT EXISTS idx_answerChoices_display ON answerChoices(display);
 
       CREATE TABLE IF NOT EXISTS riddles (
         id                   INTEGER PRIMARY KEY AUTOINCREMENT,

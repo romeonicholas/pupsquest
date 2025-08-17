@@ -1,6 +1,6 @@
 export function seedRiddles(db) {
-  const findChoiceByName = db.prepare(
-    `SELECT id FROM answerChoices WHERE name = ? LIMIT 1`
+  const findChoiceId = db.prepare(
+    `SELECT id FROM answerChoices WHERE key = ? LIMIT 1`
   );
   const findRiddleByKey = db.prepare(
     `SELECT id FROM riddles WHERE riddleKey = ? LIMIT 1`
@@ -12,12 +12,13 @@ export function seedRiddles(db) {
   const updateRiddle = db.prepare(`
     UPDATE riddles SET headline = ?, body = ?, answerDetails = ?, answerImgPath = ? WHERE id = ?
   `);
-  const clearLinks = db.prepare(`
-  DELETE FROM riddleAnswerChoices WHERE riddleId = ?
-  `);
+
+  const clearLinks = db.prepare(
+    `DELETE FROM riddleAnswerChoices WHERE riddleId = ?`
+  );
   const insertLink = db.prepare(`
-  INSERT INTO riddleAnswerChoices (riddleId, answerChoiceId, slotIndex)
-  VALUES (?, ?, ?)
+    INSERT INTO riddleAnswerChoices (riddleId, answerChoiceId, slotIndex)
+    VALUES (?, ?, ?)
   `);
 
   const rows = [
@@ -36,11 +37,11 @@ export function seedRiddles(db) {
         "My name comes from a Native American story about a girl lost in the forest who is kept warm by a blanket of red and yellow flowers.",
       answerImgPath:
         "images/riddles/answers/answer_image_temp_indian_blanket.png",
-      answerChoiceNames: [
-        "Indian Blanket",
-        "False Dandelion",
-        "Coreopsis",
-        "Purple Coneflower",
+      answerChoiceKeys: [
+        "indian_blanket",
+        "false_dandelion",
+        "coreopsis",
+        "purple_coneflower",
       ],
     },
     {
@@ -57,7 +58,7 @@ export function seedRiddles(db) {
       answerDetails:
         'In Cherokee, I’m called <span class="cherokee">ᎤᏯᏍᎦᎳ</span> (uyasgatli). I’m known as a symbol of strong protection and healthy personal boundaries.',
       answerImgPath: "images/riddles/answers/answer_image_temp_armadillo.png",
-      answerChoiceNames: ["Armadillo", "Porcupine", "Swift Fox", "Prairie Dog"],
+      answerChoiceKeys: ["armadillo", "porcupine", "swift_fox", "prairie_dog"],
     },
     {
       riddleKey: "Painted Bunting Head",
@@ -74,11 +75,11 @@ export function seedRiddles(db) {
         "A traditional story explains that when the Great Spirit was giving birds their colors, the Painted Bunting was the last in line—so it just got leftovers.",
       answerImgPath:
         "images/riddles/answers/answer_image_temp_painted_bunting.png",
-      answerChoiceNames: [
-        "Bunting Blue",
-        "Bunting Red",
-        "Bunting Green",
-        "Bunting Yellow",
+      answerChoiceKeys: [
+        "bunting_blue",
+        "bunting_red",
+        "bunting_green",
+        "bunting_yellow",
       ],
     },
     {
@@ -95,11 +96,11 @@ export function seedRiddles(db) {
       answerDetails:
         "Scissor-tailed flycatchers have special meanings for many tribes, and their feathers are often worn in the regalia of male Comanche dancers.",
       answerImgPath: "images/riddles/answers/answer_image_temp_swallowtail.png",
-      answerChoiceNames: [
-        "Scissor-tailed Flycatcher",
-        "Red-tailed Hawk",
-        "Hummingbird",
-        "Prairie Falcon",
+      answerChoiceKeys: [
+        "scissor_tailed_flycatcher",
+        "red_tailed_hawk",
+        "hummingbird",
+        "prairie_falcon",
       ],
     },
     {
@@ -117,11 +118,11 @@ export function seedRiddles(db) {
         "People may have named this lizard “Mountain Boomer” by mistake—the noises they heard echoing in the hills were more likely from Barking Frogs.",
       answerImgPath:
         "images/riddles/answers/answer_image_temp_collared_lizard.png",
-      answerChoiceNames: [
-        "Collared Lizard Blue",
-        "Collared Lizard Red",
-        "Collared Lizard Orange",
-        "Collared Lizard Green",
+      answerChoiceKeys: [
+        "collared_lizard_blue",
+        "collared_lizard_red",
+        "collared_lizard_orange",
+        "collared_lizard_green",
       ],
     },
     {
@@ -139,11 +140,11 @@ export function seedRiddles(db) {
         "A kangaroo rat’s strong hind legs allow it to jump nine feet in one bound to escape fast and sneaky animals. Its long tail acts like a rudder for steering.",
       answerImgPath:
         "images/riddles/answers/answer_image_temp_kangaroo_rat.png",
-      answerChoiceNames: [
-        "Kangaroo Rat",
-        "Collared Lizard",
-        "Flying Squirrel",
-        "Goldfinch",
+      answerChoiceKeys: [
+        "kangaroo_rat",
+        "collared_lizard",
+        "flying_squirrel",
+        "goldfinch",
       ],
     },
     {
@@ -160,11 +161,11 @@ export function seedRiddles(db) {
       answerDetails:
         'The English name "Jackrabbit" is shortened from "Jackass Rabbit"—so named because its ears look like those of a donkey!',
       answerImgPath: "images/riddles/answers/answer_image_temp_jackrabbit.png",
-      answerChoiceNames: [
-        "Jackrabbit",
-        "Bobcat",
-        "Black Bear",
-        "Pileated Woodpecker",
+      answerChoiceKeys: [
+        "jackrabbit",
+        "bobcat",
+        "black_bear",
+        "pileated_woodpecker",
       ],
     },
     {
@@ -181,12 +182,7 @@ export function seedRiddles(db) {
       answerDetails:
         "The Bullfrog is the largest frog in North America and can weigh as much as a football. They're loud, too, and can be heard up to a half-mile away.",
       answerImgPath: "images/riddles/answers/answer_image_temp_bullfrog.png",
-      answerChoiceNames: [
-        "Bullfrog",
-        '"Mountain Boomer"',
-        "Bison",
-        "Goldfinch",
-      ],
+      answerChoiceKeys: ["bullfrog", "mountain_boomer", "bison", "goldfinch"],
     },
     {
       riddleKey: "Four",
@@ -203,7 +199,7 @@ export function seedRiddles(db) {
         "They're called Giant Walking Sticks for a reason: these are the longest insects in North America, growing up to 7 inches in length.",
       answerImgPath:
         "images/riddles/answers/answer_image_temp_giant_walking_stick.png",
-      answerChoiceNames: ["Four", "Six", "Eight", "Ten"],
+      answerChoiceKeys: ["six", "four", "eight", "ten"],
     },
     {
       riddleKey: "Beaver",
@@ -219,7 +215,7 @@ export function seedRiddles(db) {
       answerDetails:
         "In addition to making dams, beavers build their own lodges. To keep other animals out, the only entrances are underwater tunnels.",
       answerImgPath: "images/riddles/answers/answer_image_temp_beaver.png",
-      answerChoiceNames: ["Beaver", "Black Bear", "Bobcat", "Boar"],
+      answerChoiceKeys: ["beaver", "black_bear", "bobcat", "boar"],
     },
   ];
 
@@ -231,24 +227,12 @@ export function seedRiddles(db) {
         bodyLines,
         answerDetails,
         answerImgPath,
-        answerChoiceNames,
+        answerChoiceKeys,
       } = r;
-
-      if (!riddleKey) throw new Error("Each riddle must have a riddleKey");
-      if (!Array.isArray(answerChoiceNames) || answerChoiceNames.length !== 4) {
-        throw new Error(
-          `answerChoiceNames must have exactly 4 items for key "${riddleKey}"`
-        );
+      if (!riddleKey) throw new Error("riddleKey required");
+      if (!Array.isArray(answerChoiceKeys) || answerChoiceKeys.length !== 4) {
+        throw new Error(`answerChoiceKeys must have 4 keys for ${riddleKey}`);
       }
-
-      const choiceIds = answerChoiceNames.map((t) => {
-        const found = findChoiceByName.get(t);
-        if (!found)
-          throw new Error(
-            `answerChoices.name not found: "${t}" (riddleKey=${riddleKey})`
-          );
-        return found.id;
-      });
 
       const existing = findRiddleByKey.get(riddleKey);
       let riddleId;
@@ -272,11 +256,21 @@ export function seedRiddles(db) {
         riddleId = lastInsertRowid;
       }
 
-      clearLinks.run(riddleId);
+      const choiceIds = answerChoiceKeys.map((k) => {
+        const row = findChoiceId.get(k);
+        if (!row)
+          throw new Error(
+            `answerChoice key not found: "${k}" (riddleKey=${riddleKey})`
+          );
+        return row.id;
+      });
 
-      choiceIds.forEach((choiceId, slotIndex) =>
-        insertLink.run(riddleId, choiceId, slotIndex)
+      clearLinks.run(riddleId);
+      choiceIds.forEach((id, slotIndex) =>
+        insertLink.run(riddleId, id, slotIndex)
       );
     }
   })();
+
+  console.log(`Seeded ${rows.length} riddles by riddleKey with choice keys`);
 }
