@@ -72,7 +72,7 @@ export function openAndMigrate(path = "./database.db") {
       id         INTEGER PRIMARY KEY AUTOINCREMENT,
       userAnimal INTEGER NOT NULL,
       userColor  INTEGER NOT NULL,
-      gameState  TEXT NOT NULL DEFAULT '{"currentRiddleId":null,"currentGuesses":[],"hintsRemaining":7}',
+      gameState  TEXT NOT NULL DEFAULT '{"currentRiddleId":0,"currentGuesses":[],"hintsRemaining":7}',
       UNIQUE (userAnimal, userColor),
       FOREIGN KEY (userAnimal) REFERENCES userAnimals(id),
       FOREIGN KEY (userColor)  REFERENCES userColors(id),
