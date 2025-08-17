@@ -4,11 +4,13 @@ import express from "express";
 import dotenv from "dotenv";
 import { openAndMigrate } from "./db/init.js";
 import { seedUserColors } from "./db/seeds/userColors.js";
+import { seedUserAnimals } from "./db/seeds/userAnimals.js";
 
 dotenv.config();
 
 export const db = openAndMigrate("./db/database.db");
 seedUserColors(db);
+seedUserAnimals(db);
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
