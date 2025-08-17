@@ -29,4 +29,5 @@ export function seedUserAnimals(db) {
   });
 
   tx(rows);
+  console.log(`Seeded ${rows.length} userAnimals.`);
 }
