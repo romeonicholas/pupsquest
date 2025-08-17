@@ -2,6 +2,9 @@ import path from "path";
 import { fileURLToPath } from "url";
 import express from "express";
 import dotenv from "dotenv";
+import { openAndMigrate } from "./db/init.js";
+
+export const db = openAndMigrate("./db/database.db");
 
 dotenv.config();
 
@@ -23,4 +26,15 @@ app.get("/", (request, response) => {
 
 app.listen(PORT, HOST, () => {
   console.log(`Started server on ${HOST}:${PORT}`);
+});
+
+process.on("SIGINT", () => {
+  db.close((err) => {
+    if (err) {
+      console.error("Error closing database:", err.message);
+    } else {
+      console.log("Database connection closed.");
+    }
+    process.exit(0);
+  });
 });
