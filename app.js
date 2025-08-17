@@ -4,6 +4,7 @@ import express from "express";
 import dotenv from "dotenv";
 import { db } from "./db/init.js";
 import { runAllSeeds } from "./db/seeds/index.js";
+import { getAllRiddlesWithChoices } from "./db/queries/riddles.js";
 import { getAllDataForDashboard } from "./db/queries/all.js";
 
 dotenv.config();
@@ -33,7 +34,18 @@ app.get("/db", (req, res) => {
   }
 });
 
+app.get("/riddles", (req, res) => {
+  try {
+    const data = getAllRiddlesWithChoices(db);
+    res.json(data);
+  } catch (error) {
+    console.error("Error fetching riddles:", error);
+    res.status(500).json({ error: "Failed to fetch riddles" });
+  }
+});
+
 app.get("/", (request, response) => {
+  console.log("serving index");
   response.render("index");
 });
 
