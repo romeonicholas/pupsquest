@@ -9,13 +9,13 @@ export function openAndMigrate(path = "./database.db") {
   db.exec(`
     CREATE TABLE IF NOT EXISTS userAnimals (
       id       INTEGER PRIMARY KEY AUTOINCREMENT,
-      name     TEXT NOT NULL,
+      name     TEXT NOT NULL UNIQUE,
       imgPath  TEXT NOT NULL
     );
 
     CREATE TABLE IF NOT EXISTS userColors (
         id        INTEGER PRIMARY KEY AUTOINCREMENT,
-        name      TEXT NOT NULL,
+        name      TEXT NOT NULL UNIQUE,
         hex       TEXT NOT NULL,
         badgePath TEXT NOT NULL
     );
@@ -28,14 +28,14 @@ export function openAndMigrate(path = "./database.db") {
 
     CREATE TABLE IF NOT EXISTS riddles (
       id                   INTEGER PRIMARY KEY AUTOINCREMENT,
+      riddleKey            TEXT NOT NULL UNIQUE,
       headline             TEXT NOT NULL,
       body                 TEXT NOT NULL,
-      correctAnswerIndex   INTEGER NOT NULL CHECK (correctAnswerIndex BETWEEN 0 AND 3),
       answerDetails        TEXT NOT NULL,
       answerImgPath        TEXT NOT NULL,
       CHECK (json_valid(body)),
       CHECK (json_type(body) = 'array'),
-      CHECK (json_array_length(body) = 3),
+      CHECK (json_array_length(body) = 6),
       CHECK (
         json_type(body, '$[0]') = 'text'
         AND json_type(body, '$[1]') = 'text'
