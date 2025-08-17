@@ -1,11 +1,11 @@
 export function seedUserColors(db) {
   const rows = [
-    ["Orange", "#DE880E", "public/images/userCreation/badge_orange.png"],
-    ["Yellow", "#DEB10E", "public/images/userCreation/badge_yellow.png"],
-    ["Green", "#99B328", "public/images/userCreation/badge_green.png"],
-    ["Blue", "#66A6E2", "public/images/userCreation/badge_blue.png"],
-    ["Purple", "#AD69C4", "public/images/userCreation/badge_purple.png"],
-    ["Pink", "#FF8CCB", "public/images/userCreation/badge_pink.png"],
+    ["Orange", "#DE880E", "assets/images/userCreation/badge_orange.png"],
+    ["Yellow", "#DEB10E", "assets/images/userCreation/badge_yellow.png"],
+    ["Green", "#99B328", "assets/images/userCreation/badge_green.png"],
+    ["Blue", "#66A6E2", "assets/images/userCreation/badge_blue.png"],
+    ["Purple", "#AD69C4", "assets/images/userCreation/badge_purple.png"],
+    ["Pink", "#FF8CCB", "assets/images/userCreation/badge_pink.png"],
   ];
 
   const tx = db.transaction((items) => {

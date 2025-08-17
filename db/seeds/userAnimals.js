@@ -1,10 +1,10 @@
 export function seedUserAnimals(db) {
   const rows = [
-    ["Armadillo", "public/images/userCreation/badge_armadillo.png"],
-    ["Fox", "public/images/userCreation/badge_fox.png"],
-    ["Hummingbird", "public/images/userCreation/badge_hummingbird.png"],
-    ["Porcupine", "public/images/userCreation/badge_porcupine.png"],
-    ["Prairie Dog", "public/images/userCreation/badge_prairie_dog.png"],
+    ["Armadillo", "assets/images/userCreation/badge_armadillo.png"],
+    ["Fox", "assets/images/userCreation/badge_fox.png"],
+    ["Hummingbird", "assets/images/userCreation/badge_hummingbird.png"],
+    ["Porcupine", "assets/images/userCreation/badge_porcupine.png"],
+    ["Prairie Dog", "assets/images/userCreation/badge_prairie_dog.png"],
   ];
 
   const tx = db.transaction((items) => {

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Database Review</title>
+    <style>
+      body {
+        font-family: system-ui, Arial, sans-serif;
+        margin: 2rem;
+      }
+      header {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
+      header a {
+        text-decoration: none;
+        padding: 0.4rem 0.6rem;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+      }
+      section {
+        margin: 2rem 0;
+      }
+      h2 {
+        margin: 0.2rem 0 1rem;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+      }
+      th,
+      td {
+        border: 1px solid #eee;
+        padding: 0.5rem;
+        vertical-align: top;
+      }
+      th {
+        background: #fafafa;
+        text-align: left;
+      }
+      .grid {
+        display: grid;
+        gap: 1rem;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      }
+      .card {
+        border: 1px solid #eee;
+        border-radius: 10px;
+        padding: 1rem;
+      }
+      .muted {
+        color: #666;
+        font-size: 0.9rem;
+      }
+      .img-thumb {
+        max-width: 140px;
+        max-height: 140px;
+        display: block;
+      }
+      .badge {
+        display: inline-block;
+        width: 1.2em;
+        height: 1.2em;
+        border-radius: 50%;
+        border: 1px solid #ccc;
+        vertical-align: middle;
+        margin-right: 0.35rem;
+      }
+      .mono {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      }
+      details {
+        margin-top: 0.5rem;
+      }
+      .correct {
+        font-weight: 700;
+      }
+      .choices img {
+        height: 28px;
+        vertical-align: middle;
+        margin-left: 0.4rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Database Review</h1>
+
+    <header>
+      <a href="#riddles">Riddles (<%= data.riddles.length %>)</a>
+      <a href="#answerChoices"
+        >Answer Choices (<%= data.answerChoices.length %>)</a
+      >
+      <a href="#userAnimals">User Animals (<%= data.userAnimals.length %>)</a>
+      <a href="#userColors">User Colors (<%= data.userColors.length %>)</a>
+      <a href="#users">Users (<%= data.users.length %>)</a>
+    </header>
+
+    <section id="riddles">
+      <h2>Riddles (<%= data.riddles.length %>)</h2>
+      <div class="grid">
+        <% data.riddles.forEach(r => { %>
+        <div class="card">
+          <div class="muted">
+            ID: <%= r.id %> <% if (r.riddleKey) { %> · Key: <%= r.riddleKey %>
+            <% } %>
+          </div>
+          <h3><%= r.headline %></h3>
+
+          <% if (r.bodyLines && r.bodyLines.length) { %>
+          <ul>
+            <% r.bodyLines.forEach(line => { %>
+            <li><%= line %></li>
+            <% }) %>
+          </ul>
+          <% } %> <% if (r.answerImgPath) { %>
+          <img class="img-thumb" src="<%= r.answerImgPath %>" alt="" />
+          <% } %>
+
+          <h4>Choices</h4>
+          <ol class="choices">
+            <% r.choices.forEach(c => { %>
+            <li class="<%= c.isCorrect ? 'correct' : '' %>">
+              <%= c.name %> <% if (c.isCorrect) { %> ✅ <% } %> <% if
+              (c.imgPath) { %><img src="<%= c.imgPath %>" alt="" /><% } %>
+              <span class="muted"> (slot <%= c.slotIndex %>)</span>
+            </li>
+            <% }) %>
+          </ol>
+
+          <details>
+            <summary>Answer details</summary>
+            <p><%= r.answerDetails %></p>
+          </details>
+        </div>
+        <% }) %>
+      </div>
+    </section>
+
+    <section id="answerChoices">
+      <h2>Answer Choices (<%= data.answerChoices.length %>)</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Image</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% data.answerChoices.forEach(ac => { %>
+          <tr>
+            <td class="mono"><%= ac.id %></td>
+            <td><%= ac.name %></td>
+            <td>
+              <% if (ac.imgPath) { %>
+              <img class="img-thumb" src="<%= ac.imgPath %>" alt="" />
+              <% } %>
+            </td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="userAnimals">
+      <h2>User Animals (<%= data.userAnimals.length %>)</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Image</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% data.userAnimals.forEach(a => { %>
+          <tr>
+            <td class="mono"><%= a.id %></td>
+            <td><%= a.name %></td>
+            <td>
+              <% if (a.imgPath) { %>
+              <img class="img-thumb" src="<%= a.imgPath %>" alt="" />
+              <% } %>
+            </td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="userColors">
+      <h2>User Colors (<%= data.userColors.length %>)</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Hex</th>
+            <th>Badge</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% data.userColors.forEach(c => { %>
+          <tr>
+            <td class="mono"><%= c.id %></td>
+            <td>
+              <span class="badge" style="background: <%= c.hex %>"></span>
+              <%= c.name %>
+            </td>
+            <td class="mono"><%= c.hex %></td>
+            <td>
+              <% if (c.badgePath) { %>
+              <img class="img-thumb" src="<%= c.badgePath %>" alt="" />
+              <% } %>
+            </td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="users">
+      <h2>Users (<%= data.users.length %>)</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Animal</th>
+            <th>Color</th>
+            <th>Game State</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% data.users.forEach(u => { %>
+          <tr>
+            <td class="mono"><%= u.id %></td>
+            <td>
+              <% if (u.animal.imgPath) { %>
+              <img
+                class="img-thumb"
+                src="<%= u.animal.imgPath %>"
+                alt=""
+                style="max-height: 60px"
+              />
+              <% } %><br />
+              <strong><%= u.animal.name %></strong>
+            </td>
+            <td>
+              <% if (u.color.badgePath) { %>
+              <img
+                class="img-thumb"
+                src="<%= u.color.badgePath %>"
+                alt=""
+                style="max-height: 60px"
+              />
+              <% } %><br />
+              <span class="badge" style="background: <%= u.color.hex %>"></span>
+              <strong><%= u.color.name %></strong>
+              <div class="mono muted"><%= u.color.hex %></div>
+            </td>
+            <td class="mono">
+              <pre><%= JSON.stringify(u.gameState, null, 2) %></pre>
+            </td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </section>
+  </body>
+</html>
