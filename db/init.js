@@ -14,9 +14,10 @@ export function openAndMigrate(path = "./database.db") {
     );
 
     CREATE TABLE IF NOT EXISTS userColors (
-      id    INTEGER PRIMARY KEY AUTOINCREMENT,
-      name  TEXT NOT NULL,
-      hex   TEXT NOT NULL
+        id        INTEGER PRIMARY KEY AUTOINCREMENT,
+        name      TEXT NOT NULL,
+        hex       TEXT NOT NULL,
+        badgePath TEXT NOT NULL
     );
 
     CREATE TABLE IF NOT EXISTS answerChoices (
