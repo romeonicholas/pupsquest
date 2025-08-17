@@ -1,3 +1,5 @@
+import { name } from "ejs";
+
 export function seedAnswerChoices(db) {
   // sanity check: table has the expected columns
   const cols = db.prepare(`PRAGMA table_info('answerChoices')`).all();
@@ -19,6 +21,7 @@ export function seedAnswerChoices(db) {
     "bunting_green",
     "bunting_red",
     "bunting_yellow",
+    "collared_lizard",
     "collared_lizard_blue",
     "collared_lizard_green",
     "collared_lizard_red",
@@ -35,14 +38,22 @@ export function seedAnswerChoices(db) {
     "prairie_dog",
     "prairie_falcon",
     "purple_coneflower",
-    "red_tailed_hawk",
-    "ruby_throated_hummingbird",
-    "scissor_tailed_flycatcher",
+    "red-tailed_hawk",
+    "hummingbird",
+    "scissor-tailed_flycatcher",
     "swift_fox",
     "four",
     "six",
     "eight",
     "ten",
+  ];
+
+  // Sometimes a choice is displayed with a different name
+  const exceptions = [
+    {
+      name: '"Mountain Boomer"',
+      slug: "collared_lizard",
+    },
   ];
 
   const toTitle = (slug) =>
@@ -55,9 +66,17 @@ export function seedAnswerChoices(db) {
       .trim();
 
   const rows = slugs.map((slug) => ({
-    name: toTitle(slug), // e.g., "Armadillo"
-    imgPath: `public/images/riddles/icons/${slug}.png`,
+    name: toTitle(slug),
+    imgPath: `assets/images/riddles/icons/${slug}.png`,
   }));
+
+  //add exceptions
+  for (const { name, slug } of exceptions) {
+    rows.push({
+      name,
+      imgPath: `assets/images/riddles/icons/${slug}.png`,
+    });
+  }
 
   const find = db.prepare(
     `SELECT id FROM answerChoices WHERE name = ? LIMIT 1`

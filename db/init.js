@@ -1,88 +1,103 @@
 import Database from "better-sqlite3";
 
 export function openAndMigrate(path = "./database.db") {
-  const db = new Database(path);
-  db.pragma("foreign_keys = ON");
-  db.pragma("journal_mode = WAL");
-  db.pragma("synchronous = NORMAL");
+  console.log("Opening database at:", path);
 
-  db.exec(`
-    CREATE TABLE IF NOT EXISTS userAnimals (
-      id       INTEGER PRIMARY KEY AUTOINCREMENT,
-      name     TEXT NOT NULL UNIQUE,
-      imgPath  TEXT NOT NULL
-    );
+  try {
+    const db = new Database(path);
+    console.log("Database opened successfully");
 
-    CREATE TABLE IF NOT EXISTS userColors (
-        id        INTEGER PRIMARY KEY AUTOINCREMENT,
-        name      TEXT NOT NULL UNIQUE,
-        hex       TEXT NOT NULL,
-        badgePath TEXT NOT NULL
-    );
+    db.pragma("foreign_keys = ON");
+    db.pragma("journal_mode = WAL");
+    db.pragma("synchronous = NORMAL");
 
-    CREATE TABLE IF NOT EXISTS answerChoices (
-      id      INTEGER PRIMARY KEY AUTOINCREMENT,
-      name    TEXT NOT NULL,
-      imgPath TEXT NOT NULL
-    );
+    console.log("Running migrations...");
+    db.exec(`
+      CREATE TABLE IF NOT EXISTS userAnimals (
+        id       INTEGER PRIMARY KEY AUTOINCREMENT,
+        name     TEXT NOT NULL UNIQUE,
+        imgPath  TEXT NOT NULL
+      );
 
-    CREATE TABLE IF NOT EXISTS riddles (
-      id                   INTEGER PRIMARY KEY AUTOINCREMENT,
-      riddleKey            TEXT NOT NULL UNIQUE,
-      headline             TEXT NOT NULL,
-      body                 TEXT NOT NULL,
-      answerDetails        TEXT NOT NULL,
-      answerImgPath        TEXT NOT NULL,
-      CHECK (json_valid(body)),
-      CHECK (json_type(body) = 'array'),
-      CHECK (json_array_length(body) = 6),
-      CHECK (
-        json_type(body, '$[0]') = 'text'
-        AND json_type(body, '$[1]') = 'text'
-        AND json_type(body, '$[2]') = 'text'
-        AND json_type(body, '$[3]') = 'text'
-        AND json_type(body, '$[4]') = 'text'
-        AND json_type(body, '$[5]') = 'text'
-      )
-    );
+      CREATE TABLE IF NOT EXISTS userColors (
+          id        INTEGER PRIMARY KEY AUTOINCREMENT,
+          name      TEXT NOT NULL UNIQUE,
+          hex       TEXT NOT NULL,
+          badgePath TEXT NOT NULL
+      );
 
-    CREATE TABLE IF NOT EXISTS riddleAnswerChoices (
-      id              INTEGER PRIMARY KEY AUTOINCREMENT,
-      riddleId        INTEGER NOT NULL,
-      answerChoiceId  INTEGER NOT NULL,
-      slotIndex       INTEGER NOT NULL CHECK (slotIndex BETWEEN 0 AND 3),
-      UNIQUE (riddleId, slotIndex),
-      UNIQUE (riddleId, answerChoiceId),
-      FOREIGN KEY (riddleId)       REFERENCES riddles(id)        ON DELETE CASCADE,
-      FOREIGN KEY (answerChoiceId) REFERENCES answerChoices(id)  ON DELETE RESTRICT
-    );
-    CREATE INDEX IF NOT EXISTS idx_rac_riddleId ON riddleAnswerChoices(riddleId);
-    CREATE INDEX IF NOT EXISTS idx_rac_choiceId ON riddleAnswerChoices(answerChoiceId);
+      CREATE TABLE IF NOT EXISTS answerChoices (
+        id      INTEGER PRIMARY KEY AUTOINCREMENT,
+        name    TEXT NOT NULL,
+        imgPath TEXT NOT NULL
+      );
 
-    CREATE TRIGGER IF NOT EXISTS trg_rac_limit4
-    BEFORE INSERT ON riddleAnswerChoices
-    WHEN (
-      SELECT COUNT(*) FROM riddleAnswerChoices WHERE riddleId = NEW.riddleId
-    ) >= 4
-    BEGIN
-      SELECT RAISE(ABORT, 'This riddle already has 4 answer choices');
-    END;
+      CREATE TABLE IF NOT EXISTS riddles (
+        id                   INTEGER PRIMARY KEY AUTOINCREMENT,
+        riddleKey            TEXT NOT NULL UNIQUE,
+        headline             TEXT NOT NULL,
+        body                 TEXT NOT NULL,
+        answerDetails        TEXT NOT NULL,
+        answerImgPath        TEXT NOT NULL,
+        CHECK (json_valid(body)),
+        CHECK (json_type(body) = 'array'),
+        CHECK (json_array_length(body) = 6),
+        CHECK (
+          json_type(body, '$[0]') = 'text'
+          AND json_type(body, '$[1]') = 'text'
+          AND json_type(body, '$[2]') = 'text'
+          AND json_type(body, '$[3]') = 'text'
+          AND json_type(body, '$[4]') = 'text'
+          AND json_type(body, '$[5]') = 'text'
+        )
+      );
 
-    CREATE TABLE IF NOT EXISTS users (
-      id         INTEGER PRIMARY KEY AUTOINCREMENT,
-      userAnimal INTEGER NOT NULL,
-      userColor  INTEGER NOT NULL,
-      gameState  TEXT NOT NULL DEFAULT '{"currentRiddleId":0,"currentGuesses":[],"hintsRemaining":7}',
-      UNIQUE (userAnimal, userColor),
-      FOREIGN KEY (userAnimal) REFERENCES userAnimals(id),
-      FOREIGN KEY (userColor)  REFERENCES userColors(id),
-      CHECK (json_valid(gameState)),
-      CHECK (
-        json_extract(gameState, '$.hintsRemaining') IS NOT NULL
-        AND json_extract(gameState, '$.hintsRemaining') BETWEEN 0 AND 7
-      )
-    );
-  `);
+      CREATE TABLE IF NOT EXISTS riddleAnswerChoices (
+        id              INTEGER PRIMARY KEY AUTOINCREMENT,
+        riddleId        INTEGER NOT NULL,
+        answerChoiceId  INTEGER NOT NULL,
+        slotIndex       INTEGER NOT NULL CHECK (slotIndex BETWEEN 0 AND 3),
+        UNIQUE (riddleId, slotIndex),
+        UNIQUE (riddleId, answerChoiceId),
+        FOREIGN KEY (riddleId)       REFERENCES riddles(id)        ON DELETE CASCADE,
+        FOREIGN KEY (answerChoiceId) REFERENCES answerChoices(id)  ON DELETE RESTRICT
+      );
+      CREATE INDEX IF NOT EXISTS idx_rac_riddleId ON riddleAnswerChoices(riddleId);
+      CREATE INDEX IF NOT EXISTS idx_rac_choiceId ON riddleAnswerChoices(answerChoiceId);
 
-  return db;
+      CREATE TRIGGER IF NOT EXISTS trg_rac_limit4
+      BEFORE INSERT ON riddleAnswerChoices
+      WHEN (
+        SELECT COUNT(*) FROM riddleAnswerChoices WHERE riddleId = NEW.riddleId
+      ) >= 4
+      BEGIN
+        SELECT RAISE(ABORT, 'This riddle already has 4 answer choices');
+      END;
+
+      CREATE TABLE IF NOT EXISTS users (
+        id         INTEGER PRIMARY KEY AUTOINCREMENT,
+        userAnimal INTEGER NOT NULL,
+        userColor  INTEGER NOT NULL,
+        gameState  TEXT NOT NULL DEFAULT '{"currentRiddleId":0,"currentGuesses":[],"hintsRemaining":7}',
+        UNIQUE (userAnimal, userColor),
+        FOREIGN KEY (userAnimal) REFERENCES userAnimals(id),
+        FOREIGN KEY (userColor)  REFERENCES userColors(id),
+        CHECK (json_valid(gameState)),
+        CHECK (
+          json_extract(gameState, '$.hintsRemaining') IS NOT NULL
+          AND json_extract(gameState, '$.hintsRemaining') BETWEEN 0 AND 7
+        )
+      );
+    `);
+
+    console.log("Migrations completed");
+    return db;
+  } catch (error) {
+    console.error("Database initialization failed:", error);
+    throw error;
+  }
 }
+
+export const db = openAndMigrate(
+  process.env.DATABASE_URL || "./db/database.db"
+);

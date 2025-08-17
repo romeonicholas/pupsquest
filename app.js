@@ -2,45 +2,53 @@ import path from "path";
 import { fileURLToPath } from "url";
 import express from "express";
 import dotenv from "dotenv";
-import { openAndMigrate } from "./db/init.js";
-import { seedUserColors } from "./db/seeds/userColors.js";
-import { seedUserAnimals } from "./db/seeds/userAnimals.js";
-import { seedUsers } from "./db/seeds/users.js";
-import { seedAnswerChoices } from "./db/seeds/answerChoices.js";
+import { db } from "./db/init.js";
 import { runAllSeeds } from "./db/seeds/index.js";
+import { getAllDataForDashboard } from "./db/queries/all.js";
 
 dotenv.config();
 
-export const db = openAndMigrate("./db/database.db");
+console.log("Database status before seeds:", !db.open ? "closed" : "open");
 runAllSeeds(db);
+console.log("Database status after seeds:", !db.open ? "closed" : "open");
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const PORT = process.env.PORT || 3000;
-const HOST = process.env.HOST || "localhost";
-
-app.use(express.json({ limit: "10mb" }));
-
 app.set("view engine", "ejs");
 app.use(express.static("public"));
+app.set("views", path.join(__dirname, "views"));
+
+const PORT = process.env.PORT || 3000;
+const HOST = process.env.HOST || "0.0.0.0";
+
+app.get("/db", (req, res) => {
+  try {
+    const data = getAllDataForDashboard(db);
+    res.render("dbReview", { data });
+  } catch (error) {
+    console.error("Error fetching dashboard data:", error);
+    res.status(500).json({ error: "Failed to fetch dashboard data" });
+  }
+});
 
 app.get("/", (request, response) => {
   response.render("index");
 });
+
+app.use("/assets", express.static(path.join(__dirname, "public")));
 
 app.listen(PORT, HOST, () => {
   console.log(`👋 Started server on ${HOST}:${PORT}`);
 });
 
 process.on("SIGINT", () => {
-  db.close((err) => {
-    if (err) {
-      console.error("Error closing database:", err.message);
-    } else {
-      console.log("Database connection closed.");
-    }
-    process.exit(0);
-  });
+  try {
+    db.close();
+    console.log("Database connection closed.");
+  } catch (error) {
+    console.error("Error closing database:", error.message);
+  }
+  process.exit(0);
 });
