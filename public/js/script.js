@@ -91,9 +91,9 @@ document.addEventListener("contextmenu", function (e) {
 
 async function loadRiddles() {
   try {
-    const response = await fetch("/js/riddles.json");
-    const jsonData = await response.json();
-    riddlesData = jsonData.data;
+    const response = await fetch("/riddles");
+    riddlesData = await response.json();
+    console.log("Riddles loaded:", riddlesData);
   } catch (error) {
     console.error("Error loading riddles:", error);
   }
@@ -353,11 +353,12 @@ function updateRiddleElements(riddle) {
 function updateRiddleContent(riddle) {
   riddleHeadline.children[0].innerText = riddle.headline;
 
-  const couplets = [couplet1, couplet2, couplet3];
-  couplets.forEach((couplet, index) => {
-    couplet.children[0].innerText = riddle.couplets[index][0];
-    couplet.children[1].innerText = riddle.couplets[index][1];
-  });
+  couplet1.children[0].innerText = riddle.body[0];
+  couplet1.children[1].innerText = riddle.body[1];
+  couplet2.children[0].innerText = riddle.body[2];
+  couplet2.children[1].innerText = riddle.body[3];
+  couplet3.children[0].innerText = riddle.body[4];
+  couplet3.children[1].innerText = riddle.body[5];
 }
 
 function shuffleAnswerChoices(answerChoices) {
@@ -365,20 +366,20 @@ function shuffleAnswerChoices(answerChoices) {
 }
 
 function findCorrectAnswerIndex(shuffledChoices) {
-  return shuffledChoices.findIndex((choice) => choice.is_correct);
+  return shuffledChoices.findIndex((choice) => choice.slotIndex === 0);
 }
 
 function updateSelectionIcons(shuffledChoices) {
   const icons = [iconFront1, iconFront2, iconFront3, iconFront4];
   icons.forEach((icon, index) => {
-    icon.src = shuffledChoices[index].image;
+    icon.src = shuffledChoices[index].imgPath;
   });
 }
 
 function updateSelectionTexts(shuffledChoices) {
   const texts = [optionText1, optionText2, optionText3, optionText4];
   texts.forEach((text, index) => {
-    text.innerText = shuffledChoices[index].text;
+    text.innerText = shuffledChoices[index].name;
   });
 }
 
@@ -463,8 +464,9 @@ function showNewRiddle() {
   updateRiddleElements(riddlesData[currentRiddleIndex]);
 
   setTimeout(() => {
+    console.log(currentShuffledChoices);
     updateRiddleAnswer(
-      currentShuffledChoices[currentCorrectAnswerIndex].text,
+      currentShuffledChoices[currentCorrectAnswerIndex].name,
       currentRiddle.answerDetails,
       currentRiddle.answerImgPath
     );
