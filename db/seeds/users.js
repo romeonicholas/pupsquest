@@ -1,4 +1,56 @@
 export function seedUsers(db) {
+  function seededShuffle(array, seed) {
+    let s = seed >>> 0 || 1;
+    const rand = () => (s = (s * 1664525 + 1013904223) >>> 0) / 0x100000000;
+    const a = array.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(rand() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function getAllRiddleIds() {
+    return db
+      .prepare("SELECT id FROM riddles ORDER BY id")
+      .all()
+      .map((r) => r.id);
+  }
+
+  function initialStateForUser(userId, riddleIds) {
+    const queue = seededShuffle(riddleIds, userId * 1103515245);
+    return {
+      currentRiddleId: queue[0] ?? null,
+      currentGuesses: [],
+      hintsRemaining: 7,
+      riddleQueue: queue,
+      queueCursor: 0,
+      queueVersion: 1,
+    };
+  }
+
+  function stateWithCurrent(
+    userId,
+    riddleIds,
+    { currentRiddleId, currentGuesses = [], hintsRemaining = 7 }
+  ) {
+    const queue = seededShuffle(riddleIds, (userId * 1103515245) ^ 0x9e3779b9);
+
+    if (currentRiddleId != null && !queue.includes(currentRiddleId))
+      queue.unshift(currentRiddleId);
+    const cursor =
+      currentRiddleId != null ? Math.max(0, queue.indexOf(currentRiddleId)) : 0;
+
+    return {
+      currentRiddleId: queue[cursor] ?? null,
+      currentGuesses,
+      hintsRemaining,
+      riddleQueue: queue,
+      queueCursor: cursor,
+      queueVersion: 1,
+    };
+  }
+
   const findColorId = db.prepare(
     `SELECT id FROM userColors  WHERE name = ? LIMIT 1`
   );
@@ -6,69 +58,63 @@ export function seedUsers(db) {
     `SELECT id FROM userAnimals WHERE name = ? LIMIT 1`
   );
 
-  const insertDefaultUser = db.prepare(`
+  const insertIfMissing = db.prepare(`
     INSERT INTO users (userAnimal, userColor)
     VALUES (?, ?)
     ON CONFLICT(userAnimal, userColor) DO NOTHING
   `);
 
-  const resetUserState = db.prepare(`
+  const updateStateByIds = db.prepare(`
     UPDATE users
     SET gameState = ?
     WHERE userAnimal = ? AND userColor = ?
   `);
 
-  const upsertCustomUser = db.prepare(`
-    INSERT INTO users (userAnimal, userColor, gameState)
-    VALUES (?, ?, ?)
-    ON CONFLICT(userAnimal, userColor) DO UPDATE SET
-      gameState = excluded.gameState
-  `);
-
-  const getUserId = db.prepare(`
+  const getUserIdByIds = db.prepare(`
     SELECT id FROM users WHERE userAnimal = ? AND userColor = ? LIMIT 1
   `);
 
-  const DEFAULT_GAME_STATE = JSON.stringify({
-    currentRiddleId: 0,
-    currentGuesses: [],
-    hintsRemaining: 7,
-  });
+  const rows = [
+    { colorName: "Green", animalName: "Prairie Dog", which: "user1" },
+    { colorName: "Purple", animalName: "Hummingbird", which: "user2" },
+  ];
 
-  const user1 = { colorName: "Green", animalName: "Prairie Dog" };
-  const user2 = {
-    colorName: "Purple",
-    animalName: "Hummingbird",
-    gameState: {
-      currentRiddleId: 3,
-      currentGuesses: [0, 2],
-      hintsRemaining: 5,
-    },
-  };
+  const allRiddleIds = getAllRiddleIds();
 
   db.transaction(() => {
-    const color0 = findColorId.get(user1.colorName);
-    if (!color0) throw new Error(`Color not found: ${user1.colorName}`);
-    const animal0 = findAnimalId.get(user1.animalName);
-    if (!animal0) throw new Error(`Animal not found: ${user1.animalName}`);
+    for (const { colorName, animalName, which } of rows) {
+      const color = findColorId.get(colorName);
+      if (!color)
+        throw new Error(
+          `Color not found: "${colorName}". Seed userColors first.`
+        );
+      const animal = findAnimalId.get(animalName);
+      if (!animal)
+        throw new Error(
+          `Animal not found: "${animalName}". Seed userAnimals first.`
+        );
 
-    const color1 = findColorId.get(user2.colorName);
-    if (!color1) throw new Error(`Color not found: ${user2.colorName}`);
-    const animal1 = findAnimalId.get(user2.animalName);
-    if (!animal1) throw new Error(`Animal not found: ${user2.animalName}`);
+      insertIfMissing.run(animal.id, color.id);
 
-    insertDefaultUser.run(animal0.id, color0.id);
-    resetUserState.run(DEFAULT_GAME_STATE, animal0.id, color0.id);
+      const userRow = getUserIdByIds.get(animal.id, color.id);
+      if (!userRow) throw new Error("Failed to fetch user id after insert");
 
-    upsertCustomUser.run(
-      animal1.id,
-      color1.id,
-      JSON.stringify(user2.gameState)
-    );
+      let state;
+      if (which === "user1") {
+        state = initialStateForUser(userRow.id, allRiddleIds);
+      } else if (which === "user2") {
+        state = stateWithCurrent(userRow.id, allRiddleIds, {
+          currentRiddleId: 3,
+          currentGuesses: [0, 2],
+          hintsRemaining: 5,
+          queueCursor: 2,
+        });
+      }
 
-    const u1 = getUserId.get(animal0.id, color0.id);
-    const u2 = getUserId.get(animal1.id, color1.id);
-    console.log(`Seeded user${u1.id}: ${user1.colorName} ${user1.animalName}`);
-    console.log(`Seeded user${u2.id}: ${user2.colorName} ${user2.animalName}`);
+      updateStateByIds.run(JSON.stringify(state), animal.id, color.id);
+      console.log(
+        `Seeded/updated ${which} id=${userRow.id} (${animalName} + ${colorName})`
+      );
+    }
   })();
 }
