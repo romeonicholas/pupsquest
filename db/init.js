@@ -22,7 +22,7 @@ export function openAndMigrate(path = "./database.db") {
 
     CREATE TABLE IF NOT EXISTS answerChoices (
       id      INTEGER PRIMARY KEY AUTOINCREMENT,
-      text    TEXT NOT NULL,
+      name    TEXT NOT NULL,
       imgPath TEXT NOT NULL
     );
 

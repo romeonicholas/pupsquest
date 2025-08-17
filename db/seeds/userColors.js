@@ -30,4 +30,5 @@ export function seedUserColors(db) {
   });
 
   tx(rows);
+  console.log(`Seeded ${rows.length} userColors.`);
 }
