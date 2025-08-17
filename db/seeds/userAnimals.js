@@ -1,0 +1,32 @@
+export function seedUserAnimals(db) {
+  const rows = [
+    ["Armadillo", "public/images/userCreation/badge_armadillo.png"],
+    ["Fox", "public/images/userCreation/badge_fox.png"],
+    ["Hummingbird", "public/images/userCreation/badge_hummingbird.png"],
+    ["Porcupine", "public/images/userCreation/badge_porcupine.png"],
+    ["Prairie Dog", "public/images/userCreation/badge_prairie_dog.png"],
+  ];
+
+  const tx = db.transaction((items) => {
+    const findByName = db.prepare(
+      `SELECT id FROM userAnimals WHERE name = ? LIMIT 1`
+    );
+    const updateById = db.prepare(
+      `UPDATE userAnimals SET imgPath = ? WHERE id = ?`
+    );
+    const insert = db.prepare(
+      `INSERT INTO userAnimals (name, imgPath) VALUES (?, ?)`
+    );
+
+    for (const [name, imgPath] of items) {
+      const existing = findByName.get(name);
+      if (existing) {
+        updateById.run(imgPath, existing.id);
+      } else {
+        insert.run(name, imgPath);
+      }
+    }
+  });
+
+  tx(rows);
+}
