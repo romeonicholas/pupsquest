@@ -12,6 +12,12 @@ export function seedUsers(db) {
     ON CONFLICT(userAnimal, userColor) DO NOTHING
   `);
 
+  const resetUserState = db.prepare(`
+    UPDATE users
+    SET gameState = ?
+    WHERE userAnimal = ? AND userColor = ?
+  `);
+
   const upsertCustomUser = db.prepare(`
     INSERT INTO users (userAnimal, userColor, gameState)
     VALUES (?, ?, ?)
@@ -22,6 +28,12 @@ export function seedUsers(db) {
   const getUserId = db.prepare(`
     SELECT id FROM users WHERE userAnimal = ? AND userColor = ? LIMIT 1
   `);
+
+  const DEFAULT_GAME_STATE = JSON.stringify({
+    currentRiddleId: 0,
+    currentGuesses: [],
+    hintsRemaining: 7,
+  });
 
   const user0 = { colorName: "Green", animalName: "Prairie Dog" };
   const user1 = {
@@ -35,21 +47,27 @@ export function seedUsers(db) {
   };
 
   db.transaction(() => {
-    const c0 = findColorId.get(user0.colorName);
-    if (!c0) throw new Error(`Color not found: ${user0.colorName}`);
-    const a0 = findAnimalId.get(user0.animalName);
-    if (!a0) throw new Error(`Animal not found: ${user0.animalName}`);
+    const color0 = findColorId.get(user0.colorName);
+    if (!color0) throw new Error(`Color not found: ${user0.colorName}`);
+    const animal0 = findAnimalId.get(user0.animalName);
+    if (!animal0) throw new Error(`Animal not found: ${user0.animalName}`);
 
-    const c1 = findColorId.get(user1.colorName);
-    if (!c1) throw new Error(`Color not found: ${user1.colorName}`);
-    const a1 = findAnimalId.get(user1.animalName);
-    if (!a1) throw new Error(`Animal not found: ${user1.animalName}`);
+    const color1 = findColorId.get(user1.colorName);
+    if (!color1) throw new Error(`Color not found: ${user1.colorName}`);
+    const animal1 = findAnimalId.get(user1.animalName);
+    if (!animal1) throw new Error(`Animal not found: ${user1.animalName}`);
 
-    insertDefaultUser.run(a0.id, c0.id);
-    upsertCustomUser.run(a1.id, c1.id, JSON.stringify(user1.gameState));
+    insertDefaultUser.run(animal0.id, color0.id);
+    resetUserState.run(DEFAULT_GAME_STATE, animal0.id, color0.id);
 
-    const u0 = getUserId.get(a0.id, c0.id);
-    const u1 = getUserId.get(a1.id, c1.id);
+    upsertCustomUser.run(
+      animal1.id,
+      color1.id,
+      JSON.stringify(user1.gameState)
+    );
+
+    const u0 = getUserId.get(animal0.id, color0.id);
+    const u1 = getUserId.get(animal1.id, color1.id);
     console.log(
       `Seeded user0 id=${u0.id} (${user0.animalName} + ${user0.colorName})`
     );
