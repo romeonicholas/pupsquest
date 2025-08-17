@@ -18,10 +18,10 @@ const incorrectAnswerBackings = [
 
 // const createUserButton = document.getElementById("create-user-button");
 // const createNewUserDiv = document.getElementById("create-new-user");
-// const colorsHeader = document.querySelector(".follows-colors-slider");
-// const animalsHeader = document.querySelector(".follows-animals-slider");
-// const colorsSlider = document.getElementById("colors-slider");
-// const animalsSlider = document.getElementById("animals-slider");
+const colorsHeader = document.querySelector(".follows-colors-slider");
+const animalsHeader = document.querySelector(".follows-animals-slider");
+const colorsSlider = document.getElementById("colors-slider");
+const animalsSlider = document.getElementById("animals-slider");
 
 const badgeBase = document.getElementById("badge-base");
 const badgeIcon = document.getElementById("badge-icon");

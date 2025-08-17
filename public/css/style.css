@@ -75,6 +75,36 @@ button {
   font-size: 0;
 }
 
+#create-new-user-page {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 99;
+}
+
+#create-new-user-panel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 99;
+}
+
+#colors-header {
+  position: absolute;
+  top: 566px;
+  left: -480px;
+  z-index: 97;
+}
+
+#animals-header {
+  position: absolute;
+  top: 706px;
+  left: -480px;
+  z-index: 96;
+}
+
 .fixed-element {
   position: relative;
   top: 0;
