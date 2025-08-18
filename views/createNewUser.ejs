@@ -94,7 +94,6 @@
       }
 
       async function fetchAvailableAnimalsForColor(event, colorId) {
-        console.log("clicked: " + colorId);
         const response = await fetch(`/api/animals?colorId=${colorId}`);
         const animals = await response.json();
         const container = document.getElementById("animals-container");
@@ -127,9 +126,6 @@
           alert("Please select both a color and an animal.");
           return;
         }
-
-        console.log("Selected color ID:", selectedColor.dataset.id);
-        console.log("Selected animal ID:", selectedAnimal.dataset.id);
 
         const userData = {
           colorId: selectedColor.dataset.id,
