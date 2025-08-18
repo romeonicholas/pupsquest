@@ -6,6 +6,25 @@
     <link rel="stylesheet" href="/css/style.css" />
     <link rel="icon" href="data:," />
     <script src="/js/script.js" defer></script>
+    <style>
+      .color.selected,
+      .animal.selected {
+        border: 3px solid #000;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+      }
+
+      .color,
+      .animal {
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: all 0.2s ease;
+      }
+
+      .color:hover,
+      .animal:hover {
+        opacity: 0.8;
+      }
+    </style>
   </head>
   <body>
     <div id="container">
@@ -28,6 +47,24 @@
             id="animals-container"
             style="display: flex; justify-content: space-around"
           ></div>
+
+          <div
+            id="button-container"
+            style="display: flex; justify-content: center"
+          >
+            <button
+              onclick="createUser()"
+              style="
+                width: 100px;
+                height: 100px;
+                background: blue !important;
+                font-size: large;
+                color: darkred;
+              "
+            >
+              Create User
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -36,6 +73,7 @@
         const response = await fetch("/api/colors");
         const colors = await response.json();
         const container = document.getElementById("colors-container");
+
         colors.forEach((color) => {
           const colorDiv = document.createElement("div");
           colorDiv.className = "color";
@@ -43,17 +81,26 @@
           colorDiv.style.height = "100px";
           colorDiv.style.backgroundColor = color.hex;
           colorDiv.innerText = color.name;
-          colorDiv.onclick = () => {
-            fetchAvailableAnimalsForColor(color.id);
+          colorDiv.dataset.id = color.id;
+          colorDiv.onclick = (event) => {
+            document
+              .querySelectorAll(".color")
+              .forEach((c) => c.classList.remove("selected"));
+            event.target.classList.add("selected");
+            fetchAvailableAnimalsForColor(event, color.id);
           };
           container.appendChild(colorDiv);
         });
       }
 
-      async function fetchAvailableAnimalsForColor(colorId) {
+      async function fetchAvailableAnimalsForColor(event, colorId) {
+        console.log("clicked: " + colorId);
         const response = await fetch(`/api/animals?colorId=${colorId}`);
         const animals = await response.json();
         const container = document.getElementById("animals-container");
+
+        container.innerHTML = "";
+
         animals.forEach((animal) => {
           const animalDiv = document.createElement("div");
           animalDiv.className = "animal";
@@ -61,8 +108,47 @@
           animalDiv.style.height = "100px";
           animalDiv.style.backgroundImage = `url(${animal.imgPath})`;
           animalDiv.innerText = animal.name;
+          animalDiv.dataset.id = animal.id;
+          animalDiv.onclick = (event) => {
+            document
+              .querySelectorAll(".animal")
+              .forEach((a) => a.classList.remove("selected"));
+            event.target.classList.add("selected");
+          };
           container.appendChild(animalDiv);
         });
+      }
+
+      async function createUser() {
+        const selectedColor = document.querySelector(".color.selected");
+        const selectedAnimal = document.querySelector(".animal.selected");
+
+        if (!selectedColor || !selectedAnimal) {
+          alert("Please select both a color and an animal.");
+          return;
+        }
+
+        console.log("Selected color ID:", selectedColor.dataset.id);
+        console.log("Selected animal ID:", selectedAnimal.dataset.id);
+
+        const userData = {
+          colorId: selectedColor.dataset.id,
+          animalId: selectedAnimal.dataset.id,
+        };
+
+        const response = await fetch("/api/users", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(userData),
+        });
+
+        if (response.ok) {
+          alert("User created successfully!");
+        } else {
+          alert("Failed to create user.");
+        }
       }
 
       fetchColors();
