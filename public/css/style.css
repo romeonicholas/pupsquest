@@ -220,7 +220,7 @@ button {
 
 #riddle-couplets-container {
   position: absolute;
-  top: 175px;
+  top: 176px;
   z-index: 73;
 }
 
@@ -239,11 +239,11 @@ button {
 
 .couplet-2 {
   align-items: center;
-  margin-top: 77px;
+  margin-top: 78px;
 }
 .couplet-3 {
   align-items: center;
-  margin-top: 77px;
+  margin-top: 78px;
 }
 
 #riddle-container {
