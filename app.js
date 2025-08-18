@@ -9,6 +9,7 @@ import { getAllDataForDashboard } from "./db/queries/all.js";
 import {
   getAllColors,
   getAvailableAnimalsForColor,
+  createUser,
 } from "./db/queries/userCreate.js";
 
 dotenv.config({ path: ".env", quiet: true });
@@ -23,11 +24,23 @@ app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.set("views", path.join(__dirname, "views"));
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 const PORT = process.env.PORT || 3000;
 const HOST = process.env.HOST || "0.0.0.0";
 
 app.get("/new-user", (req, res) => {
   res.render("createNewUser");
+});
+
+app.post("/api/users", (req, res) => {
+  const { colorId, animalId } = req.body;
+  if (!colorId || !animalId) {
+    return res.status(400).json({ error: "Missing colorId or animalId" });
+  }
+  createUser(db, { colorId, animalId });
+  res.status(201).json({ message: "User created successfully" });
 });
 
 app.get("/api/colors", (req, res) => {
