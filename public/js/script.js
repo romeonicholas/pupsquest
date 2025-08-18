@@ -383,11 +383,11 @@ function showNewRiddle() {
   }, 2000);
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-  nextRiddleButton.addEventListener("click", function () {
-    showNewRiddle();
-  });
-});
+// document.addEventListener("DOMContentLoaded", function () {
+//   nextRiddleButton.addEventListener("click", function () {
+//     showNewRiddle();
+//   });
+// });
 
 function decreaseHints() {
   const currentX = getTranslateX(hintCountForeground);
