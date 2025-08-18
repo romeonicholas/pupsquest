@@ -1,61 +1,16 @@
-<div
-  id="start-screen"
-  class="show-again"
-  style="position: absolute; top: 0; left: 0; z-index: 100"
->
-  <img
-    src="/images/startScreen.png"
-    style="
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 1080px;
-      height: 1920px;
-      object-fit: cover;
-      z-index: 100;
-    "
-  />
+<div id="start-screen">
+  <img src="/images/startScreen.png" />
 
   <button
-    id="start-new-game-button"
-    style="
-      background: transparent;
-      border: none !important;
-      font-size: 0;
-      position: absolute;
-      top: 811px;
-      left: 177px;
-      z-index: 100;
-      width: 724px;
-      height: 145px;
-    "
+    id="new-game-button"
+    onclick="hideStartScreen(); showCreateNewUserScreen();"
   ></button>
   <button
     id="rejoin-game-button"
-    style="
-      background: transparent;
-      border: none !important;
-      font-size: 0;
-      position: absolute;
-      top: 1004px;
-      left: 177px;
-      z-index: 101;
-      width: 724px;
-      height: 145px;
-    "
+    onclick="hideStartScreen(); showRejoinGameScreen();"
   ></button>
   <button
     id="use-phone-button"
-    style="
-      background: transparent;
-      border: none !important;
-      font-size: 0;
-      position: absolute;
-      top: 1348px;
-      left: 177px;
-      z-index: 101;
-      width: 724px;
-      height: 145px;
-    "
+    onclick="hideStartScreen(); showUsePhoneScreen();"
   ></button>
 </div>
