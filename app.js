@@ -6,6 +6,10 @@ import { db } from "./db/init.js";
 import { runAllSeeds } from "./db/seeds/index.js";
 import { getAllRiddlesWithChoices } from "./db/queries/riddles.js";
 import { getAllDataForDashboard } from "./db/queries/all.js";
+import {
+  getAllColors,
+  getAvailableAnimalsForColor,
+} from "./db/queries/userCreate.js";
 
 dotenv.config({ path: ".env", quiet: true });
 
@@ -21,6 +25,35 @@ app.set("views", path.join(__dirname, "views"));
 
 const PORT = process.env.PORT || 3000;
 const HOST = process.env.HOST || "0.0.0.0";
+
+app.get("/new-user", (req, res) => {
+  res.render("createNewUser");
+});
+
+app.get("/api/colors", (req, res) => {
+  try {
+    const colors = getAllColors(db);
+    res.json(colors);
+  } catch (error) {
+    console.error("Error fetching colors:", error);
+    res.status(500).json({ error: "Failed to fetch colors" });
+  }
+});
+
+app.get("/api/animals", (req, res) => {
+  const colorId = req.query.colorId;
+  if (!colorId) {
+    return res.status(400).json({ error: "Missing colorId" });
+  }
+
+  try {
+    const animals = getAvailableAnimalsForColor(db, colorId);
+    res.json(animals);
+  } catch (error) {
+    console.error("Error fetching animals:", error);
+    res.status(500).json({ error: "Failed to fetch animals" });
+  }
+});
 
 app.get("/db", (req, res) => {
   try {

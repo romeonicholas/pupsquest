@@ -1,101 +1,71 @@
-<div
-  id="create-new-user"
-  class="hide-on-empty show-again"
-  style="position: absolute; top: 0; left: 0; z-index: 99"
->
-  <img
-    src="/images/userCreation/mainPanel.png"
-    class=""
-    style="position: relative; z-index: 98; pointer-events: none"
-  />
-  <!-- Something wrong with bottom shadow image -->
-  <!-- <img
-    src="/images/userCreation/animalsHeaderShadow.png"
-    class=""
-    style="
-      position: absolute;
-      top: 696px;
-      left: 282px;
-      z-index: 97;
-      width: 516px;
-      height: 378px;
-      box-shadow: 2px 0px 15px 0px rgba(0, 0, 0, 0.5);
-    "
-  /> -->
-  <img
-    src="/images/userCreation/colorsHeader.png"
-    class="follows-colors-slider slideable"
-    style="
-      position: absolute;
-      top: 556px;
-      left: -480px;
-      z-index: 96;
-      width: 3000px;
-    "
-  />
-  <img
-    src="/images/userCreation/animalsHeader.png"
-    class="follows-animals-slider slideable"
-    style="position: absolute; top: 706px; left: -480px; z-index: 96"
-  />
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="icon" href="data:," />
+    <script src="/js/script.js" defer></script>
+  </head>
+  <body>
+    <div id="container">
+      <div id="clip-path">
+        <div
+          id="vertical-center"
+          style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+          "
+        >
+          <div
+            id="colors-container"
+            style="display: flex; justify-content: space-around"
+          ></div>
 
-  <img
-    src="/images/userCreation/colorsSlider.png"
-    id="colors-slider"
-    class="slide-on-tap slideable"
-    style="
-      position: absolute;
-      top: 1130px;
-      left: 0px;
-      z-index: 96;
-      transform: translateX(125px);
-    "
-  />
-  <img
-    src="/images/userCreation/animalsSlider.png"
-    id="animals-slider"
-    class="slide-on-tap slideable"
-    style="
-      position: absolute;
-      top: 1355px;
-      left: 0px;
-      z-index: 96;
-      transform: translateX(375px);
-    "
-    data=""
-  />
+          <div
+            id="animals-container"
+            style="display: flex; justify-content: space-around"
+          ></div>
+        </div>
+      </div>
+    </div>
+    <script>
+      async function fetchColors() {
+        const response = await fetch("/api/colors");
+        const colors = await response.json();
+        const container = document.getElementById("colors-container");
+        colors.forEach((color) => {
+          const colorDiv = document.createElement("div");
+          colorDiv.className = "color";
+          colorDiv.style.width = "100px";
+          colorDiv.style.height = "100px";
+          colorDiv.style.backgroundColor = color.hex;
+          colorDiv.innerText = color.name;
+          colorDiv.onclick = () => {
+            fetchAvailableAnimalsForColor(color.id);
+          };
+          container.appendChild(colorDiv);
+        });
+      }
 
-  <button
-    id="back-to-start-button"
-    style="
-      background: transparent;
-      border: none !important;
-      font-size: 0;
-      position: absolute;
-      top: 1638px;
-      left: 145px;
-      z-index: 98;
-      width: 258px;
-      height: 100px;
-    "
-  ></button>
+      async function fetchAvailableAnimalsForColor(colorId) {
+        const response = await fetch(`/api/animals?colorId=${colorId}`);
+        const animals = await response.json();
+        const container = document.getElementById("animals-container");
+        animals.forEach((animal) => {
+          const animalDiv = document.createElement("div");
+          animalDiv.className = "animal";
+          animalDiv.style.width = "100px";
+          animalDiv.style.height = "100px";
+          animalDiv.style.backgroundImage = `url(${animal.imgPath})`;
+          animalDiv.innerText = animal.name;
+          container.appendChild(animalDiv);
+        });
+      }
 
-  <button
-    id="create-user-button"
-    style="
-      background: transparent;
-      border: none !important;
-      font-size: 0;
-      position: absolute;
-      top: 1638px;
-      left: 529px;
-      z-index: 98;
-      width: 404px;
-      height: 100px;
-    "
-  ></button>
-  <div
-    class="fixed-element"
-    style="z-index: 95; pointer-events: none; background-color: #faf8f2"
-  ></div>
-</div>
+      fetchColors();
+    </script>
+  </body>
+</html>
