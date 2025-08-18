@@ -39,8 +39,14 @@ app.post("/api/users", (req, res) => {
   if (!colorId || !animalId) {
     return res.status(400).json({ error: "Missing colorId or animalId" });
   }
-  createUser(db, { colorId, animalId });
-  res.status(201).json({ message: "User created successfully" });
+
+  try {
+    createUser(db, { colorId, animalId });
+    res.status(201).json({ message: "User created successfully" });
+  } catch (error) {
+    console.error("Error creating user:", error);
+    res.status(500).json({ error: "Failed to create user" });
+  }
 });
 
 app.get("/api/colors", (req, res) => {
