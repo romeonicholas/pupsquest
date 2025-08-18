@@ -11,6 +11,11 @@ import {
   getAvailableAnimalsForColor,
   createUser,
 } from "./db/queries/userCreate.js";
+import {
+  getAllColorsFromUsers,
+  getAllAnimalsFromUsersWithColor,
+  getUserByColorAndAnimal,
+} from "./db/queries/userLogin.js";
 
 dotenv.config({ path: ".env", quiet: true });
 
@@ -32,6 +37,39 @@ const HOST = process.env.HOST || "0.0.0.0";
 
 app.get("/new-user", (req, res) => {
   res.render("createNewUser");
+});
+
+app.get("/login", (req, res) => {
+  res.render("login");
+});
+
+app.get("/api/colors/from-users", async (req, res) => {
+  try {
+    const colors = await getAllColorsFromUsers(db);
+    res.json(colors);
+  } catch (error) {
+    console.error("Error fetching user colors:", error);
+    res.status(500).json({ error: "Failed to fetch user colors" });
+  }
+});
+
+app.get("/api/users", (req, res) => {
+  const { colorId, animalId } = req.query;
+
+  if (!colorId || !animalId) {
+    return res.status(400).json({ error: "Missing colorId or animalId" });
+  }
+
+  try {
+    const user = getUserByColorAndAnimal(db, colorId, animalId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    res.json(user);
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    res.status(500).json({ error: "Failed to fetch user" });
+  }
 });
 
 app.post("/api/users", (req, res) => {
@@ -59,7 +97,18 @@ app.get("/api/colors", (req, res) => {
   }
 });
 
-app.get("/api/animals", (req, res) => {
+app.get("/api/animals/existing", (req, res) => {
+  try {
+    const colorId = req.query.colorId;
+    const animals = getAllAnimalsFromUsersWithColor(db, colorId);
+    res.json(animals);
+  } catch (error) {
+    console.error("Error fetching existing animals:", error);
+    res.status(500).json({ error: "Failed to fetch existing animals" });
+  }
+});
+
+app.get("/api/animals/available", (req, res) => {
   const colorId = req.query.colorId;
   if (!colorId) {
     return res.status(400).json({ error: "Missing colorId" });

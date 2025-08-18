@@ -53,7 +53,7 @@
             style="display: flex; justify-content: center"
           >
             <button
-              onclick="createUser()"
+              onclick="logInUser()"
               style="
                 width: 100px;
                 height: 100px;
@@ -62,15 +62,15 @@
                 color: darkred;
               "
             >
-              Create User
+              Log In
             </button>
           </div>
         </div>
       </div>
     </div>
     <script>
-      async function fetchColors() {
-        const response = await fetch("/api/colors");
+      async function fetchColorsFromUsers() {
+        const response = await fetch("/api/colors/from-users");
         const colors = await response.json();
         const container = document.getElementById("colors-container");
 
@@ -95,7 +95,7 @@
 
       async function fetchAvailableAnimalsForColor(event, colorId) {
         const response = await fetch(
-          `/api/animals/available?colorId=${colorId}`
+          `/api/animals/existing?colorId=${colorId}`
         );
         const animals = await response.json();
         const container = document.getElementById("animals-container");
@@ -120,7 +120,7 @@
         });
       }
 
-      async function createUser() {
+      async function logInUser() {
         const selectedColor = document.querySelector(".color.selected");
         const selectedAnimal = document.querySelector(".animal.selected");
 
@@ -129,27 +129,28 @@
           return;
         }
 
-        const userData = {
-          colorId: selectedColor.dataset.id,
-          animalId: selectedAnimal.dataset.id,
-        };
+        const colorId = selectedColor.dataset.id;
+        const animalId = selectedAnimal.dataset.id;
 
-        const response = await fetch("/api/users", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(userData),
-        });
+        const response = await fetch(
+          `/api/users?colorId=${colorId}&animalId=${animalId}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
         if (response.ok) {
-          alert("User created successfully!");
+          const loggedInUser = await response.json();
+          alert("Logged in user: " + JSON.stringify(loggedInUser, null, 2));
         } else {
-          alert("Failed to create user.");
+          alert("Failed to log in user");
         }
       }
 
-      fetchColors();
+      fetchColorsFromUsers();
     </script>
   </body>
 </html>
