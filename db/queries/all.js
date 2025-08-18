@@ -7,9 +7,9 @@ export function getAllDataForDashboard(db) {
     SELECT
       r.id, r.riddleKey, r.headline, r.body, r.answerDetails, r.answerImgPath,
       rac.slotIndex,
-      ac.id   AS answerChoiceId,
-      ac.key  AS answerKey,
-      ac.imgPath AS answerChoiceImgPath
+      ac.id as answerChoiceId,
+      ac.key as answerKey,
+      ac.imgPath as answerChoiceImgPath
     FROM riddles r
     LEFT JOIN riddleAnswerChoices rac ON rac.riddleId = r.id
     LEFT JOIN answerChoices ac        ON ac.id = rac.answerChoiceId
@@ -37,6 +37,7 @@ export function getAllDataForDashboard(db) {
       riddlesMap.get(row.id).choices.push({
         id: row.answerChoiceId,
         key: row.answerKey,
+        display: row.display,
         imgPath: row.answerChoiceImgPath,
         slotIndex: row.slotIndex,
         isCorrect: row.slotIndex === 0,
@@ -48,7 +49,7 @@ export function getAllDataForDashboard(db) {
   const answerChoices = db
     .prepare(
       `
-    SELECT id, key, imgPath
+    SELECT id, key, display, imgPath
     FROM answerChoices
     ORDER BY key
   `

@@ -145,7 +145,8 @@
         <thead>
           <tr>
             <th>ID</th>
-            <th>Name</th>
+            <th>Key</th>
+            <th>Display</th>
             <th>Image</th>
           </tr>
         </thead>
@@ -153,7 +154,8 @@
           <% data.answerChoices.forEach(ac => { %>
           <tr>
             <td class="mono"><%= ac.id %></td>
-            <td><%= ac.name %></td>
+            <td><%= ac.key %></td>
+            <td><%= ac.display %></td>
             <td>
               <% if (ac.imgPath) { %>
               <img class="img-thumb" src="<%= ac.imgPath %>" alt="" />
