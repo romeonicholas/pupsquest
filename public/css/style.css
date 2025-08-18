@@ -75,6 +75,49 @@ button {
   font-size: 0;
 }
 
+#start-screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 100;
+}
+
+#new-game-button {
+  background: transparent;
+  border: none !important;
+  font-size: 0;
+  position: absolute;
+  top: 811px;
+  left: 177px;
+  z-index: 100;
+  width: 724px;
+  height: 145px;
+}
+
+#rejoin-game-button {
+  background: transparent;
+  border: none !important;
+  font-size: 0;
+  position: absolute;
+  top: 1004px;
+  left: 177px;
+  z-index: 101;
+  width: 724px;
+  height: 145px;
+}
+
+#use-phone-button {
+  background: transparent;
+  border: none !important;
+  font-size: 0;
+  position: absolute;
+  top: 1348px;
+  left: 177px;
+  z-index: 101;
+  width: 724px;
+  height: 145px;
+}
+
 .fixed-element {
   position: relative;
   top: 0;
@@ -486,3 +529,60 @@ button {
     transform: translatex(900%);
   }
 } */
+
+/* Temp create and login screens */
+
+#create-new-user-screen {
+  display: none;
+}
+
+#login-screen {
+  display: none;
+}
+
+#riddle-screen {
+  display: none;
+}
+
+.color.selected,
+.animal.selected {
+  border: 3px solid #000;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.color,
+.animal {
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.color:hover,
+.animal:hover {
+  opacity: 0.8;
+}
+
+.vertical-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.colors-container {
+  display: flex;
+  justify-content: space-around;
+}
+
+.animals-container {
+  display: flex;
+  justify-content: center;
+}
+
+.temp-button {
+  width: 100px;
+  height: 100px;
+  background: blue !important;
+  font-size: large;
+  color: darkred;
+}
