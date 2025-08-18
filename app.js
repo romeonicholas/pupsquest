@@ -16,6 +16,7 @@ import {
   getAllAnimalsFromUsersWithColor,
   getUserByColorAndAnimal,
 } from "./db/queries/userLogin.js";
+import { removeExpiredUsers } from "./db/scripts/userRemoval.js";
 
 dotenv.config({ path: ".env", quiet: true });
 
@@ -152,6 +153,17 @@ app.use("/assets", express.static(path.join(__dirname, "public")));
 app.listen(PORT, HOST, () => {
   console.log(`Started server on ${HOST}:${PORT}`);
 });
+
+console.log("Expired users removed:", removeExpiredUsers(db));
+
+setInterval(() => {
+  try {
+    const n = removeExpiredUsers(db);
+    if (n) console.log(`[TTL] Deleted ${n} expired users`);
+  } catch (e) {
+    console.error("[TTL] cleanup failed:", e.message);
+  }
+}, 180 * 60 * 1000);
 
 process.on("SIGINT", () => {
   try {
