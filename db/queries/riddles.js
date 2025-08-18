@@ -7,9 +7,9 @@ export function getAllRiddlesWithChoices() {
     SELECT
       r.id, r.riddleKey, r.headline, r.body, r.answerDetails, r.answerImgPath,
       rac.slotIndex,
-      ac.id   AS answerChoiceId,
-      ac.display AS answerName,
-      ac.imgPath AS answerChoiceImgPath
+      ac.id as answerChoiceId,
+      ac.display as answerChoiceDisplay,
+      ac.imgPath as answerChoiceImgPath
     FROM riddles r
     LEFT JOIN riddleAnswerChoices rac ON rac.riddleId = r.id
     LEFT JOIN answerChoices ac        ON ac.id = rac.answerChoiceId
@@ -34,7 +34,8 @@ export function getAllRiddlesWithChoices() {
     if (row.answerChoiceId != null) {
       byId.get(row.id).answerChoices.push({
         id: row.answerChoiceId,
-        name: row.answerName,
+        key: row.answerKey,
+        display: row.answerChoiceDisplay,
         imgPath: row.answerChoiceImgPath,
         slotIndex: row.slotIndex,
         isCorrect: row.slotIndex === 0, // slot 0 = correct

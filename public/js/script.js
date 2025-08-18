@@ -93,7 +93,6 @@ async function loadRiddles() {
   try {
     const response = await fetch("/riddles");
     riddlesData = await response.json();
-    console.log("Riddles loaded:", riddlesData);
   } catch (error) {
     console.error("Error loading riddles:", error);
   }
@@ -244,7 +243,6 @@ function incrementRiddleIndex() {
 
 function updateRiddleElements(riddle) {
   updateRiddleContent(riddle);
-  console.log(riddle);
   const shuffledChoices = shuffleAnswerChoices(riddle.answerChoices);
   const correctAnswerIndex = findCorrectAnswerIndex(shuffledChoices);
 
@@ -287,7 +285,7 @@ function updateSelectionIcons(shuffledChoices) {
 function updateSelectionTexts(shuffledChoices) {
   const texts = [optionText1, optionText2, optionText3, optionText4];
   texts.forEach((text, index) => {
-    text.innerText = shuffledChoices[index].name;
+    text.innerText = shuffledChoices[index].display;
   });
 }
 
@@ -372,9 +370,8 @@ function showNewRiddle() {
   updateRiddleElements(riddlesData[currentRiddleIndex]);
 
   setTimeout(() => {
-    console.log(currentShuffledChoices);
     updateRiddleAnswer(
-      currentShuffledChoices[currentCorrectAnswerIndex].name,
+      currentShuffledChoices[currentCorrectAnswerIndex].display,
       currentRiddle.answerDetails,
       currentRiddle.answerImgPath
     );
