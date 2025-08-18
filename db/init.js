@@ -1,17 +1,13 @@
 import Database from "better-sqlite3";
 
 export function openAndMigrate(path = "./database.db") {
-  console.log("Opening database at:", path);
-
   try {
     const db = new Database(path);
-    console.log("Database opened successfully");
 
     db.pragma("foreign_keys = ON");
     db.pragma("journal_mode = WAL");
     db.pragma("synchronous = NORMAL");
 
-    console.log("Running migrations...");
     db.exec(`
       CREATE TABLE IF NOT EXISTS userAnimals (
         id       INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -92,7 +88,6 @@ export function openAndMigrate(path = "./database.db") {
       );
     `);
 
-    console.log("Migrations completed");
     return db;
   } catch (error) {
     console.error("Database initialization failed:", error);

@@ -112,9 +112,6 @@ export function seedUsers(db) {
       }
 
       updateStateByIds.run(JSON.stringify(state), animal.id, color.id);
-      console.log(
-        `Seeded/updated ${which} id=${userRow.id} (${animalName} + ${colorName})`
-      );
     }
   })();
 }

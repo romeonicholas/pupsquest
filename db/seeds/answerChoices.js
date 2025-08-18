@@ -196,5 +196,4 @@ export function seedAnswerChoices(db) {
     `);
 
   db.transaction(() => rows.forEach((r) => upsert.run(r)))();
-  console.log(`Seeded ${rows.length} answerChoices.`);
 }

@@ -7,11 +7,9 @@ import { runAllSeeds } from "./db/seeds/index.js";
 import { getAllRiddlesWithChoices } from "./db/queries/riddles.js";
 import { getAllDataForDashboard } from "./db/queries/all.js";
 
-dotenv.config();
+dotenv.config({ path: ".env", quiet: true });
 
-console.log("Database status before seeds:", !db.open ? "closed" : "open");
 runAllSeeds(db);
-console.log("Database status after seeds:", !db.open ? "closed" : "open");
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -45,14 +43,13 @@ app.get("/riddles", (req, res) => {
 });
 
 app.get("/", (request, response) => {
-  console.log("serving index");
   response.render("index");
 });
 
 app.use("/assets", express.static(path.join(__dirname, "public")));
 
 app.listen(PORT, HOST, () => {
-  console.log(`👋 Started server on ${HOST}:${PORT}`);
+  console.log(`Started server on ${HOST}:${PORT}`);
 });
 
 process.on("SIGINT", () => {
