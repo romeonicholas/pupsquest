@@ -43,8 +43,8 @@ export function createUser(db, { colorId, animalId }) {
 
   const getAllRiddleIds = db.prepare(`SELECT id FROM riddles ORDER BY id`);
   const insertUser = db.prepare(`
-    INSERT INTO users (userAnimal, userColor, gameState)
-    VALUES (?, ?, ?)
+    INSERT INTO users (userAnimal, userColor, gameState, createdAt)
+    VALUES (?, ?, ?, strftime('%s','now'))
   `);
   const updateState = db.prepare(`
     UPDATE users SET gameState = ? WHERE id = ?
