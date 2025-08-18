@@ -271,6 +271,4 @@ export function seedRiddles(db) {
       );
     }
   })();
-
-  console.log(`Seeded ${rows.length} riddles by riddleKey with choice keys`);
 }
