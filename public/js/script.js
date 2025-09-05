@@ -532,8 +532,11 @@ function updateStatusWheel(wheelText) {
 
 // testing screen functions
 
-function hideStartScreen() {
-  document.getElementById("start-screen").style.display = "none";
+function lowerStartScreen() {
+  document.getElementById("start-screen").style.transition =
+    "transform 1800ms ease-in";
+  document.getElementById("start-screen").style.transform =
+    "translateY(1920px)";
 }
 
 function showCreateNewUserScreen() {
