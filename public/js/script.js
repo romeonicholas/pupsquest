@@ -559,7 +559,11 @@ function showColorPicker() {
   document.getElementById("user-creation-instructions").style.transition =
     "transform 800ms ease-in";
   document.getElementById("user-creation-instructions").style.transform =
-    "translateY(910px)";
+    "translateY(1270px)";
+  document.getElementById("color-picker").style.transition =
+    "transform 800ms ease-in";
+  document.getElementById("color-picker").style.transform =
+    "translateY(1337px)";
 }
 
 async function fetchColors() {
