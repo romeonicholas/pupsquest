@@ -85,9 +85,9 @@ function scaleContainer() {
 window.addEventListener("resize", scaleContainer);
 window.addEventListener("load", scaleContainer);
 document.addEventListener("DOMContentLoaded", scaleContainer);
-document.addEventListener("contextmenu", function (e) {
-  e.preventDefault();
-});
+// document.addEventListener("contextmenu", function (e) {
+//   e.preventDefault();
+// });
 
 async function loadRiddles() {
   try {
@@ -556,8 +556,7 @@ async function fetchColors() {
   const response = await fetch("/api/colors");
   const colors = await response.json();
   console.log(colors);
-  const container = document.querySelector(".colors-container");
-
+  const container = document.getElementById("create-new-user-colors-container");
   colors.forEach((color) => {
     const colorDiv = document.createElement("div");
     colorDiv.className = "color";
@@ -574,13 +573,18 @@ async function fetchColors() {
       fetchAvailableAnimalsForColor(color.id);
     };
     container.appendChild(colorDiv);
+    console.log(container);
   });
 }
 
 async function fetchAvailableAnimalsForColor(colorId) {
+  console.log(`Fetching available animals for color ID: ${colorId}`);
   const response = await fetch(`/api/animals/available?colorId=${colorId}`);
   const animals = await response.json();
-  const container = document.querySelector(".animals-container");
+  console.log(animals);
+  const container = document.getElementById(
+    "create-new-user-animals-container"
+  );
 
   container.innerHTML = "";
 
