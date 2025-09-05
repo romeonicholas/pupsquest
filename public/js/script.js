@@ -532,10 +532,9 @@ function updateStatusWheel(wheelText) {
 
 
 function lowerStartScreen() {
-  document.getElementById("start-screen").style.transition =
-    "transform 1800ms ease-in";
-  document.getElementById("start-screen").style.transform =
-    "translateY(1920px)";
+  const startScreen = document.getElementById("start-screen");
+  startScreen.style.transition = "transform 1800ms ease-in";
+  startScreen.style.transform = "translateY(1920px)";
 }
 
 function showCreateNewUserScreen() {
@@ -553,15 +552,15 @@ function showUsePhoneScreen() {
 
 
 function showColorPicker() {
-  console.log("showColorPicker");
-  document.getElementById("user-creation-instructions").style.transition =
-    "transform 800ms ease-in";
-  document.getElementById("user-creation-instructions").style.transform =
-    "translateY(1270px)";
-  document.getElementById("color-picker").style.transition =
-    "transform 800ms ease-in";
-  document.getElementById("color-picker").style.transform =
-    "translateY(1337px)";
+  const userCreationInstructions = document.getElementById(
+    "user-creation-instructions"
+  );
+  const colorPicker = document.getElementById("color-picker");
+
+  userCreationInstructions.style.transition = "transform 800ms ease-in";
+  userCreationInstructions.style.transform = "translateY(1270px)";
+  colorPicker.style.transition = "transform 800ms ease-in";
+  colorPicker.style.transform = "translateY(1337px)";
 }
 
 async function fetchColors() {
