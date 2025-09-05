@@ -136,14 +136,14 @@ button {
   z-index: 79;
 }
 
-#header-panel {
+#user-panel {
   position: absolute;
   top: 0px;
   left: 0px;
   z-index: 79;
 }
 
-#header-panel-base {
+#user-panel-base {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -151,6 +151,7 @@ button {
 }
 
 #badge-container {
+  display: none;
   position: absolute;
   top: 115px;
   left: 561px;
@@ -243,7 +244,7 @@ button {
   transform: rotate(-36deg);
 }
 
-#header-panel-shadow {
+#user-panel-shadow {
   position: absolute;
   top: 516px;
   left: 0px;

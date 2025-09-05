@@ -103,66 +103,66 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 //Temporary random badge and animal for demo
-window.addEventListener("load", function () {
-  const badgeColorOptions = [
-    {
-      color: "Yellow",
-      image: "images/userCreation/badge_yellow.png",
-    },
-    {
-      color: "Blue",
-      image: "images/userCreation/badge_blue.png",
-    },
-    {
-      color: "Green",
-      image: "images/userCreation/badge_green.png",
-    },
-    {
-      color: "Purple",
-      image: "images/userCreation/badge_purple.png",
-    },
-    {
-      color: "Orange",
-      image: "images/userCreation/badge_orange.png",
-    },
-    {
-      color: "Pink",
-      image: "images/userCreation/badge_pink.png",
-    },
-  ];
-  const randomColorIndex = Math.floor(Math.random() * badgeColorOptions.length);
+// window.addEventListener("load", function () {
+//   const badgeColorOptions = [
+//     {
+//       color: "Yellow",
+//       image: "images/userCreation/badge_yellow.png",
+//     },
+//     {
+//       color: "Blue",
+//       image: "images/userCreation/badge_blue.png",
+//     },
+//     {
+//       color: "Green",
+//       image: "images/userCreation/badge_green.png",
+//     },
+//     {
+//       color: "Purple",
+//       image: "images/userCreation/badge_purple.png",
+//     },
+//     {
+//       color: "Orange",
+//       image: "images/userCreation/badge_orange.png",
+//     },
+//     {
+//       color: "Pink",
+//       image: "images/userCreation/badge_pink.png",
+//     },
+//   ];
+//   const randomColorIndex = Math.floor(Math.random() * badgeColorOptions.length);
 
-  const badgeAnimalOptions = [
-    {
-      animal: "Hummingbird",
-      image: "images/userCreation/badge_hummingbird.png",
-    },
-    {
-      animal: "Porcupine",
-      image: "images/userCreation/badge_porcupine.png",
-    },
-    {
-      animal: "Armadillo",
-      image: "images/userCreation/badge_armadillo.png",
-    },
-    {
-      animal: "Fox",
-      image: "images/userCreation/badge_fox.png",
-    },
-    {
-      animal: "Prairie Dog",
-      image: "images/userCreation/badge_prairie_dog.png",
-    },
-  ];
-  const randomAnimalIndex = Math.floor(
-    Math.random() * badgeAnimalOptions.length
-  );
+//   const badgeAnimalOptions = [
+//     {
+//       animal: "Hummingbird",
+//       image: "images/userCreation/badge_hummingbird.png",
+//     },
+//     {
+//       animal: "Porcupine",
+//       image: "images/userCreation/badge_porcupine.png",
+//     },
+//     {
+//       animal: "Armadillo",
+//       image: "images/userCreation/badge_armadillo.png",
+//     },
+//     {
+//       animal: "Fox",
+//       image: "images/userCreation/badge_fox.png",
+//     },
+//     {
+//       animal: "Prairie Dog",
+//       image: "images/userCreation/badge_prairie_dog.png",
+//     },
+//   ];
+//   const randomAnimalIndex = Math.floor(
+//     Math.random() * badgeAnimalOptions.length
+//   );
 
-  badgeBase.src = badgeColorOptions[randomColorIndex].image;
-  badgeIcon.src = badgeAnimalOptions[randomAnimalIndex].image;
+//   badgeBase.src = badgeColorOptions[randomColorIndex].image;
+//   badgeIcon.src = badgeAnimalOptions[randomAnimalIndex].image;
 
-  colorAnimalText.innerText = `${badgeColorOptions[randomColorIndex].color} ${badgeAnimalOptions[randomAnimalIndex].animal}`;
-});
+//   colorAnimalText.innerText = `${badgeColorOptions[randomColorIndex].color} ${badgeAnimalOptions[randomAnimalIndex].animal}`;
+// });
 
 let movedColors = false;
 let movedAnimals = false;
