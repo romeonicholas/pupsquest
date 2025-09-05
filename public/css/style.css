@@ -77,7 +77,7 @@ button {
 
 #start-screen {
   position: absolute;
-  top: 0;
+  bottom: 0; /* Start screen has a tab on top that extends out of view */
   left: 0;
   z-index: 100;
 }
