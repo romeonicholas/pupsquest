@@ -1,6 +1,8 @@
 import Database from "better-sqlite3";
+import { runAllMigrations } from "./migrations/index.js";
+import { runAllSeeds } from "./seeds/index.js";
 
-export function openAndMigrate(path = "./database.db") {
+export async function openAndMigrate(path = "./database.db") {
   try {
     const db = new Database(path);
 
@@ -88,6 +90,9 @@ export function openAndMigrate(path = "./database.db") {
       );
     `);
 
+    await runAllMigrations(db);
+    runAllSeeds(db);
+
     return db;
   } catch (error) {
     console.error("Database initialization failed:", error);
@@ -95,6 +100,6 @@ export function openAndMigrate(path = "./database.db") {
   }
 }
 
-export const db = openAndMigrate(
+export const db = await openAndMigrate(
   process.env.DATABASE_URL || "./db/database.db"
 );
