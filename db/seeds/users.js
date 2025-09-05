@@ -59,8 +59,8 @@ export function seedUsers(db) {
   );
 
   const insertIfMissing = db.prepare(`
-    INSERT INTO users (userAnimal, userColor)
-    VALUES (?, ?)
+    INSERT INTO users (userAnimal, userColor, createdAt)
+    VALUES (?, ?, ?)
     ON CONFLICT(userAnimal, userColor) DO NOTHING
   `);
 
@@ -75,14 +75,24 @@ export function seedUsers(db) {
   `);
 
   const rows = [
-    { colorName: "Green", animalName: "Prairie Dog", which: "user1" },
-    { colorName: "Purple", animalName: "Hummingbird", which: "user2" },
+    {
+      colorName: "Green",
+      animalName: "Prairie Dog",
+      which: "user1",
+      createdAt: Math.floor(Date.now() / 1000) - 86400,
+    },
+    {
+      colorName: "Red",
+      animalName: "Hummingbird",
+      which: "user2",
+      createdAt: Math.floor(Date.now() / 1000) - 3600,
+    },
   ];
 
   const allRiddleIds = getAllRiddleIds();
 
   db.transaction(() => {
-    for (const { colorName, animalName, which } of rows) {
+    for (const { colorName, animalName, which, createdAt } of rows) {
       const color = findColorId.get(colorName);
       if (!color)
         throw new Error(
@@ -94,7 +104,7 @@ export function seedUsers(db) {
           `Animal not found: "${animalName}". Seed userAnimals first.`
         );
 
-      insertIfMissing.run(animal.id, color.id);
+      insertIfMissing.run(animal.id, color.id, createdAt);
 
       const userRow = getUserIdByIds.get(animal.id, color.id);
       if (!userRow) throw new Error("Failed to fetch user id after insert");

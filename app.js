@@ -2,8 +2,11 @@ import path from "path";
 import { fileURLToPath } from "url";
 import express from "express";
 import dotenv from "dotenv";
-import { db } from "./db/init.js";
-import { runAllSeeds } from "./db/seeds/index.js";
+
+dotenv.config({ path: ".env", quiet: true });
+
+const { db } = await import("./db/init.js");
+
 import { getAllRiddlesWithChoices } from "./db/queries/riddles.js";
 import { getAllDataForDashboard } from "./db/queries/all.js";
 import {
@@ -17,10 +20,6 @@ import {
   getUserByColorAndAnimal,
 } from "./db/queries/userLogin.js";
 import { removeExpiredUsers } from "./db/scripts/userRemoval.js";
-
-dotenv.config({ path: ".env", quiet: true });
-
-runAllSeeds(db);
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

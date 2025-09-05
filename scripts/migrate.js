@@ -65,11 +65,9 @@ async function run() {
       );
     })();
 
-    console.log(`↑ applied ${file}`);
     ran++;
   }
 
-  if (!ran) console.log("Nothing to migrate.");
   db.close();
 }
 
