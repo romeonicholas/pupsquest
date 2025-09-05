@@ -563,7 +563,21 @@ function showColorPicker() {
   userCreationInstructions.style.transform = "translateY(1270px)";
   colorPicker.style.transition = "transform 800ms ease-in";
   colorPicker.style.transform = "translateY(1337px)";
+
+  setTimeout(() => {
+    const statusTextCurrent = document.getElementById("status-text-current");
+    const statusTextNext = document.getElementById("status-text-next");
+    statusTextCurrent.style.transition = "transform 800ms ease-in";
+    statusTextNext.style.transition = "transform 800ms ease-in";
+
+    updateStatusWheel("CODE NAME");
+    const badgeContainer = document.getElementById("badge-container");
+    badgeContainer.style.transition = "transform 800ms ease-in";
+    badgeContainer.style.transform = "translateY(465px)";
+  }, 800);
 }
+
+function selectColor(colorDisplayName) {}
 
 async function fetchColors() {
   const response = await fetch("/api/colors");

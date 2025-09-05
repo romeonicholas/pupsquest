@@ -160,9 +160,9 @@ button {
 }
 
 #badge-container {
-  display: none;
   position: absolute;
-  top: 115px;
+  /* top: 120px; */
+  top: -340px;
   left: 561px;
   z-index: 79;
 }
@@ -182,7 +182,7 @@ button {
   left: 218px;
   height: 150px;
   width: 225px;
-  transform: rotate(6.05deg);
+  transform: rotate(3deg);
 }
 
 #color-animal-text {
@@ -194,6 +194,7 @@ button {
 }
 
 #scout-text {
+  display: none;
   font-family: "Gotham";
   font-size: 24px;
   line-height: 1.6;
