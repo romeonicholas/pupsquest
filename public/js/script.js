@@ -552,6 +552,14 @@ function showUsePhoneScreen() {
 }
 
 
+function showColorPicker() {
+  console.log("showColorPicker");
+  document.getElementById("user-creation-instructions").style.transition =
+    "transform 800ms ease-in";
+  document.getElementById("user-creation-instructions").style.transform =
+    "translateY(910px)";
+}
+
 async function fetchColors() {
   const response = await fetch("/api/colors");
   const colors = await response.json();
