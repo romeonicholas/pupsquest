@@ -118,6 +118,15 @@ button {
   height: 145px;
 }
 
+#user-creation-instructions-button {
+  position: absolute;
+  top: 2080px;
+  left: 356px;
+  width: 371px;
+  height: 105px;
+  z-index: 100;
+}
+
 .fixed-element {
   position: relative;
   top: 0;
