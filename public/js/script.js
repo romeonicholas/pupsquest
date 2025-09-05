@@ -577,7 +577,43 @@ function showColorPicker() {
   }, 800);
 }
 
-function selectColor(colorDisplayName) {}
+function clearColorSelectionIndicators() {
+  document.getElementById("red-selected").style.display = "none";
+  document.getElementById("yellow-selected").style.display = "none";
+  document.getElementById("green-selected").style.display = "none";
+  document.getElementById("blue-selected").style.display = "none";
+}
+
+function showColorSelectionIndicators(colorDisplayName) {
+  if (colorDisplayName === "red") {
+    document.getElementById("red-selected").style.display = "inline";
+  } else if (colorDisplayName === "yellow") {
+    document.getElementById("yellow-selected").style.display = "inline";
+  } else if (colorDisplayName === "green") {
+    document.getElementById("green-selected").style.display = "inline";
+  } else if (colorDisplayName === "blue") {
+    document.getElementById("blue-selected").style.display = "inline";
+  }
+}
+
+function updateBadgeColor(colorDisplayName) {
+  const badgeBase = document.getElementById("badge-base");
+  if (colorDisplayName === "red") {
+    badgeBase.src = "images/userCreation/badge_red.png";
+  } else if (colorDisplayName === "yellow") {
+    badgeBase.src = "images/userCreation/badge_yellow.png";
+  } else if (colorDisplayName === "green") {
+    badgeBase.src = "images/userCreation/badge_green.png";
+  } else if (colorDisplayName === "blue") {
+    badgeBase.src = "images/userCreation/badge_blue.png";
+  }
+}
+
+function selectColor(colorDisplayName) {
+  clearColorSelectionIndicators();
+  showColorSelectionIndicators(colorDisplayName);
+  updateBadgeColor(colorDisplayName);
+}
 
 async function fetchColors() {
   const response = await fetch("/api/colors");
