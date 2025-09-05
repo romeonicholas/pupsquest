@@ -597,5 +597,15 @@ button {
 }
 
 #user-creation-instructions {
-  transform: translate(0px, -341px);
+  position: absolute;
+  top: -341px;
+  left: 0px;
+  z-index: 5;
+}
+
+#color-picker {
+  position: absolute;
+  top: -1337px;
+  left: 0px;
+  z-index: 6;
 }
