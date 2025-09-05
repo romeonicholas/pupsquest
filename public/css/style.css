@@ -543,9 +543,6 @@ button {
 
 /* Temp create and login screens */
 
-#create-new-user-screen {
-}
-
 #login-screen {
   display: none;
 }
@@ -611,39 +608,44 @@ button {
   z-index: 6;
 }
 
-#red-color-button {
+#color-options-container {
   position: absolute;
-  top: 648px;
+  width: 1080px;
+  top: 650px;
+}
+
+#option-red {
+  position: absolute;
   left: 106px;
-  width: 170px;
-  height: 170px;
-  /* background-color: red;
-  opacity: 0.5; */
 }
-#blue-color-button {
+
+#option-yellow {
   position: absolute;
-  top: 648px;
-  left: 805px;
-  width: 170px;
-  height: 170px;
-  /* background-color: blue;
-  opacity: 0.5; */
-}
-#green-color-button {
-  position: absolute;
-  top: 648px;
-  left: 576px;
-  width: 170px;
-  height: 170px;
-  /* background-color: green;
-  opacity: 0.5; */
-}
-#yellow-color-button {
-  position: absolute;
-  top: 648px;
   left: 337px;
+}
+
+#option-blue {
+  position: absolute;
+  left: 805px;
+}
+
+#option-green {
+  position: absolute;
+  left: 576px;
+}
+
+.color-button {
+  padding: 0px;
   width: 170px;
   height: 170px;
-  /* background-color: yellow;
-  opacity: 0.5; */
+}
+
+.color-selected {
+  display: none;
+  position: absolute;
+  left: 0;
+  padding-left: 25px;
+  padding-right: 25px;
+  padding-top: 25px;
+  padding-bottom: 25px;
 }
