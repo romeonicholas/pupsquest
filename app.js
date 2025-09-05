@@ -37,7 +37,7 @@ const PORT = process.env.PORT || 3000;
 const HOST = process.env.HOST || "0.0.0.0";
 
 app.get("/new-user", (req, res) => {
-  res.render("createNewUser");
+  res.render("create_new_user");
 });
 
 app.get("/login", (req, res) => {

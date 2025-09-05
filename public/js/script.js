@@ -539,7 +539,6 @@ function lowerStartScreen() {
 }
 
 function showCreateNewUserScreen() {
-  document.getElementById("create-new-user-screen").style.display = "block";
   fetchColors();
 }
 
@@ -556,7 +555,6 @@ function showUsePhoneScreen() {
 async function fetchColors() {
   const response = await fetch("/api/colors");
   const colors = await response.json();
-  console.log(colors);
   const container = document.getElementById("create-new-user-colors-container");
   colors.forEach((color) => {
     const colorDiv = document.createElement("div");
@@ -574,15 +572,12 @@ async function fetchColors() {
       fetchAvailableAnimalsForColor(color.id);
     };
     container.appendChild(colorDiv);
-    console.log(container);
   });
 }
 
 async function fetchAvailableAnimalsForColor(colorId) {
-  console.log(`Fetching available animals for color ID: ${colorId}`);
   const response = await fetch(`/api/animals/available?colorId=${colorId}`);
   const animals = await response.json();
-  console.log(animals);
   const container = document.getElementById(
     "create-new-user-animals-container"
   );
@@ -639,13 +634,9 @@ async function createUser() {
 async function fetchColorsFromUsers() {
   const response = await fetch("/api/colors/from-users");
   const colors = await response.json();
-  console.log(colors);
   const container = document.getElementById("login-colors-container");
 
   colors.forEach((color) => {
-    console.log(
-      `Color ID: ${color.id}, Name: ${color.name}, Hex: ${color.hex}`
-    );
     const colorDiv = document.createElement("div");
     colorDiv.className = "color";
     colorDiv.style.width = "100px";
@@ -667,7 +658,6 @@ async function fetchColorsFromUsers() {
 async function fetchAvailableAnimalsForColor(colorId) {
   const response = await fetch(`/api/animals/existing?colorId=${colorId}`);
   const animals = await response.json();
-  console.log(animals);
   const container = document.getElementById("login-animals-container");
 
   container.innerHTML = "";

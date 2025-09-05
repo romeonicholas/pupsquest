@@ -534,7 +534,6 @@ button {
 /* Temp create and login screens */
 
 #create-new-user-screen {
-  display: none;
 }
 
 #login-screen {
@@ -586,4 +585,8 @@ button {
   background: blue !important;
   font-size: large;
   color: darkred;
+}
+
+#user-creation-instructions {
+  transform: translate(0px, -341px);
 }
