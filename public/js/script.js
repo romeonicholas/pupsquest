@@ -598,38 +598,46 @@ async function selectColor(colorDisplayName, colorId) {
   updateBadgeColor(colorDisplayName);
   const animals = await fetchAvailableAnimalsForColor(colorId);
 
+  const animalOptions = [];
+  animals.forEach((animal) => {
+    animalOptions.push(renderAnimalOption(animal));
+  });
+
+  const animalOptionsContainer = document.getElementById(
+    "animal-options-container"
+  );
+  animalOptionsContainer.innerHTML = animalOptions.join("");
+
   if (userCreationInstructions.style.transform !== "translateY(2210px)") {
     userCreationInstructions.style.transition = "transform 800ms ease-in";
     userCreationInstructions.style.transform = "translateY(2210px)";
   }
 }
 
+function renderAnimalOption(animal) {
+  return ejs.render(`<div class="animal-option">
+  <div class="animal-icon-container">
+    <img class="animal-icon" src="${animal.imgPath}" />
+    <img
+      id="${animal.name.toLowerCase()}-selected"
+      class="animal-selected"
+      src="/images/userCreation/animal_selected.png"
+    />
+  </div>
+  <div class="animal-icon-text">${animal.name}</div>
+  <button
+    id="button-${animal.name.toLowerCase()}"
+    class="animal-button"
+    onclick="selectAnimal('${animal.name.toLowerCase()}', ${animal.id})"
+  ></button>
+</div>
+`);
+}
+
 async function fetchAvailableAnimalsForColor(colorId) {
   const response = await fetch(`/api/animals/available?colorId=${colorId}`);
   const animals = await response.json();
   return animals;
-  // const container = document.getElementById(
-  //   "create-new-user-animals-container"
-  // );
-
-  // container.innerHTML = "";
-
-  // animals.forEach((animal) => {
-  //   const animalDiv = document.createElement("div");
-  //   animalDiv.className = "animal";
-  //   animalDiv.style.width = "100px";
-  //   animalDiv.style.height = "100px";
-  //   animalDiv.style.backgroundImage = `url(${animal.imgPath})`;
-  //   animalDiv.innerText = animal.name;
-  //   animalDiv.dataset.id = animal.id;
-  //   animalDiv.onclick = (event) => {
-  //     document
-  //       .querySelectorAll(".animal")
-  //       .forEach((a) => a.classList.remove("selected"));
-  //     event.target.classList.add("selected");
-  //   };
-  //   container.appendChild(animalDiv);
-  // });
 }
 
 function selectAnimal(animalDisplayName, animalId) {
