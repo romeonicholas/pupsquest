@@ -632,6 +632,10 @@ async function fetchAvailableAnimalsForColor(colorId) {
   // });
 }
 
+function selectAnimal(animalDisplayName, animalId) {
+  console.log("Selected animal:", animalDisplayName, animalId);
+}
+
 // async function createUser() {
 //   const selectedColor = document.querySelector(".color.selected");
 //   const selectedAnimal = document.querySelector(".animal.selected");

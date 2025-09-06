@@ -654,16 +654,24 @@ button {
   padding-bottom: 25px;
 }
 
+#animal-options-instructions {
+  position: absolute;
+  width: 100%;
+  top: 1040px;
+  font-family: "Enriqueta";
+  font-size: 36px;
+  text-align: center;
+}
+
 #animal-options-container {
   position: absolute;
-  top: 1130px;
+  top: 1135px;
   left: 34px;
   width: 1012px;
   height: 620px;
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
-  background-color: rgba(100, 40, 20, 0.3);
 }
 
 .animal-option {
@@ -672,7 +680,7 @@ button {
   align-items: center;
   justify-content: center;
   width: 25%;
-  height: 250px;
+  height: 300px;
 }
 
 .animal-selected {
@@ -682,6 +690,9 @@ button {
 }
 
 .animal-button {
+  position: absolute;
+  height: 240px;
+  width: 220px;
   padding: 0px;
 }
 
@@ -694,4 +705,9 @@ button {
 
 .animal-icon {
   margin-bottom: 25px;
+}
+
+#confirmation-panel {
+  position: absolute;
+  top: 1900px;
 }
