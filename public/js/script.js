@@ -1,4 +1,4 @@
-const currentUser = null;
+let currentUser = null;
 let currentRiddleIndex = Math.floor(Math.random() * 5);
 let riddlesData = null;
 let currentRiddleData = null;
@@ -499,7 +499,8 @@ function updateAnimalSelection(animalDisplayName) {
 function updateBadgeIcon(animalImgPath) {
   const badgeIcon = document.getElementById("badge-icon");
   badgeIcon.src = animalImgPath;
-  badgeIcon.style.display = "block";
+
+  badgeIcon.classList.add("visible");
 }
 
 function getSelectedColor() {
@@ -531,7 +532,7 @@ function updateBadgeText(animalDisplayName) {
   badgeText.innerText = `${color} ${animalDisplayName}`;
 
   const badgeTextContainer = document.getElementById("badge-text-container");
-  badgeTextContainer.style.display = "flex";
+  badgeTextContainer.classList.add("visible");
 }
 
 function selectAnimal(animalDisplayName, animalId, animalImgPath) {
