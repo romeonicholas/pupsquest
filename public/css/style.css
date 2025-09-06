@@ -168,15 +168,22 @@ button {
 }
 
 #badge-icon {
+  opacity: 0;
   position: absolute;
   top: 122px;
   left: 40px;
   transform: rotate(3deg);
+  transition: opacity 300ms ease-in;
+}
+
+#badge-icon.visible {
+  opacity: 1;
 }
 
 #badge-text-container {
+  opacity: 0;
   position: absolute;
-  display: none;
+  display: flex;
   flex-direction: column;
   justify-content: center;
   top: 132px;
@@ -184,6 +191,11 @@ button {
   height: 150px;
   width: 225px;
   transform: rotate(3deg);
+  transition: opacity 300ms ease-in;
+}
+
+#badge-text-container.visible {
+  opacity: 1;
 }
 
 #color-animal-text {
