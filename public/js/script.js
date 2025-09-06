@@ -1,5 +1,3 @@
-// State
-
 let currentRiddleIndex = Math.floor(Math.random() * 5);
 let riddlesData = null;
 let currentRiddleData = null;
@@ -12,16 +10,6 @@ const incorrectAnswerBackings = [
   "/images/riddles/ui/answer_backing_wrong_2.png",
   "/images/riddles/ui/answer_backing_wrong_3.png",
 ];
-
-// const startScreenDiv = document.getElementById("start-screen");
-// const startGameButton = document.getElementById("start-new-game-button");
-
-// const createUserButton = document.getElementById("create-user-button");
-// const createNewUserDiv = document.getElementById("create-new-user");
-// const colorsHeader = document.querySelector(".follows-colors-slider");
-// const animalsHeader = document.querySelector(".follows-animals-slider");
-// const colorsSlider = document.getElementById("colors-slider");
-// const animalsSlider = document.getElementById("animals-slider");
 
 const badgeBase = document.getElementById("badge-base");
 const badgeIcon = document.getElementById("badge-icon");
@@ -102,127 +90,9 @@ document.addEventListener("DOMContentLoaded", function () {
   loadRiddles();
 });
 
-//Temporary random badge and animal for demo
-// window.addEventListener("load", function () {
-//   const badgeColorOptions = [
-//     {
-//       color: "Yellow",
-//       image: "images/userCreation/badge_yellow.png",
-//     },
-//     {
-//       color: "Blue",
-//       image: "images/userCreation/badge_blue.png",
-//     },
-//     {
-//       color: "Green",
-//       image: "images/userCreation/badge_green.png",
-//     },
-//     {
-//       color: "Purple",
-//       image: "images/userCreation/badge_purple.png",
-//     },
-//     {
-//       color: "Orange",
-//       image: "images/userCreation/badge_orange.png",
-//     },
-//     {
-//       color: "Pink",
-//       image: "images/userCreation/badge_pink.png",
-//     },
-//   ];
-//   const randomColorIndex = Math.floor(Math.random() * badgeColorOptions.length);
-
-//   const badgeAnimalOptions = [
-//     {
-//       animal: "Hummingbird",
-//       image: "images/userCreation/badge_hummingbird.png",
-//     },
-//     {
-//       animal: "Porcupine",
-//       image: "images/userCreation/badge_porcupine.png",
-//     },
-//     {
-//       animal: "Armadillo",
-//       image: "images/userCreation/badge_armadillo.png",
-//     },
-//     {
-//       animal: "Fox",
-//       image: "images/userCreation/badge_fox.png",
-//     },
-//     {
-//       animal: "Prairie Dog",
-//       image: "images/userCreation/badge_prairie_dog.png",
-//     },
-//   ];
-//   const randomAnimalIndex = Math.floor(
-//     Math.random() * badgeAnimalOptions.length
-//   );
-
-//   badgeBase.src = badgeColorOptions[randomColorIndex].image;
-//   badgeIcon.src = badgeAnimalOptions[randomAnimalIndex].image;
-
-//   colorAnimalText.innerText = `${badgeColorOptions[randomColorIndex].color} ${badgeAnimalOptions[randomAnimalIndex].animal}`;
-// });
-
 let movedColors = false;
 let movedAnimals = false;
 let isAnimating = false;
-
-// document.addEventListener("DOMContentLoaded", function () {
-//   document.querySelectorAll(".slide-on-tap").forEach(function (element) {
-//     element.addEventListener("click", function (event) {
-//       if (isAnimating) return;
-
-//       const screenMidpoint = window.innerWidth / 2;
-//       const clickX = event.clientX;
-
-//       let slider = element;
-//       let header = slider.id === "colors-slider" ? colorsHeader : animalsHeader;
-
-//       let sliderTranslate = getTranslateX(slider);
-//       let headerTranslate = getTranslateX(header);
-
-//       let colorSliderMaxTranslate = -500;
-//       let colorSliderMinTranslate = 125;
-
-//       let animalSliderMaxTranslate = -375;
-//       let animalSliderMinTranslate = 375;
-
-//       let maxTranslate =
-//         slider.id === "colors-slider"
-//           ? colorSliderMaxTranslate
-//           : animalSliderMaxTranslate;
-//       let minTranslate =
-//         slider.id === "colors-slider"
-//           ? colorSliderMinTranslate
-//           : animalSliderMinTranslate;
-
-//       let shouldMove = false;
-
-//       if (clickX > screenMidpoint) {
-//         if (sliderTranslate > maxTranslate) {
-//           isAnimating = true;
-//           shouldMove = true;
-//           slider.style.transform = `translateX(${sliderTranslate - 125}px)`;
-//           header.style.transform = `translateX(${headerTranslate - 510}px)`;
-//         }
-//       } else {
-//         if (sliderTranslate < minTranslate) {
-//           isAnimating = true;
-//           shouldMove = true;
-//           slider.style.transform = `translateX(${sliderTranslate + 125}px)`;
-//           header.style.transform = `translateX(${headerTranslate + 510}px)`;
-//         }
-//       }
-
-//       if (shouldMove) {
-//         setTimeout(() => {
-//           isAnimating = false;
-//         }, 300);
-//       }
-//     });
-//   });
-// });
 
 function closeRiddleContainerFromBottom() {
   selectionLayer.style.transform = "translateY(0)";
@@ -362,7 +232,6 @@ function resetIconPositions() {
 }
 
 function showNewRiddle() {
-  resetHints(); // temporary, only for this demo deliverable
   resetIconPositions();
 
   incrementRiddleIndex();
@@ -382,12 +251,6 @@ function showNewRiddle() {
     showFirstCouplet();
   }, 2000);
 }
-
-// document.addEventListener("DOMContentLoaded", function () {
-//   nextRiddleButton.addEventListener("click", function () {
-//     showNewRiddle();
-//   });
-// });
 
 function decreaseHints() {
   const currentX = getTranslateX(hintCountForeground);
@@ -529,8 +392,6 @@ function updateStatusWheel(wheelText) {
   nextStatusText.innerHTML = '<span class="status-text"></span>';
   statusWheelContainer.appendChild(nextStatusText);
 }
-
-// testing screen functions
 
 function lowerStartScreen() {
   const startScreen = document.getElementById("start-screen");
