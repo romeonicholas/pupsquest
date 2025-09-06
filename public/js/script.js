@@ -643,6 +643,10 @@ function selectAnimal(animalDisplayName, animalId) {
     `${animalDisplayName}-selected`
   );
   animalSelectionIndicator.style.display = "inline";
+
+  const confirmationPanel = document.getElementById("confirmation-panel");
+  confirmationPanel.style.transition = "transform 300ms ease-in";
+  confirmationPanel.style.transform = "translateY(-165px)";
 }
 
 // async function createUser() {
