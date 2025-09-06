@@ -649,6 +649,12 @@ function selectAnimal(animalDisplayName, animalId) {
   confirmationPanel.style.transform = "translateY(-165px)";
 }
 
+function confirmAnimal() {
+  const confirmationPanel = document.getElementById("confirmation-panel");
+  confirmationPanel.style.transition = "transform 1200ms ease-in";
+  confirmationPanel.style.transform = "translateY(-1470px)";
+}
+
 // async function createUser() {
 //   const selectedColor = document.querySelector(".color.selected");
 //   const selectedAnimal = document.querySelector(".animal.selected");

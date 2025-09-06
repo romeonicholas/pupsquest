@@ -717,4 +717,14 @@ button {
 #confirmation-panel {
   position: absolute;
   top: 1900px;
+  z-index: 6;
+}
+
+#animal-confirmation-button {
+  position: absolute;
+  top: 9px;
+  left: 350px;
+  width: 381px;
+  height: 115px;
+  padding: 0px;
 }
