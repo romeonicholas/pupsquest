@@ -633,7 +633,9 @@ function renderAnimalOption(animal) {
 }
 
 async function fetchAvailableAnimalsForColor(colorId) {
-  const response = await fetch(`/api/animals/available?colorId=${colorId}`);
+  const response = await fetch(
+    `/api/animals/available?colorId=${colorId}&limit=8`
+  );
   const animals = await response.json();
   return animals;
 }
