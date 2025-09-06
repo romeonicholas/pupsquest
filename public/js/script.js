@@ -1,3 +1,4 @@
+const currentUser = null;
 let currentRiddleIndex = Math.floor(Math.random() * 5);
 let riddlesData = null;
 let currentRiddleData = null;
@@ -485,14 +486,14 @@ async function fetchAvailableAnimalsForColor(colorId) {
 }
 
 function updateAnimalSelection(animalDisplayName) {
-  document.querySelectorAll(".animal-selected").forEach((el) => {
-    el.style.display = "none";
+  document.querySelectorAll(".animal-selection-icon").forEach((el) => {
+    el.classList.remove("selected");
   });
 
   const animalSelectionIndicator = document.getElementById(
     `${animalDisplayName.toLowerCase()}-selected`
   );
-  animalSelectionIndicator.style.display = "inline";
+  animalSelectionIndicator.classList.add("selected");
 }
 
 function updateBadgeIcon(animalImgPath) {
@@ -501,13 +502,30 @@ function updateBadgeIcon(animalImgPath) {
   badgeIcon.style.display = "block";
 }
 
-function updateBadgeText(animalDisplayName) {
+function getSelectedColor() {
   const selectedColorIcon = document.querySelector(
     ".color-selection-icon.selected"
   );
   const color = selectedColorIcon
     ? selectedColorIcon.getAttribute("data-color")
     : "unknown";
+
+  return color;
+}
+
+function getSelectedColorId() {
+  const selectedColorIcon = document.querySelector(
+    ".color-selection-icon.selected"
+  );
+  const colorId = selectedColorIcon
+    ? selectedColorIcon.getAttribute("data-id")
+    : null;
+
+  return colorId;
+}
+
+function updateBadgeText(animalDisplayName) {
+  const color = getSelectedColor();
 
   const badgeText = document.getElementById("color-animal-text");
   badgeText.innerText = `${color} ${animalDisplayName}`;
@@ -528,40 +546,47 @@ function selectAnimal(animalDisplayName, animalId, animalImgPath) {
   confirmationPanel.style.transform = "translateY(-165px)";
 }
 
-function confirmAnimal() {
+function getSelectedAnimalId() {
+  const selectedAnimalIcon = document.querySelector(
+    ".animal-selection-icon.selected"
+  );
+  const animal = selectedAnimalIcon
+    ? selectedAnimalIcon.getAttribute("data-animal")
+    : "unknown";
+
+  return animal;
+}
+
+async function confirmAnimal() {
   const confirmationPanel = document.getElementById("confirmation-panel");
   confirmationPanel.style.transition = "transform 1200ms ease-in";
   confirmationPanel.style.transform = "translateY(-1470px)";
+  currentUser = await createUser();
 }
 
-// async function createUser() {
-//   const selectedColor = document.querySelector(".color.selected");
-//   const selectedAnimal = document.querySelector(".animal.selected");
+async function createUser() {
+  const selectedColorId = getSelectedColorId();
+  const selectedAnimalId = getSelectedAnimalId();
 
-//   if (!selectedColor || !selectedAnimal) {
-//     alert("Please select both a color and an animal.");
-//     return;
-//   }
+  const userData = {
+    colorId: selectedColorId,
+    animalId: selectedAnimalId,
+  };
 
-//   const userData = {
-//     colorId: selectedColor.dataset.id,
-//     animalId: selectedAnimal.dataset.id,
-//   };
+  const response = await fetch("/api/users", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(userData),
+  });
 
-//   const response = await fetch("/api/users", {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify(userData),
-//   });
-
-//   if (response.ok) {
-//     alert("User created successfully!");
-//   } else {
-//     alert("Failed to create user.");
-//   }
-// }
+  if (response.ok) {
+    alert("User created successfully!");
+  } else {
+    alert("Failed to create user.");
+  }
+}
 
 // Login user
 // async function fetchColorsFromUsers() {
