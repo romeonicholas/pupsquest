@@ -169,13 +169,14 @@ button {
 
 #badge-icon {
   position: absolute;
-  top: 119px;
-  left: 37px;
+  top: 122px;
+  left: 40px;
+  transform: rotate(3deg);
 }
 
 #badge-text-container {
   position: absolute;
-  display: flex;
+  display: none;
   flex-direction: column;
   justify-content: center;
   top: 149px;
@@ -194,7 +195,6 @@ button {
 }
 
 #scout-text {
-  display: none;
   font-family: "Gotham";
   font-size: 24px;
   line-height: 1.6;
@@ -555,13 +555,13 @@ button {
   display: none;
 }
 
-.color.selected,
+/* .color.selected,
 .animal.selected {
   border: 3px solid #000;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-}
+} */
 
-.color,
+/* .color,
 .animal {
   cursor: pointer;
   border: 2px solid transparent;
@@ -578,7 +578,7 @@ button {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-}
+} */
 
 .colors-container {
   display: flex;
@@ -644,7 +644,7 @@ button {
   height: 170px;
 }
 
-.color-selected {
+.color-selection-icon {
   display: none;
   position: absolute;
   left: 0;
@@ -652,6 +652,10 @@ button {
   padding-right: 25px;
   padding-top: 25px;
   padding-bottom: 25px;
+}
+
+.selected {
+  display: inline;
 }
 
 #animal-options-instructions {

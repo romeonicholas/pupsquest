@@ -12,7 +12,7 @@
   <button
     id="button-<%= animal.name.toLowerCase() %>"
     class="animal-button"
-    onclick="selectAnimal('<%= animal.name.toLowerCase() %>', <%= animal.id %>)"
+    onclick="selectAnimal('<%= animal.name %>', <%= animal.id %>, '<%= animal.imgPath %>');"
   ></button>
 </div>
 <% }); %>
