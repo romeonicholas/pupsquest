@@ -541,7 +541,11 @@ button {
   }
 } */
 
-/* Temp create and login screens */
+#create-new-user-screen {
+  width: 100%;
+  height: 100%;
+  background-color: rgb(189, 210, 212);
+}
 
 #login-screen {
   display: none;
