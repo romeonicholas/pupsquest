@@ -110,12 +110,18 @@ app.get("/api/animals/existing", (req, res) => {
 
 app.get("/api/animals/available", (req, res) => {
   const colorId = req.query.colorId;
+  const limit = req.query.limit ? parseInt(req.query.limit) : null;
+
   if (!colorId) {
     return res.status(400).json({ error: "Missing colorId" });
   }
 
+  if (limit !== null && (isNaN(limit) || limit <= 0)) {
+    return res.status(400).json({ error: "Invalid limit parameter" });
+  }
+
   try {
-    const animals = getAvailableAnimalsForColor(db, colorId);
+    const animals = getAvailableAnimalsForColor(db, colorId, limit);
     res.json(animals);
   } catch (error) {
     console.error("Error fetching animals:", error);

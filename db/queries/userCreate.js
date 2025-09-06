@@ -10,21 +10,25 @@ export function getAllColors(db) {
     .all();
 }
 
-export function getAvailableAnimalsForColor(db, colorId) {
-  return db
-    .prepare(
-      `
+export function getAvailableAnimalsForColor(db, colorId, limit = null) {
+  let query = `
     SELECT ua.id, ua.name, ua.imgPath
     FROM userAnimals ua
-    WHERE NOT EXISTS (
-      SELECT 1 FROM users u
-      WHERE u.userAnimal = ua.id
-        AND u.userColor  = ?
+    WHERE ua.id NOT IN (
+      SELECT u.userAnimal 
+      FROM users u 
+      WHERE u.userColor = ?
     )
     ORDER BY ua.name
-  `
-    )
-    .all(colorId);
+  `;
+
+  if (limit !== null) {
+    query += ` LIMIT ?`;
+  }
+
+  const stmt = db.prepare(query);
+
+  return limit !== null ? stmt.all(colorId, limit) : stmt.all(colorId);
 }
 
 export function createUser(db, { colorId, animalId }) {
