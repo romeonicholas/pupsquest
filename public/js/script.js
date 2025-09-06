@@ -462,10 +462,29 @@ async function updateAnimalContainer(colorId) {
   );
 }
 
+function resetBadge() {
+  const badgeBase = document.getElementById("badge-base");
+  badgeBase.src = "images/userCreation/badge_grey.png";
+
+  const badgeIcon = document.getElementById("badge-icon");
+  badgeIcon.classList.remove("visible");
+
+  const badgeTextContainer = document.getElementById("badge-text-container");
+  badgeTextContainer.classList.remove("visible");
+}
+
+function hideConfirmationPanel() {
+  const confirmationPanel = document.getElementById("confirmation-panel");
+  confirmationPanel.style.transition = "transform 300ms ease-in";
+  confirmationPanel.style.transform = "translateY(0px)";
+}
+
 async function selectColor(colorDisplayName, colorId) {
   const userCreationInstructions = document.getElementById(
     "user-creation-instructions"
   );
+  resetBadge();
+  hideConfirmationPanel();
   clearColorSelectionIndicators();
   showColorSelectionIndicator(colorDisplayName);
   updateBadgeColor(colorDisplayName);
