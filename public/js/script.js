@@ -502,8 +502,15 @@ function updateBadgeIcon(animalImgPath) {
 }
 
 function updateBadgeText(animalDisplayName) {
+  const selectedColorIcon = document.querySelector(
+    ".color-selection-icon.selected"
+  );
+  const color = selectedColorIcon
+    ? selectedColorIcon.getAttribute("data-color")
+    : "unknown";
+
   const badgeText = document.getElementById("color-animal-text");
-  badgeText.innerText = animalDisplayName;
+  badgeText.innerText = `${color} ${animalDisplayName}`;
 
   const badgeTextContainer = document.getElementById("badge-text-container");
   badgeTextContainer.style.display = "flex";
