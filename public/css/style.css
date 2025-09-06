@@ -657,13 +657,16 @@ button {
 }
 
 .color-selection-icon {
-  display: none;
+  opacity: 0;
+  pointer-events: none;
+  display: inline;
   position: absolute;
   left: 0;
   padding-left: 25px;
   padding-right: 25px;
   padding-top: 25px;
   padding-bottom: 25px;
+  transition: opacity 300ms ease-in;
 }
 
 #animal-options-instructions {
@@ -701,14 +704,16 @@ button {
 }
 
 .animal-selection-icon {
-  display: none;
+  display: inline;
+  opacity: 0;
   position: absolute;
   left: -20px;
   top: -20px;
+  transition: opacity 300ms ease-in;
 }
 
 .selected {
-  display: inline;
+  opacity: 1;
 }
 
 .animal-button {
