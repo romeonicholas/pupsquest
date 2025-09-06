@@ -683,10 +683,16 @@ button {
   height: 300px;
 }
 
+.animal-icon-container {
+  position: relative;
+  display: inline-block;
+}
+
 .animal-selected {
   display: none;
   position: absolute;
-  left: 0;
+  left: -20px;
+  top: -20px;
 }
 
 .animal-button {
@@ -704,6 +710,7 @@ button {
 }
 
 .animal-icon {
+  display: block;
   margin-bottom: 25px;
 }
 
