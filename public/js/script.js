@@ -613,26 +613,6 @@ async function selectColor(colorDisplayName, colorId) {
   }
 }
 
-function renderAnimalOption(animal) {
-  return `<div class="animal-option">
-  <div class="animal-icon-container">
-    <img class="animal-icon" src="${animal.imgPath}" />
-    <img
-      id="${animal.name.toLowerCase()}-selected"
-      class="animal-selected"
-      src="/images/userCreation/animal_selected.png"
-    />
-  </div>
-  <div class="animal-icon-text">${animal.name}</div>
-  <button
-    id="button-${animal.name.toLowerCase()}"
-    class="animal-button"
-    onclick="selectAnimal('${animal.name.toLowerCase()}', ${animal.id})"
-  ></button>
-</div>
-`;
-}
-
 async function fetchAvailableAnimalsForColor(colorId) {
   const response = await fetch(
     `/api/animals/available/html?colorId=${colorId}&limit=8`
