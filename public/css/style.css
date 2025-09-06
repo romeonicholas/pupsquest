@@ -653,3 +653,45 @@ button {
   padding-top: 25px;
   padding-bottom: 25px;
 }
+
+#animal-options-container {
+  position: absolute;
+  top: 1130px;
+  left: 34px;
+  width: 1012px;
+  height: 620px;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  background-color: rgba(100, 40, 20, 0.3);
+}
+
+.animal-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 25%;
+  height: 250px;
+}
+
+.animal-selected {
+  display: none;
+  position: absolute;
+  left: 0;
+}
+
+.animal-button {
+  padding: 0px;
+}
+
+.animal-icon-text {
+  font-family: "Enriqueta";
+  font-size: 36px;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.animal-icon {
+  margin-bottom: 25px;
+}
