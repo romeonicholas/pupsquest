@@ -434,15 +434,17 @@ function showColorPicker() {
 }
 
 function clearColorSelectionIndicators() {
-  document.getElementById("red-selected").style.display = "none";
-  document.getElementById("yellow-selected").style.display = "none";
-  document.getElementById("green-selected").style.display = "none";
-  document.getElementById("blue-selected").style.display = "none";
+  document.getElementById("red-selected").classList.remove("selected");
+  document.getElementById("yellow-selected").classList.remove("selected");
+  document.getElementById("green-selected").classList.remove("selected");
+  document.getElementById("blue-selected").classList.remove("selected");
 }
 
 function showColorSelectionIndicator(colorDisplayName) {
-  document.getElementById(`${colorDisplayName}-selected`).style.display =
-    "inline";
+  const selectedColorIcon = document.getElementById(
+    `${colorDisplayName}-selected`
+  );
+  selectedColorIcon.classList.add("selected");
 }
 
 function updateBadgeColor(colorDisplayName) {
@@ -482,17 +484,37 @@ async function fetchAvailableAnimalsForColor(colorId) {
   return html;
 }
 
-function selectAnimal(animalDisplayName, animalId) {
-  console.log("Selected animal:", animalDisplayName, animalId);
-
+function updateAnimalSelection(animalDisplayName) {
   document.querySelectorAll(".animal-selected").forEach((el) => {
     el.style.display = "none";
   });
 
   const animalSelectionIndicator = document.getElementById(
-    `${animalDisplayName}-selected`
+    `${animalDisplayName.toLowerCase()}-selected`
   );
   animalSelectionIndicator.style.display = "inline";
+}
+
+function updateBadgeIcon(animalImgPath) {
+  const badgeIcon = document.getElementById("badge-icon");
+  badgeIcon.src = animalImgPath;
+  badgeIcon.style.display = "block";
+}
+
+function updateBadgeText(animalDisplayName) {
+  const badgeText = document.getElementById("color-animal-text");
+  badgeText.innerText = animalDisplayName;
+
+  const badgeTextContainer = document.getElementById("badge-text-container");
+  badgeTextContainer.style.display = "flex";
+}
+
+function selectAnimal(animalDisplayName, animalId, animalImgPath) {
+  console.log("Selected animal:", animalDisplayName, animalId, animalImgPath);
+
+  updateAnimalSelection(animalDisplayName);
+  updateBadgeIcon(animalImgPath);
+  updateBadgeText(animalDisplayName);
 
   const confirmationPanel = document.getElementById("confirmation-panel");
   confirmationPanel.style.transition = "transform 300ms ease-in";
