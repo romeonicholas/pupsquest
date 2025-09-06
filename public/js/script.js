@@ -540,7 +540,6 @@ function lowerStartScreen() {
 
 function showRejoinGameScreen() {
   document.getElementById("login-screen").style.display = "block";
-  fetchColorsFromUsers();
 }
 
 function showUsePhoneScreen() {
@@ -580,16 +579,9 @@ function clearColorSelectionIndicators() {
   document.getElementById("blue-selected").style.display = "none";
 }
 
-function showColorSelectionIndicators(colorDisplayName) {
-  if (colorDisplayName === "red") {
-    document.getElementById("red-selected").style.display = "inline";
-  } else if (colorDisplayName === "yellow") {
-    document.getElementById("yellow-selected").style.display = "inline";
-  } else if (colorDisplayName === "green") {
-    document.getElementById("green-selected").style.display = "inline";
-  } else if (colorDisplayName === "blue") {
-    document.getElementById("blue-selected").style.display = "inline";
-  }
+function showColorSelectionIndicator(colorDisplayName) {
+  document.getElementById(`${colorDisplayName}-selected`).style.display =
+    "inline";
 }
 
 function updateBadgeColor(colorDisplayName) {
@@ -598,10 +590,18 @@ function updateBadgeColor(colorDisplayName) {
 }
 
 async function selectColor(colorDisplayName, colorId) {
+  const userCreationInstructions = document.getElementById(
+    "user-creation-instructions"
+  );
   clearColorSelectionIndicators();
-  showColorSelectionIndicators(colorDisplayName);
+  showColorSelectionIndicator(colorDisplayName);
   updateBadgeColor(colorDisplayName);
   const animals = await fetchAvailableAnimalsForColor(colorId);
+
+  if (userCreationInstructions.style.transform !== "translateY(2210px)") {
+    userCreationInstructions.style.transition = "transform 800ms ease-in";
+    userCreationInstructions.style.transform = "translateY(2210px)";
+  }
 }
 
 async function fetchAvailableAnimalsForColor(colorId) {
