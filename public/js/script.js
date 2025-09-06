@@ -538,10 +538,6 @@ function lowerStartScreen() {
   startScreen.style.transform = "translateY(1920px)";
 }
 
-function showCreateNewUserScreen() {
-  fetchColors();
-}
-
 function showRejoinGameScreen() {
   document.getElementById("login-screen").style.display = "block";
   fetchColorsFromUsers();
@@ -598,178 +594,124 @@ function showColorSelectionIndicators(colorDisplayName) {
 
 function updateBadgeColor(colorDisplayName) {
   const badgeBase = document.getElementById("badge-base");
-  if (colorDisplayName === "red") {
-    badgeBase.src = "images/userCreation/badge_red.png";
-  } else if (colorDisplayName === "yellow") {
-    badgeBase.src = "images/userCreation/badge_yellow.png";
-  } else if (colorDisplayName === "green") {
-    badgeBase.src = "images/userCreation/badge_green.png";
-  } else if (colorDisplayName === "blue") {
-    badgeBase.src = "images/userCreation/badge_blue.png";
-  }
+  badgeBase.src = `images/userCreation/badge_${colorDisplayName}.png`;
 }
 
-function selectColor(colorDisplayName) {
+async function selectColor(colorDisplayName, colorId) {
   clearColorSelectionIndicators();
   showColorSelectionIndicators(colorDisplayName);
   updateBadgeColor(colorDisplayName);
-}
-
-async function fetchColors() {
-  const response = await fetch("/api/colors");
-  const colors = await response.json();
-  const container = document.getElementById("create-new-user-colors-container");
-  colors.forEach((color) => {
-    const colorDiv = document.createElement("div");
-    colorDiv.className = "color";
-    colorDiv.style.width = "100px";
-    colorDiv.style.height = "100px";
-    colorDiv.style.backgroundColor = color.hex;
-    colorDiv.innerText = color.name;
-    colorDiv.dataset.id = color.id;
-    colorDiv.onclick = (event) => {
-      document
-        .querySelectorAll(".color")
-        .forEach((c) => c.classList.remove("selected"));
-      event.target.classList.add("selected");
-      fetchAvailableAnimalsForColor(color.id);
-    };
-    container.appendChild(colorDiv);
-  });
+  const animals = await fetchAvailableAnimalsForColor(colorId);
 }
 
 async function fetchAvailableAnimalsForColor(colorId) {
   const response = await fetch(`/api/animals/available?colorId=${colorId}`);
   const animals = await response.json();
-  const container = document.getElementById(
-    "create-new-user-animals-container"
-  );
+  return animals;
+  // const container = document.getElementById(
+  //   "create-new-user-animals-container"
+  // );
 
-  container.innerHTML = "";
+  // container.innerHTML = "";
 
-  animals.forEach((animal) => {
-    const animalDiv = document.createElement("div");
-    animalDiv.className = "animal";
-    animalDiv.style.width = "100px";
-    animalDiv.style.height = "100px";
-    animalDiv.style.backgroundImage = `url(${animal.imgPath})`;
-    animalDiv.innerText = animal.name;
-    animalDiv.dataset.id = animal.id;
-    animalDiv.onclick = (event) => {
-      document
-        .querySelectorAll(".animal")
-        .forEach((a) => a.classList.remove("selected"));
-      event.target.classList.add("selected");
-    };
-    container.appendChild(animalDiv);
-  });
+  // animals.forEach((animal) => {
+  //   const animalDiv = document.createElement("div");
+  //   animalDiv.className = "animal";
+  //   animalDiv.style.width = "100px";
+  //   animalDiv.style.height = "100px";
+  //   animalDiv.style.backgroundImage = `url(${animal.imgPath})`;
+  //   animalDiv.innerText = animal.name;
+  //   animalDiv.dataset.id = animal.id;
+  //   animalDiv.onclick = (event) => {
+  //     document
+  //       .querySelectorAll(".animal")
+  //       .forEach((a) => a.classList.remove("selected"));
+  //     event.target.classList.add("selected");
+  //   };
+  //   container.appendChild(animalDiv);
+  // });
 }
 
-async function createUser() {
-  const selectedColor = document.querySelector(".color.selected");
-  const selectedAnimal = document.querySelector(".animal.selected");
+// async function createUser() {
+//   const selectedColor = document.querySelector(".color.selected");
+//   const selectedAnimal = document.querySelector(".animal.selected");
 
-  if (!selectedColor || !selectedAnimal) {
-    alert("Please select both a color and an animal.");
-    return;
-  }
+//   if (!selectedColor || !selectedAnimal) {
+//     alert("Please select both a color and an animal.");
+//     return;
+//   }
 
-  const userData = {
-    colorId: selectedColor.dataset.id,
-    animalId: selectedAnimal.dataset.id,
-  };
+//   const userData = {
+//     colorId: selectedColor.dataset.id,
+//     animalId: selectedAnimal.dataset.id,
+//   };
 
-  const response = await fetch("/api/users", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(userData),
-  });
+//   const response = await fetch("/api/users", {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify(userData),
+//   });
 
-  if (response.ok) {
-    alert("User created successfully!");
-  } else {
-    alert("Failed to create user.");
-  }
-}
+//   if (response.ok) {
+//     alert("User created successfully!");
+//   } else {
+//     alert("Failed to create user.");
+//   }
+// }
 
 // Login user
-async function fetchColorsFromUsers() {
-  const response = await fetch("/api/colors/from-users");
-  const colors = await response.json();
-  const container = document.getElementById("login-colors-container");
+// async function fetchColorsFromUsers() {
+//   const response = await fetch("/api/colors/from-users");
+//   const colors = await response.json();
+//   const container = document.getElementById("login-colors-container");
 
-  colors.forEach((color) => {
-    const colorDiv = document.createElement("div");
-    colorDiv.className = "color";
-    colorDiv.style.width = "100px";
-    colorDiv.style.height = "100px";
-    colorDiv.style.backgroundColor = color.hex;
-    colorDiv.innerText = color.name;
-    colorDiv.dataset.id = color.id;
-    colorDiv.onclick = (event) => {
-      document
-        .querySelectorAll(".color")
-        .forEach((c) => c.classList.remove("selected"));
-      event.target.classList.add("selected");
-      fetchAvailableAnimalsForColor(color.id);
-    };
-    container.appendChild(colorDiv);
-  });
-}
+//   colors.forEach((color) => {
+//     const colorDiv = document.createElement("div");
+//     colorDiv.className = "color";
+//     colorDiv.style.width = "100px";
+//     colorDiv.style.height = "100px";
+//     colorDiv.style.backgroundColor = color.hex;
+//     colorDiv.innerText = color.name;
+//     colorDiv.dataset.id = color.id;
+//     colorDiv.onclick = (event) => {
+//       document
+//         .querySelectorAll(".color")
+//         .forEach((c) => c.classList.remove("selected"));
+//       event.target.classList.add("selected");
+//       fetchAvailableAnimalsForColor(color.id);
+//     };
+//     container.appendChild(colorDiv);
+//   });
+// }
 
-async function fetchAvailableAnimalsForColor(colorId) {
-  const response = await fetch(`/api/animals/existing?colorId=${colorId}`);
-  const animals = await response.json();
-  const container = document.getElementById("login-animals-container");
+// async function logInUser() {
+//   const selectedColor = document.querySelector(".color.selected");
+//   const selectedAnimal = document.querySelector(".animal.selected");
 
-  container.innerHTML = "";
+//   if (!selectedColor || !selectedAnimal) {
+//     alert("Please select both a color and an animal.");
+//     return;
+//   }
 
-  animals.forEach((animal) => {
-    const animalDiv = document.createElement("div");
-    animalDiv.className = "animal";
-    animalDiv.style.width = "100px";
-    animalDiv.style.height = "100px";
-    animalDiv.style.backgroundImage = `url(${animal.imgPath})`;
-    animalDiv.innerText = animal.name;
-    animalDiv.dataset.id = animal.id;
-    animalDiv.onclick = (event) => {
-      document
-        .querySelectorAll(".animal")
-        .forEach((a) => a.classList.remove("selected"));
-      event.target.classList.add("selected");
-    };
-    container.appendChild(animalDiv);
-  });
-}
+//   const colorId = selectedColor.dataset.id;
+//   const animalId = selectedAnimal.dataset.id;
 
-async function logInUser() {
-  const selectedColor = document.querySelector(".color.selected");
-  const selectedAnimal = document.querySelector(".animal.selected");
+//   const response = await fetch(
+//     `/api/users?colorId=${colorId}&animalId=${animalId}`,
+//     {
+//       method: "GET",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//     }
+//   );
 
-  if (!selectedColor || !selectedAnimal) {
-    alert("Please select both a color and an animal.");
-    return;
-  }
-
-  const colorId = selectedColor.dataset.id;
-  const animalId = selectedAnimal.dataset.id;
-
-  const response = await fetch(
-    `/api/users?colorId=${colorId}&animalId=${animalId}`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  );
-
-  if (response.ok) {
-    const loggedInUser = await response.json();
-    alert("Logged in user: " + JSON.stringify(loggedInUser, null, 2));
-  } else {
-    alert("Failed to log in user");
-  }
-}
+//   if (response.ok) {
+//     const loggedInUser = await response.json();
+//     alert("Logged in user: " + JSON.stringify(loggedInUser, null, 2));
+//   } else {
+//     alert("Failed to log in user");
+//   }
+// }
