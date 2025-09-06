@@ -654,10 +654,6 @@ button {
   padding-bottom: 25px;
 }
 
-.selected {
-  display: inline;
-}
-
 #animal-options-instructions {
   position: absolute;
   width: 100%;
@@ -692,11 +688,15 @@ button {
   display: inline-block;
 }
 
-.animal-selected {
+.animal-selection-icon {
   display: none;
   position: absolute;
   left: -20px;
   top: -20px;
+}
+
+.selected {
+  display: inline;
 }
 
 .animal-button {
