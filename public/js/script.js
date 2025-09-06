@@ -589,6 +589,15 @@ function updateBadgeColor(colorDisplayName) {
   badgeBase.src = `images/userCreation/badge_${colorDisplayName}.png`;
 }
 
+async function updateAnimalContainer(colorId) {
+  const animalOptionsContainer = document.getElementById(
+    "animal-options-container"
+  );
+  animalOptionsContainer.innerHTML = await fetchAvailableAnimalsForColor(
+    colorId
+  );
+}
+
 async function selectColor(colorDisplayName, colorId) {
   const userCreationInstructions = document.getElementById(
     "user-creation-instructions"
@@ -596,17 +605,7 @@ async function selectColor(colorDisplayName, colorId) {
   clearColorSelectionIndicators();
   showColorSelectionIndicator(colorDisplayName);
   updateBadgeColor(colorDisplayName);
-  const animals = await fetchAvailableAnimalsForColor(colorId);
-
-  const animalOptions = [];
-  animals.forEach((animal) => {
-    animalOptions.push(renderAnimalOption(animal));
-  });
-
-  const animalOptionsContainer = document.getElementById(
-    "animal-options-container"
-  );
-  animalOptionsContainer.innerHTML = animalOptions.join("");
+  await updateAnimalContainer(colorId);
 
   if (userCreationInstructions.style.transform !== "translateY(2210px)") {
     userCreationInstructions.style.transition = "transform 800ms ease-in";
@@ -615,7 +614,7 @@ async function selectColor(colorDisplayName, colorId) {
 }
 
 function renderAnimalOption(animal) {
-  return ejs.render(`<div class="animal-option">
+  return `<div class="animal-option">
   <div class="animal-icon-container">
     <img class="animal-icon" src="${animal.imgPath}" />
     <img
@@ -631,15 +630,15 @@ function renderAnimalOption(animal) {
     onclick="selectAnimal('${animal.name.toLowerCase()}', ${animal.id})"
   ></button>
 </div>
-`);
+`;
 }
 
 async function fetchAvailableAnimalsForColor(colorId) {
   const response = await fetch(
-    `/api/animals/available?colorId=${colorId}&limit=8`
+    `/api/animals/available/html?colorId=${colorId}&limit=8`
   );
-  const animals = await response.json();
-  return animals;
+  const html = await response.text();
+  return html;
 }
 
 function selectAnimal(animalDisplayName, animalId) {

@@ -129,6 +129,23 @@ app.get("/api/animals/available", (req, res) => {
   }
 });
 
+app.get("/api/animals/available/html", (req, res) => {
+  const colorId = req.query.colorId;
+  const limit = req.query.limit ? parseInt(req.query.limit) : 8; // Default to 8
+
+  if (!colorId) {
+    return res.status(400).send("<p>Error: Missing colorId</p>");
+  }
+
+  try {
+    const animals = getAvailableAnimalsForColor(db, colorId, limit);
+    res.render("partials/animal_options", { animals });
+  } catch (error) {
+    console.error("Error fetching animals:", error);
+    res.status(500).send("<p>Error loading animals</p>");
+  }
+});
+
 app.get("/db", (req, res) => {
   try {
     const data = getAllDataForDashboard(db);
