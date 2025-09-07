@@ -167,12 +167,10 @@ app.get("/db", (req, res) => {
 });
 
 app.get("/api/riddles/:id", (req, res) => {
-  const riddleId = parseInt(req.params.id, 10);
-  if (isNaN(riddleId)) {
-    return res.status(400).json({ error: "Invalid riddle ID" });
-  }
   try {
+    const riddleId = req.params.id;
     const riddle = getRiddleById(db, riddleId);
+
     if (!riddle) {
       return res.status(404).json({ error: "Riddle not found" });
     }
