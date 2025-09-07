@@ -7,7 +7,10 @@ dotenv.config({ path: ".env", quiet: true });
 
 const { db } = await import("./db/init.js");
 
-import { getAllRiddlesWithChoices } from "./db/queries/riddles.js";
+import {
+  getRiddleById,
+  getAllRiddlesWithChoices,
+} from "./db/queries/riddles.js";
 import { getAllDataForDashboard } from "./db/queries/all.js";
 import {
   getAllColors,
@@ -72,17 +75,24 @@ app.get("/api/users", (req, res) => {
   }
 });
 
-app.post("/api/users", (req, res) => {
-  const { colorId, animalId } = req.body;
-  if (!colorId || !animalId) {
-    return res.status(400).json({ error: "Missing colorId or animalId" });
-  }
-
+app.post("/api/users", async (req, res) => {
   try {
-    createUser(db, { colorId, animalId });
-    res.status(201).json({ message: "User created successfully" });
+    const { colorId, animalId } = req.body;
+
+    if (!colorId || !animalId) {
+      return res.status(400).json({ error: "Missing colorId or animalId" });
+    }
+
+    const newUser = createUser(db, { colorId, animalId });
+
+    res.status(201).json(newUser);
   } catch (error) {
     console.error("Error creating user:", error);
+
+    if (error.message.includes("already taken")) {
+      return res.status(409).json({ error: error.message });
+    }
+
     res.status(500).json({ error: "Failed to create user" });
   }
 });
@@ -153,6 +163,23 @@ app.get("/db", (req, res) => {
   } catch (error) {
     console.error("Error fetching dashboard data:", error);
     res.status(500).json({ error: "Failed to fetch dashboard data" });
+  }
+});
+
+app.get("/api/riddles/:id", (req, res) => {
+  const riddleId = parseInt(req.params.id, 10);
+  if (isNaN(riddleId)) {
+    return res.status(400).json({ error: "Invalid riddle ID" });
+  }
+  try {
+    const riddle = getRiddleById(db, riddleId);
+    if (!riddle) {
+      return res.status(404).json({ error: "Riddle not found" });
+    }
+    res.json(riddle);
+  } catch (error) {
+    console.error("Error fetching riddle:", error);
+    res.status(500).json({ error: "Failed to fetch riddle" });
   }
 });
 

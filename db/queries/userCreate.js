@@ -54,6 +54,24 @@ export function createUser(db, { colorId, animalId }) {
     UPDATE users SET gameState = ? WHERE id = ?
   `);
 
+  const getUserById = db.prepare(`
+    SELECT 
+      u.id,
+      u.gameState,
+      u.createdAt,
+      uc.id as colorId,
+      uc.name as colorName,
+      uc.hex as colorHex,
+      uc.badgePath as colorBadgePath,
+      ua.id as animalId,
+      ua.name as animalName,
+      ua.imgPath as animalImgPath
+    FROM users u
+    INNER JOIN userColors uc ON uc.id = u.userColor
+    INNER JOIN userAnimals ua ON ua.id = u.userAnimal
+    WHERE u.id = ?
+  `);
+
   try {
     const tx = db.transaction(() => {
       const placeholder = JSON.stringify({
@@ -78,7 +96,9 @@ export function createUser(db, { colorId, animalId }) {
 
       updateState.run(JSON.stringify(state), userId);
 
-      return userId;
+      const user = getUserById.get(userId);
+      user.gameState = JSON.parse(user.gameState);
+      return user;
     });
 
     return tx();
@@ -88,4 +108,18 @@ export function createUser(db, { colorId, animalId }) {
     }
     throw e;
   }
+}
+
+export function getUserById(db, userId) {
+  const getUserById = db.prepare(
+    `
+    SELECT id, userAnimal, userColor, gameState, createdAt
+    FROM users
+    WHERE id = ?
+  `
+  );
+
+  const user = getUserById.get(userId);
+  user.gameState = JSON.parse(user.gameState);
+  return user;
 }
