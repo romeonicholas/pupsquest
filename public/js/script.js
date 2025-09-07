@@ -239,27 +239,32 @@ async function showNewRiddle() {
 
   const currentRiddleId =
     currentGameState.riddleQueue[currentGameState.queueCursor];
-  console.log(currentRiddleId);
 
-  const currentRiddle = await fetch(`/api/riddles/${currentRiddleId}`).then(
-    (response) => response.json()
-  );
+  try {
+    const response = await fetch(`/api/riddles/${currentRiddleId}`);
 
-  console.log(currentRiddle);
-  updateRiddleElements(currentRiddle);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch riddle: ${response.status}`);
+    }
 
-  setTimeout(() => {
-    updateRiddleAnswer(
-      currentShuffledChoices[currentCorrectAnswerIndex].display,
-      currentRiddle.answerDetails,
-      currentRiddle.answerImgPath
-    );
-    updateStatusWheel(`RIDDLE ${currentRiddleIndex + 1}`);
-  }, 1000);
+    const currentRiddle = await response.json();
+    updateRiddleElements(currentRiddle);
 
-  setTimeout(() => {
-    showFirstCouplet();
-  }, 2000);
+    setTimeout(() => {
+      updateRiddleAnswer(
+        currentShuffledChoices[currentCorrectAnswerIndex].display,
+        currentRiddle.answerDetails,
+        currentRiddle.answerImgPath
+      );
+      updateStatusWheel(`RIDDLE ${currentRiddleIndex + 1}`);
+    }, 1000);
+
+    setTimeout(() => {
+      showFirstCouplet();
+    }, 2000);
+  } catch (error) {
+    console.error("Error fetching riddle:", error);
+  }
 }
 
 function decreaseHints() {

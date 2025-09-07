@@ -1,6 +1,18 @@
 import { db } from "../init.js";
 
-export function getRiddleById(riddleId) {
+export function getRiddleById(db, riddleId) {
+  if (riddleId == null || riddleId === undefined) {
+    console.error("getRiddleById: riddleId is null or undefined");
+    return null;
+  }
+
+  const id = typeof riddleId === "string" ? parseInt(riddleId, 10) : riddleId;
+
+  if (isNaN(id)) {
+    console.error("getRiddleById: riddleId is not a valid number:", riddleId);
+    return null;
+  }
+
   const row = db
     .prepare(
       `
@@ -17,7 +29,7 @@ export function getRiddleById(riddleId) {
     ORDER BY rac.slotIndex ASC
   `
     )
-    .all(riddleId);
+    .all(id);
 
   if (row.length === 0) {
     return null;
