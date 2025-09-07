@@ -1,5 +1,55 @@
 import { db } from "../init.js";
 
+export function getRiddleById(riddleId) {
+  const row = db
+    .prepare(
+      `
+    SELECT
+      r.id, r.riddleKey, r.headline, r.body, r.answerDetails, r.answerImgPath,
+      rac.slotIndex,
+      ac.id as answerChoiceId,
+      ac.display as answerChoiceDisplay,
+      ac.imgPath as answerChoiceImgPath
+    FROM riddles r
+    LEFT JOIN riddleAnswerChoices rac ON rac.riddleId = r.id
+    LEFT JOIN answerChoices ac        ON ac.id = rac.answerChoiceId
+    WHERE r.id = ?
+    ORDER BY rac.slotIndex ASC
+  `
+    )
+    .all(riddleId);
+
+  if (row.length === 0) {
+    return null;
+  }
+
+  const riddle = {
+    id: row[0].id,
+    riddleKey: row[0].riddleKey,
+    headline: row[0].headline,
+    body: Array.isArray(row[0].body)
+      ? row[0].body
+      : JSON.parse(row[0].body || "[]"),
+    answerDetails: row[0].answerDetails,
+    answerImgPath: row[0].answerImgPath,
+    answerChoices: [],
+  };
+
+  for (const r of row) {
+    if (r.answerChoiceId != null) {
+      riddle.answerChoices.push({
+        id: r.answerChoiceId,
+        display: r.answerChoiceDisplay,
+        imgPath: r.answerChoiceImgPath,
+        slotIndex: r.slotIndex,
+        isCorrect: r.slotIndex === 0,
+      });
+    }
+  }
+
+  return riddle;
+}
+
 export function getAllRiddlesWithChoices() {
   const rows = db
     .prepare(

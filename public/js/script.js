@@ -1,9 +1,10 @@
 let currentUser = null;
-let currentRiddleIndex = Math.floor(Math.random() * 5);
-let riddlesData = null;
-let currentRiddleData = null;
-let remainingHints = 7;
-let incorrectGuesses = 0;
+let currentGameState = null;
+// let currentRiddleIndex = Math.floor(Math.random() * 5);
+// let riddlesData = null;
+// let currentRiddleData = null;
+// let remainingHints = 7;
+// let incorrectGuesses = 0;
 
 const correctAnswerBacking = "/images/riddles/ui/answer_backing_correct.png";
 const incorrectAnswerBackings = [
@@ -78,18 +79,18 @@ document.addEventListener("DOMContentLoaded", scaleContainer);
 //   e.preventDefault();
 // });
 
-async function loadRiddles() {
-  try {
-    const response = await fetch("/riddles");
-    riddlesData = await response.json();
-  } catch (error) {
-    console.error("Error loading riddles:", error);
-  }
-}
+// async function loadRiddles() {
+//   try {
+//     const response = await fetch("/riddles");
+//     riddlesData = await response.json();
+//   } catch (error) {
+//     console.error("Error loading riddles:", error);
+//   }
+// }
 
-document.addEventListener("DOMContentLoaded", function () {
-  loadRiddles();
-});
+// document.addEventListener("DOMContentLoaded", function () {
+//   loadRiddles();
+// });
 
 let movedColors = false;
 let movedAnimals = false;
@@ -232,12 +233,20 @@ function resetIconPositions() {
   });
 }
 
-function showNewRiddle() {
+async function showNewRiddle() {
   resetIconPositions();
-
-  incrementRiddleIndex();
   closeRiddleContainerFromBottom();
-  updateRiddleElements(riddlesData[currentRiddleIndex]);
+
+  const currentRiddleId =
+    currentGameState.riddleQueue[currentGameState.queueCursor];
+  console.log(currentRiddleId);
+
+  const currentRiddle = await fetch(`/api/riddles/${currentRiddleId}`).then(
+    (response) => response.json()
+  );
+
+  console.log(currentRiddle);
+  updateRiddleElements(currentRiddle);
 
   setTimeout(() => {
     updateRiddleAnswer(
@@ -581,30 +590,54 @@ async function confirmAnimal() {
   const confirmationPanel = document.getElementById("confirmation-panel");
   confirmationPanel.style.transition = "transform 1200ms ease-in";
   confirmationPanel.style.transform = "translateY(-1470px)";
+
   currentUser = await createUser();
+  currentGameState = currentUser.gameState;
+  // const selectionLayer = document.getElementById("selection-layer");
+  // const startScreen = document.getElementById("start-screen");
+  // selectionLayer.style.transform = "translateY(1480px)";
+  // startScreen.style.display = "none";
 }
 
 async function createUser() {
-  const selectedColorId = getSelectedColorId();
-  const selectedAnimalId = getSelectedAnimalId();
+  try {
+    const selectedColorId = getSelectedColorId();
+    const selectedAnimalId = getSelectedAnimalId();
 
-  const userData = {
-    colorId: selectedColorId,
-    animalId: selectedAnimalId,
-  };
+    if (!selectedColorId || !selectedAnimalId) {
+      throw new Error("Please select both a color and an animal.");
+    }
 
-  const response = await fetch("/api/users", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(userData),
-  });
+    const userData = {
+      colorId: parseInt(selectedColorId),
+      animalId: parseInt(selectedAnimalId),
+    };
 
-  if (response.ok) {
-    alert("User created successfully!");
-  } else {
-    alert("Failed to create user.");
+    const response = await fetch("/api/users", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userData),
+    });
+
+    if (!response.ok) {
+      const errorData = await response
+        .json()
+        .catch(() => ({ error: "Unknown error" }));
+      throw new Error(errorData.error || `Server error: ${response.status}`);
+    }
+
+    const newUser = await response.json();
+    console.log("Created user:", newUser);
+
+    return newUser;
+  } catch (error) {
+    console.error("Error creating user:", error);
+
+    alert(`Failed to create user: ${error.message}`);
+
+    return null;
   }
 }
 

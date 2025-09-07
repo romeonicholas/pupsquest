@@ -745,7 +745,16 @@ button {
   position: absolute;
   top: 9px;
   left: 350px;
-  width: 381px;
+  width: 380px;
+  height: 115px;
+  padding: 0px;
+}
+
+#transition-to-riddles-button {
+  position: absolute;
+  top: 1305px;
+  left: 350px;
+  width: 380px;
   height: 115px;
   padding: 0px;
 }
