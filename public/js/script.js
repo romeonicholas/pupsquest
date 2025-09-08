@@ -445,6 +445,11 @@ function showUsePhoneScreen() {
 }
 
 
+function showCreateNewUserScreen() {
+  const createNewUserScreen = document.getElementById("create-new-user-screen");
+  createNewUserScreen.style.display = "block";
+}
+
 function showColorPicker() {
   const userCreationInstructions = document.getElementById(
     "user-creation-instructions"
@@ -499,7 +504,7 @@ async function updateAnimalContainer(colorId) {
 
 function resetBadge() {
   const badgeBase = document.getElementById("badge-base");
-  badgeBase.src = "images/userCreation/badge_grey.png";
+  badgeBase.src = "images/userCreation/badge_gray.png";
 
   const badgeIcon = document.getElementById("badge-icon");
   badgeIcon.classList.remove("visible");
@@ -539,10 +544,14 @@ async function fetchAvailableAnimalsForColor(colorId) {
   return html;
 }
 
-function updateAnimalSelection(animalDisplayName) {
+function clearAnimalSelectionIndicators() {
   document.querySelectorAll(".animal-selection-icon").forEach((el) => {
     el.classList.remove("selected");
   });
+}
+
+function updateAnimalSelection(animalDisplayName) {
+  clearAnimalSelectionIndicators();
 
   const animalSelectionIndicator = document.getElementById(
     `${animalDisplayName.toLowerCase()}-selected`
@@ -619,10 +628,6 @@ async function confirmAnimal() {
 
   currentUser = await createUser();
   currentGameState = currentUser.gameState;
-  // const selectionLayer = document.getElementById("selection-layer");
-  // const startScreen = document.getElementById("start-screen");
-  // selectionLayer.style.transform = "translateY(1480px)";
-  // startScreen.style.display = "none";
 }
 
 async function createUser() {
@@ -667,6 +672,41 @@ async function createUser() {
   }
 }
 
+function resetCreateNewUserScreen() {
+  const createNewUserScreen = document.getElementById("create-new-user-screen");
+  createNewUserScreen.style.display = "none";
+
+  resetBadge();
+  clearColorSelectionIndicators();
+  clearAnimalSelectionIndicators();
+
+  const userCreationInstructions = document.getElementById(
+    "user-creation-instructions"
+  );
+  const colorPicker = document.getElementById("color-picker");
+  const badgeContainer = document.getElementById("badge-container");
+  const confirmationPanel = document.getElementById("confirmation-panel");
+
+  userCreationInstructions.style.transform = "translateY(0px)";
+  colorPicker.style.transform = "translateY(0px)";
+  badgeContainer.style.transform = "translateY(0px)";
+  confirmationPanel.style.transform = "translateY(0px)";
+
+  const statusTextCurrent = document.querySelector(".current-text");
+  statusTextCurrent.firstChild.innerText = "WELCOME";
+}
+
+function resetRiddleScreen() {
+  riddleScreen.style.display = "none";
+  riddleTextLayerBackground.style.transform = "translateY(0px)";
+  selectionLayer.style.transform = "translateY(0px)";
+  riddleContainer.style.transform = "translateY(0px)";
+  riddleAnswer.style.display = "none";
+
+  const gameOver = document.getElementById("game-over");
+  gameOver.style.display = "none";
+}
+
 function showStartScreen() {
   const startScreen = document.getElementById("start-screen");
   startScreen.style.display = "block";
@@ -693,6 +733,9 @@ async function saveAndExit() {
 
       const data = await response.json();
       currentUser = null;
+
+      resetRiddleScreen();
+      resetCreateNewUserScreen();
 
       showStartScreen();
     } catch (error) {
