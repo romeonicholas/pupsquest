@@ -668,61 +668,6 @@ async function createUser() {
   }
 }
 
-// Login user
-// async function fetchColorsFromUsers() {
-//   const response = await fetch("/api/colors/from-users");
-//   const colors = await response.json();
-//   const container = document.getElementById("login-colors-container");
-
-//   colors.forEach((color) => {
-//     const colorDiv = document.createElement("div");
-//     colorDiv.className = "color";
-//     colorDiv.style.width = "100px";
-//     colorDiv.style.height = "100px";
-//     colorDiv.style.backgroundColor = color.hex;
-//     colorDiv.innerText = color.name;
-//     colorDiv.dataset.id = color.id;
-//     colorDiv.onclick = (event) => {
-//       document
-//         .querySelectorAll(".color")
-//         .forEach((c) => c.classList.remove("selected"));
-//       event.target.classList.add("selected");
-//       fetchAvailableAnimalsForColor(color.id);
-//     };
-//     container.appendChild(colorDiv);
-//   });
-// }
-
-// async function logInUser() {
-//   const selectedColor = document.querySelector(".color.selected");
-//   const selectedAnimal = document.querySelector(".animal.selected");
-
-//   if (!selectedColor || !selectedAnimal) {
-//     alert("Please select both a color and an animal.");
-//     return;
-//   }
-
-//   const colorId = selectedColor.dataset.id;
-//   const animalId = selectedAnimal.dataset.id;
-
-//   const response = await fetch(
-//     `/api/users?colorId=${colorId}&animalId=${animalId}`,
-//     {
-//       method: "GET",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//     }
-//   );
-
-//   if (response.ok) {
-//     const loggedInUser = await response.json();
-//     alert("Logged in user: " + JSON.stringify(loggedInUser, null, 2));
-//   } else {
-//     alert("Failed to log in user");
-//   }
-// }
-
 function showStartScreen() {
   const startScreen = document.getElementById("start-screen");
   startScreen.style.display = "block";
