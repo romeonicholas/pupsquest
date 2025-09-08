@@ -1,4 +1,4 @@
-export function getAllColorsFromUsers(db) {
+export async function getAllColorsFromUsers(db) {
   return db
     .prepare(
       `
@@ -11,7 +11,7 @@ export function getAllColorsFromUsers(db) {
     .all();
 }
 
-export function getAllAnimalsFromUsersWithColor(db, colorId) {
+export async function getAllAnimalsFromUsersWithColor(db, colorId) {
   return db
     .prepare(
       `
@@ -25,7 +25,7 @@ export function getAllAnimalsFromUsersWithColor(db, colorId) {
     .all(colorId);
 }
 
-export function getUserByColorAndAnimal(db, colorId, animalId) {
+export async function getUserByColorAndAnimal(db, colorId, animalId) {
   return db
     .prepare(
       `

@@ -22,6 +22,7 @@ import {
   getAllAnimalsFromUsersWithColor,
   getUserByColorAndAnimal,
 } from "./db/queries/userLogin.js";
+import { updateUserGameState } from "./db/queries/userUpdate.js";
 import { removeExpiredUsers } from "./db/scripts/userRemoval.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -56,7 +57,33 @@ app.get("/api/colors/from-users", async (req, res) => {
   }
 });
 
-app.get("/api/users", (req, res) => {
+app.put("/api/users/:id", async (req, res) => {
+  try {
+    const userId = parseInt(req.params.id);
+    const { gameState } = req.body;
+
+    if (!userId || isNaN(userId)) {
+      return res.status(400).json({ error: "Invalid user ID" });
+    }
+
+    if (!gameState) {
+      return res.status(400).json({ error: "Missing gameState" });
+    }
+
+    const result = await updateUserGameState(db, userId, gameState);
+
+    if (result.changes === 0) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.json({ message: "User updated successfully", userId });
+  } catch (error) {
+    console.error("Error updating user:", error);
+    res.status(500).json({ error: "Failed to update user" });
+  }
+});
+
+app.get("/api/users", async (req, res) => {
   const { colorId, animalId } = req.query;
 
   if (!colorId || !animalId) {
@@ -64,7 +91,7 @@ app.get("/api/users", (req, res) => {
   }
 
   try {
-    const user = getUserByColorAndAnimal(db, colorId, animalId);
+    const user = await getUserByColorAndAnimal(db, colorId, animalId);
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
@@ -83,7 +110,7 @@ app.post("/api/users", async (req, res) => {
       return res.status(400).json({ error: "Missing colorId or animalId" });
     }
 
-    const newUser = createUser(db, { colorId, animalId });
+    const newUser = await createUser(db, { colorId, animalId });
 
     res.status(201).json(newUser);
   } catch (error) {
@@ -97,9 +124,9 @@ app.post("/api/users", async (req, res) => {
   }
 });
 
-app.get("/api/colors", (req, res) => {
+app.get("/api/colors", async (req, res) => {
   try {
-    const colors = getAllColors(db);
+    const colors = await getAllColors(db);
     res.json(colors);
   } catch (error) {
     console.error("Error fetching colors:", error);
@@ -107,10 +134,10 @@ app.get("/api/colors", (req, res) => {
   }
 });
 
-app.get("/api/animals/existing", (req, res) => {
+app.get("/api/animals/existing", async (req, res) => {
   try {
     const colorId = req.query.colorId;
-    const animals = getAllAnimalsFromUsersWithColor(db, colorId);
+    const animals = await getAllAnimalsFromUsersWithColor(db, colorId);
     res.json(animals);
   } catch (error) {
     console.error("Error fetching existing animals:", error);
@@ -118,7 +145,7 @@ app.get("/api/animals/existing", (req, res) => {
   }
 });
 
-app.get("/api/animals/available", (req, res) => {
+app.get("/api/animals/available", async (req, res) => {
   const colorId = req.query.colorId;
   const limit = req.query.limit ? parseInt(req.query.limit) : null;
 
@@ -131,7 +158,7 @@ app.get("/api/animals/available", (req, res) => {
   }
 
   try {
-    const animals = getAvailableAnimalsForColor(db, colorId, limit);
+    const animals = await getAvailableAnimalsForColor(db, colorId, limit);
     res.json(animals);
   } catch (error) {
     console.error("Error fetching animals:", error);
@@ -139,7 +166,7 @@ app.get("/api/animals/available", (req, res) => {
   }
 });
 
-app.get("/api/animals/available/html", (req, res) => {
+app.get("/api/animals/available/html", async (req, res) => {
   const colorId = req.query.colorId;
   const limit = req.query.limit ? parseInt(req.query.limit) : 8; // Default to 8
 
@@ -148,7 +175,7 @@ app.get("/api/animals/available/html", (req, res) => {
   }
 
   try {
-    const animals = getAvailableAnimalsForColor(db, colorId, limit);
+    const animals = await getAvailableAnimalsForColor(db, colorId, limit);
     res.render("partials/animal_options", { animals });
   } catch (error) {
     console.error("Error fetching animals:", error);
@@ -156,9 +183,9 @@ app.get("/api/animals/available/html", (req, res) => {
   }
 });
 
-app.get("/db", (req, res) => {
+app.get("/db", async (req, res) => {
   try {
-    const data = getAllDataForDashboard(db);
+    const data = await getAllDataForDashboard(db);
     res.render("dbReview", { data });
   } catch (error) {
     console.error("Error fetching dashboard data:", error);
@@ -166,10 +193,10 @@ app.get("/db", (req, res) => {
   }
 });
 
-app.get("/api/riddles/:id", (req, res) => {
+app.get("/api/riddles/:id", async (req, res) => {
   try {
     const riddleId = req.params.id;
-    const riddle = getRiddleById(db, riddleId);
+    const riddle = await getRiddleById(db, riddleId);
 
     if (!riddle) {
       return res.status(404).json({ error: "Riddle not found" });
@@ -181,9 +208,9 @@ app.get("/api/riddles/:id", (req, res) => {
   }
 });
 
-app.get("/riddles", (req, res) => {
+app.get("/riddles", async (req, res) => {
   try {
-    const data = getAllRiddlesWithChoices(db);
+    const data = await getAllRiddlesWithChoices(db);
     res.json(data);
   } catch (error) {
     console.error("Error fetching riddles:", error);

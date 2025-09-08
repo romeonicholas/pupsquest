@@ -726,3 +726,39 @@ async function createUser() {
 //     alert("Failed to log in user");
 //   }
 // }
+
+async function saveAndExit() {
+  if (currentUser && currentGameState) {
+    const updatedUser = {
+      ...currentUser,
+      gameState: currentGameState,
+    };
+
+    fetch(`/api/users/${currentUser.id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        gameState: currentGameState,
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Failed to save user data: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("User saved:", data);
+        currentUser = null;
+        //todo: redirect to start screen later
+      })
+      .catch((error) => {
+        console.error("Error saving user data:", error);
+        alert("Failed to save user data. Please try again.");
+      });
+  } else {
+    alert("No user is currently logged in.");
+  }
+}
