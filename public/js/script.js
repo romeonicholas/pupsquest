@@ -315,7 +315,7 @@ function handleIncorrectGuess(clickedArea, iconIndex) {
   decreaseHints();
   showIconBacking(iconIndex);
 
-  if (incorrectGuesses >= 3) {
+  if (incorrectGuesses >= 3 || remainingHints <= 0) {
     incorrectGuesses = 0;
     setTimeout(() => {
       riddleTextLayerBackground.style.transition = "transform 1s ease-in";
@@ -324,8 +324,15 @@ function handleIncorrectGuess(clickedArea, iconIndex) {
       selectionLayer.style.transition = "transform 1s ease-in";
       selectionLayer.style.transform = "translateY(1298px)";
 
-      riddleAnswer.style.display = "flex";
-      answerIncorrectText.style.display = "block";
+      const gameOver = document.getElementById("game-over");
+      if (remainingHints <= 0) {
+        riddleAnswer.style.display = "none";
+        gameOver.style.display = "flex";
+      } else {
+        gameOver.style.display = "none";
+        riddleAnswer.style.display = "flex";
+        answerIncorrectText.style.display = "block";
+      }
       enableAllInput();
     }, 1500);
 
