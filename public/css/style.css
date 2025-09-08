@@ -438,6 +438,31 @@ button {
   z-index: 71;
 }
 
+#game-over {
+  display: none;
+  align-items: center;
+  flex-direction: column;
+  position: absolute;
+  top: 470px;
+  width: 100%;
+  flex-direction: column;
+  background-color: #bdd2d4;
+  z-index: 71;
+}
+
+#game-over-img {
+  width: 631px;
+  height: 631px;
+  padding-top: 200px;
+  padding-bottom: 70px;
+}
+
+#riddle-count-text {
+  font-family: Gotham;
+  font-size: 72px;
+  padding-bottom: 400px;
+}
+
 .answer-text {
   font-family: "Enriqueta";
   font-size: 46px;
@@ -565,6 +590,7 @@ button {
 
 #riddle-screen {
   position: absolute;
+  height: 100%;
   z-index: 40;
 }
 
