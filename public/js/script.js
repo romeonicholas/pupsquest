@@ -267,7 +267,7 @@ function decreaseHints() {
   const currentX = getTranslateX(hintCountForeground);
   remainingHints--;
   hintCountForeground.style.transition = "transform 1s ease-in";
-  hintCountForeground.style.transform = `translateX(${currentX - 45}px)`;
+  hintCountForeground.style.transform = `translateX(${currentX - 47}px)`;
 }
 
 function resetHints() {
