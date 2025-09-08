@@ -329,6 +329,10 @@ function handleIncorrectGuess(clickedArea, iconIndex) {
       const nextRiddleSheet = document.getElementById("next-riddle-sheet");
 
       if (remainingHints <= 0) {
+        const riddleCountNumber = document.getElementById(
+          "riddle-count-number"
+        );
+        riddleCountNumber.innerText = currentGameState.currentScore;
         riddleAnswer.style.display = "none";
         gameOver.style.display = "flex";
         playAgainSheet.style.display = "block";
@@ -356,6 +360,7 @@ function handleCorrectGuess(clickedArea, iconIndex) {
   disableAllInput();
   replaceElementToRemoveListeners(clickedArea);
 
+  currentGameState.currentScore++;
   incorrectGuesses = 0;
   showIconBacking(iconIndex);
 
