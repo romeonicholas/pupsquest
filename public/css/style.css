@@ -290,6 +290,10 @@ button {
   z-index: 73;
 }
 
+#play-again-sheet {
+  display: none;
+}
+
 .couplet {
   font-family: "Enriqueta";
   font-size: 46px;
