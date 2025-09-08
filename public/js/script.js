@@ -417,9 +417,6 @@ function updateNextStatusText(nextText) {
 
 function updateStatusWheel(wheelText) {
   updateNextStatusText(wheelText);
-
-  const statusToDelete = currentStatusText;
-
   currentStatusText.classList.remove("current-text");
   currentStatusText.classList.add("previous-text");
   nextStatusText.classList.remove("next-text");
@@ -431,12 +428,6 @@ function updateStatusWheel(wheelText) {
   nextStatusText.className = "status-text-wrapper next-text";
   nextStatusText.innerHTML = '<span class="status-text"></span>';
   statusWheelContainer.appendChild(nextStatusText);
-
-  setTimeout(() => {
-    if (statusToDelete && statusToDelete.parentNode) {
-      statusToDelete.remove();
-    }
-  }, 1000);
 }
 
 function lowerStartScreen() {
