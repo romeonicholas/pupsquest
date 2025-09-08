@@ -3,8 +3,8 @@ let currentGameState = null;
 // let currentRiddleIndex = Math.floor(Math.random() * 5);
 // let riddlesData = null;
 // let currentRiddleData = null;
-// let remainingHints = 7;
-// let incorrectGuesses = 0;
+let remainingHints = 7;
+let incorrectGuesses = 0;
 
 const correctAnswerBacking = "/images/riddles/ui/answer_backing_correct.png";
 const incorrectAnswerBackings = [
@@ -77,19 +77,6 @@ window.addEventListener("load", scaleContainer);
 document.addEventListener("DOMContentLoaded", scaleContainer);
 // document.addEventListener("contextmenu", function (e) {
 //   e.preventDefault();
-// });
-
-// async function loadRiddles() {
-//   try {
-//     const response = await fetch("/riddles");
-//     riddlesData = await response.json();
-//   } catch (error) {
-//     console.error("Error loading riddles:", error);
-//   }
-// }
-
-// document.addEventListener("DOMContentLoaded", function () {
-//   loadRiddles();
 // });
 
 let movedColors = false;
@@ -234,6 +221,15 @@ function resetIconPositions() {
 }
 
 async function showNewRiddle() {
+  const startScreen = document.getElementById("start-screen");
+  startScreen.style.display = "none";
+
+  const createNewUserScreen = document.getElementById("create-new-user-screen");
+  createNewUserScreen.style.display = "none";
+
+  const riddleScreen = document.getElementById("riddle-screen");
+  riddleScreen.style.display = "block";
+
   resetIconPositions();
   closeRiddleContainerFromBottom();
 
@@ -256,7 +252,7 @@ async function showNewRiddle() {
         currentRiddle.answerDetails,
         currentRiddle.answerImgPath
       );
-      updateStatusWheel(`RIDDLE ${currentRiddleIndex + 1}`);
+      updateStatusWheel(`RIDDLE ${currentGameState.queueCursor + 1}`);
     }, 1000);
 
     setTimeout(() => {
