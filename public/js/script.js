@@ -328,6 +328,8 @@ function handleIncorrectGuess(clickedArea, iconIndex) {
       answerIncorrectText.style.display = "block";
       enableAllInput();
     }, 1500);
+
+    currentGameState.queueCursor++;
   } else {
     showNextHint();
     setTimeout(() => {
@@ -355,6 +357,8 @@ function handleCorrectGuess(clickedArea, iconIndex) {
 
     enableAllInput();
   }, 1500);
+
+  currentGameState.queueCursor++;
 }
 
 function getTranslateX(element) {
