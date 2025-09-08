@@ -1,9 +1,5 @@
 let currentUser = null;
 let currentGameState = null;
-// let currentRiddleIndex = Math.floor(Math.random() * 5);
-// let riddlesData = null;
-// let currentRiddleData = null;
-let remainingHints = 7;
 let incorrectGuesses = 0;
 
 const correctAnswerBacking = "/images/riddles/ui/answer_backing_correct.png";
@@ -265,13 +261,13 @@ async function showNewRiddle() {
 
 function decreaseHints() {
   const currentX = getTranslateX(hintCountForeground);
-  remainingHints--;
+  currentGameState.hintsRemaining--;
   hintCountForeground.style.transition = "transform 1s ease-in";
   hintCountForeground.style.transform = `translateX(${currentX - 47}px)`;
 }
 
 function resetHints() {
-  remainingHints = 7;
+  currentGameState.hintsRemaining = 7;
   hintCountForeground.style.transition = "transform 1s ease-in";
   hintCountForeground.style.transform = "translateX(0)";
 }
@@ -324,7 +320,7 @@ function handleIncorrectGuess(clickedArea, iconIndex) {
   decreaseHints();
   showIconBacking(iconIndex);
 
-  if (incorrectGuesses >= 3 || remainingHints <= 0) {
+  if (incorrectGuesses >= 3 || currentGameState.hintsRemaining <= 0) {
     incorrectGuesses = 0;
     setTimeout(() => {
       riddleTextLayerBackground.style.transition = "transform 1s ease-in";
@@ -337,7 +333,7 @@ function handleIncorrectGuess(clickedArea, iconIndex) {
       const playAgainSheet = document.getElementById("play-again-sheet");
       const nextRiddleSheet = document.getElementById("next-riddle-sheet");
 
-      if (remainingHints <= 0) {
+      if (currentGameState.hintsRemaining <= 0) {
         updateScoreText();
         riddleAnswer.style.display = "none";
         gameOver.style.display = "flex";
