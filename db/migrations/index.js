@@ -12,17 +12,25 @@ export async function runAllMigrations(db) {
     .all();
 
   try {
-    const migration = await import("./001_add_users_createdAt.js");
-
     if (
       !executedMigrations.some(
         (m) => m.filename === "001_add_users_createdAt.js"
       )
     ) {
-      migration.up(db);
-
+      const migration001 = await import("./001_add_users_createdAt.js");
+      migration001.up(db);
       db.prepare(`INSERT INTO migrations (filename) VALUES (?)`).run(
         "001_add_users_createdAt.js"
+      );
+    }
+
+    if (
+      !executedMigrations.some((m) => m.filename === "002_add_user_scores.js")
+    ) {
+      const migration002 = await import("./002_add_user_scores.js");
+      migration002.up(db);
+      db.prepare(`INSERT INTO migrations (filename) VALUES (?)`).run(
+        "002_add_user_scores.js"
       );
     }
   } catch (error) {

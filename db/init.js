@@ -91,7 +91,7 @@ export async function openAndMigrate(path = "./database.db") {
     `);
 
     await runAllMigrations(db);
-    runAllSeeds(db);
+    await runAllSeeds(db);
 
     return db;
   } catch (error) {

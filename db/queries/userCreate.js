@@ -59,6 +59,7 @@ export function createUser(db, { colorId, animalId }) {
       u.id,
       u.gameState,
       u.createdAt,
+      u.scores,
       uc.id as colorId,
       uc.name as colorName,
       uc.hex as colorHex,
@@ -78,6 +79,7 @@ export function createUser(db, { colorId, animalId }) {
         currentRiddleId: null,
         currentGuesses: [],
         hintsRemaining: DEFAULT_HINTS,
+        currentScore: 0,
       });
       const info = insertUser.run(animalId, colorId, placeholder);
       const userId = Number(info.lastInsertRowid);
@@ -88,6 +90,7 @@ export function createUser(db, { colorId, animalId }) {
         currentRiddleId: queue[0] ?? null,
         currentGuesses: [],
         hintsRemaining: DEFAULT_HINTS,
+        currentScore: 0,
         riddleQueue: queue,
         queueCursor: 0,
         queueVersion: 1,
