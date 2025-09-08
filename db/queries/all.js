@@ -1,7 +1,7 @@
 import { db } from "../init.js";
 
-export function getAllDataForDashboard(db) {
-  const rows = db
+export async function getAllDataForDashboard(db) {
+  const rows = await db
     .prepare(
       `
     SELECT

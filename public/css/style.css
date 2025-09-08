@@ -794,3 +794,13 @@ button {
   position: absolute;
   top: 430px;
 }
+
+#save-exit-button {
+  position: absolute;
+  top: 0px;
+  left: 360px;
+  width: 360px;
+  height: 85px;
+  padding: 0px;
+  z-index: 79;
+}
