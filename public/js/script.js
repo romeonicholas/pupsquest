@@ -325,13 +325,20 @@ function handleIncorrectGuess(clickedArea, iconIndex) {
       selectionLayer.style.transform = "translateY(1298px)";
 
       const gameOver = document.getElementById("game-over");
+      const playAgainSheet = document.getElementById("play-again-sheet");
+      const nextRiddleSheet = document.getElementById("next-riddle-sheet");
+
       if (remainingHints <= 0) {
         riddleAnswer.style.display = "none";
         gameOver.style.display = "flex";
+        playAgainSheet.style.display = "block";
+        nextRiddleSheet.style.display = "none";
       } else {
         gameOver.style.display = "none";
         riddleAnswer.style.display = "flex";
         answerIncorrectText.style.display = "block";
+        playAgainSheet.style.display = "none";
+        nextRiddleSheet.style.display = "block";
       }
       enableAllInput();
     }, 1500);
