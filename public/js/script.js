@@ -307,6 +307,15 @@ function enableAllInput() {
   }
 }
 
+function updateScoreText() {
+  const scoreText = document.getElementById("score-text");
+  if (currentGameState.currentScore == 1) {
+    scoreText.innerText = `You solved ${currentGameState.currentScore} riddle!`;
+  } else {
+    scoreText.innerText = `You solved ${currentGameState.currentScore} riddles!`;
+  }
+}
+
 function handleIncorrectGuess(clickedArea, iconIndex) {
   disableAllInput();
   replaceElementToRemoveListeners(clickedArea);
@@ -329,14 +338,12 @@ function handleIncorrectGuess(clickedArea, iconIndex) {
       const nextRiddleSheet = document.getElementById("next-riddle-sheet");
 
       if (remainingHints <= 0) {
-        const riddleCountNumber = document.getElementById(
-          "riddle-count-number"
-        );
-        riddleCountNumber.innerText = currentGameState.currentScore;
+        updateScoreText();
         riddleAnswer.style.display = "none";
         gameOver.style.display = "flex";
         playAgainSheet.style.display = "block";
         nextRiddleSheet.style.display = "none";
+        resetHints();
       } else {
         gameOver.style.display = "none";
         riddleAnswer.style.display = "flex";
