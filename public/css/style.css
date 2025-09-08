@@ -564,7 +564,8 @@ button {
 }
 
 #riddle-screen {
-  display: none;
+  position: absolute;
+  z-index: 40;
 }
 
 /* .color.selected,
@@ -757,4 +758,9 @@ button {
   width: 380px;
   height: 115px;
   padding: 0px;
+}
+
+#riddle-screen-confirmation-dummy {
+  position: absolute;
+  top: 430px;
 }
