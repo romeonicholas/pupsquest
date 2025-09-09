@@ -88,10 +88,10 @@ function showFirstCouplet() {
   selectionLayer.style.transform = "translateY(276px)";
 }
 
-function incrementRiddleIndex() {
-  currentRiddleIndex++;
-  if (currentRiddleIndex >= riddlesData.length) {
-    currentRiddleIndex = 0;
+function incrementRiddleQueueCursor() {
+  currentGameState.queueCursor++;
+  if (currentGameState.queueCursor >= currentGameState.riddleQueue.length) {
+    currentGameState.queueCursor = 0;
   }
 }
 
@@ -345,7 +345,7 @@ async function handleIncorrectGuess(clickedArea, iconIndex) {
 
         currentUser.scores.push(currentGameState.currentScore);
         currentGameState.currentScore = 0;
-        currentGameState.queueCursor++;
+        incrementRiddleQueueCursor();
 
         try {
           const response = await fetch(`/api/users/${currentUser.id}`, {
@@ -371,7 +371,7 @@ async function handleIncorrectGuess(clickedArea, iconIndex) {
       enableAllInput();
     }, 1500);
 
-    currentGameState.queueCursor++;
+    incrementRiddleQueueCursor();
   } else {
     showNextHint();
     setTimeout(() => {
@@ -401,7 +401,7 @@ function handleCorrectGuess(clickedArea, iconIndex) {
     enableAllInput();
   }, 1500);
 
-  currentGameState.queueCursor++;
+  incrementRiddleQueueCursor();
 }
 
 function getTranslateX(element) {
