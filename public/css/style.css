@@ -79,6 +79,7 @@ button {
   position: absolute;
   bottom: 0; /* Start screen has a tab on top that extends out of view */
   left: 0;
+  height: 2020px;
   z-index: 100;
 }
 
