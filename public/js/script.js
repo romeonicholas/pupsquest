@@ -517,12 +517,28 @@ function updateBadgeColor(colorDisplayName) {
 }
 
 async function updateAnimalContainer(colorId) {
-  const animalOptionsContainer = document.getElementById(
-    "animal-options-container"
-  );
-  animalOptionsContainer.innerHTML = await fetchAvailableAnimalsForColor(
-    colorId
-  );
+  try {
+    const animalOptionsContainer = document.getElementById(
+      "animal-options-container"
+    );
+    animalOptionsContainer.style.transition = "opacity 300ms ease-out";
+    animalOptionsContainer.style.opacity = "0";
+
+    setTimeout(async () => {
+      const response = await fetch(
+        `/api/animals/available/html?colorId=${colorId}&limit=8`
+      );
+      const html = await response.text();
+
+      animalOptionsContainer.innerHTML = html;
+
+      animalOptionsContainer.style.transition = "opacity 300ms ease-in";
+      animalOptionsContainer.style.opacity = "1";
+    }, 200);
+  } catch (error) {
+    console.error("Error updating animal container:", error);
+    animalOptionsContainer.style.opacity = "1";
+  }
 }
 
 function resetBadge() {
