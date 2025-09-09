@@ -667,8 +667,6 @@ function updateBadgeText(animalDisplayName) {
 }
 
 function selectAnimal(animalDisplayName, animalId, animalImgPath) {
-  console.log("Selected animal:", animalDisplayName, animalId, animalImgPath);
-
   updateAnimalSelection(animalDisplayName);
   updateBadgeIcon(animalImgPath);
   updateBadgeText(animalDisplayName);
@@ -733,7 +731,6 @@ async function createUser() {
     }
 
     const newUser = await response.json();
-    console.log("Created user:", newUser);
 
     return newUser;
   } catch (error) {
