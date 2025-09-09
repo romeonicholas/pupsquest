@@ -44,28 +44,28 @@ body {
   overflow: hidden;
   touch-action: none;
   overscroll-behavior: none;
-  width: 100vw;
-  height: 100vh;
-  position: fixed;
+  width: 100dvw;
+  height: 100dvh;
+  position: relative;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  background: #f1ece1;
+  background: #5e5e5e;
 }
 
 #container {
   width: 1080px;
   height: 1920px;
   position: relative;
-  transform-origin: center center;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 10px 20px rgba(0, 0, 0, 0.2);
+  transform-origin: center top;
+  /* box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 10px 20px rgba(0, 0, 0, 0.2); */
 }
 
 #clip-path {
   width: 1080px;
   height: 1920px;
   position: relative;
-  transform-origin: center center;
+  transform-origin: center top;
   overflow: clip;
 }
 
