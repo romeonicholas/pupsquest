@@ -311,7 +311,7 @@ function updateScoreText() {
   }
 }
 
-function handleIncorrectGuess(clickedArea, iconIndex) {
+async function handleIncorrectGuess(clickedArea, iconIndex) {
   disableAllInput();
   replaceElementToRemoveListeners(clickedArea);
 
@@ -324,7 +324,7 @@ function handleIncorrectGuess(clickedArea, iconIndex) {
     currentGameState.hintsRemaining <= 0
   ) {
     currentGameState.currentGuesses = [];
-    setTimeout(() => {
+    setTimeout(async () => {
       riddleTextLayerBackground.style.transition = "transform 1s ease-in";
       riddleTextLayerBackground.style.transform = "translateY(0px)";
 
@@ -342,6 +342,25 @@ function handleIncorrectGuess(clickedArea, iconIndex) {
         playAgainSheet.style.display = "block";
         nextRiddleSheet.style.display = "none";
         resetHints();
+
+        currentUser.scores.push(currentGameState.currentScore);
+        currentGameState.currentScore = 0;
+        currentGameState.queueCursor++;
+
+        try {
+          const response = await fetch(`/api/users/${currentUser.id}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              gameState: currentGameState,
+              scores: currentUser.scores,
+            }),
+          });
+        } catch (error) {
+          console.error("Error updating user:", error);
+        }
       } else {
         gameOver.style.display = "none";
         riddleAnswer.style.display = "flex";
