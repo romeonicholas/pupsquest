@@ -288,6 +288,7 @@ button {
 #riddle-couplets-container {
   position: absolute;
   top: 176px;
+  width: 1080px;
   z-index: 73;
 }
 
