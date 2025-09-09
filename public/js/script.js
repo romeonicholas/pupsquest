@@ -222,9 +222,6 @@ function transitionToRiddleScreen() {
   const createNewUserScreen = document.getElementById("create-new-user-screen");
   createNewUserScreen.style.display = "none";
 
-  const riddleScreen = document.getElementById("riddle-screen");
-  riddleScreen.style.display = "block";
-
   showNewRiddle();
 }
 
@@ -653,6 +650,9 @@ async function confirmAnimal() {
 
   currentUser = await createUser();
   currentGameState = currentUser.gameState;
+
+  const riddleScreen = document.getElementById("riddle-screen");
+  riddleScreen.style.display = "block";
 }
 
 async function createUser() {
