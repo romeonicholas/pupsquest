@@ -247,7 +247,11 @@ async function showNewRiddle() {
         currentRiddle.answerDetails,
         currentRiddle.answerImgPath
       );
-      updateStatusWheel(`RIDDLE ${currentGameState.queueCursor + 1}`);
+      updateStatusWheel(
+        `RIDDLE ${
+          currentGameState.queueCursor + 1 - currentGameState.startingIndex
+        }`
+      );
       const nextRiddleSheet = document.getElementById("next-riddle-sheet");
       nextRiddleSheet.style.visibility = "visible";
     }, 1000);
@@ -338,6 +342,7 @@ async function handleIncorrectGuess(clickedArea, iconIndex) {
       const nextRiddleSheet = document.getElementById("next-riddle-sheet");
 
       if (currentGameState.hintsRemaining <= 0) {
+        currentGameState.startingIndex = currentGameState.queueCursor;
         updateScoreText();
         riddleAnswer.style.display = "none";
         gameOver.style.display = "flex";
