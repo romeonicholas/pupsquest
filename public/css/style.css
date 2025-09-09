@@ -803,7 +803,7 @@ button {
   top: 430px;
 }
 
-#save-exit-button {
+.exit-button {
   position: absolute;
   top: 0px;
   left: 360px;
@@ -811,4 +811,8 @@ button {
   height: 85px;
   padding: 0px;
   z-index: 79;
+}
+
+#save-exit-button {
+  display: none;
 }

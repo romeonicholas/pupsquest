@@ -452,6 +452,22 @@ function updateStatusWheel(wheelText) {
   statusWheelContainer.appendChild(nextStatusText);
 }
 
+function setExitButtonToActive() {
+  const exitButton = document.getElementById("exit-button");
+  exitButton.style.display = "none";
+
+  const saveExitButton = document.getElementById("save-exit-button");
+  saveExitButton.style.display = "block";
+}
+
+function setSaveAndExitButtonToActive() {
+  const saveExitButton = document.getElementById("save-exit-button");
+  saveExitButton.style.display = "block";
+
+  const exitButton = document.getElementById("exit-button");
+  exitButton.style.display = "none";
+}
+
 function lowerStartScreen() {
   const startScreen = document.getElementById("start-screen");
   startScreen.style.transition = "transform 1800ms ease-in";
@@ -607,19 +623,15 @@ function updateBadgeIcon(animalImgPath) {
   const nextIndex = currentBadgeIndex === 1 ? 2 : 1;
   const nextIcon = document.getElementById(`badge-icon-${nextIndex}`);
 
-  // Set the new image source
   nextIcon.src = animalImgPath;
 
   if (currentIcon.classList.contains("visible")) {
-    // Crossfade: fade out current, fade in new simultaneously
     currentIcon.classList.remove("visible");
     nextIcon.classList.add("visible");
   } else {
-    // First time - just fade in
     nextIcon.classList.add("visible");
   }
 
-  // Update the current index
   currentBadgeIndex = nextIndex;
 }
 
@@ -688,6 +700,8 @@ async function confirmAnimal() {
 
   const riddleScreen = document.getElementById("riddle-screen");
   riddleScreen.style.display = "block";
+
+  setSaveAndExitButtonToActive();
 }
 
 async function createUser() {
@@ -774,6 +788,12 @@ function showStartScreen() {
   startScreen.style.transform = "translateY(0px)";
 }
 
+function exit() {
+  resetCreateNewUserScreen();
+  showStartScreen();
+  setExitButtonToActive();
+}
+
 async function saveAndExit() {
   if (currentUser && currentGameState) {
     try {
@@ -798,6 +818,8 @@ async function saveAndExit() {
       resetCreateNewUserScreen();
 
       showStartScreen();
+
+      setExitButtonToActive();
     } catch (error) {
       console.error("Error saving user data:", error);
       alert("Failed to save user data. Please try again.");
