@@ -215,7 +215,7 @@ function resetIconPositions() {
   });
 }
 
-async function showNewRiddle() {
+function transitionToRiddleScreen() {
   const startScreen = document.getElementById("start-screen");
   startScreen.style.display = "none";
 
@@ -225,6 +225,10 @@ async function showNewRiddle() {
   const riddleScreen = document.getElementById("riddle-screen");
   riddleScreen.style.display = "block";
 
+  showNewRiddle();
+}
+
+async function showNewRiddle() {
   resetIconPositions();
   closeRiddleContainerFromBottom();
 
