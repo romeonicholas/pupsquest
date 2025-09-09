@@ -275,7 +275,7 @@ button {
 #riddle-text {
   align-items: center;
   position: relative;
-  top: 1750px;
+  top: 1745px;
   left: 0px;
   transition: transform 1s ease-in;
   z-index: 73;
@@ -285,7 +285,7 @@ button {
 
 #riddle-couplets-container {
   position: absolute;
-  top: 176px;
+  top: 180px;
   width: 1080px;
   z-index: 73;
 }
