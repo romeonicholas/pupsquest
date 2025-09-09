@@ -33,6 +33,16 @@ export async function runAllMigrations(db) {
         "002_add_user_scores.js"
       );
     }
+
+    if (
+      !executedMigrations.some((m) => m.filename === "003_add_startingIndex.js")
+    ) {
+      const migration003 = await import("./003_add_startingIndex.js");
+      migration003.up(db);
+      db.prepare(`INSERT INTO migrations (filename) VALUES (?)`).run(
+        "003_add_startingIndex.js"
+      );
+    }
   } catch (error) {
     console.error("Migration failed:", error);
     throw error;
