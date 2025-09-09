@@ -168,16 +168,22 @@ button {
   z-index: 79;
 }
 
-#badge-icon {
-  opacity: 0;
+#badge-icon-container {
   position: absolute;
-  top: 122px;
-  left: 40px;
+  top: 118px;
+  left: 44px;
   transform: rotate(3deg);
-  transition: opacity 300ms ease-in;
 }
 
-#badge-icon.visible {
+.badge-icon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  transition: opacity 300ms ease-in-out;
+}
+
+.badge-icon.visible {
   opacity: 1;
 }
 

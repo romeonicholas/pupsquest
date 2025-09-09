@@ -545,8 +545,8 @@ function resetBadge() {
   const badgeBase = document.getElementById("badge-base");
   badgeBase.src = "images/userCreation/badge_gray.png";
 
-  const badgeIcon = document.getElementById("badge-icon");
-  badgeIcon.classList.remove("visible");
+  const badgeIcons = document.querySelectorAll(".badge-icon");
+  badgeIcons.forEach((icon) => icon.classList.remove("visible"));
 
   const badgeTextContainer = document.getElementById("badge-text-container");
   badgeTextContainer.classList.remove("visible");
@@ -598,11 +598,29 @@ function updateAnimalSelection(animalDisplayName) {
   animalSelectionIndicator.classList.add("selected");
 }
 
-function updateBadgeIcon(animalImgPath) {
-  const badgeIcon = document.getElementById("badge-icon");
-  badgeIcon.src = animalImgPath;
+let currentBadgeIndex = 1;
 
-  badgeIcon.classList.add("visible");
+function updateBadgeIcon(animalImgPath) {
+  const currentIcon = document.getElementById(
+    `badge-icon-${currentBadgeIndex}`
+  );
+  const nextIndex = currentBadgeIndex === 1 ? 2 : 1;
+  const nextIcon = document.getElementById(`badge-icon-${nextIndex}`);
+
+  // Set the new image source
+  nextIcon.src = animalImgPath;
+
+  if (currentIcon.classList.contains("visible")) {
+    // Crossfade: fade out current, fade in new simultaneously
+    currentIcon.classList.remove("visible");
+    nextIcon.classList.add("visible");
+  } else {
+    // First time - just fade in
+    nextIcon.classList.add("visible");
+  }
+
+  // Update the current index
+  currentBadgeIndex = nextIndex;
 }
 
 function getSelectedColor() {
