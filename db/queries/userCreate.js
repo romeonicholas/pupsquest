@@ -100,8 +100,7 @@ export function createUser(db, { colorId, animalId }) {
       updateState.run(JSON.stringify(state), userId);
 
       const user = getUserById.get(userId);
-      user.gameState = JSON.parse(user.gameState);
-      return user;
+      return parseUserData(user);
     });
 
     return tx();
@@ -123,6 +122,15 @@ export function getUserById(db, userId) {
   );
 
   const user = getUserById.get(userId);
-  user.gameState = JSON.parse(user.gameState);
-  return user;
+  return parseUserData(user);
+}
+
+function parseUserData(user) {
+  if (!user) return null;
+
+  return {
+    ...user,
+    gameState: JSON.parse(user.gameState),
+    scores: JSON.parse(user.scores || "[]"),
+  };
 }

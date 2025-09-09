@@ -22,7 +22,7 @@ import {
   getAllAnimalsFromUsersWithColor,
   getUserByColorAndAnimal,
 } from "./db/queries/userLogin.js";
-import { updateUserGameState } from "./db/queries/userUpdate.js";
+import { updateUser } from "./db/queries/userUpdate.js";
 import { removeExpiredUsers } from "./db/scripts/userRemoval.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -60,7 +60,7 @@ app.get("/api/colors/from-users", async (req, res) => {
 app.put("/api/users/:id", async (req, res) => {
   try {
     const userId = parseInt(req.params.id);
-    const { gameState } = req.body;
+    const { gameState, scores } = req.body;
 
     if (!userId || isNaN(userId)) {
       return res.status(400).json({ error: "Invalid user ID" });
@@ -70,7 +70,7 @@ app.put("/api/users/:id", async (req, res) => {
       return res.status(400).json({ error: "Missing gameState" });
     }
 
-    const result = await updateUserGameState(db, userId, gameState);
+    const result = await updateUser(db, userId, { gameState, scores });
 
     if (result.changes === 0) {
       return res.status(404).json({ error: "User not found" });
