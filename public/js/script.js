@@ -347,7 +347,6 @@ async function handleIncorrectGuess(clickedArea, iconIndex) {
 
         currentUser.scores.push(currentGameState.currentScore);
         currentGameState.currentScore = 0;
-        incrementRiddleQueueCursor();
 
         try {
           const response = await fetch(`/api/users/${currentUser.id}`, {
