@@ -74,10 +74,6 @@ document.addEventListener("DOMContentLoaded", scaleContainer);
 //   e.preventDefault();
 // });
 
-let movedColors = false;
-let movedAnimals = false;
-let isAnimating = false;
-
 function closeRiddleContainerFromBottom() {
   selectionLayer.style.transform = "translateY(0)";
   riddleContainer.style.transform = "translateY(-1294px)";
@@ -222,6 +218,9 @@ function transitionToRiddleScreen() {
   const createNewUserScreen = document.getElementById("create-new-user-screen");
   createNewUserScreen.style.display = "none";
 
+  const nextRiddleSheet = document.getElementById("next-riddle-sheet");
+  nextRiddleSheet.style.visibility = "hidden";
+
   showNewRiddle();
 }
 
@@ -249,6 +248,8 @@ async function showNewRiddle() {
         currentRiddle.answerImgPath
       );
       updateStatusWheel(`RIDDLE ${currentGameState.queueCursor + 1}`);
+      const nextRiddleSheet = document.getElementById("next-riddle-sheet");
+      nextRiddleSheet.style.visibility = "visible";
     }, 1000);
 
     setTimeout(() => {
