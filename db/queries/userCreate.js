@@ -19,7 +19,7 @@ export function getAvailableAnimalsForColor(db, colorId, limit = null) {
       FROM users u 
       WHERE u.userColor = ?
     )
-    ORDER BY ua.name
+    ORDER BY RANDOM()
   `;
 
   if (limit !== null) {
