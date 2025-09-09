@@ -1,6 +1,5 @@
 let currentUser = null;
 let currentGameState = null;
-let incorrectGuesses = 0;
 
 const correctAnswerBacking = "/images/riddles/ui/answer_backing_correct.png";
 const incorrectAnswerBackings = [
@@ -316,12 +315,15 @@ function handleIncorrectGuess(clickedArea, iconIndex) {
   disableAllInput();
   replaceElementToRemoveListeners(clickedArea);
 
-  incorrectGuesses++;
+  currentGameState.currentGuesses.push(iconIndex);
   decreaseHints();
   showIconBacking(iconIndex);
 
-  if (incorrectGuesses >= 3 || currentGameState.hintsRemaining <= 0) {
-    incorrectGuesses = 0;
+  if (
+    currentGameState.currentGuesses.length >= 3 ||
+    currentGameState.hintsRemaining <= 0
+  ) {
+    currentGameState.currentGuesses = [];
     setTimeout(() => {
       riddleTextLayerBackground.style.transition = "transform 1s ease-in";
       riddleTextLayerBackground.style.transform = "translateY(0px)";
@@ -364,7 +366,7 @@ function handleCorrectGuess(clickedArea, iconIndex) {
   replaceElementToRemoveListeners(clickedArea);
 
   currentGameState.currentScore++;
-  incorrectGuesses = 0;
+  currentGameState.currentGuesses = [];
   showIconBacking(iconIndex);
 
   setTimeout(() => {
