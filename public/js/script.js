@@ -461,10 +461,10 @@ function updateStatusWheel(wheelText) {
 
 function setExitButtonToActive() {
   const exitButton = document.getElementById("exit-button");
-  exitButton.style.display = "none";
+  exitButton.style.display = "block";
 
   const saveExitButton = document.getElementById("save-exit-button");
-  saveExitButton.style.display = "block";
+  saveExitButton.style.display = "none";
 }
 
 function setSaveAndExitButtonToActive() {
@@ -763,27 +763,31 @@ async function createUser() {
 }
 
 function resetCreateNewUserScreen() {
-  const createNewUserScreen = document.getElementById("create-new-user-screen");
-  createNewUserScreen.style.display = "none";
+  setTimeout(() => {
+    const createNewUserScreen = document.getElementById(
+      "create-new-user-screen"
+    );
+    createNewUserScreen.style.display = "none";
 
-  resetBadge();
-  clearColorSelectionIndicators();
-  clearAnimalSelectionIndicators();
+    resetBadge();
+    clearColorSelectionIndicators();
+    clearAnimalSelectionIndicators();
 
-  const userCreationInstructions = document.getElementById(
-    "user-creation-instructions"
-  );
-  const colorPicker = document.getElementById("color-picker");
-  const badgeContainer = document.getElementById("badge-container");
-  const confirmationPanel = document.getElementById("confirmation-panel");
+    const userCreationInstructions = document.getElementById(
+      "user-creation-instructions"
+    );
+    const colorPicker = document.getElementById("color-picker");
+    const badgeContainer = document.getElementById("badge-container");
+    const confirmationPanel = document.getElementById("confirmation-panel");
 
-  userCreationInstructions.style.transform = "translateY(0px)";
-  colorPicker.style.transform = "translateY(0px)";
-  badgeContainer.style.transform = "translateY(0px)";
-  confirmationPanel.style.transform = "translateY(0px)";
+    userCreationInstructions.style.transform = "translateY(0px)";
+    colorPicker.style.transform = "translateY(0px)";
+    badgeContainer.style.transform = "translateY(0px)";
+    confirmationPanel.style.transform = "translateY(0px)";
 
-  const statusTextCurrent = document.querySelector(".current-text");
-  statusTextCurrent.firstChild.innerText = "WELCOME";
+    const statusTextCurrent = document.querySelector(".current-text");
+    statusTextCurrent.firstChild.innerText = "WELCOME";
+  }, 1800);
 }
 
 function resetRiddleScreen() {
@@ -805,8 +809,8 @@ function showStartScreen() {
 }
 
 function exit() {
+  raiseStartScreen();
   resetCreateNewUserScreen();
-  showStartScreen();
   setExitButtonToActive();
 }
 
@@ -832,9 +836,7 @@ async function saveAndExit() {
 
       resetRiddleScreen();
       resetCreateNewUserScreen();
-
       showStartScreen();
-
       setExitButtonToActive();
     } catch (error) {
       console.error("Error saving user data:", error);
