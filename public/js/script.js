@@ -258,6 +258,8 @@ async function showNewRiddle() {
 
     setTimeout(() => {
       showFirstCouplet();
+      const gameOver = document.getElementById("game-over");
+      gameOver.style.display = "none";
     }, 2000);
   } catch (error) {
     console.error("Error fetching riddle:", error);
@@ -479,6 +481,12 @@ function lowerStartScreen() {
   startScreen.style.transform = "translateY(1920px)";
 }
 
+function raiseStartScreen() {
+  const startScreen = document.getElementById("start-screen");
+  startScreen.style.transition = "transform 1800ms ease-in";
+  startScreen.style.transform = "translateY(0)";
+}
+
 function showRejoinGameScreen() {
   document.getElementById("login-screen").style.display = "block";
 }
@@ -492,6 +500,12 @@ function showUsePhoneScreen() {
 function showCreateNewUserScreen() {
   const createNewUserScreen = document.getElementById("create-new-user-screen");
   createNewUserScreen.style.display = "block";
+
+  const userPanel = document.getElementById("user-panel");
+  userPanel.style.display = "block";
+
+  const exitContainer = document.getElementById("exit-container");
+  exitContainer.style.display = "block";
 }
 
 function showColorPicker() {
