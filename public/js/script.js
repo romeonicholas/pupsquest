@@ -492,6 +492,8 @@ function showRejoinGameScreen() {
 }
 
 function showUsePhoneScreen() {
+  document.getElementById("user-panel").style.display = "none";
+  document.getElementById("exit-container").style.display = "none";
   document.getElementById("use-phone-screen").style.display = "block";
 }
 
