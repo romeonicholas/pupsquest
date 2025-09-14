@@ -810,7 +810,7 @@ async function rejoinSelectColor(colorDisplayName, colorId) {
   clearRejoinColorSelectionIndicators();
   showRejoinColorSelectionIndicator(colorDisplayName);
   updateBadgeColor(colorDisplayName);
-  // await updateAnimalContainer(colorId);
+  await updateRejoinAnimalContainer(colorId);
 }
 
 function showRejoinColorSelectionIndicator(colorDisplayName) {
@@ -827,6 +827,31 @@ function clearRejoinColorSelectionIndicators() {
     .classList.remove("selected");
   document.getElementById("rejoin-green-selected").classList.remove("selected");
   document.getElementById("rejoin-blue-selected").classList.remove("selected");
+}
+
+async function updateRejoinAnimalContainer(colorId) {
+  try {
+    const animalOptionsContainer = document.getElementById(
+      "rejoin-animal-options-container"
+    );
+    animalOptionsContainer.style.transition = "opacity 300ms ease-out";
+    animalOptionsContainer.style.opacity = "0";
+
+    setTimeout(async () => {
+      const response = await fetch(
+        `/api/animals/existing/html/?colorId=${colorId}`
+      );
+      const html = await response.text();
+
+      animalOptionsContainer.innerHTML = html;
+
+      animalOptionsContainer.style.transition = "opacity 300ms ease-in";
+      animalOptionsContainer.style.opacity = "1";
+    }, 200);
+  } catch (error) {
+    console.error("Error updating animal container:", error);
+    animalOptionsContainer.style.opacity = "1";
+  }
 }
 
 function resetRiddleScreen() {
