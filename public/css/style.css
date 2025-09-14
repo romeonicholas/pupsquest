@@ -811,6 +811,12 @@ button {
   z-index: 6;
 }
 
+#rejoin-confirmation-panel {
+  position: absolute;
+  top: 1900px;
+  z-index: 6;
+}
+
 #animal-confirmation-button {
   position: absolute;
   top: 9px;
