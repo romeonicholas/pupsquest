@@ -145,6 +145,22 @@ app.get("/api/animals/existing", async (req, res) => {
   }
 });
 
+app.get("/api/animals/existing/html", async (req, res) => {
+  const colorId = req.query.colorId;
+
+  if (!colorId) {
+    return res.status(400).send("<p>Error: Missing colorId</p>");
+  }
+
+  try {
+    const animals = await getAllAnimalsFromUsersWithColor(db, colorId);
+    res.render("partials/animal_options", { animals });
+  } catch (error) {
+    console.error("Error fetching animals:", error);
+    res.status(500).send("<p>Error loading animals</p>");
+  }
+});
+
 app.get("/api/animals/available", async (req, res) => {
   const colorId = req.query.colorId;
   const limit = req.query.limit ? parseInt(req.query.limit) : null;
