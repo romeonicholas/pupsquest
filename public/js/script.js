@@ -488,10 +488,17 @@ function raiseStartScreen() {
 }
 
 function showRejoinGameScreen() {
-  document.getElementById("login-screen").style.display = "block";
+  document.getElementById("use-phone-screen").style.display = "none";
+  document.getElementById("rejoin-screen").style.display = "block";
+  document.getElementById("user-panel").style.display = "block";
+  document.getElementById("exit-container").style.display = "block";
+  resetBadge();
+  const badgeContainer = document.getElementById("badge-container");
+  badgeContainer.style.transform = "translateY(465px)";
 }
 
 function showUsePhoneScreen() {
+  document.getElementById("rejoin-screen").style.display = "none";
   document.getElementById("user-panel").style.display = "none";
   document.getElementById("exit-container").style.display = "none";
   document.getElementById("use-phone-screen").style.display = "block";

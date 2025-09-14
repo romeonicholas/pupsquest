@@ -1,0 +1,89 @@
+<div id="rejoin-screen">
+  <div id="color-picker">
+    <img src="/images/userCreation/color_picker.png" />
+    <div id="color-options-container">
+      <div id="option-red">
+        <button
+          id="button-red"
+          class="color-button"
+          onclick="selectColor('red', 1)"
+        ></button>
+        <img
+          id="red-selected"
+          class="color-selection-icon"
+          src="/images/userCreation/color_selected.png"
+          data-color="Red"
+          data-id="1"
+        />
+      </div>
+
+      <div id="option-yellow">
+        <button
+          id="button-yellow"
+          class="color-button"
+          onclick="selectColor('yellow', 2)"
+        ></button>
+        <img
+          id="yellow-selected"
+          class="color-selection-icon"
+          src="/images/userCreation/color_selected.png"
+          data-color="Yellow"
+          data-id="2"
+        />
+      </div>
+
+      <div id="option-green">
+        <button
+          id="button-green"
+          class="color-button"
+          onclick="selectColor('green', 3)"
+        ></button>
+        <img
+          id="green-selected"
+          class="color-selection-icon"
+          src="/images/userCreation/color_selected.png"
+          data-color="Green"
+          data-id="3"
+        />
+      </div>
+
+      <div id="option-blue">
+        <button
+          id="button-blue"
+          class="color-button"
+          onclick="selectColor('blue', 4)"
+        ></button>
+        <img
+          id="blue-selected"
+          class="color-selection-icon"
+          src="/images/userCreation/color_selected.png"
+          data-color="Blue"
+          data-id="4"
+        />
+      </div>
+    </div>
+  </div>
+  <div id="user-creation-instructions">
+    <img src="/images/userCreation/user_creation_instructions.png" />
+    <button
+      id="user-creation-instructions-button"
+      onclick="showColorPicker()"
+    ></button>
+  </div>
+
+  <div id="animal-options-instructions">Now choose your animal name</div>
+
+  <div id="animal-options-container"></div>
+
+  <div id="confirmation-panel">
+    <img
+      id="confirmation-panel-image"
+      src="/images/userCreation/confirmation_panel.png"
+    />
+    <button id="animal-confirmation-button" onclick="confirmAnimal()"></button>
+    <button
+      id="transition-to-riddles-button"
+      onclick="transitionToRiddleScreen()"
+    ></button>
+  </div>
+</div>
