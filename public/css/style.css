@@ -658,10 +658,32 @@ button {
   z-index: 6;
 }
 
+#rejoin-color-picker {
+  position: absolute;
+  top: 96px;
+  left: 0px;
+  z-index: 6;
+}
+
 #color-options-container {
   position: absolute;
   width: 1080px;
   top: 650px;
+}
+
+#rejoin-color-options-container {
+  position: absolute;
+  width: 1080px;
+  top: 0px;
+}
+
+#rejoin-color-picker-instructions {
+  position: absolute;
+  width: 100%;
+  top: 554px;
+  font-family: "Enriqueta";
+  font-size: 36px;
+  text-align: center;
 }
 
 #option-red {
