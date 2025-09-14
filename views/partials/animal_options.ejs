@@ -10,10 +10,18 @@
     />
   </div>
   <div class="animal-icon-text"><%= animal.name %></div>
+  <% if (isRejoin) { %>
+  <button
+    id="button-<%= animal.name.toLowerCase() %>"
+    class="animal-button"
+    onclick="selectRejoinAnimal('<%= animal.name %>', '<%= animal.imgPath %>');"
+  ></button>
+  <% } else { %>
   <button
     id="button-<%= animal.name.toLowerCase() %>"
     class="animal-button"
     onclick="selectAnimal('<%= animal.name %>', '<%= animal.id %>', '<%= animal.imgPath %>');"
   ></button>
+  <% } %>
 </div>
 <% }); %>

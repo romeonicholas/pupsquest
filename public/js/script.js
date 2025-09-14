@@ -696,7 +696,7 @@ function updateBadgeText(animalDisplayName) {
   badgeTextContainer.classList.add("visible");
 }
 
-function selectAnimal(animalDisplayName, animalId, animalImgPath) {
+function selectAnimal(animalDisplayName, animalImgPath) {
   updateAnimalSelection(animalDisplayName);
   updateBadgeIcon(animalImgPath);
   updateBadgeText(animalDisplayName);
@@ -852,6 +852,34 @@ async function updateRejoinAnimalContainer(colorId) {
     console.error("Error updating animal container:", error);
     animalOptionsContainer.style.opacity = "1";
   }
+}
+
+function selectRejoinAnimal(animalDisplayName, animalImgPath) {
+  updateAnimalSelection(animalDisplayName);
+  updateBadgeIcon(animalImgPath);
+  updateBadgeText(animalDisplayName);
+
+  const confirmationPanel = document.getElementById(
+    "rejoin-confirmation-panel"
+  );
+  confirmationPanel.style.transition = "transform 300ms ease-in";
+  confirmationPanel.style.transform = "translateY(-165px)";
+}
+
+async function confirmRejoinAnimal() {
+  const confirmationPanel = document.getElementById(
+    "rejoin-confirmation-panel"
+  );
+  confirmationPanel.style.transition = "transform 1200ms ease-in";
+  confirmationPanel.style.transform = "translateY(-1470px)";
+
+  currentUser = await createUser();
+  currentGameState = currentUser.gameState;
+
+  const riddleScreen = document.getElementById("riddle-screen");
+  riddleScreen.style.display = "block";
+
+  setSaveAndExitButtonToActive();
 }
 
 function resetRiddleScreen() {

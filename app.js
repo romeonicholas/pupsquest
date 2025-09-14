@@ -154,7 +154,7 @@ app.get("/api/animals/existing/html", async (req, res) => {
 
   try {
     const animals = await getAllAnimalsFromUsersWithColor(db, colorId);
-    res.render("partials/animal_options", { animals });
+    res.render("partials/animal_options", { animals, isRejoin: true });
   } catch (error) {
     console.error("Error fetching animals:", error);
     res.status(500).send("<p>Error loading animals</p>");
