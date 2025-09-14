@@ -495,6 +495,7 @@ function showRejoinGameScreen() {
   resetBadge();
   const badgeContainer = document.getElementById("badge-container");
   badgeContainer.style.transform = "translateY(465px)";
+  updateStatusWheel("ENTER CODE");
 }
 
 function showUsePhoneScreen() {
@@ -797,6 +798,35 @@ function resetCreateNewUserScreen() {
     const statusTextCurrent = document.querySelector(".current-text");
     statusTextCurrent.firstChild.innerText = "WELCOME";
   }, 1800);
+}
+
+async function rejoinSelectColor(colorDisplayName, colorId) {
+  const rejoinColorPickerInstructions = document.getElementById(
+    "rejoin-color-picker-instructions"
+  );
+  rejoinColorPickerInstructions.innerText = "Now select your animal";
+
+  resetBadge();
+  clearRejoinColorSelectionIndicators();
+  showRejoinColorSelectionIndicator(colorDisplayName);
+  updateBadgeColor(colorDisplayName);
+  // await updateAnimalContainer(colorId);
+}
+
+function showRejoinColorSelectionIndicator(colorDisplayName) {
+  const selectedColorIcon = document.getElementById(
+    `rejoin-${colorDisplayName}-selected`
+  );
+  selectedColorIcon.classList.add("selected");
+}
+
+function clearRejoinColorSelectionIndicators() {
+  document.getElementById("rejoin-red-selected").classList.remove("selected");
+  document
+    .getElementById("rejoin-yellow-selected")
+    .classList.remove("selected");
+  document.getElementById("rejoin-green-selected").classList.remove("selected");
+  document.getElementById("rejoin-blue-selected").classList.remove("selected");
 }
 
 function resetRiddleScreen() {
