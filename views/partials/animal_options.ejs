@@ -2,12 +2,21 @@
 <div class="animal-option">
   <div class="animal-icon-container">
     <img class="animal-icon" src="<%= animal.imgPath %>" />
+    <% if (isRejoin) { %>
+    <img
+      id="rejoin-<%= animal.name.toLowerCase() %>-selected"
+      class="rejoin-animal-selection-icon"
+      src="/images/userCreation/animal_selected.png"
+      data-animal="<%= animal.id %>"
+    />
+    <% } else { %>
     <img
       id="<%= animal.name.toLowerCase() %>-selected"
       class="animal-selection-icon"
       src="/images/userCreation/animal_selected.png"
       data-animal="<%= animal.id %>"
     />
+    <% } %>
   </div>
   <div class="animal-icon-text"><%= animal.name %></div>
   <% if (isRejoin) { %>
@@ -20,7 +29,7 @@
   <button
     id="button-<%= animal.name.toLowerCase() %>"
     class="animal-button"
-    onclick="selectAnimal('<%= animal.name %>', '<%= animal.id %>', '<%= animal.imgPath %>');"
+    onclick="selectAnimal('<%= animal.name %>', '<%= animal.imgPath %>');"
   ></button>
   <% } %>
 </div>
