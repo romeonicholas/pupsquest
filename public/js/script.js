@@ -218,16 +218,15 @@ function transitionToRiddleScreen() {
   const createNewUserScreen = document.getElementById("create-new-user-screen");
   createNewUserScreen.style.display = "none";
 
-  const rejoinScreen = document.getElementById("rejoin-screen");
-  rejoinScreen.style.display = "none";
-
   const riddleScreen = document.getElementById("riddle-screen");
   riddleScreen.style.display = "block";
 
   const nextRiddleSheet = document.getElementById("next-riddle-sheet");
   nextRiddleSheet.style.visibility = "hidden";
 
-  showNewRiddle();
+  setTimeout(() => {
+    showNewRiddle();
+  }, 50);
 }
 
 async function showNewRiddle() {
@@ -260,6 +259,9 @@ async function showNewRiddle() {
       );
       const nextRiddleSheet = document.getElementById("next-riddle-sheet");
       nextRiddleSheet.style.visibility = "visible";
+
+      const rejoinScreen = document.getElementById("rejoin-screen");
+      rejoinScreen.style.display = "none";
     }, 1000);
 
     setTimeout(() => {
@@ -522,6 +524,11 @@ function showCreateNewUserScreen() {
 
   const exitContainer = document.getElementById("exit-container");
   exitContainer.style.display = "block";
+
+  const riddleScreenConfirmationDummy = document.getElementById(
+    "riddle-screen-confirmation-dummy"
+  );
+  riddleScreenConfirmationDummy.style.display = "block";
 }
 
 function showColorPicker() {
@@ -882,16 +889,23 @@ function selectRejoinAnimal(animalDisplayName, animalImgPath) {
 }
 
 async function confirmRejoinAnimal() {
-  const confirmationPanel = document.getElementById(
+  const rejoinConfirmationPanel = document.getElementById(
     "rejoin-confirmation-panel"
   );
-  confirmationPanel.style.transition = "transform 1200ms ease-in";
-  confirmationPanel.style.transform = "translateY(-1470px)";
+  rejoinConfirmationPanel.style.transitionDelay = "50ms";
+  rejoinConfirmationPanel.style.transition = "transform 1s ease-in";
+  rejoinConfirmationPanel.style.transform = "translateY(-1200px)";
 
   currentUser = await loginUser();
   currentGameState = currentUser.gameState;
 
   setSaveAndExitButtonToActive();
+
+  const riddleScreenConfirmationDummy = document.getElementById(
+    "riddle-screen-confirmation-dummy"
+  );
+  riddleScreenConfirmationDummy.style.display = "none";
+
   transitionToRiddleScreen();
 }
 
@@ -949,6 +963,7 @@ function resetRejoinScreen() {
       "rejoin-confirmation-panel"
     );
 
+    rejoinConfirmationPanel.style.transitionDelay = "0ms";
     rejoinConfirmationPanel.style.transform = "translateY(0px)";
 
     const statusTextCurrent = document.querySelector(".current-text");
@@ -1003,6 +1018,7 @@ async function saveAndExit() {
 
       resetRiddleScreen();
       resetCreateNewUserScreen();
+      resetRejoinScreen();
       showStartScreen();
       setExitButtonToActive();
     } catch (error) {
