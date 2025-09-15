@@ -530,20 +530,28 @@ function updateStatusWheel(wheelText) {
   statusWheelContainer.appendChild(nextStatusText);
 }
 
-function setExitButtonToActive() {
-  const exitButton = document.getElementById("exit-button");
-  exitButton.style.display = "block";
+function setStartOverButtonToActive() {
+  const startOverPanel = document.getElementById("start-over-panel");
+  startOverPanel.classList.add("visible");
+  const saveExitPanel = document.getElementById("save-exit-panel");
+  saveExitPanel.classList.remove("visible");
 
+  const startOverButton = document.getElementById("start-over-button");
+  startOverButton.style.display = "block";
   const saveExitButton = document.getElementById("save-exit-button");
   saveExitButton.style.display = "none";
 }
 
 function setSaveAndExitButtonToActive() {
+  const startOverPanel = document.getElementById("start-over-panel");
+  startOverPanel.classList.remove("visible");
+  const saveExitPanel = document.getElementById("save-exit-panel");
+  saveExitPanel.classList.add("visible");
+
+  const startOverButton = document.getElementById("start-over-button");
+  startOverButton.style.display = "none";
   const saveExitButton = document.getElementById("save-exit-button");
   saveExitButton.style.display = "block";
-
-  const exitButton = document.getElementById("exit-button");
-  exitButton.style.display = "none";
 }
 
 function lowerStartScreen() {
@@ -567,6 +575,7 @@ function showRejoinGameScreen() {
   const badgeContainer = document.getElementById("badge-container");
   badgeContainer.style.transform = "translateY(465px)";
   updateStatusWheel("ENTER CODE");
+  setStartOverButtonToActive();
 }
 
 function showUsePhoneScreen() {
@@ -592,6 +601,8 @@ function showCreateNewUserScreen() {
     "riddle-screen-confirmation-dummy"
   );
   riddleScreenConfirmationDummy.style.display = "block";
+
+  setStartOverButtonToActive();
 }
 
 function showColorPicker() {
@@ -1058,11 +1069,11 @@ function showStartScreen() {
   startScreen.style.transform = "translateY(0px)";
 }
 
-function exit() {
+function startOver() {
   raiseStartScreen();
   resetCreateNewUserScreen();
   resetRejoinScreen();
-  setExitButtonToActive();
+  setStartOverButtonToActive();
 }
 
 async function saveAndExit() {
@@ -1091,7 +1102,7 @@ async function saveAndExit() {
       resetCreateNewUserScreen(hasDelay);
       resetRejoinScreen(hasDelay);
       showStartScreen();
-      setExitButtonToActive();
+      setStartOverButtonToActive();
     } catch (error) {
       console.error("Error saving user data:", error);
       alert("Failed to save user data. Please try again.");

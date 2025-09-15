@@ -1,9 +1,19 @@
 <div id="exit-container">
-  <img id="save-exit-panel" src="/images/riddles/ui/save_exit_panel.png" />
+  <img id="start-over-panel" class="exit-panel" src="/images/start_over.png" />
+  <img
+    id="save-exit-panel"
+    class="exit-panel"
+    src="/images/riddles/ui/save_exit_panel.png"
+  />
+
   <button
     id="save-exit-button"
     class="exit-button"
     onclick="saveAndExit();"
   ></button>
-  <button id="exit-button" class="exit-button" onclick="exit();"></button>
+  <button
+    id="start-over-button"
+    class="exit-button"
+    onclick="startOver();"
+  ></button>
 </div>
