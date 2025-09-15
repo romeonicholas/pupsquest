@@ -218,6 +218,9 @@ function transitionToRiddleScreen() {
   const createNewUserScreen = document.getElementById("create-new-user-screen");
   createNewUserScreen.style.display = "none";
 
+  const rejoinScreen = document.getElementById("rejoin-screen");
+  rejoinScreen.style.display = "none";
+
   const nextRiddleSheet = document.getElementById("next-riddle-sheet");
   nextRiddleSheet.style.visibility = "hidden";
 
@@ -725,7 +728,6 @@ function updateBadgeText(animalDisplayName) {
 }
 
 function selectAnimal(animalDisplayName, animalImgPath) {
-  console.log("Selected animal:", animalDisplayName, animalImgPath);
   updateAnimalSelection(animalDisplayName);
   updateBadgeIcon(animalImgPath);
   updateBadgeText(animalDisplayName);
@@ -914,13 +916,10 @@ async function confirmRejoinAnimal() {
   confirmationPanel.style.transform = "translateY(-1470px)";
 
   currentUser = await loginUser();
-  console.log("Current User:", currentUser);
   currentGameState = currentUser.gameState;
 
-  const riddleScreen = document.getElementById("riddle-screen");
-  riddleScreen.style.display = "block";
-
   setSaveAndExitButtonToActive();
+  transitionToRiddleScreen();
 }
 
 async function loginUser() {
@@ -949,9 +948,7 @@ async function loginUser() {
       throw new Error(errorData.error || `Server error: ${response.status}`);
     }
 
-    const user = await response.json();
-
-    return user;
+    return await response.json();
   } catch (error) {
     console.error("Error logging in user:", error);
 
