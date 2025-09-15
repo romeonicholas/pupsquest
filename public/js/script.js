@@ -1079,6 +1079,16 @@ function startOver() {
   }, 500);
 }
 
+function firstTimeSaveAndExit() {
+  const userPanel = document.getElementById("user-panel");
+  const riddleScreen = document.getElementById("riddle-screen");
+
+  userPanel.style.transition = "transform 800ms ease-in";
+  userPanel.style.transform = "translateY(380px)";
+  riddleScreen.style.transition = "transform 800ms ease-in";
+  riddleScreen.style.transform = "translateY(380px)";
+}
+
 async function saveAndExit() {
   if (currentUser && currentGameState) {
     try {
