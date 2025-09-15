@@ -225,11 +225,11 @@ function transitionToRiddleScreen() {
   nextRiddleSheet.style.visibility = "hidden";
 
   setTimeout(() => {
-    showNewRiddle();
+    showRiddle();
   }, 50);
 }
 
-async function showNewRiddle() {
+async function showRiddle() {
   resetIconPositions();
   closeRiddleContainerFromBottom();
 
