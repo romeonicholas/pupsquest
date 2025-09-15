@@ -214,11 +214,17 @@ button {
   color: white;
 }
 
-#save-exit-panel {
+.exit-panel {
   position: absolute;
   top: 0px;
   left: 0px;
+  transition: opacity 300ms ease-in;
+  opacity: 0;
   z-index: 78;
+}
+
+.exit-panel.visible {
+  opacity: 1;
 }
 
 #status-wheel {
@@ -865,6 +871,7 @@ button {
 
 #exit-container {
   display: none;
+  background-color: #c54132;
 }
 
 .exit-button {
