@@ -634,12 +634,29 @@ function clearAnimalSelectionIndicators() {
   });
 }
 
+function clearRejoinAnimalSelectionIndicators() {
+  document.querySelectorAll(".rejoin-animal-selection-icon").forEach((el) => {
+    el.classList.remove("selected");
+  });
+}
+
 function updateAnimalSelection(animalDisplayName) {
   clearAnimalSelectionIndicators();
 
   const animalSelectionIndicator = document.getElementById(
     `${animalDisplayName.toLowerCase()}-selected`
   );
+
+  animalSelectionIndicator.classList.add("selected");
+}
+
+function updateRejoinAnimalSelection(animalDisplayName) {
+  clearRejoinAnimalSelectionIndicators();
+
+  const animalSelectionIndicator = document.getElementById(
+    `rejoin-${animalDisplayName.toLowerCase()}-selected`
+  );
+
   animalSelectionIndicator.classList.add("selected");
 }
 
@@ -686,6 +703,17 @@ function getSelectedColorId() {
   return colorId;
 }
 
+function getRejoinSelectedColorId() {
+  const selectedColorIcon = document.querySelector(
+    ".rejoin-color-selection-icon.selected"
+  );
+  const colorId = selectedColorIcon
+    ? selectedColorIcon.getAttribute("data-id")
+    : null;
+
+  return colorId;
+}
+
 function updateBadgeText(animalDisplayName) {
   const color = getSelectedColor();
 
@@ -697,6 +725,7 @@ function updateBadgeText(animalDisplayName) {
 }
 
 function selectAnimal(animalDisplayName, animalImgPath) {
+  console.log("Selected animal:", animalDisplayName, animalImgPath);
   updateAnimalSelection(animalDisplayName);
   updateBadgeIcon(animalImgPath);
   updateBadgeText(animalDisplayName);
@@ -709,6 +738,17 @@ function selectAnimal(animalDisplayName, animalImgPath) {
 function getSelectedAnimalId() {
   const selectedAnimalIcon = document.querySelector(
     ".animal-selection-icon.selected"
+  );
+  const animal = selectedAnimalIcon
+    ? selectedAnimalIcon.getAttribute("data-animal")
+    : "unknown";
+
+  return animal;
+}
+
+function getRejoinSelectedAnimalId() {
+  const selectedAnimalIcon = document.querySelector(
+    ".rejoin-animal-selection-icon.selected"
   );
   const animal = selectedAnimalIcon
     ? selectedAnimalIcon.getAttribute("data-animal")
@@ -855,7 +895,7 @@ async function updateRejoinAnimalContainer(colorId) {
 }
 
 function selectRejoinAnimal(animalDisplayName, animalImgPath) {
-  updateAnimalSelection(animalDisplayName);
+  updateRejoinAnimalSelection(animalDisplayName);
   updateBadgeIcon(animalImgPath);
   updateBadgeText(animalDisplayName);
 
@@ -873,13 +913,52 @@ async function confirmRejoinAnimal() {
   confirmationPanel.style.transition = "transform 1200ms ease-in";
   confirmationPanel.style.transform = "translateY(-1470px)";
 
-  currentUser = await createUser();
+  currentUser = await loginUser();
+  console.log("Current User:", currentUser);
   currentGameState = currentUser.gameState;
 
   const riddleScreen = document.getElementById("riddle-screen");
   riddleScreen.style.display = "block";
 
   setSaveAndExitButtonToActive();
+}
+
+async function loginUser() {
+  try {
+    const selectedColorId = getRejoinSelectedColorId();
+    const selectedAnimalId = getRejoinSelectedAnimalId();
+
+    if (!selectedColorId || !selectedAnimalId) {
+      throw new Error("Please select both a color and an animal.");
+    }
+
+    const response = await fetch(
+      `/api/users/?colorId=${selectedColorId}&animalId=${selectedAnimalId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      const errorData = await response
+        .json()
+        .catch(() => ({ error: "Unknown error" }));
+      throw new Error(errorData.error || `Server error: ${response.status}`);
+    }
+
+    const user = await response.json();
+
+    return user;
+  } catch (error) {
+    console.error("Error logging in user:", error);
+
+    alert(`Failed to log in user: ${error.message}`);
+
+    return null;
+  }
 }
 
 function resetRiddleScreen() {
