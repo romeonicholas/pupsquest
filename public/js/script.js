@@ -940,20 +940,19 @@ function resetRejoinScreen() {
     clearColorSelectionIndicators("rejoin");
     clearAnimalSelectionIndicators("rejoin");
 
-    const userCreationInstructions = document.getElementById(
-      "user-creation-instructions"
+    const rejoinAnimalOptionsContainer = document.getElementById(
+      "rejoin-animal-options-container"
     );
-    const colorPicker = document.getElementById("color-picker");
-    const badgeContainer = document.getElementById("badge-container");
-    const confirmationPanel = document.getElementById("confirmation-panel");
+    rejoinAnimalOptionsContainer.innerHTML = "";
 
-    userCreationInstructions.style.transform = "translateY(0px)";
-    colorPicker.style.transform = "translateY(0px)";
-    badgeContainer.style.transform = "translateY(0px)";
-    confirmationPanel.style.transform = "translateY(0px)";
+    const rejoinConfirmationPanel = document.getElementById(
+      "rejoin-confirmation-panel"
+    );
+
+    rejoinConfirmationPanel.style.transform = "translateY(0px)";
 
     const statusTextCurrent = document.querySelector(".current-text");
-    statusTextCurrent.firstChild.innerText = "WELCOME";
+    statusTextCurrent.firstChild.innerText = "ENTER CODE";
   }, 1800);
 }
 
@@ -978,6 +977,7 @@ function showStartScreen() {
 function exit() {
   raiseStartScreen();
   resetCreateNewUserScreen();
+  resetRejoinScreen();
   setExitButtonToActive();
 }
 
