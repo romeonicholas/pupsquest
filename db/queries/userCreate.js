@@ -97,6 +97,8 @@ export function createUser(db, { colorId, animalId }) {
         queueCursor: 0,
         queueVersion: 1,
         completed: [],
+        currentShuffledChoices: [],
+        currentCorrectAnswerIndex: null,
       };
 
       updateState.run(JSON.stringify(state), userId);

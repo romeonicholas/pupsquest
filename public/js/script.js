@@ -89,12 +89,19 @@ function incrementRiddleQueueCursor() {
   if (currentGameState.queueCursor >= currentGameState.riddleQueue.length) {
     currentGameState.queueCursor = 0;
   }
+
+  currentGameState.currentShuffledChoices = [];
+  currentGameState.currentCorrectAnswerIndex = null;
+  currentGameState.currentGuesses = [];
 }
 
 function updateRiddleElements(riddle) {
   updateRiddleContent(riddle);
   const shuffledChoices = shuffleAnswerChoices(riddle.answerChoices);
   const correctAnswerIndex = findCorrectAnswerIndex(shuffledChoices);
+
+  currentGameState.currentShuffledChoices = shuffledChoices;
+  currentGameState.currentCorrectAnswerIndex = correctAnswerIndex;
 
   updateSelectionIcons(shuffledChoices);
   updateSelectionTexts(shuffledChoices);
@@ -104,6 +111,47 @@ function updateRiddleElements(riddle) {
   currentShuffledChoices = shuffledChoices;
   currentCorrectAnswerIndex = correctAnswerIndex;
   currentRiddle = riddle;
+}
+
+function restoreRiddleState(riddle) {
+  updateRiddleContent(riddle);
+
+  const shuffledChoices = currentGameState.currentShuffledChoices;
+  const correctAnswerIndex = currentGameState.currentCorrectAnswerIndex;
+
+  updateSelectionIcons(shuffledChoices);
+  updateSelectionTexts(shuffledChoices);
+  updateIconBackings(correctAnswerIndex);
+  attachClickHandlers(correctAnswerIndex);
+
+  restoreIncorrectGuesses();
+  restoreVisibleHints();
+
+  currentShuffledChoices = shuffledChoices;
+  currentCorrectAnswerIndex = correctAnswerIndex;
+  currentRiddle = riddle;
+}
+
+function restoreIncorrectGuesses() {
+  setTimeout(() => {
+    currentGameState.currentGuesses.forEach((iconIndex) => {
+      showIconBacking(iconIndex);
+      const clickArea = document.getElementById(
+        `option-click-area-${iconIndex + 1}`
+      );
+      replaceElementToRemoveListeners(clickArea);
+    });
+  }, 2000);
+}
+
+function restoreVisibleHints() {
+  setTimeout(() => {
+    const hintOffset =
+      Math.min(currentGameState.currentGuesses.length, 3) * 222;
+    if (hintOffset > 0) {
+      selectionLayer.style.transform = `translateY(${276 + hintOffset}px)`;
+    }
+  }, 2000);
 }
 
 function updateRiddleContent(riddle) {
@@ -244,7 +292,16 @@ async function showRiddle() {
     }
 
     const currentRiddle = await response.json();
-    updateRiddleElements(currentRiddle);
+
+    const isRejoining =
+      currentGameState.currentShuffledChoices &&
+      currentGameState.currentShuffledChoices.length > 0;
+
+    if (isRejoining) {
+      restoreRiddleState(currentRiddle);
+    } else {
+      updateRiddleElements(currentRiddle);
+    }
 
     setTimeout(() => {
       updateRiddleAnswer(
@@ -265,7 +322,9 @@ async function showRiddle() {
     }, 1000);
 
     setTimeout(() => {
-      showFirstCouplet();
+      if (!isRejoining) {
+        showFirstCouplet();
+      }
       const gameOver = document.getElementById("game-over");
       gameOver.style.display = "none";
     }, 2000);
@@ -302,9 +361,9 @@ function showIconBacking(iconIndex) {
   const icons = [iconFront1, iconFront2, iconFront3, iconFront4];
   const clickedIcon = icons[iconIndex];
   const currentY = getTranslateY(clickedIcon);
-
   clickedIcon.style.transition =
     "transform 1s cubic-bezier(0.54, -0.16, 0.735, 0.045)";
+
   clickedIcon.style.transform = `translateY(${currentY + 234}px)`;
 }
 
