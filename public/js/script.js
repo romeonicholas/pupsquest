@@ -287,6 +287,10 @@ function resetHints() {
   hintCountForeground.style.transform = "translateX(0)";
 }
 
+function setHints(hints) {
+  hintCountForeground.style.transform = `translateX(${-(7 - hints) * 47}px)`;
+}
+
 function showNextHint() {
   const currentY = getTranslateY(selectionLayer);
   selectionLayer.style.transition =
@@ -755,8 +759,8 @@ async function confirmAnimal() {
   confirmationPanel.style.transition = "transform 1200ms ease-in";
   confirmationPanel.style.transform = "translateY(-1470px)";
 
-  currentUser = await createUser();
-  currentGameState = currentUser.gameState;
+  user = await createUser();
+  setUser(user);
 
   const riddleScreen = document.getElementById("riddle-screen");
   riddleScreen.style.display = "block";
@@ -896,8 +900,8 @@ async function confirmRejoinAnimal() {
   rejoinConfirmationPanel.style.transition = "transform 1s ease-in";
   rejoinConfirmationPanel.style.transform = "translateY(-1200px)";
 
-  currentUser = await loginUser();
-  currentGameState = currentUser.gameState;
+  user = await loginUser();
+  setUser(user);
 
   setSaveAndExitButtonToActive();
 
@@ -1014,7 +1018,7 @@ async function saveAndExit() {
       }
 
       const data = await response.json();
-      currentUser = null;
+      setUser(null);
 
       resetRiddleScreen();
       resetCreateNewUserScreen();
@@ -1028,4 +1032,16 @@ async function saveAndExit() {
   } else {
     alert("No user is currently logged in.");
   }
+}
+
+function setUser(user) {
+  if (!user) {
+    currentUser = null;
+    currentGameState = null;
+    return;
+  }
+
+  currentUser = user;
+  currentGameState = currentUser.gameState;
+  setHints(currentGameState.hintsRemaining);
 }
