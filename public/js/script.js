@@ -809,32 +809,35 @@ async function createUser() {
   }
 }
 
-function resetCreateNewUserScreen() {
-  setTimeout(() => {
-    const createNewUserScreen = document.getElementById(
-      "create-new-user-screen"
-    );
-    createNewUserScreen.style.display = "none";
+function resetCreateNewUserScreen(hasDelay = true) {
+  setTimeout(
+    () => {
+      const createNewUserScreen = document.getElementById(
+        "create-new-user-screen"
+      );
+      createNewUserScreen.style.display = "none";
 
-    resetBadge();
-    clearColorSelectionIndicators();
-    clearAnimalSelectionIndicators();
+      resetBadge();
+      clearColorSelectionIndicators();
+      clearAnimalSelectionIndicators();
 
-    const userCreationInstructions = document.getElementById(
-      "user-creation-instructions"
-    );
-    const colorPicker = document.getElementById("color-picker");
-    const badgeContainer = document.getElementById("badge-container");
-    const confirmationPanel = document.getElementById("confirmation-panel");
+      const userCreationInstructions = document.getElementById(
+        "user-creation-instructions"
+      );
+      const colorPicker = document.getElementById("color-picker");
+      const badgeContainer = document.getElementById("badge-container");
+      const confirmationPanel = document.getElementById("confirmation-panel");
 
-    userCreationInstructions.style.transform = "translateY(0px)";
-    colorPicker.style.transform = "translateY(0px)";
-    badgeContainer.style.transform = "translateY(0px)";
-    confirmationPanel.style.transform = "translateY(0px)";
+      userCreationInstructions.style.transform = "translateY(0px)";
+      colorPicker.style.transform = "translateY(0px)";
+      badgeContainer.style.transform = "translateY(0px)";
+      confirmationPanel.style.transform = "translateY(0px)";
 
-    const statusTextCurrent = document.querySelector(".current-text");
-    statusTextCurrent.firstChild.innerText = "WELCOME";
-  }, 1800);
+      const statusTextCurrent = document.querySelector(".current-text");
+      statusTextCurrent.firstChild.innerText = "WELCOME";
+    },
+    hasDelay ? 1800 : 0
+  );
 }
 
 async function rejoinSelectColor(colorDisplayName, colorId) {
@@ -949,30 +952,33 @@ async function loginUser() {
   }
 }
 
-function resetRejoinScreen() {
-  setTimeout(() => {
-    const rejoinScreen = document.getElementById("rejoin-screen");
-    rejoinScreen.style.display = "none";
+function resetRejoinScreen(hasDelay = true) {
+  setTimeout(
+    () => {
+      const rejoinScreen = document.getElementById("rejoin-screen");
+      rejoinScreen.style.display = "none";
 
-    resetBadge();
-    clearColorSelectionIndicators("rejoin");
-    clearAnimalSelectionIndicators("rejoin");
+      resetBadge();
+      clearColorSelectionIndicators("rejoin");
+      clearAnimalSelectionIndicators("rejoin");
 
-    const rejoinAnimalOptionsContainer = document.getElementById(
-      "rejoin-animal-options-container"
-    );
-    rejoinAnimalOptionsContainer.innerHTML = "";
+      const rejoinAnimalOptionsContainer = document.getElementById(
+        "rejoin-animal-options-container"
+      );
+      rejoinAnimalOptionsContainer.innerHTML = "";
 
-    const rejoinConfirmationPanel = document.getElementById(
-      "rejoin-confirmation-panel"
-    );
+      const rejoinConfirmationPanel = document.getElementById(
+        "rejoin-confirmation-panel"
+      );
 
-    rejoinConfirmationPanel.style.transitionDelay = "0ms";
-    rejoinConfirmationPanel.style.transform = "translateY(0px)";
+      rejoinConfirmationPanel.style.transitionDelay = "0ms";
+      rejoinConfirmationPanel.style.transform = "translateY(0px)";
 
-    const statusTextCurrent = document.querySelector(".current-text");
-    statusTextCurrent.firstChild.innerText = "ENTER CODE";
-  }, 1800);
+      const statusTextCurrent = document.querySelector(".current-text");
+      statusTextCurrent.firstChild.innerText = "ENTER CODE";
+    },
+    hasDelay ? 1800 : 0
+  );
 }
 
 function resetRiddleScreen() {
@@ -1020,9 +1026,11 @@ async function saveAndExit() {
       const data = await response.json();
       setUser(null);
 
+      const hasDelay = false;
+
       resetRiddleScreen();
-      resetCreateNewUserScreen();
-      resetRejoinScreen();
+      resetCreateNewUserScreen(hasDelay);
+      resetRejoinScreen(hasDelay);
       showStartScreen();
       setExitButtonToActive();
     } catch (error) {
