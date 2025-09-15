@@ -75,10 +75,13 @@ export async function openAndMigrate(path = "./database.db") {
       END;
 
       CREATE TABLE IF NOT EXISTS users (
-        id         INTEGER PRIMARY KEY AUTOINCREMENT,
-        userAnimal INTEGER NOT NULL,
-        userColor  INTEGER NOT NULL,
-        gameState  TEXT NOT NULL DEFAULT '{"currentRiddleId":0,"currentGuesses":[],"hintsRemaining":7,"currentScore":0,"startingIndex":0}',
+        id                INTEGER PRIMARY KEY AUTOINCREMENT,
+        userAnimal        INTEGER NOT NULL,
+        userColor         INTEGER NOT NULL,
+        gameState         TEXT NOT NULL DEFAULT '{"currentRiddleId":0,"currentGuesses":[],"hintsRemaining":7,"currentScore":0,"startingIndex":0,"currentShuffledChoices":[],"currentCorrectAnswerIndex":0}',
+        createdAt         INTEGER,
+        scores            TEXT DEFAULT '[]',
+        hasViewedExitPanel INTEGER DEFAULT 0 CHECK (hasViewedExitPanel IN (0, 1)),
         UNIQUE (userAnimal, userColor),
         FOREIGN KEY (userAnimal) REFERENCES userAnimals(id),
         FOREIGN KEY (userColor)  REFERENCES userColors(id),

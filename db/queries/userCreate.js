@@ -136,5 +136,6 @@ function parseUserData(user) {
     ...user,
     gameState: JSON.parse(user.gameState),
     scores: JSON.parse(user.scores || "[]"),
+    hasViewedExitPanel: Boolean(user.hasViewedExitPanel),
   };
 }

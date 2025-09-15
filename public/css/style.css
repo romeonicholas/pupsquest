@@ -888,6 +888,27 @@ button {
   display: none;
 }
 
+#cancel-button {
+  display: none;
+  position: absolute;
+  top: 235px;
+  left: 185px;
+  width: 320px;
+  height: 85px;
+  padding: 0px;
+  z-index: 100;
+}
+
+#sign-out-button {
+  display: none;
+  position: absolute;
+  top: 235px;
+  left: 575px;
+  width: 320px;
+  height: 85px;
+  z-index: 100;
+}
+
 #use-phone-back-button {
   position: absolute;
   top: 1755px;

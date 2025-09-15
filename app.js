@@ -60,18 +60,27 @@ app.get("/api/colors/from-users", async (req, res) => {
 app.put("/api/users/:id", async (req, res) => {
   try {
     const userId = parseInt(req.params.id);
-    const { gameState, scores } = req.body;
+    const { gameState, scores, hasViewedExitPanel, ...otherFields } = req.body;
 
     if (!userId || isNaN(userId)) {
       return res.status(400).json({ error: "Invalid user ID" });
     }
 
-    if (!gameState) {
-      return res.status(400).json({ error: "Missing gameState" });
+    if (
+      !gameState &&
+      !scores &&
+      hasViewedExitPanel === undefined &&
+      Object.keys(otherFields).length === 0
+    ) {
+      return res.status(400).json({ error: "No update data provided" });
     }
 
-    const result = await updateUser(db, userId, { gameState, scores });
-
+    const result = await updateUser(db, userId, {
+      gameState,
+      scores,
+      hasViewedExitPanel: hasViewedExitPanel ? 1 : 0,
+      ...otherFields,
+    });
     if (result.changes === 0) {
       return res.status(404).json({ error: "User not found" });
     }
