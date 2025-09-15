@@ -26,13 +26,21 @@ export async function getAllAnimalsFromUsersWithColor(db, colorId) {
 }
 
 export async function getUserByColorAndAnimal(db, colorId, animalId) {
-  return db
-    .prepare(
-      `
+  const stmt = db.prepare(`
     SELECT *
     FROM users
     WHERE userColor = ? AND userAnimal = ?
-  `
-    )
-    .get(colorId, animalId);
+  `);
+  const user = stmt.get(colorId, animalId);
+  return parseUserData(user);
+}
+
+function parseUserData(user) {
+  if (!user) return null;
+
+  return {
+    ...user,
+    gameState: JSON.parse(user.gameState),
+    scores: JSON.parse(user.scores || "[]"),
+  };
 }
