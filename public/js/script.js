@@ -560,10 +560,20 @@ function lowerStartScreen() {
   startScreen.style.transform = "translateY(1920px)";
 }
 
-function raiseStartScreen() {
+function returnToStartScreen() {
   const startScreen = document.getElementById("start-screen");
-  startScreen.style.transition = "transform 1800ms ease-in";
+  startScreen.style.display = "block";
+
+  startScreen.style.transition = "none";
   startScreen.style.transform = "translateY(0)";
+  startScreen.style.opacity = "0";
+
+  startScreen.offsetHeight;
+
+  setTimeout(() => {
+    startScreen.style.transition = "opacity 500ms ease-in";
+    startScreen.style.opacity = "1";
+  }, 10);
 }
 
 function showRejoinGameScreen() {
@@ -879,35 +889,28 @@ async function createUser() {
   }
 }
 
-function resetCreateNewUserScreen(hasDelay = true) {
-  setTimeout(
-    () => {
-      const createNewUserScreen = document.getElementById(
-        "create-new-user-screen"
-      );
-      createNewUserScreen.style.display = "none";
+function resetCreateNewUserScreen() {
+  const createNewUserScreen = document.getElementById("create-new-user-screen");
+  createNewUserScreen.style.display = "none";
 
-      resetBadge();
-      clearColorSelectionIndicators();
-      clearAnimalSelectionIndicators();
+  resetBadge();
+  clearColorSelectionIndicators();
+  clearAnimalSelectionIndicators();
 
-      const userCreationInstructions = document.getElementById(
-        "user-creation-instructions"
-      );
-      const colorPicker = document.getElementById("color-picker");
-      const badgeContainer = document.getElementById("badge-container");
-      const confirmationPanel = document.getElementById("confirmation-panel");
-
-      userCreationInstructions.style.transform = "translateY(0px)";
-      colorPicker.style.transform = "translateY(0px)";
-      badgeContainer.style.transform = "translateY(0px)";
-      confirmationPanel.style.transform = "translateY(0px)";
-
-      const statusTextCurrent = document.querySelector(".current-text");
-      statusTextCurrent.firstChild.innerText = "WELCOME";
-    },
-    hasDelay ? 1800 : 0
+  const userCreationInstructions = document.getElementById(
+    "user-creation-instructions"
   );
+  const colorPicker = document.getElementById("color-picker");
+  const badgeContainer = document.getElementById("badge-container");
+  const confirmationPanel = document.getElementById("confirmation-panel");
+
+  userCreationInstructions.style.transform = "translateY(0px)";
+  colorPicker.style.transform = "translateY(0px)";
+  badgeContainer.style.transform = "translateY(0px)";
+  confirmationPanel.style.transform = "translateY(0px)";
+
+  const statusTextCurrent = document.querySelector(".current-text");
+  statusTextCurrent.firstChild.innerText = "WELCOME";
 }
 
 async function rejoinSelectColor(colorDisplayName, colorId) {
@@ -1022,33 +1025,28 @@ async function loginUser() {
   }
 }
 
-function resetRejoinScreen(hasDelay = true) {
-  setTimeout(
-    () => {
-      const rejoinScreen = document.getElementById("rejoin-screen");
-      rejoinScreen.style.display = "none";
+function resetRejoinScreen() {
+  const rejoinScreen = document.getElementById("rejoin-screen");
+  rejoinScreen.style.display = "none";
 
-      resetBadge();
-      clearColorSelectionIndicators("rejoin");
-      clearAnimalSelectionIndicators("rejoin");
+  resetBadge();
+  clearColorSelectionIndicators("rejoin");
+  clearAnimalSelectionIndicators("rejoin");
 
-      const rejoinAnimalOptionsContainer = document.getElementById(
-        "rejoin-animal-options-container"
-      );
-      rejoinAnimalOptionsContainer.innerHTML = "";
-
-      const rejoinConfirmationPanel = document.getElementById(
-        "rejoin-confirmation-panel"
-      );
-
-      rejoinConfirmationPanel.style.transitionDelay = "0ms";
-      rejoinConfirmationPanel.style.transform = "translateY(0px)";
-
-      const statusTextCurrent = document.querySelector(".current-text");
-      statusTextCurrent.firstChild.innerText = "ENTER CODE";
-    },
-    hasDelay ? 1800 : 0
+  const rejoinAnimalOptionsContainer = document.getElementById(
+    "rejoin-animal-options-container"
   );
+  rejoinAnimalOptionsContainer.innerHTML = "";
+
+  const rejoinConfirmationPanel = document.getElementById(
+    "rejoin-confirmation-panel"
+  );
+
+  rejoinConfirmationPanel.style.transitionDelay = "0ms";
+  rejoinConfirmationPanel.style.transform = "translateY(0px)";
+
+  const statusTextCurrent = document.querySelector(".current-text");
+  statusTextCurrent.firstChild.innerText = "ENTER CODE";
 }
 
 function resetRiddleScreen() {
@@ -1070,10 +1068,15 @@ function showStartScreen() {
 }
 
 function startOver() {
-  raiseStartScreen();
-  resetCreateNewUserScreen();
-  resetRejoinScreen();
-  setStartOverButtonToActive();
+  returnToStartScreen();
+  disableAllInput();
+
+  setTimeout(() => {
+    resetCreateNewUserScreen();
+    resetRejoinScreen();
+    setStartOverButtonToActive();
+    enableAllInput();
+  }, 500);
 }
 
 async function saveAndExit() {
@@ -1098,11 +1101,16 @@ async function saveAndExit() {
 
       const hasDelay = false;
 
-      resetRiddleScreen();
-      resetCreateNewUserScreen(hasDelay);
-      resetRejoinScreen(hasDelay);
-      showStartScreen();
-      setStartOverButtonToActive();
+      returnToStartScreen();
+      disableAllInput();
+
+      setTimeout(() => {
+        resetRiddleScreen();
+        resetCreateNewUserScreen();
+        resetRejoinScreen();
+        setStartOverButtonToActive();
+        enableAllInput();
+      }, 500);
     } catch (error) {
       console.error("Error saving user data:", error);
       alert("Failed to save user data. Please try again.");
