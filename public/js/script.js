@@ -374,6 +374,13 @@ function disableAllInput() {
   }
 }
 
+function disableRiddleInput() {
+  const riddleScreen = document.getElementById("riddle-screen");
+  if (riddleScreen) {
+    riddleScreen.style.pointerEvents = "none";
+  }
+}
+
 function enableAllInput() {
   const container = document.getElementById("container");
   if (container) {
@@ -1079,6 +1086,27 @@ function startOver() {
   }, 500);
 }
 
+async function markExitPanelViewed() {
+  if (currentUser && !currentUser.hasViewedExitPanel) {
+    try {
+      await fetch(`/api/users/${currentUser.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          hasViewedExitPanel: true,
+        }),
+      });
+      currentUser.hasViewedExitPanel = true;
+    } catch (error) {
+      console.error("Failed to update exit panel viewed status:", error);
+    }
+  }
+}
+
+function shouldShowExitPanelDetails() {
+  return currentUser && !currentUser.hasViewedExitPanel;
+}
+
 function firstTimeSaveAndExit() {
   const userPanel = document.getElementById("user-panel");
   const riddleScreen = document.getElementById("riddle-screen");
@@ -1087,46 +1115,72 @@ function firstTimeSaveAndExit() {
   userPanel.style.transform = "translateY(380px)";
   riddleScreen.style.transition = "transform 800ms ease-in";
   riddleScreen.style.transform = "translateY(380px)";
+
+  const cancelButton = document.getElementById("cancel-button");
+  const signOutButton = document.getElementById("sign-out-button");
+  cancelButton.style.display = "block";
+  signOutButton.style.display = "block";
+
+  markExitPanelViewed();
+}
+
+function cancelExit() {
+  const userPanel = document.getElementById("user-panel");
+  const riddleScreen = document.getElementById("riddle-screen");
+
+  userPanel.style.transition = "transform 800ms ease-in";
+  userPanel.style.transform = "translateY(0px)";
+  riddleScreen.style.transition = "transform 800ms ease-in";
+  riddleScreen.style.transform = "translateY(0px)";
+
+  const cancelButton = document.getElementById("cancel-button");
+  cancelButton.style.display = "none";
+  const signOutButton = document.getElementById("sign-out-button");
+  signOutButton.style.display = "none";
 }
 
 async function saveAndExit() {
-  if (currentUser && currentGameState) {
-    try {
-      const response = await fetch(`/api/users/${currentUser.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          gameState: currentGameState,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to save user data: ${response.status}`);
-      }
-
-      const data = await response.json();
-      setUser(null);
-
-      const hasDelay = false;
-
-      returnToStartScreen();
-      disableAllInput();
-
-      setTimeout(() => {
-        resetRiddleScreen();
-        resetCreateNewUserScreen();
-        resetRejoinScreen();
-        setStartOverButtonToActive();
-        enableAllInput();
-      }, 500);
-    } catch (error) {
-      console.error("Error saving user data:", error);
-      alert("Failed to save user data. Please try again.");
-    }
+  if (shouldShowExitPanelDetails()) {
+    firstTimeSaveAndExit();
   } else {
-    alert("No user is currently logged in.");
+    if (currentUser && currentGameState) {
+      try {
+        const response = await fetch(`/api/users/${currentUser.id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            gameState: currentGameState,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error(`Failed to save user data: ${response.status}`);
+        }
+
+        const data = await response.json();
+        setUser(null);
+
+        const hasDelay = false;
+
+        returnToStartScreen();
+        disableAllInput();
+
+        setTimeout(() => {
+          resetRiddleScreen();
+          resetCreateNewUserScreen();
+          resetRejoinScreen();
+          setStartOverButtonToActive();
+          enableAllInput();
+        }, 500);
+      } catch (error) {
+        console.error("Error saving user data:", error);
+        alert("Failed to save user data. Please try again.");
+      }
+    } else {
+      alert("No user is currently logged in.");
+    }
   }
 }
 

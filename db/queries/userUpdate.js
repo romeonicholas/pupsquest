@@ -1,5 +1,5 @@
 export function updateUser(db, userId, updates) {
-  const { gameState, scores } = updates;
+  const { gameState, scores, hasViewedExitPanel, ...otherFields } = updates;
 
   const setParts = [];
   const params = [];
@@ -12,6 +12,18 @@ export function updateUser(db, userId, updates) {
   if (scores !== undefined) {
     setParts.push("scores = ?");
     params.push(JSON.stringify(scores));
+  }
+
+  if (hasViewedExitPanel !== undefined) {
+    setParts.push("hasViewedExitPanel = ?");
+    params.push(hasViewedExitPanel);
+  }
+
+  for (const [key, value] of Object.entries(otherFields)) {
+    if (["userAnimal", "userColor"].includes(key) && value !== undefined) {
+      setParts.push(`${key} = ?`);
+      params.push(value);
+    }
   }
 
   if (setParts.length === 0) {

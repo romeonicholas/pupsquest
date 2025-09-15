@@ -43,6 +43,18 @@ export async function runAllMigrations(db) {
         "003_add_startingIndex.js"
       );
     }
+
+    if (
+      !executedMigrations.some(
+        (m) => m.filename === "004_add_hasViewedExitPanel.js"
+      )
+    ) {
+      const migration004 = await import("./004_add_hasViewedExitPanel.js");
+      migration004.up(db);
+      db.prepare(`INSERT INTO migrations (filename) VALUES (?)`).run(
+        "004_add_hasViewedExitPanel.js"
+      );
+    }
   } catch (error) {
     console.error("Migration failed:", error);
     throw error;
