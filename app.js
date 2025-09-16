@@ -23,6 +23,7 @@ import {
   getUserByColorAndAnimal,
 } from "./db/queries/userLogin.js";
 import { updateUser } from "./db/queries/userUpdate.js";
+import { getAverageScore } from "./db/queries/stats.js";
 import { removeExpiredUsers } from "./db/scripts/userRemoval.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -100,6 +101,16 @@ app.get("/api/users", async (req, res) => {
   } catch (error) {
     console.error("Error fetching user:", error);
     res.status(500).json({ error: "Failed to fetch user" });
+  }
+});
+
+app.get("/api/stats/average-score", async (req, res) => {
+  try {
+    const stats = await getAverageScore(db);
+    res.json(stats);
+  } catch (error) {
+    console.error("Error calculating average scores:", error);
+    res.status(500).json({ error: "Failed to calculate average scores" });
   }
 });
 

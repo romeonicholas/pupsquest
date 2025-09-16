@@ -75,9 +75,9 @@ function scaleContainer() {
 window.addEventListener("resize", scaleContainer);
 window.addEventListener("load", scaleContainer);
 document.addEventListener("DOMContentLoaded", scaleContainer);
-document.addEventListener("contextmenu", function (e) {
-  e.preventDefault();
-});
+// document.addEventListener("contextmenu", function (e) {
+//   e.preventDefault();
+// });
 
 document.addEventListener("mousemove", startInactivityTimer);
 document.addEventListener("keydown", startInactivityTimer);
@@ -437,12 +437,39 @@ function enableAllInput() {
   }
 }
 
-function updateScoreText() {
-  const scoreText = document.getElementById("score-text");
-  if (currentGameState.currentScore == 1) {
-    scoreText.innerText = `You solved ${currentGameState.currentScore} riddle!`;
+async function updateScoreText() {
+  let averageScore = 0;
+  try {
+    const response = await fetch("/api/stats/average-score");
+    const data = await response.json();
+    averageScore = Math.round(data.averageScore);
+  } catch (error) {
+    console.error("Error fetching average score:", error);
+  }
+
+  const scoreTextContainer = document.getElementById("score-text");
+
+  if (currentGameState.currentScore == 0) {
+    scoreTextContainer.innerHTML = `<span class="small-score-text">You didn't solve any riddles this time.</span>`;
+  } else if (currentGameState.currentScore == 1) {
+    scoreTextContainer.innerHTML = `You solved <span class="red-text">${currentGameState.currentScore}</span> riddle!`;
   } else {
-    scoreText.innerText = `You solved ${currentGameState.currentScore} riddles!`;
+    scoreTextContainer.innerHTML = `You solved <span class="red-text">${currentGameState.currentScore}</span> riddles!`;
+  }
+
+  const scoreComparisonTextContainer = document.getElementById(
+    "score-comparison-text"
+  );
+  if (currentGameState.currentScore > averageScore) {
+    scoreComparisonTextContainer.innerHTML = `That's ${
+      currentGameState.currentScore - averageScore
+    } more than the average score this week`;
+  } else if (currentGameState.currentScore < averageScore) {
+    scoreComparisonTextContainer.innerHTML = `That's ${
+      averageScore - currentGameState.currentScore
+    } less than the average score this week`;
+  } else {
+    scoreComparisonTextContainer.innerHTML = `That's the same as the average score this week`;
   }
 }
 
@@ -472,7 +499,9 @@ async function handleIncorrectGuess(clickedArea, iconIndex) {
 
       if (currentGameState.hintsRemaining <= 0) {
         currentGameState.startingIndex = currentGameState.queueCursor;
-        updateScoreText();
+        await updateScoreText();
+        updateStatusWheel("GAME OVER", false, "red-text");
+
         riddleAnswer.style.display = "none";
         gameOver.style.display = "flex";
         playAgainSheet.style.display = "block";
@@ -579,7 +608,7 @@ function updateNextStatusText(nextText) {
   nextStatusText.firstChild.innerText = nextText;
 }
 
-function updateStatusWheel(wheelText, instant = false) {
+function updateStatusWheel(wheelText, instant = false, additionalClass) {
   updateNextStatusText(wheelText);
   let currentStatusText = document.querySelector(".current-text");
   let nextStatusText = document.querySelector(".next-text");
@@ -592,6 +621,10 @@ function updateStatusWheel(wheelText, instant = false) {
     nextStatusText.style.transition = "transform 800ms ease-in";
   }
 
+  if (additionalClass) {
+    nextStatusText.classList.add(additionalClass);
+  }
+
   currentStatusText.classList.remove("current-text");
   currentStatusText.classList.add("previous-text");
   nextStatusText.classList.remove("next-text");
@@ -599,10 +632,20 @@ function updateStatusWheel(wheelText, instant = false) {
 
   currentStatusText = nextStatusText;
   nextStatusText = document.createElement("div");
-  nextStatusText.id = "status-text-next";
   nextStatusText.className = "status-text-wrapper next-text";
   nextStatusText.innerHTML = '<span class="status-text"></span>';
   statusWheelContainer.appendChild(nextStatusText);
+
+  removeOldStatusTexts();
+}
+
+function removeOldStatusTexts() {
+  setTimeout(() => {
+    const previousTexts = document.querySelectorAll(".previous-text");
+    previousTexts.forEach((element) => {
+      element.remove();
+    });
+  }, 1000);
 }
 
 function setStartOverButtonToActive() {
