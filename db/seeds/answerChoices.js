@@ -320,6 +320,21 @@ export function seedAnswerChoices(db) {
       display: "Stripe",
       imgPath: "/assets/images/riddles/icons/stripe.png",
     },
+    {
+      key: "two",
+      display: "Two",
+      imgPath: "/assets/images/riddles/icons/two.png",
+    },
+    {
+      key: "three",
+      display: "Three",
+      imgPath: "/assets/images/riddles/icons/three.png",
+    },
+    {
+      key: "five",
+      display: "Five",
+      imgPath: "/assets/images/riddles/icons/five.png",
+    },
   ];
 
   const upsert = db.prepare(`
