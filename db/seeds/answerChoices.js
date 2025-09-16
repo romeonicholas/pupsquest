@@ -185,6 +185,141 @@ export function seedAnswerChoices(db) {
       display: '"Mountain Boomer"',
       imgPath: "/assets/images/riddles/icons/collared_lizard.png",
     },
+    {
+      key: "arkansas_bluestar",
+      display: "Arkansas Bluestar",
+      imgPath: "/assets/images/riddles/icons/arkansas_bluestar.png",
+    },
+    {
+      key: "bald_cypress",
+      display: "Bald Cypress",
+      imgPath: "/assets/images/riddles/icons/bald_cypress.png",
+    },
+    {
+      key: "bands",
+      display: "Bands",
+      imgPath: "/assets/images/riddles/icons/bands.png",
+    },
+    {
+      key: "blackjack_oak",
+      display: "Blackjack Oak",
+      imgPath: "/assets/images/riddles/icons/blackjack_oak.png",
+    },
+    {
+      key: "blue_jay",
+      display: "Blue Jay",
+      imgPath: "/assets/images/riddles/icons/blue_jay.png",
+    },
+    {
+      key: "cardinal",
+      display: "Cardinal",
+      imgPath: "/assets/images/riddles/icons/cardinal.png",
+    },
+    {
+      key: "cattails",
+      display: "Cattails",
+      imgPath: "/assets/images/riddles/icons/cattails.png",
+    },
+    {
+      key: "crow",
+      display: "Crow",
+      imgPath: "/assets/images/riddles/icons/crow.png",
+    },
+    {
+      key: "desert_scorpion",
+      display: "Desert Scorpion",
+      imgPath: "/assets/images/riddles/icons/desert_scorpion.png",
+    },
+    {
+      key: "diamonds",
+      display: "Diamonds",
+      imgPath: "/assets/images/riddles/icons/diamonds.png",
+    },
+    {
+      key: "eastern_red_cypress",
+      display: "Eastern Red Cypress",
+      imgPath: "/assets/images/riddles/icons/eastern_red_cypress.png",
+    },
+    {
+      key: "eastern_redbud",
+      display: "Eastern Redbud",
+      imgPath: "/assets/images/riddles/icons/eastern_redbud.png",
+    },
+    {
+      key: "feathers",
+      display: "Feathers",
+      imgPath: "/assets/images/riddles/icons/feathers.png",
+    },
+    {
+      key: "giant_walking_stick",
+      display: "Giant Walking Stick",
+      imgPath: "/assets/images/riddles/icons/giant_walking_stick.png",
+    },
+    {
+      key: "grasshoppers",
+      display: "Grasshoppers",
+      imgPath: "/assets/images/riddles/icons/grasshoppers.png",
+    },
+    {
+      key: "honey_bee",
+      display: "Honey Bee",
+      imgPath: "/assets/images/riddles/icons/honey_bee.png",
+    },
+    {
+      key: "horned_toad",
+      display: "Horned Toad",
+      imgPath: "/assets/images/riddles/icons/horned_toad.png",
+    },
+    {
+      key: "indian_pink",
+      display: "Indian Pink",
+      imgPath: "/assets/images/riddles/icons/indian_pink.png",
+    },
+    {
+      key: "leafcutter_ants",
+      display: "Leafcutter Ants",
+      imgPath: "/assets/images/riddles/icons/leafcutter_ants.png",
+    },
+    {
+      key: "leaves",
+      display: "Leaves",
+      imgPath: "/assets/images/riddles/icons/leaves.png",
+    },
+    {
+      key: "mushroom",
+      display: "Mushroom",
+      imgPath: "/assets/images/riddles/icons/mushroom.png",
+    },
+    {
+      key: "oldwife_underwing_moths",
+      display: "Oldwife Underwing Moths",
+      imgPath: "/assets/images/riddles/icons/oldwife_underwing_moths.png",
+    },
+    {
+      key: "purple_milkweed",
+      display: "Purple Milkweed",
+      imgPath: "/assets/images/riddles/icons/purple_milkweed.png",
+    },
+    {
+      key: "spots",
+      display: "Spots",
+      imgPath: "/assets/images/riddles/icons/spots.png",
+    },
+    {
+      key: "stag_beetle",
+      display: "Stag Beetle",
+      imgPath: "/assets/images/riddles/icons/stag_beetle.png",
+    },
+    {
+      key: "sticks",
+      display: "Sticks",
+      imgPath: "/assets/images/riddles/icons/sticks.png",
+    },
+    {
+      key: "stripe",
+      display: "Stripe",
+      imgPath: "/assets/images/riddles/icons/stripe.png",
+    },
   ];
 
   const upsert = db.prepare(`
