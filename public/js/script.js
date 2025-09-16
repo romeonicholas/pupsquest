@@ -1326,7 +1326,11 @@ async function saveAndExit() {
   clearTimeout(inactivityTimeout);
   clearTimeout(inactivityConfirmationTimeout);
   const inactivityScreen = document.getElementById("inactivity-screen");
-  if (shouldShowExitPanelDetails() && !inactivityScreen.style.pointerEvents) {
+  const isInactivityScreenVisible =
+    inactivityScreen.style.opacity === "1" &&
+    inactivityScreen.style.pointerEvents === "auto";
+
+  if (shouldShowExitPanelDetails() && !isInactivityScreenVisible) {
     // I don't want to show the exit panel if they're inactive and not there anyway
     firstTimeSaveAndExit();
   } else {
