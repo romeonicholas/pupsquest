@@ -710,6 +710,7 @@ function showRejoinGameScreen() {
 
   resetBadge();
   const badgeContainer = document.getElementById("badge-container");
+  badgeContainer.style.transition = "none";
   badgeContainer.style.transform = "translateY(465px)";
   let isInstant = true;
   updateStatusWheel("ENTER CODE", isInstant);
