@@ -114,6 +114,14 @@ function dismissInactivityScreen() {
   startInactivityTimer();
 }
 
+function showErrorScreenAndReload() {
+  const errorScreen = document.getElementById("error-screen");
+  errorScreen.style.display = "block";
+  setTimeout(() => {
+    window.location.reload();
+  }, 6000);
+}
+
 function closeRiddleContainerFromBottom() {
   selectionLayer.style.transform = "translateY(0)";
   riddleContainer.style.transform = "translateY(-1294px)";
@@ -959,9 +967,7 @@ async function createUser() {
     return newUser;
   } catch (error) {
     console.error("Error creating user:", error);
-
-    alert(`Failed to create user: ${error.message}`);
-
+    showErrorScreenAndReload();
     return null;
   }
 }
@@ -1101,9 +1107,7 @@ async function loginUser() {
     return await response.json();
   } catch (error) {
     console.error("Error logging in user:", error);
-
-    alert(`Failed to log in user: ${error.message}`);
-
+    showErrorScreenAndReload();
     return null;
   }
 }
@@ -1277,10 +1281,10 @@ async function saveAndExit() {
         }, 500);
       } catch (error) {
         console.error("Error saving user data:", error);
-        alert("Failed to save user data. Please try again.");
+        showErrorScreenAndReload();
       }
     } else {
-      alert("No user is currently logged in.");
+      showErrorScreenAndReload();
     }
   }
 }
