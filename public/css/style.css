@@ -103,7 +103,7 @@ button {
 
 #visitor-new-game-button {
   position: absolute;
-  top: 1190px;
+  top: 1290px;
   left: 177px;
   z-index: 100;
   width: 724px;
@@ -112,7 +112,7 @@ button {
 
 #visitor-rejoin-game-button {
   position: absolute;
-  top: 1385px;
+  top: 1485px;
   left: 177px;
   z-index: 101;
   width: 724px;
@@ -465,6 +465,7 @@ button {
   position: absolute;
   top: 470px;
   width: 100%;
+  height: 100%;
   flex-direction: column;
   background-color: #bdd2d4;
   z-index: 71;
@@ -478,9 +479,22 @@ button {
 }
 
 #score-text {
+  width: 860px;
   font-family: Gotham;
   font-size: 72px;
-  padding-bottom: 400px;
+  padding-bottom: 25px;
+  text-align: center;
+}
+
+.small-score-text {
+  font-size: 45px;
+}
+
+#score-comparison-text {
+  text-align: center;
+  width: 535px;
+  font-family: Enriqueta;
+  font-size: 46px;
 }
 
 .answer-text {
@@ -568,33 +582,6 @@ button {
   pointer-events: none;
 }
 
-/* .flight-path {
-  position: absolute;
-  top: 200px;
-  left: 0;
-  width: 10%;
-  animation: leftRight 6s infinite linear;
-  z-index: 100;
-}
-
-.flyer {
-  position: absolute;
-  animation: upDown 1.5s alternate infinite ease-in-out;
-  width: 200%;
-  z-index: 100;
-}
-
-@keyframes upDown {
-  to {
-    transform: translatey(100px);
-  }
-}
-@keyframes leftRight {
-  to {
-    transform: translatex(900%);
-  }
-} */
-
 #create-new-user-screen {
   display: none;
   width: 100%;
@@ -616,31 +603,6 @@ button {
   height: 100%;
   z-index: 40;
 }
-
-/* .color.selected,
-.animal.selected {
-  border: 3px solid #000;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-} */
-
-/* .color,
-.animal {
-  cursor: pointer;
-  border: 2px solid transparent;
-  transition: all 0.2s ease;
-}
-
-.color:hover,
-.animal:hover {
-  opacity: 0.8;
-}
-
-.vertical-center {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-} */
 
 .colors-container {
   display: flex;
@@ -969,4 +931,8 @@ button {
   height: 100%;
   background-image: url("/images/error_screen.png");
   z-index: 200;
+}
+
+.red-text {
+  color: #c54132;
 }
