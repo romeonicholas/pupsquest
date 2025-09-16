@@ -1087,6 +1087,8 @@ function startOver() {
 }
 
 async function markExitPanelViewed() {
+  currentUser.hasViewedExitPanel = true;
+
   if (currentUser && !currentUser.hasViewedExitPanel) {
     try {
       await fetch(`/api/users/${currentUser.id}`, {
@@ -1096,9 +1098,9 @@ async function markExitPanelViewed() {
           hasViewedExitPanel: true,
         }),
       });
-      currentUser.hasViewedExitPanel = true;
     } catch (error) {
       console.error("Failed to update exit panel viewed status:", error);
+      currentUser.hasViewedExitPanel = false;
     }
   }
 }
@@ -1139,7 +1141,25 @@ function cancelExit() {
   signOutButton.style.display = "none";
 }
 
+function hideExitDetails() {
+  const userPanel = document.getElementById("user-panel");
+  const riddleScreen = document.getElementById("riddle-screen");
+
+  setTimeout(() => {
+    userPanel.style.transition = "none";
+    userPanel.style.transform = "translateY(0px)";
+    riddleScreen.style.transition = "none";
+    riddleScreen.style.transform = "translateY(0px)";
+
+    const cancelButton = document.getElementById("cancel-button");
+    cancelButton.style.display = "none";
+    const signOutButton = document.getElementById("sign-out-button");
+    signOutButton.style.display = "none";
+  }, 500);
+}
+
 async function saveAndExit() {
+  console.log(currentUser.hasViewedExitPanel);
   if (shouldShowExitPanelDetails()) {
     firstTimeSaveAndExit();
   } else {
@@ -1152,6 +1172,8 @@ async function saveAndExit() {
           },
           body: JSON.stringify({
             gameState: currentGameState,
+            scores: currentUser.scores,
+            hasViewedExitPanel: currentUser.hasViewedExitPanel,
           }),
         });
 
