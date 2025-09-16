@@ -180,7 +180,7 @@ export function seedRiddles(db) {
         "go see the waterfall, I’m nearly in it!",
       ],
       answerDetails:
-        "The Bullfrog is the largest frog in North America and can weigh as much as a football. They're loud, too, and can be heard up to a half-mile away.",
+        "The Bullfrog is the largest frog in North America and can weigh as much as a football. They’re loud, too, and can be heard up to a half-mile away.",
       answerImgPath: "images/riddles/answers/answer_image_temp_bullfrog.png",
       answerChoiceKeys: ["bullfrog", "mountain_boomer", "bison", "goldfinch"],
     },
@@ -196,7 +196,7 @@ export function seedRiddles(db) {
         "Look by the mink, not by the bear.",
       ],
       answerDetails:
-        "They're called Giant Walking Sticks for a reason: these are the longest insects in North America, growing up to 7 inches in length.",
+        "They’re called Giant Walking Sticks for a reason: these are the longest insects in North America, growing up to 7 inches in length.",
       answerImgPath:
         "images/riddles/answers/answer_image_temp_giant_walking_stick.png",
       answerChoiceKeys: ["six", "four", "eight", "ten"],
@@ -216,6 +216,191 @@ export function seedRiddles(db) {
         "In addition to making dams, beavers build their own lodges. To keep other animals out, the only entrances are underwater tunnels.",
       answerImgPath: "images/riddles/answers/answer_image_temp_beaver.png",
       answerChoiceKeys: ["beaver", "black_bear", "bobcat", "boar"],
+    },
+    {
+      riddleKey: "Monarch Butterfly",
+      headline: "What plant am I on?",
+      bodyLines: [
+        "You know me, the Monarch Butterfly,",
+        "but can you say on which plant I rely?",
+        "Its flower blooms in the forest shade,",
+        "and this is where all my eggs are laid!",
+        "If you still can’t find me, don’t despair.",
+        "The solution is easy: go ask the bear!",
+      ],
+      answerDetails:
+        "Without milkweed plants, Monarch Butterflies would quickly die out. It’s the only plant where they can lay their eggs and their caterpillars can feed.",
+      answerImgPath: "images/riddles/answers/monarch_butterfly.png",
+      answerChoiceKeys: [
+        "purple_milkweed",
+        "indian_pink",
+        "cattails",
+        "arkansas_bluestar",
+      ],
+    },
+    {
+      riddleKey: "Leafcutter Ants",
+      headline: "Who are we?",
+      bodyLines: [
+        "Answer me this, if you already know:",
+        "What tiny critters help a fungus grow?",
+        "Start at the river, then head to the right,",
+        "past the milkweed, now we’re in sight!",
+        "Below a blackbird with red on his wing,",
+        "you’ll find us just doing our thing.",
+      ],
+      answerDetails:
+        "Leafcutter Ants don’t eat the leaves they cut. They bring them back to their colony to ’feed’ a fungus—then they eat the fungus!",
+      answerImgPath: "images/riddles/answers/leafcutter_ants.png",
+      answerChoiceKeys: [
+        "leafcutter_ants",
+        "honey_bee",
+        "oldwife_underwing_moths",
+        "grasshoppers",
+      ],
+    },
+    {
+      riddleKey: "Bald Cypress",
+      headline: "Which one am I?",
+      bodyLines: [
+        "Here’s a tip to help solve this quest:",
+        "I dunk my trunk more than the rest.",
+        "The river keeps my roots from drying,",
+        "so look for me where fish are flying.",
+        "One more hint for where to walk:",
+        "right now I see a Red-Tailed Hawk.",
+      ],
+      answerDetails:
+        "Most trees with needles will keep them all year. This one is named the Bald Cypress because every Fall it drops all its needles.",
+      answerImgPath: "images/riddles/answers/bald_cypress.png",
+      answerChoiceKeys: [
+        "bald_cypress",
+        "blackjack_oak",
+        "eastern_redbud",
+        "eastern_red_cedar",
+      ],
+    },
+    {
+      riddleKey: "Arkansas Bluestar",
+      headline: "How many petals have I?",
+      bodyLines: [
+        "Blue is the color of the flowers I wear,",
+        "How many petals per flower are there?",
+        "Find me by the critters nearest me:",
+        "bunting, squirrel, and honey bee.",
+        "Too small you say? Then this will do:",
+        "Look for the elk, he’s bigger than you!",
+      ],
+      answerDetails:
+        "Despite its name, the Arkansas Bluestar is also native to Oklahoma. It grows in the Ouachita mountain range, which crosses both states.",
+      answerImgPath: "images/riddles/answers/arkansas_bluestar.png",
+      answerChoiceKeys: ["five", "six", "four", "three"],
+    },
+    {
+      riddleKey: "Rose Rock",
+      headline: "Who’s crawling on me?",
+      bodyLines: [
+        "I’m a Rose Rock, and rocks can’t see,",
+        "So may I ask: who’s crawling on me?",
+        "I’m hard to find, my numbers are few,",
+        "But if milkweed’s near, then so are you.",
+        "Here’s the last hint I’ll give you today:",
+        "There’s a big black beast not far away!",
+      ],
+      answerDetails:
+        "The Rose Rock is no rock—it’s a mineral! Outside of small amounts in Kansas, Morocco, and Australia, Rose Rocks are only found in Oklahoma.",
+      answerImgPath: "images/riddles/answers/rose_rock.png",
+      answerChoiceKeys: [
+        "leafcutter_ants",
+        "desert_scorpion",
+        "giant_walking_stick",
+        "stag_beetle",
+      ],
+    },
+    {
+      riddleKey: "Timber Rattlesnake",
+      headline: "What’s on my skin?",
+      bodyLines: [
+        "My name is a clue.",
+        "Find my home and solve the riddle too!",
+        "I’ll tell you plainly where I’m at:",
+        "deep in the woods, near a spotted cat.",
+        "One more thing that may help to know:",
+        "I’m next to a cave where climbers go.",
+      ],
+      answerDetails:
+        "Caddo people were decorating ceramic jars with Timber Rattlesnake images more than 3,000 years ago, in the area now called eastern Oklahoma.",
+      answerImgPath: "images/riddles/answers/timber_rattlesnake.png",
+      answerChoiceKeys: ["bands", "diamonds", "spots", "stripe"],
+    },
+    {
+      riddleKey: "Stag Beetle",
+      headline: "Which one am I?",
+      bodyLines: [
+        "Smaller than a frog, bigger than a bee,",
+        "my happy place is a broken down tree.",
+        "Tried the forest? If not, you should.",
+        "I’m easy to spot on a fallen wood.",
+        "Start at the bobcat and go to the right.",
+        "Come when it’s dark: I’m out at night!",
+      ],
+      answerDetails:
+        "An adult Stag Beetles never eats, it only drinks—mostly tree sap and juice from rotting fruits. Those big claw things on its face are just for fighting.",
+      answerImgPath: "images/riddles/answers/stag_beetle.png",
+      answerChoiceKeys: [
+        "stag_beetle",
+        "desert_scorpion",
+        "kangaroo_rat",
+        "horned_toad",
+      ],
+    },
+    {
+      riddleKey: "Blue Dasher Dragonfly",
+      headline: "How many are we?",
+      bodyLines: [
+        "Dragonflies were given many hues,",
+        "We’re the ones that got the blues!",
+        "We’re hard to find, always flyin’ around.",
+        "Today we’re near a tree that’s downed.",
+        "In the forest, see the white-tailed deer?",
+        "We’re in the flowers that are very near.",
+      ],
+      answerDetails:
+        "Modern dragonfly wings are less than five inches, but a fossil of an ancient ancestor of dragonflies has been found with a wingspan longer than two feet.",
+      answerImgPath: "images/riddles/answers/blue_dasher_dragonfly.png",
+      answerChoiceKeys: ["two", "three", "four", "five"],
+    },
+    {
+      riddleKey: "Goldfinch",
+      headline: "Which one am I?",
+      bodyLines: [
+        "The tail of cat should make me wary,",
+        "But the ones near me aren’t so scary.",
+        "I’m out by the water, enjoying the day.",
+        "I see a skunk, he’d better not spray!",
+        "Look for the elk and keep going right,",
+        "after a while you’ll see me—I’m bright!",
+      ],
+      answerDetails:
+        "Other birds eats insects regularly, but the Goldfinch diet is very vegetarian—mostly they just eat seeds.",
+      answerImgPath: "images/riddles/answers/goldfinch.png",
+      answerChoiceKeys: ["goldfinch", "cardinal", "blue_jay", "crow"],
+    },
+    {
+      riddleKey: "Respect",
+      headline: "What’s the ’T’ made of?",
+      bodyLines: [
+        '"Respect" is written somewhere to see.',
+        "If you find it, tell me: what’s the 'T'?",
+        "Those prairie dogs, they dig so well,",
+        "but did they really learn how to spell?",
+        "In the central grove, see a place to sit?",
+        '"The word "Respect" is written on it!',
+      ],
+      answerDetails:
+        "Prairie dogs can’t spell, but their squeaky sounds are a complex language—they can even describe to each other what a predator looks like!",
+      answerImgPath: "images/riddles/answers/respect.png",
+      answerChoiceKeys: ["mushroom", "sticks", "feathers", "leaves"],
     },
   ];
 
