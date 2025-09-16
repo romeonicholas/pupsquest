@@ -1,5 +1,7 @@
 let currentUser = null;
 let currentGameState = null;
+let inactivityTimeout;
+const INACTIVITY_THRESHOLD = 15000;
 
 const correctAnswerBacking = "/images/riddles/ui/answer_backing_correct.png";
 const incorrectAnswerBackings = [
@@ -71,6 +73,23 @@ document.addEventListener("DOMContentLoaded", scaleContainer);
 // document.addEventListener("contextmenu", function (e) {
 //   e.preventDefault();
 // });
+
+document.addEventListener("mousemove", startInactivityTimer);
+document.addEventListener("keydown", startInactivityTimer);
+document.addEventListener("scroll", startInactivityTimer);
+document.addEventListener("touchstart", startInactivityTimer);
+
+function startInactivityTimer() {
+  clearTimeout(inactivityTimeout);
+  inactivityTimeout = setTimeout(showInactivityScreen, INACTIVITY_THRESHOLD);
+}
+
+function showInactivityScreen() {
+  const modal = document.getElementById("inactivity-screen");
+  if (modal) {
+    modal.style.display = "block";
+  }
+}
 
 function closeRiddleContainerFromBottom() {
   selectionLayer.style.transform = "translateY(0)";
@@ -599,6 +618,8 @@ function returnToStartScreen() {
 }
 
 function showRejoinGameScreen() {
+  startInactivityTimer();
+
   document.getElementById("use-phone-screen").style.display = "none";
   document.getElementById("rejoin-screen").style.display = "block";
   document.getElementById("user-panel").style.display = "block";
@@ -613,6 +634,8 @@ function showRejoinGameScreen() {
 }
 
 function showUsePhoneScreen() {
+  startInactivityTimer();
+
   document.getElementById("rejoin-screen").style.display = "none";
   document.getElementById("user-panel").style.display = "none";
   document.getElementById("exit-container").style.display = "none";
@@ -620,6 +643,8 @@ function showUsePhoneScreen() {
 }
 
 function showCreateNewUserScreen() {
+  startInactivityTimer();
+
   const createNewUserScreen = document.getElementById("create-new-user-screen");
   createNewUserScreen.style.display = "block";
 
