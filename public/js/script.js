@@ -148,9 +148,7 @@ function restoreVisibleHints() {
   setTimeout(() => {
     const hintOffset =
       Math.min(currentGameState.currentGuesses.length, 3) * 222;
-    if (hintOffset > 0) {
-      selectionLayer.style.transform = `translateY(${276 + hintOffset}px)`;
-    }
+    selectionLayer.style.transform = `translateY(${276 + hintOffset}px)`;
   }, 2000);
 }
 
