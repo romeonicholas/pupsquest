@@ -1073,6 +1073,10 @@ async function updateRejoinAnimalContainer(colorId) {
     animalOptionsContainer.style.transition = "opacity 300ms ease-out";
     animalOptionsContainer.style.opacity = "0";
 
+    const noAnimalsMessage = document.getElementById("no-animals-message");
+    noAnimalsMessage.style.transition = "opacity 300ms ease-out";
+    noAnimalsMessage.style.opacity = "0";
+
     setTimeout(async () => {
       const response = await fetch(
         `/api/animals/existing/html/?colorId=${colorId}`
@@ -1080,9 +1084,14 @@ async function updateRejoinAnimalContainer(colorId) {
       const html = await response.text();
 
       animalOptionsContainer.innerHTML = html;
-
       animalOptionsContainer.style.transition = "opacity 300ms ease-in";
       animalOptionsContainer.style.opacity = "1";
+
+      const animalsExist =
+        document.querySelectorAll(".animal-option").length > 0;
+      if (!animalsExist) {
+        noAnimalsMessage.style.opacity = "1";
+      }
 
       const scrollableContainer = document.getElementById(
         "scrollable-container"
