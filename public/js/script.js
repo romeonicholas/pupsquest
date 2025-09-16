@@ -1000,6 +1000,12 @@ async function rejoinSelectColor(colorDisplayName, colorId) {
   clearColorSelectionIndicators("rejoin");
   showColorSelectionIndicator(colorDisplayName, "rejoin");
   updateBadgeColor(colorDisplayName);
+
+  const rejoinConfirmationPanel = document.getElementById(
+    "rejoin-confirmation-panel"
+  );
+  rejoinConfirmationPanel.style.transform = "translateY(0px)";
+
   await updateRejoinAnimalContainer(
     colorId,
     "rejoin-animal-options-container",
