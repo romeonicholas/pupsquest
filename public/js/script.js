@@ -808,6 +808,10 @@ async function updateAnimalContainer(colorId) {
     animalOptionsContainer.style.transition = "opacity 300ms ease-out";
     animalOptionsContainer.style.opacity = "0";
 
+    const noAnimalsMessage = document.querySelector(".no-animals-message.new");
+    noAnimalsMessage.style.transition = "opacity 300ms ease-out";
+    noAnimalsMessage.style.opacity = "0";
+
     setTimeout(async () => {
       const response = await fetch(
         `/api/animals/available/html?colorId=${colorId}&limit=8`
@@ -815,9 +819,15 @@ async function updateAnimalContainer(colorId) {
       const html = await response.text();
 
       animalOptionsContainer.innerHTML = html;
-
       animalOptionsContainer.style.transition = "opacity 300ms ease-in";
       animalOptionsContainer.style.opacity = "1";
+
+      const animalsExist =
+        document.querySelectorAll(".animal-option").length > 0;
+      if (!animalsExist) {
+        noAnimalsMessage.style.transition = "opacity 300ms ease-in";
+        noAnimalsMessage.style.opacity = "1";
+      }
     }, 200);
   } catch (error) {
     console.error("Error updating animal container:", error);
@@ -1073,7 +1083,9 @@ async function updateRejoinAnimalContainer(colorId) {
     animalOptionsContainer.style.transition = "opacity 300ms ease-out";
     animalOptionsContainer.style.opacity = "0";
 
-    const noAnimalsMessage = document.getElementById("no-animals-message");
+    const noAnimalsMessage = document.querySelector(
+      ".no-animals-message.rejoin"
+    );
     noAnimalsMessage.style.transition = "opacity 300ms ease-out";
     noAnimalsMessage.style.opacity = "0";
 
@@ -1090,6 +1102,7 @@ async function updateRejoinAnimalContainer(colorId) {
       const animalsExist =
         document.querySelectorAll(".animal-option").length > 0;
       if (!animalsExist) {
+        noAnimalsMessage.style.transition = "opacity 300ms ease-in";
         noAnimalsMessage.style.opacity = "1";
       }
 
