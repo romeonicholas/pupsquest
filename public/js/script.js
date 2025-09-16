@@ -1109,11 +1109,14 @@ function shouldShowExitPanelDetails() {
 function firstTimeSaveAndExit() {
   const userPanel = document.getElementById("user-panel");
   const riddleScreen = document.getElementById("riddle-screen");
+  const createNewUserScreen = document.getElementById("create-new-user-screen");
 
   userPanel.style.transition = "transform 800ms ease-in";
   userPanel.style.transform = "translateY(380px)";
   riddleScreen.style.transition = "transform 800ms ease-in";
   riddleScreen.style.transform = "translateY(380px)";
+  createNewUserScreen.style.transition = "transform 800ms ease-in";
+  createNewUserScreen.style.transform = "translateY(380px)";
 
   const cancelButton = document.getElementById("cancel-button");
   const signOutButton = document.getElementById("sign-out-button");
@@ -1126,11 +1129,14 @@ function firstTimeSaveAndExit() {
 function cancelExit() {
   const userPanel = document.getElementById("user-panel");
   const riddleScreen = document.getElementById("riddle-screen");
+  const createNewUserScreen = document.getElementById("create-new-user-screen");
 
   userPanel.style.transition = "transform 800ms ease-in";
   userPanel.style.transform = "translateY(0px)";
   riddleScreen.style.transition = "transform 800ms ease-in";
   riddleScreen.style.transform = "translateY(0px)";
+  createNewUserScreen.style.transition = "transform 800ms ease-in";
+  createNewUserScreen.style.transform = "translateY(0px)";
 
   const cancelButton = document.getElementById("cancel-button");
   cancelButton.style.display = "none";
@@ -1141,12 +1147,15 @@ function cancelExit() {
 function hideExitDetails() {
   const userPanel = document.getElementById("user-panel");
   const riddleScreen = document.getElementById("riddle-screen");
+  const createNewUserScreen = document.getElementById("create-new-user-screen");
 
   setTimeout(() => {
     userPanel.style.transition = "none";
     userPanel.style.transform = "translateY(0px)";
     riddleScreen.style.transition = "none";
     riddleScreen.style.transform = "translateY(0px)";
+    createNewUserScreen.style.transition = "none";
+    createNewUserScreen.style.transform = "translateY(0px)";
 
     const cancelButton = document.getElementById("cancel-button");
     cancelButton.style.display = "none";
