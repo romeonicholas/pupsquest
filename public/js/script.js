@@ -704,7 +704,6 @@ function showRejoinGameScreen() {
   isTimerActive = true;
   startInactivityTimer();
 
-  document.getElementById("use-phone-screen").style.display = "none";
   document.getElementById("rejoin-screen").style.display = "block";
   document.getElementById("user-panel").style.display = "block";
   document.getElementById("exit-container").style.display = "block";
@@ -1203,6 +1202,7 @@ function startOver() {
   disableAllInput();
 
   setTimeout(() => {
+    document.getElementById("use-phone-screen").style.display = "none";
     resetCreateNewUserScreen();
     resetRejoinScreen();
     setStartOverButtonToActive();
@@ -1324,6 +1324,7 @@ async function saveAndExit() {
         disableAllInput();
 
         setTimeout(() => {
+          document.getElementById("use-phone-screen").style.display = "none";
           resetRiddleScreen();
           resetCreateNewUserScreen();
           resetRejoinScreen();

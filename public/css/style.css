@@ -877,6 +877,10 @@ button {
   z-index: 100;
 }
 
+#use-phone-scren {
+  display: none;
+}
+
 #use-phone-back-button {
   position: absolute;
   top: 1755px;
