@@ -116,7 +116,8 @@ function dismissInactivityScreen() {
   startInactivityTimer();
 }
 
-function showErrorScreenAndReload() {
+function showErrorScreenAndReload(error) {
+  console.error("An error occurred:", error);
   const errorScreen = document.getElementById("error-screen");
   errorScreen.style.display = "block";
   setTimeout(() => {
@@ -969,7 +970,7 @@ async function createUser() {
     return newUser;
   } catch (error) {
     console.error("Error creating user:", error);
-    showErrorScreenAndReload();
+    showErrorScreenAndReload(error);
     return null;
   }
 }
@@ -1109,7 +1110,7 @@ async function loginUser() {
     return await response.json();
   } catch (error) {
     console.error("Error logging in user:", error);
-    showErrorScreenAndReload();
+    showErrorScreenAndReload(error);
     return null;
   }
 }
@@ -1283,11 +1284,22 @@ async function saveAndExit() {
         }, 500);
       } catch (error) {
         console.error("Error saving user data:", error);
-        showErrorScreenAndReload();
+        showErrorScreenAndReload(error);
       }
     } else {
-      showErrorScreenAndReload();
+      console.error("No user or game state to save.");
     }
+  }
+}
+
+function handleInactivitySignOut() {
+  clearTimeout(inactivityTimeout);
+  clearTimeout(inactivityConfirmationTimeout);
+
+  if (currentUser && currentGameState) {
+    saveAndExit();
+  } else {
+    startOver();
   }
 }
 
