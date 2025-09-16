@@ -4,7 +4,7 @@ let currentUser = null;
 let currentGameState = null;
 let inactivityTimeout;
 let inactivityConfirmationTimeout;
-const INACTIVITY_THRESHOLD = 15000;
+const INACTIVITY_THRESHOLD = 25000;
 const INACTIVITY_CONFIRMATION_TIMEOUT = 8000;
 let isTimerActive = false;
 
