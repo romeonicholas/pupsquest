@@ -236,9 +236,9 @@ export function seedAnswerChoices(db) {
       imgPath: "/assets/images/riddles/icons/diamonds.png",
     },
     {
-      key: "eastern_red_cypress",
-      display: "Eastern Red Cypress",
-      imgPath: "/assets/images/riddles/icons/eastern_red_cypress.png",
+      key: "eastern_red_cedar",
+      display: "Eastern Red Cedar",
+      imgPath: "/assets/images/riddles/icons/eastern_red_cedar.png",
     },
     {
       key: "eastern_redbud",
