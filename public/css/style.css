@@ -941,7 +941,7 @@ button {
   color: #c54132;
 }
 
-#no-animals-message {
+.no-animals-message {
   opacity: 0;
   position: relative;
   top: 1350px;
