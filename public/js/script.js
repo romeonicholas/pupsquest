@@ -1,7 +1,10 @@
 let currentUser = null;
 let currentGameState = null;
 let inactivityTimeout;
+let inactivityConfirmationTimeout;
 const INACTIVITY_THRESHOLD = 15000;
+const INACTIVITY_CONFIRMATION_TIMEOUT = 8000;
+let isTimerActive = false;
 
 const correctAnswerBacking = "/images/riddles/ui/answer_backing_correct.png";
 const incorrectAnswerBackings = [
@@ -80,15 +83,35 @@ document.addEventListener("scroll", startInactivityTimer);
 document.addEventListener("touchstart", startInactivityTimer);
 
 function startInactivityTimer() {
+  if (!isTimerActive) {
+    return;
+  }
   clearTimeout(inactivityTimeout);
   inactivityTimeout = setTimeout(showInactivityScreen, INACTIVITY_THRESHOLD);
 }
 
+function startInactivityConfirmationTimer() {
+  clearTimeout(inactivityConfirmationTimeout);
+
+  inactivityConfirmationTimeout = setTimeout(
+    currentUser ? saveAndExit : startOver,
+    INACTIVITY_CONFIRMATION_TIMEOUT
+  );
+}
+
 function showInactivityScreen() {
-  const modal = document.getElementById("inactivity-screen");
-  if (modal) {
-    modal.style.display = "block";
-  }
+  const inactivityScreen = document.getElementById("inactivity-screen");
+  inactivityScreen.style.opacity = "1";
+  inactivityScreen.style.pointerEvents = "auto";
+  startInactivityConfirmationTimer();
+}
+
+function dismissInactivityScreen() {
+  const inactivityScreen = document.getElementById("inactivity-screen");
+  inactivityScreen.style.opacity = "0";
+  inactivityScreen.style.pointerEvents = "none";
+  clearTimeout(inactivityConfirmationTimeout);
+  startInactivityTimer();
 }
 
 function closeRiddleContainerFromBottom() {
@@ -602,6 +625,8 @@ function lowerStartScreen() {
 }
 
 function returnToStartScreen() {
+  clearTimeout(inactivityTimeout);
+  isTimerActive = false;
   const startScreen = document.getElementById("start-screen");
   startScreen.style.display = "block";
 
@@ -614,10 +639,15 @@ function returnToStartScreen() {
   setTimeout(() => {
     startScreen.style.transition = "opacity 500ms ease-in";
     startScreen.style.opacity = "1";
+
+    const inactivityScreen = document.getElementById("inactivity-screen");
+    inactivityScreen.style.opacity = "0";
+    inactivityScreen.style.pointerEvents = "none";
   }, 10);
 }
 
 function showRejoinGameScreen() {
+  isTimerActive = true;
   startInactivityTimer();
 
   document.getElementById("use-phone-screen").style.display = "none";
@@ -634,6 +664,7 @@ function showRejoinGameScreen() {
 }
 
 function showUsePhoneScreen() {
+  isTimerActive = true;
   startInactivityTimer();
 
   document.getElementById("rejoin-screen").style.display = "none";
@@ -643,6 +674,7 @@ function showUsePhoneScreen() {
 }
 
 function showCreateNewUserScreen() {
+  isTimerActive = true;
   startInactivityTimer();
 
   const createNewUserScreen = document.getElementById("create-new-user-screen");
@@ -1105,13 +1137,6 @@ function resetRiddleScreen() {
   gameOver.style.display = "none";
 }
 
-function showStartScreen() {
-  const startScreen = document.getElementById("start-screen");
-  startScreen.style.display = "block";
-  startScreen.style.transition = "transform 0ms ease-in";
-  startScreen.style.transform = "translateY(0px)";
-}
-
 function startOver() {
   returnToStartScreen();
   disableAllInput();
@@ -1206,8 +1231,11 @@ function hideExitDetails() {
 }
 
 async function saveAndExit() {
-  console.log(currentUser.hasViewedExitPanel);
-  if (shouldShowExitPanelDetails()) {
+  clearTimeout(inactivityTimeout);
+  clearTimeout(inactivityConfirmationTimeout);
+  const inactivityScreen = document.getElementById("inactivity-screen");
+  if (shouldShowExitPanelDetails() && !inactivityScreen.style.pointerEvents) {
+    // I don't want to show the exit panel if they're inactive and not there anyway
     firstTimeSaveAndExit();
   } else {
     if (currentUser && currentGameState) {
@@ -1230,8 +1258,6 @@ async function saveAndExit() {
 
         const data = await response.json();
         setUser(null);
-
-        const hasDelay = false;
 
         returnToStartScreen();
         disableAllInput();
