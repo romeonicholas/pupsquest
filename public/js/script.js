@@ -1,3 +1,5 @@
+const isVisitor =
+  new URLSearchParams(window.location.search).get("device") === "visitor";
 let currentUser = null;
 let currentGameState = null;
 let inactivityTimeout;
@@ -73,9 +75,9 @@ function scaleContainer() {
 window.addEventListener("resize", scaleContainer);
 window.addEventListener("load", scaleContainer);
 document.addEventListener("DOMContentLoaded", scaleContainer);
-// document.addEventListener("contextmenu", function (e) {
-//   e.preventDefault();
-// });
+document.addEventListener("contextmenu", function (e) {
+  e.preventDefault();
+});
 
 document.addEventListener("mousemove", startInactivityTimer);
 document.addEventListener("keydown", startInactivityTimer);
@@ -83,7 +85,7 @@ document.addEventListener("scroll", startInactivityTimer);
 document.addEventListener("touchstart", startInactivityTimer);
 
 function startInactivityTimer() {
-  if (!isTimerActive) {
+  if (!isTimerActive || isVisitor) {
     return;
   }
   clearTimeout(inactivityTimeout);

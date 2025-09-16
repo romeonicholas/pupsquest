@@ -1,16 +1,27 @@
 <div id="start-screen">
-  <img src="/images/startScreen.png" />
-
+  <% if (isVisitor) { %>
+  <img src="/images/visitor_start_screen.png" />
   <button
-    id="new-game-button"
+    id="visitor-new-game-button"
     onclick="lowerStartScreen(); showCreateNewUserScreen();"
   ></button>
   <button
-    id="rejoin-game-button"
+    id="visitor-rejoin-game-button"
+    onclick="lowerStartScreen(); showRejoinGameScreen();"
+  ></button>
+  <% } else { %>
+  <img src="/images/startScreen.png" />
+  <button
+    id="museum-new-game-button"
+    onclick="lowerStartScreen(); showCreateNewUserScreen();"
+  ></button>
+  <button
+    id="museum-rejoin-game-button"
     onclick="lowerStartScreen(); showRejoinGameScreen();"
   ></button>
   <button
     id="use-phone-button"
     onclick="lowerStartScreen(); showUsePhoneScreen();"
   ></button>
+  <% } %>
 </div>

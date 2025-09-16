@@ -39,14 +39,6 @@ app.use(express.urlencoded({ extended: true }));
 const PORT = process.env.PORT || 3000;
 const HOST = process.env.HOST || "0.0.0.0";
 
-app.get("/new-user", (req, res) => {
-  res.render("create_new_user");
-});
-
-app.get("/login", (req, res) => {
-  res.render("login");
-});
-
 app.get("/api/colors/from-users", async (req, res) => {
   try {
     const colors = await getAllColorsFromUsers(db);
@@ -244,7 +236,8 @@ app.get("/riddles", async (req, res) => {
 });
 
 app.get("/", (request, response) => {
-  response.render("index");
+  const isVisitor = request.query.device === "visitor";
+  response.render("index", { isVisitor });
 });
 
 app.use("/assets", express.static(path.join(__dirname, "public")));

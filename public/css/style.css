@@ -83,10 +83,7 @@ button {
   z-index: 100;
 }
 
-#new-game-button {
-  background: transparent;
-  border: none !important;
-  font-size: 0;
+#museum-new-game-button {
   position: absolute;
   top: 907px;
   left: 177px;
@@ -95,10 +92,7 @@ button {
   height: 145px;
 }
 
-#rejoin-game-button {
-  background: transparent;
-  border: none !important;
-  font-size: 0;
+#museum-rejoin-game-button {
   position: absolute;
   top: 1103px;
   left: 177px;
@@ -107,10 +101,25 @@ button {
   height: 145px;
 }
 
+#visitor-new-game-button {
+  position: absolute;
+  top: 1190px;
+  left: 177px;
+  z-index: 100;
+  width: 724px;
+  height: 145px;
+}
+
+#visitor-rejoin-game-button {
+  position: absolute;
+  top: 1385px;
+  left: 177px;
+  z-index: 101;
+  width: 724px;
+  height: 145px;
+}
+
 #use-phone-button {
-  background: transparent;
-  border: none !important;
-  font-size: 0;
   position: absolute;
   top: 1450px;
   left: 177px;
@@ -538,9 +547,6 @@ button {
 }
 
 #next-riddle-button {
-  background: transparent;
-  border: none !important;
-  font-size: 0;
   position: absolute;
   left: 351px;
   top: 1758px;
@@ -644,14 +650,6 @@ button {
 .animals-container {
   display: flex;
   justify-content: center;
-}
-
-.temp-button {
-  width: 100px;
-  height: 100px;
-  background: blue !important;
-  font-size: large;
-  color: darkred;
 }
 
 #user-creation-instructions {
