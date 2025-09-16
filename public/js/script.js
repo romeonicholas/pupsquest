@@ -53,8 +53,6 @@ const backToStartButton = document.getElementById("back-to-start-button");
 const nextRiddleButton = document.getElementById("next-riddle-button");
 const riddleContainer = document.getElementById("riddle-container");
 const riddleTextLayerBackground = document.getElementById("riddle-text");
-// let currentStatusText = document.getElementById("status-text-current");
-// let nextStatusText = document.getElementById("status-text-next");
 const selectionLayer = document.getElementById("selection-layer");
 
 function scaleContainer() {
@@ -231,7 +229,7 @@ function attachClickHandlers(correctAnswerIndex) {
 }
 
 function updateRiddleAnswer(answerChoice, answerDetails, answerImgPath) {
-  answerChoiceText.innerText = `${answerChoice}!`;
+  answerChoiceText.innerText = `${answerChoice}`;
   answerDetailsText.innerHTML = answerDetails;
   answerImg.src = answerImgPath;
   answerCorrectText.style.display = "none";
@@ -451,6 +449,9 @@ async function handleIncorrectGuess(clickedArea, iconIndex) {
         answerIncorrectText.style.display = "block";
         playAgainSheet.style.display = "none";
         nextRiddleSheet.style.display = "block";
+
+        const answerChoiceText = document.getElementById("answer-choice-text");
+        answerChoiceText.innerText = `${answerChoiceText.innerText}.`;
       }
       enableAllInput();
     }, 1500);
@@ -481,6 +482,9 @@ function handleCorrectGuess(clickedArea, iconIndex) {
 
     riddleAnswer.style.display = "flex";
     answerCorrectText.style.display = "block";
+
+    const answerChoiceText = document.getElementById("answer-choice-text");
+    answerChoiceText.innerText = `${answerChoiceText.innerText}!`;
 
     enableAllInput();
   }, 1500);
@@ -599,10 +603,12 @@ function showRejoinGameScreen() {
   document.getElementById("rejoin-screen").style.display = "block";
   document.getElementById("user-panel").style.display = "block";
   document.getElementById("exit-container").style.display = "block";
+
   resetBadge();
   const badgeContainer = document.getElementById("badge-container");
   badgeContainer.style.transform = "translateY(465px)";
-  updateStatusWheel("ENTER CODE");
+  let isInstant = true;
+  updateStatusWheel("ENTER CODE", isInstant);
   setStartOverButtonToActive();
 }
 
@@ -620,7 +626,8 @@ function showCreateNewUserScreen() {
   const userPanel = document.getElementById("user-panel");
   userPanel.style.display = "block";
 
-  updateStatusWheel("WELCOME");
+  let isInstant = true;
+  updateStatusWheel("WELCOME", isInstant);
 
   const exitContainer = document.getElementById("exit-container");
   exitContainer.style.display = "block";
