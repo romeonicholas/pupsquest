@@ -1040,6 +1040,11 @@ async function updateRejoinAnimalContainer(colorId) {
 
       animalOptionsContainer.style.transition = "opacity 300ms ease-in";
       animalOptionsContainer.style.opacity = "1";
+
+      const scrollableContainer = document.getElementById(
+        "scrollable-container"
+      );
+      scrollableContainer.scrollTop = 0;
     }, 200);
   } catch (error) {
     console.error("Error updating animal container:", error);
