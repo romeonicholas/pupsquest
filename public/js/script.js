@@ -53,8 +53,8 @@ const backToStartButton = document.getElementById("back-to-start-button");
 const nextRiddleButton = document.getElementById("next-riddle-button");
 const riddleContainer = document.getElementById("riddle-container");
 const riddleTextLayerBackground = document.getElementById("riddle-text");
-let currentStatusText = document.getElementById("status-text-current");
-let nextStatusText = document.getElementById("status-text-next");
+// let currentStatusText = document.getElementById("status-text-current");
+// let nextStatusText = document.getElementById("status-text-next");
 const selectionLayer = document.getElementById("selection-layer");
 
 function scaleContainer() {
@@ -511,7 +511,9 @@ function getTranslateY(element) {
 }
 
 function updateNextStatusText(nextText) {
+  const nextStatusText = document.querySelector(".next-text");
   const spanElement = nextStatusText.querySelector(".status-text");
+
   if (spanElement) {
     spanElement.innerText = nextText;
   } else {
@@ -520,8 +522,19 @@ function updateNextStatusText(nextText) {
   nextStatusText.firstChild.innerText = nextText;
 }
 
-function updateStatusWheel(wheelText) {
+function updateStatusWheel(wheelText, instant = false) {
   updateNextStatusText(wheelText);
+  let currentStatusText = document.querySelector(".current-text");
+  let nextStatusText = document.querySelector(".next-text");
+
+  if (instant) {
+    currentStatusText.style.transition = "none";
+    nextStatusText.style.transition = "none";
+  } else {
+    currentStatusText.style.transition = "transform 800ms ease-in";
+    nextStatusText.style.transition = "transform 800ms ease-in";
+  }
+
   currentStatusText.classList.remove("current-text");
   currentStatusText.classList.add("previous-text");
   nextStatusText.classList.remove("next-text");
@@ -600,14 +613,14 @@ function showUsePhoneScreen() {
   document.getElementById("use-phone-screen").style.display = "block";
 }
 
-// Create new user
-
 function showCreateNewUserScreen() {
   const createNewUserScreen = document.getElementById("create-new-user-screen");
   createNewUserScreen.style.display = "block";
 
   const userPanel = document.getElementById("user-panel");
   userPanel.style.display = "block";
+
+  updateStatusWheel("WELCOME");
 
   const exitContainer = document.getElementById("exit-container");
   exitContainer.style.display = "block";
@@ -632,11 +645,6 @@ function showColorPicker() {
   colorPicker.style.transform = "translateY(1337px)";
 
   setTimeout(() => {
-    const statusTextCurrent = document.getElementById("status-text-current");
-    const statusTextNext = document.getElementById("status-text-next");
-    statusTextCurrent.style.transition = "transform 800ms ease-in";
-    statusTextNext.style.transition = "transform 800ms ease-in";
-
     updateStatusWheel("CODE NAME");
     const badgeContainer = document.getElementById("badge-container");
     badgeContainer.style.transition = "transform 800ms ease-in";
