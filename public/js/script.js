@@ -819,11 +819,12 @@ async function updateAnimalContainer(colorId) {
       const html = await response.text();
 
       animalOptionsContainer.innerHTML = html;
+      animalOptionsContainer.offsetHeight;
       animalOptionsContainer.style.transition = "opacity 300ms ease-in";
       animalOptionsContainer.style.opacity = "1";
 
       const animalsExist =
-        document.querySelectorAll(".animal-option").length > 0;
+        animalOptionsContainer.querySelectorAll(".animal-option").length > 0;
       if (!animalsExist) {
         noAnimalsMessage.style.transition = "opacity 300ms ease-in";
         noAnimalsMessage.style.opacity = "1";
@@ -1036,6 +1037,9 @@ function resetCreateNewUserScreen() {
   clearColorSelectionIndicators();
   clearAnimalSelectionIndicators();
 
+  const noAnimalsMessage = document.querySelector(".no-animals-message.new");
+  noAnimalsMessage.style.opacity = "0";
+
   const userCreationInstructions = document.getElementById(
     "user-creation-instructions"
   );
@@ -1096,11 +1100,12 @@ async function updateRejoinAnimalContainer(colorId) {
       const html = await response.text();
 
       animalOptionsContainer.innerHTML = html;
+      animalOptionsContainer.offsetHeight;
       animalOptionsContainer.style.transition = "opacity 300ms ease-in";
       animalOptionsContainer.style.opacity = "1";
 
       const animalsExist =
-        document.querySelectorAll(".animal-option").length > 0;
+        animalOptionsContainer.querySelectorAll(".animal-option").length > 0;
       if (!animalsExist) {
         noAnimalsMessage.style.transition = "opacity 300ms ease-in";
         noAnimalsMessage.style.opacity = "1";
@@ -1192,6 +1197,9 @@ function resetRejoinScreen() {
   resetBadge();
   clearColorSelectionIndicators("rejoin");
   clearAnimalSelectionIndicators("rejoin");
+
+  const noAnimalsMessage = document.querySelector(".no-animals-message.rejoin");
+  noAnimalsMessage.style.opacity = "0";
 
   const rejoinAnimalOptionsContainer = document.getElementById(
     "rejoin-animal-options-container"
