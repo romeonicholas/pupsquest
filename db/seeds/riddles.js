@@ -34,7 +34,7 @@ export function seedRiddles(db) {
         "go ask the rabbit at the front door.",
       ],
       answerDetails:
-        "My name comes from a Native American story about a girl lost in the forest who is kept warm by a blanket of red and yellow flowers.",
+        "Indian Blankets are also called firewheel flowers. They provide nectar for butterflies and bees, and their seeds are eaten by birds.",
       answerImgPath:
         "images/riddles/answers/answer_image_temp_indian_blanket.png",
       answerChoiceKeys: [
@@ -72,7 +72,7 @@ export function seedRiddles(db) {
         "but today I’m out near the waterfall!",
       ],
       answerDetails:
-        "A traditional story explains that when the Great Spirit was giving birds their colors, the Painted Bunting was the last in line—so it just got leftovers.",
+        "Many people say the male painted bunting is the most beautiful bird in North America. Their colors only show up in their second year.",
       answerImgPath:
         "images/riddles/answers/answer_image_temp_painted_bunting.png",
       answerChoiceKeys: [
@@ -94,7 +94,7 @@ export function seedRiddles(db) {
         "And also, I see … a little blue deer?",
       ],
       answerDetails:
-        "Scissor-tailed flycatchers have special meanings for many tribes, and their feathers are often worn in the regalia of male Comanche dancers.",
+        "Scissor-tailed flycatchers have special meanings for certain tribes, their feathers are sometimes worn in regalia to honor their significance.",
       answerImgPath: "images/riddles/answers/answer_image_temp_swallowtail.png",
       answerChoiceKeys: [
         "scissor_tailed_flycatcher",
@@ -159,7 +159,7 @@ export function seedRiddles(db) {
         "Coyote’s quite near me—should I run?",
       ],
       answerDetails:
-        'The English name "Jackrabbit" is shortened from "Jackass Rabbit"—so named because its ears look like those of a donkey!',
+        "Jackrabbits can leap distances of up to 20 feet and run as fast as 40 miles per hour to escape predators.",
       answerImgPath: "images/riddles/answers/answer_image_temp_jackrabbit.png",
       answerChoiceKeys: [
         "jackrabbit",
@@ -329,7 +329,7 @@ export function seedRiddles(db) {
         "I’m next to a cave where climbers go.",
       ],
       answerDetails:
-        "Caddo people were decorating ceramic jars with Timber Rattlesnake images more than 3,000 years ago, in the area now called eastern Oklahoma.",
+        "Timber Rattlesnakes are shy and prefer to avoid humans. They use their rattles as a defensive warning, not an aggressive signal to strike.",
       answerImgPath: "images/riddles/answers/timber_rattlesnake.png",
       answerChoiceKeys: ["bands", "diamonds", "spots", "stripe"],
     },
@@ -345,7 +345,7 @@ export function seedRiddles(db) {
         "Come when it’s dark: I’m out at night!",
       ],
       answerDetails:
-        "An adult Stag Beetles never eats, it only drinks—mostly tree sap and juice from rotting fruits. Those big claw things on its face are just for fighting.",
+        "An adult Stag Beetle never eats, it only drinks—mostly tree sap and juice from rotting fruits. Those big claw things are just for fighting.",
       answerImgPath: "images/riddles/answers/stag_beetle.png",
       answerChoiceKeys: [
         "stag_beetle",
