@@ -821,7 +821,7 @@ async function updateAnimalContainer(colorId) {
 
     setTimeout(async () => {
       const response = await fetch(
-        `/api/animals/available/html?colorId=${colorId}&limit=8`
+        `/api/animals/available-for-color?colorId=${colorId}`
       );
       const html = await response.text();
 

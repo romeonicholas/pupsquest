@@ -8,7 +8,7 @@ import {
   riddleAnswerChoices,
   riddles,
 } from "./schema";
-import { eq, asc } from "drizzle-orm";
+import { eq, asc, notInArray, sql } from "drizzle-orm";
 
 export async function addUserAnimals(
   animals: { name: string; imgPath: string }[]
@@ -23,6 +23,26 @@ export async function addUserAnimals(
       imgPath: userAnimals.imgPath,
     });
   return insertedAnimals;
+}
+
+export async function getAvailableAnimalsForColor(colorId: number) {
+  const takenAnimalIdsSubquery = db
+    .select({ animalId: users.userAnimal })
+    .from(users)
+    .where(eq(users.userAnimal, colorId));
+
+  const availableAnimals = await db
+    .select({
+      id: userAnimals.id,
+      name: userAnimals.name,
+      imgPath: userAnimals.imgPath,
+    })
+    .from(userAnimals)
+    .where(notInArray(userAnimals.id, takenAnimalIdsSubquery))
+    .orderBy(sql`RANDOM()`)
+    .limit(8);
+
+  return availableAnimals;
 }
 
 export async function addUserColors(
