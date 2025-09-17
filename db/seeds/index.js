@@ -9,5 +9,5 @@ export async function runAllSeeds(db) {
   seedUserAnimals(db);
   seedAnswerChoices(db);
   seedRiddles(db);
-  seedUsers(db);
+  // seedUsers(db);
 }
