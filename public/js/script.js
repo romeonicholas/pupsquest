@@ -5,7 +5,7 @@ let currentGameState = null;
 let inactivityTimeout;
 let inactivityConfirmationTimeout;
 const INACTIVITY_THRESHOLD = 25000;
-const INACTIVITY_CONFIRMATION_TIMEOUT = 8000;
+const INACTIVITY_CONFIRMATION_THRESHOLD = 8000;
 let isTimerActive = false;
 
 const correctAnswerBacking = "/images/riddles/ui/answer_backing_correct.png";
@@ -97,7 +97,7 @@ function startInactivityConfirmationTimer() {
 
   inactivityConfirmationTimeout = setTimeout(
     currentUser ? saveAndExit : startOver,
-    INACTIVITY_CONFIRMATION_TIMEOUT
+    INACTIVITY_CONFIRMATION_THRESHOLD
   );
 }
 
