@@ -327,6 +327,7 @@ function transitionToRiddleScreen() {
 }
 
 async function showRiddle() {
+  disableAllInput();
   resetIconPositions();
   closeRiddleContainerFromBottom();
 
@@ -376,9 +377,11 @@ async function showRiddle() {
       }
       const gameOver = document.getElementById("game-over");
       gameOver.style.display = "none";
+      enableAllInput();
     }, 2000);
   } catch (error) {
     console.error("Error fetching riddle:", error);
+    enableAllInput();
   }
 }
 
