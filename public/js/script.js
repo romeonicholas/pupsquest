@@ -1229,6 +1229,8 @@ function resetRiddleScreen() {
 
   const gameOver = document.getElementById("game-over");
   gameOver.style.display = "none";
+  const playAgainSheet = document.getElementById("play-again-sheet");
+  playAgainSheet.style.display = "none";
 }
 
 function startOver() {
