@@ -14,12 +14,16 @@
     "db:migrate": "node scripts/migrate.js"
   },
   "dependencies": {
+    "@libsql/client": "^0.15.15",
     "better-sqlite3": "^12.2.0",
-    "dotenv": "^17.2.1",
+    "dotenv": "^17.2.2",
+    "drizzle-orm": "^0.44.5",
     "ejs": "^3.1.10",
     "express": "^5.1.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.10"
+    "drizzle-kit": "^0.31.4",
+    "nodemon": "^3.1.10",
+    "tsx": "^4.20.5"
   }
 }
