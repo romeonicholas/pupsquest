@@ -340,7 +340,7 @@ button {
 }
 
 #selection-layer {
-  top: 1282px;
+  top: 1280px;
   width: 100%;
   position: relative;
   transition: transform 800ms ease-in;
@@ -362,14 +362,14 @@ button {
 
 #selection-panel {
   position: relative;
-  top: -926px;
+  top: -930px;
   z-index: 76;
 }
 
 #answer-options-container {
   width: 100%;
   position: absolute;
-  top: -750px;
+  top: -754px;
 }
 
 #option-1 {
