@@ -101,6 +101,8 @@ export const gameStates = sqliteTable(
     hintsRemaining: integer().notNull().default(7),
     currentScore: integer().notNull().default(0),
     startingIndex: integer().notNull().default(0),
+    riddleQueue: text().notNull(),
+    queueCursor: integer().notNull().default(0),
     currentShuffledChoices: text().notNull().default("[]"),
     currentCorrectAnswerIndex: integer().notNull().default(0),
   },
