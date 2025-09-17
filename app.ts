@@ -10,7 +10,10 @@ import { db } from "./drizzle/db.ts";
 //   getRiddleById,
 //   getAllRiddlesWithChoices,
 // } from "./db/queries/riddles.js";
-import { getAllUserAnimals } from "./drizzle/queries.ts";
+import {
+  getAllUserAnimals,
+  getAvailableAnimalsForColor,
+} from "./drizzle/queries.ts";
 // import {
 //   getAllColors,
 //   getAvailableAnimalsForColor,
@@ -21,7 +24,7 @@ import { getAllUserAnimals } from "./drizzle/queries.ts";
 //   getAllAnimalsFromUsersWithColor,
 //   getUserByColorAndAnimal,
 // } from "./db/queries/userLogin.js";
-// import { updateUser } from "./db/queries/userUpdate.js";
+// import { updateUser } from "./dbnpm/queries/userUpdate.js";
 // import { getAverageScore } from "./db/queries/stats.js";
 // import { removeExpiredUsers } from "./db/scripts/userRemoval.js";
 
@@ -49,211 +52,189 @@ app.get("/api/animals", async (req, res) => {
   }
 });
 
-app.get("/api/colors/from-users", async (req, res) => {
-  try {
-    const colors = await getAllColorsFromUsers(db);
-    res.json(colors);
-  } catch (error) {
-    console.error("Error fetching user colors:", error);
-    res.status(500).json({ error: "Failed to fetch user colors" });
-  }
-});
+// app.get("/api/colors/from-users", async (req, res) => {
+//   try {
+//     const colors = await getAllColorsFromUsers(db);
+//     res.json(colors);
+//   } catch (error) {
+//     console.error("Error fetching user colors:", error);
+//     res.status(500).json({ error: "Failed to fetch user colors" });
+//   }
+// });
 
-app.put("/api/users/:id", async (req, res) => {
-  try {
-    const userId = parseInt(req.params.id);
-    const { gameState, scores, hasViewedExitPanel, ...otherFields } = req.body;
+// app.put("/api/users/:id", async (req, res) => {
+//   try {
+//     const userId = parseInt(req.params.id);
+//     const { gameState, scores, hasViewedExitPanel, ...otherFields } = req.body;
 
-    if (!userId || isNaN(userId)) {
-      return res.status(400).json({ error: "Invalid user ID" });
-    }
+//     if (!userId || isNaN(userId)) {
+//       return res.status(400).json({ error: "Invalid user ID" });
+//     }
 
-    if (
-      !gameState &&
-      !scores &&
-      hasViewedExitPanel === undefined &&
-      Object.keys(otherFields).length === 0
-    ) {
-      return res.status(400).json({ error: "No update data provided" });
-    }
+//     if (
+//       !gameState &&
+//       !scores &&
+//       hasViewedExitPanel === undefined &&
+//       Object.keys(otherFields).length === 0
+//     ) {
+//       return res.status(400).json({ error: "No update data provided" });
+//     }
 
-    const result = await updateUser(db, userId, {
-      gameState,
-      scores,
-      hasViewedExitPanel: hasViewedExitPanel ? 1 : 0,
-      ...otherFields,
-    });
-    if (result.changes === 0) {
-      return res.status(404).json({ error: "User not found" });
-    }
+//     const result = await updateUser(db, userId, {
+//       gameState,
+//       scores,
+//       hasViewedExitPanel: hasViewedExitPanel ? 1 : 0,
+//       ...otherFields,
+//     });
+//     if (result.changes === 0) {
+//       return res.status(404).json({ error: "User not found" });
+//     }
 
-    res.json({ message: "User updated successfully", userId });
-  } catch (error) {
-    console.error("Error updating user:", error);
-    res.status(500).json({ error: "Failed to update user" });
-  }
-});
+//     res.json({ message: "User updated successfully", userId });
+//   } catch (error) {
+//     console.error("Error updating user:", error);
+//     res.status(500).json({ error: "Failed to update user" });
+//   }
+// });
 
-app.get("/api/users", async (req, res) => {
-  const { colorId, animalId } = req.query;
+// app.get("/api/users", async (req, res) => {
+//   const { colorId, animalId } = req.query;
 
-  if (!colorId || !animalId) {
-    return res.status(400).json({ error: "Missing colorId or animalId" });
-  }
+//   if (!colorId || !animalId) {
+//     return res.status(400).json({ error: "Missing colorId or animalId" });
+//   }
 
-  try {
-    const user = await getUserByColorAndAnimal(db, colorId, animalId);
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
-    res.json(user);
-  } catch (error) {
-    console.error("Error fetching user:", error);
-    res.status(500).json({ error: "Failed to fetch user" });
-  }
-});
+//   try {
+//     const user = await getUserByColorAndAnimal(db, colorId, animalId);
+//     if (!user) {
+//       return res.status(404).json({ error: "User not found" });
+//     }
+//     res.json(user);
+//   } catch (error) {
+//     console.error("Error fetching user:", error);
+//     res.status(500).json({ error: "Failed to fetch user" });
+//   }
+// });
 
-app.get("/api/stats/average-score", async (req, res) => {
-  try {
-    const stats = await getAverageScore(db);
-    res.json(stats);
-  } catch (error) {
-    console.error("Error calculating average scores:", error);
-    res.status(500).json({ error: "Failed to calculate average scores" });
-  }
-});
+// app.get("/api/stats/average-score", async (req, res) => {
+//   try {
+//     const stats = await getAverageScore(db);
+//     res.json(stats);
+//   } catch (error) {
+//     console.error("Error calculating average scores:", error);
+//     res.status(500).json({ error: "Failed to calculate average scores" });
+//   }
+// });
 
-app.post("/api/users", async (req, res) => {
-  try {
-    const { colorId, animalId } = req.body;
+// app.post("/api/users", async (req, res) => {
+//   try {
+//     const { colorId, animalId } = req.body;
 
-    if (!colorId || !animalId) {
-      return res.status(400).json({ error: "Missing colorId or animalId" });
-    }
+//     if (!colorId || !animalId) {
+//       return res.status(400).json({ error: "Missing colorId or animalId" });
+//     }
 
-    const newUser = await createUser(db, { colorId, animalId });
+//     const newUser = await createUser(db, { colorId, animalId });
 
-    res.status(201).json(newUser);
-  } catch (error) {
-    console.error("Error creating user:", error);
+//     res.status(201).json(newUser);
+//   } catch (error) {
+//     console.error("Error creating user:", error);
 
-    if (error.message.includes("already taken")) {
-      return res.status(409).json({ error: error.message });
-    }
+//     if (error.message.includes("already taken")) {
+//       return res.status(409).json({ error: error.message });
+//     }
 
-    res.status(500).json({ error: "Failed to create user" });
-  }
-});
+//     res.status(500).json({ error: "Failed to create user" });
+//   }
+// });
 
-app.get("/api/colors", async (req, res) => {
-  try {
-    const colors = await getAllColors(db);
-    res.json(colors);
-  } catch (error) {
-    console.error("Error fetching colors:", error);
-    res.status(500).json({ error: "Failed to fetch colors" });
-  }
-});
+// app.get("/api/colors", async (req, res) => {
+//   try {
+//     const colors = await getAllColors(db);
+//     res.json(colors);
+//   } catch (error) {
+//     console.error("Error fetching colors:", error);
+//     res.status(500).json({ error: "Failed to fetch colors" });
+//   }
+// });
 
-app.get("/api/animals/existing", async (req, res) => {
-  try {
-    const colorId = req.query.colorId;
-    const animals = await getAllAnimalsFromUsersWithColor(db, colorId);
-    res.json(animals);
-  } catch (error) {
-    console.error("Error fetching existing animals:", error);
-    res.status(500).json({ error: "Failed to fetch existing animals" });
-  }
-});
+// app.get("/api/animals/existing", async (req, res) => {
+//   try {
+//     const colorId = req.query.colorId;
+//     const animals = await getAllAnimalsFromUsersWithColor(db, colorId);
+//     res.json(animals);
+//   } catch (error) {
+//     console.error("Error fetching existing animals:", error);
+//     res.status(500).json({ error: "Failed to fetch existing animals" });
+//   }
+// });
 
-app.get("/api/animals/existing/html", async (req, res) => {
+// app.get("/api/animals/existing/html", async (req, res) => {
+//   const colorId = req.query.colorId;
+
+//   if (!colorId) {
+//     return res.status(400).send("<p>Error: Missing colorId</p>");
+//   }
+
+//   try {
+//     const animals = await getAllAnimalsFromUsersWithColor(db, colorId);
+//     res.render("partials/animal_options", { animals, isRejoin: true });
+//   } catch (error) {
+//     console.error("Error fetching animals:", error);
+//     res.status(500).send("<p>Error loading animals</p>");
+//   }
+// });
+
+app.get("/api/animals/available-for-color", async (req, res) => {
   const colorId = req.query.colorId;
-
-  if (!colorId) {
-    return res.status(400).send("<p>Error: Missing colorId</p>");
-  }
-
-  try {
-    const animals = await getAllAnimalsFromUsersWithColor(db, colorId);
-    res.render("partials/animal_options", { animals, isRejoin: true });
-  } catch (error) {
-    console.error("Error fetching animals:", error);
-    res.status(500).send("<p>Error loading animals</p>");
-  }
-});
-
-app.get("/api/animals/available", async (req, res) => {
-  const colorId = req.query.colorId;
-  const limit = req.query.limit ? parseInt(req.query.limit) : null;
 
   if (!colorId) {
     return res.status(400).json({ error: "Missing colorId" });
   }
 
-  if (limit !== null && (isNaN(limit) || limit <= 0)) {
-    return res.status(400).json({ error: "Invalid limit parameter" });
-  }
-
   try {
-    const animals = await getAvailableAnimalsForColor(db, colorId, limit);
-    res.json(animals);
+    const animals = await getAvailableAnimalsForColor(colorId);
+    res.render("partials/animal_options", { animals, isRejoin: false });
   } catch (error) {
     console.error("Error fetching animals:", error);
     res.status(500).json({ error: "Failed to fetch animals" });
   }
 });
 
-app.get("/api/animals/available/html", async (req, res) => {
-  const colorId = req.query.colorId;
-  const limit = req.query.limit ? parseInt(req.query.limit) : 8; // Default to 8
+// app.get("/db", async (req, res) => {
+//   try {
+//     const data = await getAllDataForDashboard();
+//     res.render("dbReview", { data });
+//   } catch (error) {
+//     console.error("Error fetching dashboard data:", error);
+//     res.status(500).json({ error: "Failed to fetch dashboard data" });
+//   }
+// });
 
-  if (!colorId) {
-    return res.status(400).send("<p>Error: Missing colorId</p>");
-  }
+// app.get("/api/riddles/:id", async (req, res) => {
+//   try {
+//     const riddleId = req.params.id;
+//     const riddle = await getRiddleById(db, riddleId);
 
-  try {
-    const animals = await getAvailableAnimalsForColor(db, colorId, limit);
-    res.render("partials/animal_options", { animals, isRejoin: false });
-  } catch (error) {
-    console.error("Error fetching animals:", error);
-    res.status(500).send("<p>Error loading animals</p>");
-  }
-});
+//     if (!riddle) {
+//       return res.status(404).json({ error: "Riddle not found" });
+//     }
+//     res.json(riddle);
+//   } catch (error) {
+//     console.error("Error fetching riddle:", error);
+//     res.status(500).json({ error: "Failed to fetch riddle" });
+//   }
+// });
 
-app.get("/db", async (req, res) => {
-  try {
-    const data = await getAllDataForDashboard();
-    res.render("dbReview", { data });
-  } catch (error) {
-    console.error("Error fetching dashboard data:", error);
-    res.status(500).json({ error: "Failed to fetch dashboard data" });
-  }
-});
-
-app.get("/api/riddles/:id", async (req, res) => {
-  try {
-    const riddleId = req.params.id;
-    const riddle = await getRiddleById(db, riddleId);
-
-    if (!riddle) {
-      return res.status(404).json({ error: "Riddle not found" });
-    }
-    res.json(riddle);
-  } catch (error) {
-    console.error("Error fetching riddle:", error);
-    res.status(500).json({ error: "Failed to fetch riddle" });
-  }
-});
-
-app.get("/riddles", async (req, res) => {
-  try {
-    const data = await getAllRiddlesWithChoices(db);
-    res.json(data);
-  } catch (error) {
-    console.error("Error fetching riddles:", error);
-    res.status(500).json({ error: "Failed to fetch riddles" });
-  }
-});
+// app.get("/riddles", async (req, res) => {
+//   try {
+//     const data = await getAllRiddlesWithChoices(db);
+//     res.json(data);
+//   } catch (error) {
+//     console.error("Error fetching riddles:", error);
+//     res.status(500).json({ error: "Failed to fetch riddles" });
+//   }
+// });
 
 app.get("/", (request, response) => {
   const isVisitor = request.query.device === "visitor";
