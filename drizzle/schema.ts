@@ -68,6 +68,27 @@ export const riddleAnswerChoices = sqliteTable(
   ]
 );
 
+export const users = sqliteTable(
+  "users",
+  {
+    id: integer().primaryKey({ autoIncrement: true }),
+    userAnimal: integer()
+      .notNull()
+      .references(() => userAnimals.id),
+    userColor: integer()
+      .notNull()
+      .references(() => userColors.id),
+    createdAt: integer().default(sql`(strftime('%s','now'))`),
+    scores: text().default("[]"),
+    hasViewedExitPanel: integer().default(0),
+  },
+  (table) => [
+    index("idx_users_createdAt").on(table.createdAt),
+    check("users_check_5", sql`hasViewedExitPanel IN (0, 1)`),
+    check("users_check_6", sql`json_valid(scores)`),
+  ]
+);
+
 export const gameStates = sqliteTable(
   "gameStates",
   {
@@ -89,27 +110,6 @@ export const gameStates = sqliteTable(
     index("idx_gameStates_userId").on(table.userId),
     check("gameStates_check_1", sql`json_valid(currentGuesses)`),
     check("gameStates_check_2", sql`json_valid(currentShuffledChoices)`),
-  ]
-);
-
-export const users = sqliteTable(
-  "users",
-  {
-    id: integer().primaryKey({ autoIncrement: true }),
-    userAnimal: integer()
-      .notNull()
-      .references(() => userAnimals.id),
-    userColor: integer()
-      .notNull()
-      .references(() => userColors.id),
-    createdAt: integer().default(sql`(strftime('%s','now'))`),
-    scores: text().default("[]"),
-    hasViewedExitPanel: integer().default(0),
-  },
-  (table) => [
-    index("idx_users_createdAt").on(table.createdAt),
-    check("users_check_5", sql`hasViewedExitPanel IN (0, 1)`),
-    check("users_check_6", sql`json_valid(scores)`),
   ]
 );
 
