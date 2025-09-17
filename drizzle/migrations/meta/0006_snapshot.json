@@ -1,0 +1,577 @@
+{
+  "version": "6",
+  "dialect": "sqlite",
+  "id": "f874e3ad-47c5-4c51-815d-aa2d81d0deff",
+  "prevId": "994d9030-3883-42c0-8635-5676d93e79d5",
+  "tables": {
+    "answerChoices": {
+      "name": "answerChoices",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "key": {
+          "name": "key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "display": {
+          "name": "display",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "imgPath": {
+          "name": "imgPath",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "answerChoices_key_unique": {
+          "name": "answerChoices_key_unique",
+          "columns": [
+            "key"
+          ],
+          "isUnique": true
+        },
+        "idx_answerChoices_display": {
+          "name": "idx_answerChoices_display",
+          "columns": [
+            "display"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "gameStates": {
+      "name": "gameStates",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "userId": {
+          "name": "userId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "currentGuesses": {
+          "name": "currentGuesses",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'[]'"
+        },
+        "hintsRemaining": {
+          "name": "hintsRemaining",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 7
+        },
+        "currentScore": {
+          "name": "currentScore",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "startingIndex": {
+          "name": "startingIndex",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "riddleQueue": {
+          "name": "riddleQueue",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "queueCursor": {
+          "name": "queueCursor",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "currentShuffledChoices": {
+          "name": "currentShuffledChoices",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'[]'"
+        },
+        "currentCorrectAnswerIndex": {
+          "name": "currentCorrectAnswerIndex",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        }
+      },
+      "indexes": {
+        "gameStates_userId_unique": {
+          "name": "gameStates_userId_unique",
+          "columns": [
+            "userId"
+          ],
+          "isUnique": true
+        },
+        "idx_gameStates_userId": {
+          "name": "idx_gameStates_userId",
+          "columns": [
+            "userId"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "gameStates_userId_users_id_fk": {
+          "name": "gameStates_userId_users_id_fk",
+          "tableFrom": "gameStates",
+          "tableTo": "users",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "gameStates_check_1": {
+          "name": "gameStates_check_1",
+          "value": "json_valid(currentGuesses)"
+        },
+        "gameStates_check_2": {
+          "name": "gameStates_check_2",
+          "value": "json_valid(currentShuffledChoices)"
+        }
+      }
+    },
+    "migrations": {
+      "name": "migrations",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "filename": {
+          "name": "filename",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "executed_at": {
+          "name": "executed_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(strftime('%s','now'))"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "riddleAnswerChoices": {
+      "name": "riddleAnswerChoices",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "riddleId": {
+          "name": "riddleId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "answerChoiceId": {
+          "name": "answerChoiceId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "slotIndex": {
+          "name": "slotIndex",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "idx_rac_choiceId": {
+          "name": "idx_rac_choiceId",
+          "columns": [
+            "answerChoiceId"
+          ],
+          "isUnique": false
+        },
+        "idx_rac_riddleId": {
+          "name": "idx_rac_riddleId",
+          "columns": [
+            "riddleId"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "riddleAnswerChoices_riddleId_riddles_id_fk": {
+          "name": "riddleAnswerChoices_riddleId_riddles_id_fk",
+          "tableFrom": "riddleAnswerChoices",
+          "tableTo": "riddles",
+          "columnsFrom": [
+            "riddleId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "riddleAnswerChoices_answerChoiceId_answerChoices_id_fk": {
+          "name": "riddleAnswerChoices_answerChoiceId_answerChoices_id_fk",
+          "tableFrom": "riddleAnswerChoices",
+          "tableTo": "answerChoices",
+          "columnsFrom": [
+            "answerChoiceId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "riddleAnswerChoices_check_4": {
+          "name": "riddleAnswerChoices_check_4",
+          "value": "slotIndex BETWEEN 0 AND 3"
+        }
+      }
+    },
+    "riddles": {
+      "name": "riddles",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "riddleKey": {
+          "name": "riddleKey",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "headline": {
+          "name": "headline",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "body": {
+          "name": "body",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "answerDetails": {
+          "name": "answerDetails",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "answerImgPath": {
+          "name": "answerImgPath",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "riddles_riddleKey_unique": {
+          "name": "riddles_riddleKey_unique",
+          "columns": [
+            "riddleKey"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "riddles_check_1": {
+          "name": "riddles_check_1",
+          "value": "json_valid(body)"
+        },
+        "riddles_check_2": {
+          "name": "riddles_check_2",
+          "value": "json_type(body) = 'array'"
+        },
+        "riddles_check_3": {
+          "name": "riddles_check_3",
+          "value": "json_array_length(body) > 0"
+        }
+      }
+    },
+    "userAnimals": {
+      "name": "userAnimals",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "imgPath": {
+          "name": "imgPath",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "userAnimals_name_unique": {
+          "name": "userAnimals_name_unique",
+          "columns": [
+            "name"
+          ],
+          "isUnique": true
+        },
+        "userAnimals_imgPath_unique": {
+          "name": "userAnimals_imgPath_unique",
+          "columns": [
+            "imgPath"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "userColors": {
+      "name": "userColors",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "badgePath": {
+          "name": "badgePath",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "userColors_name_unique": {
+          "name": "userColors_name_unique",
+          "columns": [
+            "name"
+          ],
+          "isUnique": true
+        },
+        "userColors_badgePath_unique": {
+          "name": "userColors_badgePath_unique",
+          "columns": [
+            "badgePath"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "users": {
+      "name": "users",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "userAnimal": {
+          "name": "userAnimal",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "userColor": {
+          "name": "userColor",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "(strftime('%s','now'))"
+        },
+        "scores": {
+          "name": "scores",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'[]'"
+        },
+        "hasViewedExitPanel": {
+          "name": "hasViewedExitPanel",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": 0
+        }
+      },
+      "indexes": {
+        "idx_users_createdAt": {
+          "name": "idx_users_createdAt",
+          "columns": [
+            "createdAt"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "users_userAnimal_userAnimals_id_fk": {
+          "name": "users_userAnimal_userAnimals_id_fk",
+          "tableFrom": "users",
+          "tableTo": "userAnimals",
+          "columnsFrom": [
+            "userAnimal"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "users_userColor_userColors_id_fk": {
+          "name": "users_userColor_userColors_id_fk",
+          "tableFrom": "users",
+          "tableTo": "userColors",
+          "columnsFrom": [
+            "userColor"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "users_check_5": {
+          "name": "users_check_5",
+          "value": "hasViewedExitPanel IN (0, 1)"
+        },
+        "users_check_6": {
+          "name": "users_check_6",
+          "value": "json_valid(scores)"
+        }
+      }
+    }
+  },
+  "views": {},
+  "enums": {},
+  "_meta": {
+    "schemas": {},
+    "tables": {},
+    "columns": {}
+  },
+  "internal": {
+    "indexes": {}
+  }
+}

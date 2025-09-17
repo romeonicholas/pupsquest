@@ -17,11 +17,7 @@ export async function addUserAnimals(
     .insert(userAnimals)
     .values(animals)
     .onConflictDoNothing()
-    .returning({
-      id: userAnimals.id,
-      name: userAnimals.name,
-      imgPath: userAnimals.imgPath,
-    });
+    .returning();
   return insertedAnimals;
 }
 
@@ -42,23 +38,32 @@ export async function createUser(colorId: number, animalId: number) {
       userColor: colorId,
       userAnimal: animalId,
     })
-    .returning({
-      id: users.id,
-      userColor: users.userColor,
-      userAnimal: users.userAnimal,
-    });
+    .returning();
 
-  await db.insert(gameStates).values({
-    userId: newUser.id,
-    currentGuesses: "[]",
-    hintsRemaining: 7,
-    currentScore: 0,
-    startingIndex: 0,
-    currentShuffledChoices: "[]",
-    currentCorrectAnswerIndex: 0,
-  });
+  const riddleIds = await db
+    .select({ id: riddles.id })
+    .from(riddles)
+    .orderBy(sql`RANDOM()`);
 
-  return newUser;
+  const queue = riddleIds.map((r) => r.id);
+
+  const [newGameState] = await db
+    .insert(gameStates)
+    .values({
+      userId: newUser.id,
+      riddleQueue: JSON.stringify(queue),
+    })
+    .returning();
+
+  return {
+    user: newUser,
+    gameState: {
+      ...newGameState,
+      currentGuesses: JSON.parse(newGameState.currentGuesses),
+      riddleQueue: JSON.parse(newGameState.riddleQueue), // Parse back to array
+      currentShuffledChoices: JSON.parse(newGameState.currentShuffledChoices),
+    },
+  };
 }
 
 export async function getAvailableAnimalsForColor(colorId: number) {
@@ -88,11 +93,7 @@ export async function addUserColors(
     .insert(userColors)
     .values(colors)
     .onConflictDoNothing()
-    .returning({
-      id: userColors.id,
-      name: userColors.name,
-      badgePath: userColors.badgePath,
-    });
+    .returning();
   return insertedColors;
 }
 
@@ -103,12 +104,7 @@ export async function addAnswerChoices(
     .insert(answerChoices)
     .values(choicesToSeed)
     .onConflictDoNothing()
-    .returning({
-      id: answerChoices.id,
-      key: answerChoices.key,
-      display: answerChoices.display,
-      imgPath: answerChoices.imgPath,
-    });
+    .returning();
   return insertedChoices;
 }
 
@@ -142,7 +138,7 @@ export async function addRiddles(
         answerDetails: riddleData.answerDetails,
         answerImgPath: riddleData.answerImgPath,
       })
-      .returning({ id: riddles.id });
+      .returning();
 
     const newRiddleId = newRiddle.id;
 
