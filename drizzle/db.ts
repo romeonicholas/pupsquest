@@ -15,16 +15,3 @@ if (!dbUrl) {
 const client = createClient({ url: dbUrl });
 
 export const db = drizzle(client, { schema });
-
-// async function initializeDatabase() {
-//   try {
-//     await migrate(db, { migrationsFolder: "./migrations" });
-//   } catch (error) {
-//     console.error("Migration failed:", error);
-//   }
-// }
-// initializeDatabase();
-
-// if (process.env.NODE_ENV !== "production") {
-//   initializeDatabase();
-// }
