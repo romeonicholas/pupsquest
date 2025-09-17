@@ -4,9 +4,6 @@ dotenv.config({ path: ".env", quiet: true });
 import path from "path";
 import { fileURLToPath } from "url";
 import express from "express";
-
-// const { db } = await import("./db/init.js");
-// import db from ./drizzle/db.ts
 import { db } from "./drizzle/db.ts";
 
 // import {
