@@ -1,30 +1,38 @@
+import dotenv from "dotenv";
+dotenv.config({ path: ".env", quiet: true });
+
 import path from "path";
 import { fileURLToPath } from "url";
 import express from "express";
-import dotenv from "dotenv";
 
-dotenv.config({ path: ".env", quiet: true });
+// const { db } = await import("./db/init.js");
+// import db from ./drizzle/db.ts
+import { db } from "./drizzle/db.ts";
 
-const { db } = await import("./db/init.js");
+// import {
+//   getRiddleById,
+//   getAllRiddlesWithChoices,
+// } from "./db/queries/riddles.js";
+import { seedDatabase } from "./drizzle/seeds/index.ts";
+import { getAllUserAnimals } from "./drizzle/queries.ts";
+// import {
+//   getAllColors,
+//   getAvailableAnimalsForColor,
+//   createUser,
+// } from "./db/queries/userCreate.js";
+// import {
+//   getAllColorsFromUsers,
+//   getAllAnimalsFromUsersWithColor,
+//   getUserByColorAndAnimal,
+// } from "./db/queries/userLogin.js";
+// import { updateUser } from "./db/queries/userUpdate.js";
+// import { getAverageScore } from "./db/queries/stats.js";
+// import { removeExpiredUsers } from "./db/scripts/userRemoval.js";
 
-import {
-  getRiddleById,
-  getAllRiddlesWithChoices,
-} from "./db/queries/riddles.js";
-import { getAllDataForDashboard } from "./db/queries/all.js";
-import {
-  getAllColors,
-  getAvailableAnimalsForColor,
-  createUser,
-} from "./db/queries/userCreate.js";
-import {
-  getAllColorsFromUsers,
-  getAllAnimalsFromUsersWithColor,
-  getUserByColorAndAnimal,
-} from "./db/queries/userLogin.js";
-import { updateUser } from "./db/queries/userUpdate.js";
-import { getAverageScore } from "./db/queries/stats.js";
-import { removeExpiredUsers } from "./db/scripts/userRemoval.js";
+await seedDatabase().catch((e) => {
+  console.error("Seeding failed:", e);
+  process.exit(1);
+});
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -39,6 +47,16 @@ app.use(express.urlencoded({ extended: true }));
 
 const PORT = process.env.PORT || 3000;
 const HOST = process.env.HOST || "0.0.0.0";
+
+app.get("/api/animals", async (req, res) => {
+  try {
+    const animals = await getAllUserAnimals(db);
+    res.json(animals);
+  } catch (error) {
+    console.error("Error fetching user animals:", error);
+    res.status(500).json({ error: "Failed to fetch user animals" });
+  }
+});
 
 app.get("/api/colors/from-users", async (req, res) => {
   try {
@@ -213,7 +231,7 @@ app.get("/api/animals/available/html", async (req, res) => {
 
 app.get("/db", async (req, res) => {
   try {
-    const data = await getAllDataForDashboard(db);
+    const data = await getAllDataForDashboard();
     res.render("dbReview", { data });
   } catch (error) {
     console.error("Error fetching dashboard data:", error);
@@ -257,16 +275,16 @@ app.listen(PORT, HOST, () => {
   console.log(`Started server on ${HOST}:${PORT}`);
 });
 
-console.log("Expired users removed:", removeExpiredUsers(db));
+// console.log("Expired users removed:", removeExpiredUsers(db));
 
-setInterval(() => {
-  try {
-    const n = removeExpiredUsers(db);
-    if (n) console.log(`[TTL] Deleted ${n} expired users`);
-  } catch (e) {
-    console.error("[TTL] cleanup failed:", e.message);
-  }
-}, 180 * 60 * 1000);
+// setInterval(() => {
+//   try {
+//     const n = removeExpiredUsers(db);
+//     if (n) console.log(`[TTL] Deleted ${n} expired users`);
+//   } catch (e) {
+//     console.error("[TTL] cleanup failed:", e.message);
+//   }
+// }, 180 * 60 * 1000);
 
 process.on("SIGINT", () => {
   try {
