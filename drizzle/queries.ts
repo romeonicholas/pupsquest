@@ -40,6 +40,22 @@ export async function addUserColors(
   return insertedColors;
 }
 
+export async function addAnswerChoices(
+  choices: { key: string; display: string; imgPath: string }[]
+) {
+  const insertedChoices = await db
+    .insert(answerChoices)
+    .values(choices)
+    .onConflictDoNothing()
+    .returning({
+      id: answerChoices.id,
+      key: answerChoices.key,
+      display: answerChoices.display,
+      imgPath: answerChoices.imgPath,
+    });
+  return insertedChoices;
+}
+
 export async function getAllUserAnimals() {
   return db
     .select({
