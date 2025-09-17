@@ -97,14 +97,12 @@ export const gameStates = sqliteTable(
       .notNull()
       .references(() => users.id, { onDelete: "cascade" })
       .unique(),
-    currentRiddleId: integer().notNull().default(0),
     currentGuesses: text().notNull().default("[]"),
     hintsRemaining: integer().notNull().default(7),
     currentScore: integer().notNull().default(0),
     startingIndex: integer().notNull().default(0),
     currentShuffledChoices: text().notNull().default("[]"),
     currentCorrectAnswerIndex: integer().notNull().default(0),
-    updatedAt: integer().default(sql`(strftime('%s','now'))`),
   },
   (table) => [
     index("idx_gameStates_userId").on(table.userId),
