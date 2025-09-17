@@ -10,10 +10,7 @@ import { db } from "./drizzle/db.ts";
 //   getRiddleById,
 //   getAllRiddlesWithChoices,
 // } from "./db/queries/riddles.js";
-import {
-  getAllUserAnimals,
-  getAvailableAnimalsForColor,
-} from "./drizzle/queries.ts";
+import { getAvailableAnimalsForColor, createUser } from "./drizzle/queries.ts";
 // import {
 //   getAllColors,
 //   getAvailableAnimalsForColor,
@@ -42,15 +39,15 @@ app.use(express.urlencoded({ extended: true }));
 const PORT = process.env.PORT || 3000;
 const HOST = process.env.HOST || "0.0.0.0";
 
-app.get("/api/animals", async (req, res) => {
-  try {
-    const animals = await getAllUserAnimals(db);
-    res.json(animals);
-  } catch (error) {
-    console.error("Error fetching user animals:", error);
-    res.status(500).json({ error: "Failed to fetch user animals" });
-  }
-});
+// app.get("/api/animals", async (req, res) => {
+//   try {
+//     const animals = await getAllUserAnimals(db);
+//     res.json(animals);
+//   } catch (error) {
+//     console.error("Error fetching user animals:", error);
+//     res.status(500).json({ error: "Failed to fetch user animals" });
+//   }
+// });
 
 // app.get("/api/colors/from-users", async (req, res) => {
 //   try {
@@ -126,27 +123,23 @@ app.get("/api/animals", async (req, res) => {
 //   }
 // });
 
-// app.post("/api/users", async (req, res) => {
-//   try {
-//     const { colorId, animalId } = req.body;
+app.post("/api/users", async (req, res) => {
+  try {
+    const { colorId, animalId } = req.body;
 
-//     if (!colorId || !animalId) {
-//       return res.status(400).json({ error: "Missing colorId or animalId" });
-//     }
+    if (!colorId || !animalId) {
+      return res.status(400).json({ error: "Missing colorId or animalId" });
+    }
 
-//     const newUser = await createUser(db, { colorId, animalId });
+    const newUser = await createUser(colorId, animalId);
 
-//     res.status(201).json(newUser);
-//   } catch (error) {
-//     console.error("Error creating user:", error);
+    res.status(201).json(newUser);
+  } catch (error) {
+    console.error("Error creating user:", error);
 
-//     if (error.message.includes("already taken")) {
-//       return res.status(409).json({ error: error.message });
-//     }
-
-//     res.status(500).json({ error: "Failed to create user" });
-//   }
-// });
+    res.status(500).json({ error: "Failed to create user" });
+  }
+});
 
 // app.get("/api/colors", async (req, res) => {
 //   try {

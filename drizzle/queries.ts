@@ -8,7 +8,7 @@ import {
   riddleAnswerChoices,
   riddles,
 } from "./schema";
-import { eq, asc, notInArray, sql } from "drizzle-orm";
+import { eq, and, notInArray, sql } from "drizzle-orm";
 
 export async function addUserAnimals(
   animals: { name: string; imgPath: string }[]
@@ -23,6 +23,42 @@ export async function addUserAnimals(
       imgPath: userAnimals.imgPath,
     });
   return insertedAnimals;
+}
+
+export async function createUser(colorId: number, animalId: number) {
+  const [existingUser] = await db
+    .select({ id: users.id })
+    .from(users)
+    .where(and(eq(users.userColor, colorId), eq(users.userAnimal, animalId)))
+    .limit(1);
+
+  if (existingUser) {
+    throw new Error("This color and animal combination is already taken.");
+  }
+
+  const [newUser] = await db
+    .insert(users)
+    .values({
+      userColor: colorId,
+      userAnimal: animalId,
+    })
+    .returning({
+      id: users.id,
+      userColor: users.userColor,
+      userAnimal: users.userAnimal,
+    });
+
+  await db.insert(gameStates).values({
+    userId: newUser.id,
+    currentGuesses: "[]",
+    hintsRemaining: 7,
+    currentScore: 0,
+    startingIndex: 0,
+    currentShuffledChoices: "[]",
+    currentCorrectAnswerIndex: 0,
+  });
+
+  return newUser;
 }
 
 export async function getAvailableAnimalsForColor(colorId: number) {
@@ -122,15 +158,4 @@ export async function addRiddles(
 
     await db.insert(riddleAnswerChoices).values(riddleAnswerChoiceEntries);
   }
-}
-
-export async function getAllUserAnimals() {
-  return db
-    .select({
-      id: userAnimals.id,
-      name: userAnimals.name,
-      imgPath: userAnimals.imgPath,
-    })
-    .from(userAnimals)
-    .orderBy(asc(userAnimals.name));
 }
