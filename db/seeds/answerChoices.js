@@ -292,7 +292,7 @@ export function seedAnswerChoices(db) {
     },
     {
       key: "oldwife_underwing_moths",
-      display: "Oldwife Underwing Moths",
+      display: "Oldwife Moths",
       imgPath: "/assets/images/riddles/icons/oldwife_underwing_moths.png",
     },
     {
