@@ -359,11 +359,7 @@ async function showRiddle() {
         currentRiddle.answerDetails,
         currentRiddle.answerImgPath
       );
-      updateStatusWheel(
-        `RIDDLE ${
-          currentGameState.queueCursor + 1 - currentGameState.startingIndex
-        }`
-      );
+      updateStatusWheel(`RIDDLE ${getCurrentRiddleNumber()}`);
       const nextRiddleSheet = document.getElementById("next-riddle-sheet");
       nextRiddleSheet.style.visibility = "visible";
 
@@ -383,6 +379,14 @@ async function showRiddle() {
     console.error("Error fetching riddle:", error);
     enableAllInput();
   }
+}
+
+function getCurrentRiddleNumber() {
+  const { queueCursor, startingIndex, riddleQueue } = currentGameState;
+  return (
+    ((queueCursor - startingIndex + riddleQueue.length) % riddleQueue.length) +
+    1
+  );
 }
 
 function decreaseHints() {
@@ -1231,6 +1235,8 @@ function resetRiddleScreen() {
   gameOver.style.display = "none";
   const playAgainSheet = document.getElementById("play-again-sheet");
   playAgainSheet.style.display = "none";
+  const nextRiddleSheet = document.getElementById("next-riddle-sheet");
+  nextRiddleSheet.style.display = "block";
 }
 
 function startOver() {
