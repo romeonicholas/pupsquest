@@ -1,0 +1,566 @@
+{
+  "id": "00000000-0000-0000-0000-000000000000",
+  "prevId": "",
+  "version": "6",
+  "dialect": "sqlite",
+  "tables": {
+    "userAnimals": {
+      "name": "userAnimals",
+      "columns": {
+        "id": {
+          "autoincrement": true,
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": false
+        },
+        "name": {
+          "autoincrement": false,
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "imgPath": {
+          "autoincrement": false,
+          "name": "imgPath",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "compositePrimaryKeys": {},
+      "indexes": {},
+      "foreignKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "riddles_check_1": {
+          "name": "riddles_check_1",
+          "value": "json_valid(body"
+        },
+        "riddles_check_2": {
+          "name": "riddles_check_2",
+          "value": "json_type(body"
+        },
+        "riddles_check_3": {
+          "name": "riddles_check_3",
+          "value": "json_array_length(body"
+        },
+        "riddleAnswerChoices_check_4": {
+          "name": "riddleAnswerChoices_check_4",
+          "value": "slotIndex BETWEEN 0 AND 3"
+        },
+        "users_check_5": {
+          "name": "users_check_5",
+          "value": "hasViewedExitPanel IN (0, 1"
+        },
+        "users_check_6": {
+          "name": "users_check_6",
+          "value": "json_valid(gameState"
+        }
+      }
+    },
+    "userColors": {
+      "name": "userColors",
+      "columns": {
+        "id": {
+          "autoincrement": true,
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": false
+        },
+        "name": {
+          "autoincrement": false,
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "hex": {
+          "autoincrement": false,
+          "name": "hex",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "badgePath": {
+          "autoincrement": false,
+          "name": "badgePath",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "compositePrimaryKeys": {},
+      "indexes": {},
+      "foreignKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "riddles_check_1": {
+          "name": "riddles_check_1",
+          "value": "json_valid(body"
+        },
+        "riddles_check_2": {
+          "name": "riddles_check_2",
+          "value": "json_type(body"
+        },
+        "riddles_check_3": {
+          "name": "riddles_check_3",
+          "value": "json_array_length(body"
+        },
+        "riddleAnswerChoices_check_4": {
+          "name": "riddleAnswerChoices_check_4",
+          "value": "slotIndex BETWEEN 0 AND 3"
+        },
+        "users_check_5": {
+          "name": "users_check_5",
+          "value": "hasViewedExitPanel IN (0, 1"
+        },
+        "users_check_6": {
+          "name": "users_check_6",
+          "value": "json_valid(gameState"
+        }
+      }
+    },
+    "answerChoices": {
+      "name": "answerChoices",
+      "columns": {
+        "id": {
+          "autoincrement": true,
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": false
+        },
+        "key": {
+          "autoincrement": false,
+          "name": "key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "display": {
+          "autoincrement": false,
+          "name": "display",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "imgPath": {
+          "autoincrement": false,
+          "name": "imgPath",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "compositePrimaryKeys": {},
+      "indexes": {
+        "idx_answerChoices_display": {
+          "name": "idx_answerChoices_display",
+          "columns": [
+            "display"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "riddles_check_1": {
+          "name": "riddles_check_1",
+          "value": "json_valid(body"
+        },
+        "riddles_check_2": {
+          "name": "riddles_check_2",
+          "value": "json_type(body"
+        },
+        "riddles_check_3": {
+          "name": "riddles_check_3",
+          "value": "json_array_length(body"
+        },
+        "riddleAnswerChoices_check_4": {
+          "name": "riddleAnswerChoices_check_4",
+          "value": "slotIndex BETWEEN 0 AND 3"
+        },
+        "users_check_5": {
+          "name": "users_check_5",
+          "value": "hasViewedExitPanel IN (0, 1"
+        },
+        "users_check_6": {
+          "name": "users_check_6",
+          "value": "json_valid(gameState"
+        }
+      }
+    },
+    "riddles": {
+      "name": "riddles",
+      "columns": {
+        "id": {
+          "autoincrement": true,
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": false
+        },
+        "riddleKey": {
+          "autoincrement": false,
+          "name": "riddleKey",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "headline": {
+          "autoincrement": false,
+          "name": "headline",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "body": {
+          "autoincrement": false,
+          "name": "body",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "answerDetails": {
+          "autoincrement": false,
+          "name": "answerDetails",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "answerImgPath": {
+          "autoincrement": false,
+          "name": "answerImgPath",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "compositePrimaryKeys": {},
+      "indexes": {},
+      "foreignKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "riddles_check_1": {
+          "name": "riddles_check_1",
+          "value": "json_valid(body"
+        },
+        "riddles_check_2": {
+          "name": "riddles_check_2",
+          "value": "json_type(body"
+        },
+        "riddles_check_3": {
+          "name": "riddles_check_3",
+          "value": "json_array_length(body"
+        },
+        "riddleAnswerChoices_check_4": {
+          "name": "riddleAnswerChoices_check_4",
+          "value": "slotIndex BETWEEN 0 AND 3"
+        },
+        "users_check_5": {
+          "name": "users_check_5",
+          "value": "hasViewedExitPanel IN (0, 1"
+        },
+        "users_check_6": {
+          "name": "users_check_6",
+          "value": "json_valid(gameState"
+        }
+      }
+    },
+    "riddleAnswerChoices": {
+      "name": "riddleAnswerChoices",
+      "columns": {
+        "id": {
+          "autoincrement": true,
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": false
+        },
+        "riddleId": {
+          "autoincrement": false,
+          "name": "riddleId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "answerChoiceId": {
+          "autoincrement": false,
+          "name": "answerChoiceId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "slotIndex": {
+          "autoincrement": false,
+          "name": "slotIndex",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "compositePrimaryKeys": {},
+      "indexes": {
+        "idx_rac_choiceId": {
+          "name": "idx_rac_choiceId",
+          "columns": [
+            "answerChoiceId"
+          ],
+          "isUnique": false
+        },
+        "idx_rac_riddleId": {
+          "name": "idx_rac_riddleId",
+          "columns": [
+            "riddleId"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "riddleAnswerChoices_answerChoiceId_answerChoices_id_fk": {
+          "name": "riddleAnswerChoices_answerChoiceId_answerChoices_id_fk",
+          "tableFrom": "riddleAnswerChoices",
+          "tableTo": "answerChoices",
+          "columnsFrom": [
+            "answerChoiceId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "riddleAnswerChoices_riddleId_riddles_id_fk": {
+          "name": "riddleAnswerChoices_riddleId_riddles_id_fk",
+          "tableFrom": "riddleAnswerChoices",
+          "tableTo": "riddles",
+          "columnsFrom": [
+            "riddleId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "riddles_check_1": {
+          "name": "riddles_check_1",
+          "value": "json_valid(body"
+        },
+        "riddles_check_2": {
+          "name": "riddles_check_2",
+          "value": "json_type(body"
+        },
+        "riddles_check_3": {
+          "name": "riddles_check_3",
+          "value": "json_array_length(body"
+        },
+        "riddleAnswerChoices_check_4": {
+          "name": "riddleAnswerChoices_check_4",
+          "value": "slotIndex BETWEEN 0 AND 3"
+        },
+        "users_check_5": {
+          "name": "users_check_5",
+          "value": "hasViewedExitPanel IN (0, 1"
+        },
+        "users_check_6": {
+          "name": "users_check_6",
+          "value": "json_valid(gameState"
+        }
+      }
+    },
+    "users": {
+      "name": "users",
+      "columns": {
+        "id": {
+          "autoincrement": true,
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": false
+        },
+        "userAnimal": {
+          "autoincrement": false,
+          "name": "userAnimal",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "userColor": {
+          "autoincrement": false,
+          "name": "userColor",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "gameState": {
+          "default": "'{\"currentRiddleId\":0,\"currentGuesses\":[],\"hintsRemaining\":7,\"currentScore\":0,\"startingIndex\":0,\"currentShuffledChoices\":[],\"currentCorrectAnswerIndex\":0}'",
+          "autoincrement": false,
+          "name": "gameState",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "autoincrement": false,
+          "name": "createdAt",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "scores": {
+          "default": "'[]'",
+          "autoincrement": false,
+          "name": "scores",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "hasViewedExitPanel": {
+          "default": 0,
+          "autoincrement": false,
+          "name": "hasViewedExitPanel",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "compositePrimaryKeys": {},
+      "indexes": {
+        "idx_users_createdAt": {
+          "name": "idx_users_createdAt",
+          "columns": [
+            "createdAt"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "users_userColor_userColors_id_fk": {
+          "name": "users_userColor_userColors_id_fk",
+          "tableFrom": "users",
+          "tableTo": "userColors",
+          "columnsFrom": [
+            "userColor"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "users_userAnimal_userAnimals_id_fk": {
+          "name": "users_userAnimal_userAnimals_id_fk",
+          "tableFrom": "users",
+          "tableTo": "userAnimals",
+          "columnsFrom": [
+            "userAnimal"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "riddles_check_1": {
+          "name": "riddles_check_1",
+          "value": "json_valid(body"
+        },
+        "riddles_check_2": {
+          "name": "riddles_check_2",
+          "value": "json_type(body"
+        },
+        "riddles_check_3": {
+          "name": "riddles_check_3",
+          "value": "json_array_length(body"
+        },
+        "riddleAnswerChoices_check_4": {
+          "name": "riddleAnswerChoices_check_4",
+          "value": "slotIndex BETWEEN 0 AND 3"
+        },
+        "users_check_5": {
+          "name": "users_check_5",
+          "value": "hasViewedExitPanel IN (0, 1"
+        },
+        "users_check_6": {
+          "name": "users_check_6",
+          "value": "json_valid(gameState"
+        }
+      }
+    },
+    "migrations": {
+      "name": "migrations",
+      "columns": {
+        "id": {
+          "autoincrement": true,
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": false
+        },
+        "filename": {
+          "autoincrement": false,
+          "name": "filename",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "executed_at": {
+          "default": "(strftime('%s','now'))",
+          "autoincrement": false,
+          "name": "executed_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "compositePrimaryKeys": {},
+      "indexes": {},
+      "foreignKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "riddles_check_1": {
+          "name": "riddles_check_1",
+          "value": "json_valid(body"
+        },
+        "riddles_check_2": {
+          "name": "riddles_check_2",
+          "value": "json_type(body"
+        },
+        "riddles_check_3": {
+          "name": "riddles_check_3",
+          "value": "json_array_length(body"
+        },
+        "riddleAnswerChoices_check_4": {
+          "name": "riddleAnswerChoices_check_4",
+          "value": "slotIndex BETWEEN 0 AND 3"
+        },
+        "users_check_5": {
+          "name": "users_check_5",
+          "value": "hasViewedExitPanel IN (0, 1"
+        },
+        "users_check_6": {
+          "name": "users_check_6",
+          "value": "json_valid(gameState"
+        }
+      }
+    }
+  },
+  "views": {},
+  "enums": {},
+  "_meta": {
+    "schemas": {},
+    "tables": {},
+    "columns": {}
+  }
+}
