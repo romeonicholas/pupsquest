@@ -1249,7 +1249,7 @@ function startOver() {
     resetRejoinScreen();
     setStartOverButtonToActive();
     enableAllInput();
-  }, 500);
+  }, 600);
 }
 
 async function markExitPanelViewed() {
@@ -1376,7 +1376,7 @@ async function saveAndExit() {
           resetRejoinScreen();
           setStartOverButtonToActive();
           enableAllInput();
-        }, 500);
+        }, 600);
       } catch (error) {
         console.error("Error saving user data:", error);
         showErrorScreenAndReload(error);
