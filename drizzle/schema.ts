@@ -11,21 +11,21 @@ import { sql } from "drizzle-orm";
 
 export const userAnimals = sqliteTable("userAnimals", {
   id: integer().primaryKey({ autoIncrement: true }),
-  name: text().notNull(),
-  imgPath: text().notNull(),
+  name: text().notNull().unique(),
+  imgPath: text().notNull().unique(),
 });
 
 export const userColors = sqliteTable("userColors", {
   id: integer().primaryKey({ autoIncrement: true }),
-  name: text().notNull(),
-  badgePath: text().notNull(),
+  name: text().notNull().unique(),
+  badgePath: text().notNull().unique(),
 });
 
 export const answerChoices = sqliteTable(
   "answerChoices",
   {
     id: integer().primaryKey({ autoIncrement: true }),
-    key: text().notNull(),
+    key: text().notNull().unique(),
     display: text().notNull(),
     imgPath: text().notNull(),
   },
@@ -36,7 +36,7 @@ export const riddles = sqliteTable(
   "riddles",
   {
     id: integer().primaryKey({ autoIncrement: true }),
-    riddleKey: text().notNull(),
+    riddleKey: text().notNull().unique(),
     headline: text().notNull(),
     body: text().notNull(),
     answerDetails: text().notNull(),

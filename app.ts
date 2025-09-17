@@ -13,7 +13,6 @@ import { db } from "./drizzle/db.ts";
 //   getRiddleById,
 //   getAllRiddlesWithChoices,
 // } from "./db/queries/riddles.js";
-import { seedDatabase } from "./drizzle/seeds/index.ts";
 import { getAllUserAnimals } from "./drizzle/queries.ts";
 // import {
 //   getAllColors,
@@ -28,11 +27,6 @@ import { getAllUserAnimals } from "./drizzle/queries.ts";
 // import { updateUser } from "./db/queries/userUpdate.js";
 // import { getAverageScore } from "./db/queries/stats.js";
 // import { removeExpiredUsers } from "./db/scripts/userRemoval.js";
-
-await seedDatabase().catch((e) => {
-  console.error("Seeding failed:", e);
-  process.exit(1);
-});
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

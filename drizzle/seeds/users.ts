@@ -1,7 +1,7 @@
 import { addUserAnimals, addUserColors } from "../queries.ts";
 
 export async function seedAnimals() {
-  const animals = [
+  const animalsToSeed = [
     {
       name: "Armadillo",
       imgPath: "assets/images/userCreation/badges/badge_icon_armadillo.png",
@@ -172,11 +172,11 @@ export async function seedAnimals() {
     },
   ];
 
-  return addUserAnimals(animals);
+  return addUserAnimals(animalsToSeed);
 }
 
 export async function seedColors() {
-  const colors = [
+  const colorsToSeed = [
     { name: "Red", badgePath: "assets/images/userCreation/badge_red.png" },
     {
       name: "Yellow",
@@ -186,5 +186,5 @@ export async function seedColors() {
     { name: "Blue", badgePath: "assets/images/userCreation/badge_blue.png" },
   ];
 
-  return addUserColors(colors);
+  return addUserColors(colorsToSeed);
 }

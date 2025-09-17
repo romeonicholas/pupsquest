@@ -41,11 +41,11 @@ export async function addUserColors(
 }
 
 export async function addAnswerChoices(
-  choices: { key: string; display: string; imgPath: string }[]
+  choicesToSeed: { key: string; display: string; imgPath: string }[]
 ) {
   const insertedChoices = await db
     .insert(answerChoices)
-    .values(choices)
+    .values(choicesToSeed)
     .onConflictDoNothing()
     .returning({
       id: answerChoices.id,
@@ -54,6 +54,54 @@ export async function addAnswerChoices(
       imgPath: answerChoices.imgPath,
     });
   return insertedChoices;
+}
+
+export async function addRiddles(
+  riddlesToSeed: {
+    riddleKey: string;
+    headline: string;
+    bodyLines: string[];
+    answerDetails: string;
+    answerImgPath: string;
+    answerChoiceKeys: string[];
+  }[]
+) {
+  const allAnswerChoices = await db
+    .select({
+      id: answerChoices.id,
+      key: answerChoices.key,
+    })
+    .from(answerChoices);
+
+  const answerChoiceMap = new Map();
+  allAnswerChoices.forEach((ac) => answerChoiceMap.set(ac.key, ac.id));
+
+  for (const riddleData of riddlesToSeed) {
+    const [newRiddle] = await db
+      .insert(riddles)
+      .values({
+        riddleKey: riddleData.riddleKey,
+        headline: riddleData.headline,
+        body: JSON.stringify(riddleData.bodyLines),
+        answerDetails: riddleData.answerDetails,
+        answerImgPath: riddleData.answerImgPath,
+      })
+      .returning({ id: riddles.id });
+
+    const newRiddleId = newRiddle.id;
+
+    const choiceIds = riddleData.answerChoiceKeys.map((key) =>
+      answerChoiceMap.get(key)
+    );
+
+    const riddleAnswerChoiceEntries = choiceIds.map((choiceId, index) => ({
+      riddleId: newRiddleId,
+      answerChoiceId: choiceId,
+      slotIndex: index,
+    }));
+
+    await db.insert(riddleAnswerChoices).values(riddleAnswerChoiceEntries);
+  }
 }
 
 export async function getAllUserAnimals() {
