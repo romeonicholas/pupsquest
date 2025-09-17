@@ -10,7 +10,11 @@ import { db } from "./drizzle/db.ts";
 //   getRiddleById,
 //   getAllRiddlesWithChoices,
 // } from "./db/queries/riddles.js";
-import { getAvailableAnimalsForColor, createUser } from "./drizzle/queries.ts";
+import {
+  getAvailableAnimalsForColor,
+  createUser,
+  getRiddle,
+} from "./drizzle/queries.ts";
 // import {
 //   getAllColors,
 //   getAvailableAnimalsForColor,
@@ -204,20 +208,20 @@ app.get("/api/animals/available-for-color", async (req, res) => {
 //   }
 // });
 
-// app.get("/api/riddles/:id", async (req, res) => {
-//   try {
-//     const riddleId = req.params.id;
-//     const riddle = await getRiddleById(db, riddleId);
+app.get("/api/riddles/:id", async (req, res) => {
+  try {
+    const riddleId = req.params.id;
+    const riddle = await getRiddle(riddleId);
 
-//     if (!riddle) {
-//       return res.status(404).json({ error: "Riddle not found" });
-//     }
-//     res.json(riddle);
-//   } catch (error) {
-//     console.error("Error fetching riddle:", error);
-//     res.status(500).json({ error: "Failed to fetch riddle" });
-//   }
-// });
+    if (!riddle) {
+      return res.status(404).json({ error: "Riddle not found" });
+    }
+    res.json(riddle);
+  } catch (error) {
+    console.error("Error fetching riddle:", error);
+    res.status(500).json({ error: "Failed to fetch riddle" });
+  }
+});
 
 // app.get("/riddles", async (req, res) => {
 //   try {

@@ -108,6 +108,47 @@ export async function addAnswerChoices(
   return insertedChoices;
 }
 
+export async function getRiddle(riddleId: number) {
+  const [riddle] = await db
+    .select()
+    .from(riddles)
+    .where(eq(riddles.id, riddleId))
+    .limit(1);
+
+  if (!riddle) return null;
+
+  const answerChoicesForRiddle = await db
+    .select({
+      id: answerChoices.id,
+      display: answerChoices.display,
+      imgPath: answerChoices.imgPath,
+      slotIndex: riddleAnswerChoices.slotIndex,
+    })
+    .from(answerChoices)
+    .innerJoin(
+      riddleAnswerChoices,
+      eq(answerChoices.id, riddleAnswerChoices.answerChoiceId)
+    )
+    .where(eq(riddleAnswerChoices.riddleId, riddle.id))
+    .orderBy(riddleAnswerChoices.slotIndex);
+
+  return {
+    id: riddle.id,
+    riddleKey: riddle.riddleKey,
+    headline: riddle.headline,
+    body: JSON.parse(riddle.body),
+    answerDetails: riddle.answerDetails,
+    answerImgPath: riddle.answerImgPath,
+    answerChoices: answerChoicesForRiddle.map((choice) => ({
+      id: choice.id,
+      display: choice.display,
+      imgPath: choice.imgPath,
+      slotIndex: choice.slotIndex,
+      isCorrect: choice.slotIndex === 0,
+    })),
+  };
+}
+
 export async function addRiddles(
   riddlesToSeed: {
     riddleKey: string;
