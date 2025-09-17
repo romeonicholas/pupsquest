@@ -1,4 +1,4 @@
-import { addUserAnimals } from "../queries.ts";
+import { addUserAnimals, addUserColors } from "../queries.ts";
 
 export async function seedAnimals() {
   const animals = [
@@ -173,4 +173,18 @@ export async function seedAnimals() {
   ];
 
   return addUserAnimals(animals);
+}
+
+export async function seedColors() {
+  const colors = [
+    { name: "Red", badgePath: "assets/images/userCreation/badge_red.png" },
+    {
+      name: "Yellow",
+      badgePath: "assets/images/userCreation/badge_yellow.png",
+    },
+    { name: "Green", badgePath: "assets/images/userCreation/badge_green.png" },
+    { name: "Blue", badgePath: "assets/images/userCreation/badge_blue.png" },
+  ];
+
+  return addUserColors(colors);
 }
