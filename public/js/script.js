@@ -1205,6 +1205,12 @@ function resetRejoinScreen() {
   clearColorSelectionIndicators("rejoin");
   clearAnimalSelectionIndicators("rejoin");
 
+  const rejoinColorPickerInstructions = document.getElementById(
+    "rejoin-color-picker-instructions"
+  );
+  rejoinColorPickerInstructions.innerText =
+    "To rejoin your game, select your badge color.";
+
   const noAnimalsMessage = document.querySelector(".no-animals-message.rejoin");
   noAnimalsMessage.style.opacity = "0";
 
@@ -1375,6 +1381,7 @@ async function saveAndExit() {
           resetCreateNewUserScreen();
           resetRejoinScreen();
           setStartOverButtonToActive();
+          hideExitDetails();
           enableAllInput();
         }, 600);
       } catch (error) {
