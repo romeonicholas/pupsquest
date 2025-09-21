@@ -75,9 +75,9 @@ function scaleContainer() {
 window.addEventListener("resize", scaleContainer);
 window.addEventListener("load", scaleContainer);
 document.addEventListener("DOMContentLoaded", scaleContainer);
-// document.addEventListener("contextmenu", function (e) {
-//   e.preventDefault();
-// });
+document.addEventListener("contextmenu", function (e) {
+  e.preventDefault();
+});
 
 document.addEventListener("mousemove", startInactivityTimer);
 document.addEventListener("keydown", startInactivityTimer);
