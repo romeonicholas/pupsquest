@@ -845,7 +845,7 @@ async function updateAnimalContainer(colorId) {
 
 function resetBadge() {
   const badgeBase = document.getElementById("badge-base");
-  badgeBase.src = "images/userCreation/badge_gray.png";
+  badgeBase.src = "images/users/badges/gray.png";
 
   const badgeIcons = document.querySelectorAll(".badge-icon");
   badgeIcons.forEach((icon) => icon.classList.remove("visible"));
