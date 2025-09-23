@@ -16,6 +16,7 @@ import {
   getAllColors,
   getAvailableAnimalsForColor,
   createUser,
+  get4Colors,
 } from "./db/queries/userCreate.js";
 import {
   getAllColorsFromUsers,
@@ -143,6 +144,17 @@ app.get("/api/colors", async (req, res) => {
   } catch (error) {
     console.error("Error fetching colors:", error);
     res.status(500).json({ error: "Failed to fetch colors" });
+  }
+});
+
+app.get("/api/colors/html", async (req, res) => {
+  const isRejoin = req.query.isRejoin === "true";
+  try {
+    const colors = await get4Colors(db);
+    res.render("partials/color_picker", { colors, isRejoin });
+  } catch (error) {
+    console.error("Error fetching colors:", error);
+    res.status(500).send("<p>Error loading colors</p>");
   }
 });
 

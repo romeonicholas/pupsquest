@@ -10,6 +10,19 @@ export function getAllColors(db) {
     .all();
 }
 
+export function get4Colors(db) {
+  return db
+    .prepare(
+      `
+    SELECT id, name, hex, badgePath
+    FROM userColors
+    ORDER BY RANDOM()
+    LIMIT 4
+  `
+    )
+    .all();
+}
+
 export function getAvailableAnimalsForColor(db, colorId, limit = null) {
   let query = `
     SELECT ua.id, ua.name, ua.imgPath
