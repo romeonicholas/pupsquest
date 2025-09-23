@@ -750,9 +750,16 @@ function showUsePhoneScreen() {
   document.getElementById("use-phone-screen").style.display = "block";
 }
 
-function showCreateNewUserScreen() {
+async function showCreateNewUserScreen() {
   isTimerActive = true;
   startInactivityTimer();
+
+  await fetch("/api/colors/html?isRejoin=false").then((response) =>
+    response.text().then((html) => {
+      const colorPicker = document.getElementById("color-picker");
+      colorPicker.innerHTML = html;
+    })
+  );
 
   const createNewUserScreen = document.getElementById("create-new-user-screen");
   createNewUserScreen.style.display = "block";
@@ -794,19 +801,8 @@ function showColorPicker() {
 }
 
 function clearColorSelectionIndicators(prefix = "") {
-  const prefixStr = prefix ? `${prefix}-` : "";
-  document
-    .getElementById(`${prefixStr}red-selected`)
-    .classList.remove("selected");
-  document
-    .getElementById(`${prefixStr}yellow-selected`)
-    .classList.remove("selected");
-  document
-    .getElementById(`${prefixStr}green-selected`)
-    .classList.remove("selected");
-  document
-    .getElementById(`${prefixStr}blue-selected`)
-    .classList.remove("selected");
+  const selectionIcons = document.querySelectorAll(".color-selection-icon");
+  selectionIcons.forEach((icon) => icon.classList.remove("selected"));
 }
 
 function showColorSelectionIndicator(colorDisplayName, prefix = "") {
@@ -820,7 +816,7 @@ function showColorSelectionIndicator(colorDisplayName, prefix = "") {
 
 function updateBadgeColor(colorDisplayName) {
   const badgeBase = document.getElementById("badge-base");
-  badgeBase.src = `images/userCreation/badge_${colorDisplayName}.png`;
+  badgeBase.src = `images/users/badges/${colorDisplayName}.png`;
 }
 
 async function updateAnimalContainer(colorId) {
