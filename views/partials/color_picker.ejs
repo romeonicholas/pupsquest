@@ -1,0 +1,26 @@
+<div id="color-picker">
+  <img src="/images/userCreation/color_picker.png" />
+  <% if (isRejoin) { %>
+  <div id="rejoin-color-picker-instructions">
+    To rejoin your game, select your badge color
+  </div>
+  <% } %>
+  <div id="color-options-container">
+    <% colors.forEach(color => { %>
+    <div id="option-<%= color.name.toLowerCase() %>">
+      <button
+        id="button-<%= color.name.toLowerCase() %>"
+        class="color-button"
+        onclick="selectColor('<%= color.name.toLowerCase() %>', <%= color.id %>)"
+      ></button>
+      <img
+        id="<%= color.name.toLowerCase() %>-selected"
+        class="color-selection-icon"
+        src="/images/userCreation/color_selected.png"
+        data-color="<%= color.name %>"
+        data-id="<%= color.id %>"
+      />
+    </div>
+    <% }); %>
+  </div>
+</div>

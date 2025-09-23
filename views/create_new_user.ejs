@@ -1,68 +1,8 @@
 <div id="create-new-user-screen">
-  <div id="color-picker">
-    <img src="/images/userCreation/color_picker.png" />
-    <div id="color-options-container">
-      <div id="option-red">
-        <button
-          id="button-red"
-          class="color-button"
-          onclick="selectColor('red', 1)"
-        ></button>
-        <img
-          id="red-selected"
-          class="color-selection-icon"
-          src="/images/userCreation/color_selected.png"
-          data-color="Red"
-          data-id="1"
-        />
-      </div>
+  <%- include('partials/color_picker', {isRejoin: false, colors: [{name: 'Red',
+  id: 1}, {name: 'Yellow', id: 2}, {name: 'Green', id: 3}, {name: 'Blue', id:
+  4}]}) %>
 
-      <div id="option-yellow">
-        <button
-          id="button-yellow"
-          class="color-button"
-          onclick="selectColor('yellow', 2)"
-        ></button>
-        <img
-          id="yellow-selected"
-          class="color-selection-icon"
-          src="/images/userCreation/color_selected.png"
-          data-color="Yellow"
-          data-id="2"
-        />
-      </div>
-
-      <div id="option-green">
-        <button
-          id="button-green"
-          class="color-button"
-          onclick="selectColor('green', 3)"
-        ></button>
-        <img
-          id="green-selected"
-          class="color-selection-icon"
-          src="/images/userCreation/color_selected.png"
-          data-color="Green"
-          data-id="3"
-        />
-      </div>
-
-      <div id="option-blue">
-        <button
-          id="button-blue"
-          class="color-button"
-          onclick="selectColor('blue', 4)"
-        ></button>
-        <img
-          id="blue-selected"
-          class="color-selection-icon"
-          src="/images/userCreation/color_selected.png"
-          data-color="Blue"
-          data-id="4"
-        />
-      </div>
-    </div>
-  </div>
   <div id="user-creation-instructions">
     <img src="/images/userCreation/user_creation_instructions.png" />
     <button
