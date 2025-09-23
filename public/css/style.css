@@ -621,11 +621,17 @@ button {
   z-index: 5;
 }
 
+#color-picker-panel {
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+}
+
 #color-picker {
   position: absolute;
   top: -1337px;
   left: 0px;
-  z-index: 6;
+  width: 100%;
 }
 
 #rejoin-color-picker {
@@ -639,12 +645,60 @@ button {
   position: absolute;
   width: 1080px;
   top: 650px;
+  z-index: 0;
+}
+
+#color-options-container > div {
+  position: absolute;
 }
 
 #rejoin-color-options-container {
   position: absolute;
   width: 1080px;
   top: 648px;
+}
+
+#color-options-container > div:nth-child(1) {
+  left: 106px;
+}
+#color-options-container > div:nth-child(2) {
+  left: 337px;
+}
+#color-options-container > div:nth-child(3) {
+  left: 576px;
+}
+#color-options-container > div:nth-child(4) {
+  left: 805px;
+}
+
+#color-text-container {
+  position: absolute;
+  height: 48px;
+  width: 100%;
+  top: 834px;
+  font-family: "Enriqueta";
+  font-size: 36px;
+  text-align: center;
+  z-index: 1;
+}
+
+.color-text {
+  display: inline-block;
+  position: absolute;
+  width: 160px;
+}
+
+#color-text-container > div:nth-child(1) {
+  left: 111px;
+}
+#color-text-container > div:nth-child(2) {
+  left: 341px;
+}
+#color-text-container > div:nth-child(3) {
+  left: 581px;
+}
+#color-text-container > div:nth-child(4) {
+  left: 811px;
 }
 
 #rejoin-color-picker-instructions {
@@ -654,26 +708,6 @@ button {
   font-family: "Enriqueta";
   font-size: 36px;
   text-align: center;
-}
-
-#option-red {
-  position: absolute;
-  left: 106px;
-}
-
-#option-yellow {
-  position: absolute;
-  left: 337px;
-}
-
-#option-blue {
-  position: absolute;
-  left: 805px;
-}
-
-#option-green {
-  position: absolute;
-  left: 576px;
 }
 
 .color-button {
