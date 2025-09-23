@@ -734,16 +734,24 @@ function showUsePhoneScreen() {
   document.getElementById("use-phone-screen").style.display = "block";
 }
 
+async function updateColorOptions() {
+  try {
+    await fetch("/api/colors/html?isRejoin=false").then((response) =>
+      response.text().then((html) => {
+        const colorPicker = document.getElementById("color-picker");
+        colorPicker.innerHTML = html;
+      })
+    );
+  } catch (error) {
+    console.error("Error updating color options:", error);
+  }
+}
+
 async function showCreateNewUserScreen() {
   isTimerActive = true;
   startInactivityTimer();
 
-  await fetch("/api/colors/html?isRejoin=false").then((response) =>
-    response.text().then((html) => {
-      const colorPicker = document.getElementById("color-picker");
-      colorPicker.innerHTML = html;
-    })
-  );
+  await updateColorOptions();
 
   const createNewUserScreen = document.getElementById("create-new-user-screen");
   createNewUserScreen.style.display = "block";
