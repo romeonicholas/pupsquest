@@ -736,22 +736,38 @@ function showUsePhoneScreen() {
 
 async function updateColorOptions() {
   try {
-    await fetch("/api/colors/html?isRejoin=false").then((response) =>
-      response.text().then((html) => {
-        const colorPicker = document.getElementById("color-picker");
-        colorPicker.innerHTML = html;
-      })
-    );
+    const response = await fetch("/api/colors/html?isRejoin=false");
+    const data = await response.json();
+
+    const colorPicker = document.getElementById("color-picker");
+    colorPicker.innerHTML = data.html;
+
+    return data.colors;
   } catch (error) {
     console.error("Error updating color options:", error);
   }
 }
 
+// async function updateAnimalOptions(colors) {
+//   try {
+//     const response = await fetch(`/api/animals/available/?colors=${colors.join(",")}`);
+//     const data = await response.json();
+
+//     const animalOptionsContainer = document.getElementById("animal-options-container");
+//     animalOptionsContainer.innerHTML = data.html;
+
+//     return data.animals;
+//   } catch (error) {
+//     console.error("Error updating animal options:", error);
+//   }
+// }
+
 async function showCreateNewUserScreen() {
   isTimerActive = true;
   startInactivityTimer();
 
-  await updateColorOptions();
+  const colors = await updateColorOptions();
+  // const animals = await updateAnimalOptions(colors);
 
   const createNewUserScreen = document.getElementById("create-new-user-screen");
   createNewUserScreen.style.display = "block";

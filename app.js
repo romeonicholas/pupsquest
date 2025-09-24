@@ -151,7 +151,14 @@ app.get("/api/colors/html", async (req, res) => {
   const isRejoin = req.query.isRejoin === "true";
   try {
     const colors = await get4Colors(db);
-    res.render("partials/color_picker", { colors, isRejoin });
+
+    res.render("partials/color_picker", { colors, isRejoin }, (err, html) => {
+      if (err) {
+        console.error("Error rendering template:", err);
+        return res.status(500).json({ error: "Error rendering template" });
+      }
+      res.json({ html: html, colors: colors });
+    });
   } catch (error) {
     console.error("Error fetching colors:", error);
     res.status(500).send("<p>Error loading colors</p>");
