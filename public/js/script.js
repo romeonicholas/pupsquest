@@ -707,6 +707,13 @@ function returnToStartScreen() {
   }, 10);
 }
 
+function setUsePhoneScreenToDisplayNone() {
+  setTimeout(() => {
+    const usePhoneScreen = document.getElementById("use-phone-screen");
+    usePhoneScreen.style.display = "none";
+  }, 600);
+}
+
 function showRejoinGameScreen() {
   isTimerActive = true;
   startInactivityTimer();
