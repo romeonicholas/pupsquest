@@ -955,3 +955,10 @@ button {
   pointer-events: none;
   transition: opacity 300ms ease-in;
 }
+
+#version-text {
+  position: absolute;
+  bottom: 100px;
+  right: 10px;
+  text-align: right;
+}
