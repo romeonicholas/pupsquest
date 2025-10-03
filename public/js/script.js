@@ -723,7 +723,26 @@ function setUsePhoneScreenToDisplayNone() {
   }, 600);
 }
 
-function showRejoinGameScreen() {
+async function showRejoinGameScreen() {
+  try {
+    const response = await fetch("/api/colors/used");
+    const usedColors = await response.json();
+
+    const indicators = document.querySelectorAll(
+      ".color-unavailability-indicator"
+    );
+    indicators.forEach((indicator) => {
+      const colorId = parseInt(indicator.getAttribute("data-color-id"), 10);
+      if (!usedColors.includes(colorId)) {
+        indicator.classList.add("active");
+      } else {
+        indicator.classList.remove("active");
+      }
+    });
+  } catch (error) {
+    console.error("Error fetching used colors:", error);
+  }
+
   isTimerActive = true;
   startInactivityTimer();
 
