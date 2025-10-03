@@ -1,7 +1,9 @@
 const isVisitor =
   new URLSearchParams(window.location.search).get("device") === "visitor";
+
 let currentUser = null;
 let currentGameState = null;
+
 let inactivityTimeout;
 let inactivityConfirmationTimeout;
 const INACTIVITY_THRESHOLD = 25000;
@@ -519,18 +521,25 @@ async function handleIncorrectGuess(clickedArea, iconIndex) {
         currentGameState.currentScore = 0;
 
         try {
-          const response = await fetch(`/api/users/${currentUser.id}`, {
-            method: "PUT",
+          const response = await fetch(`/api/signout`, {
+            method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              gameState: currentGameState,
+              userId: currentUser.id,
               scores: currentUser.scores,
+              hasViewedExitPanel: currentUser.hasViewedExitPanel,
+              gameState: currentGameState,
             }),
           });
+
+          if (!response.ok) {
+            throw new Error(`Failed to save user data: ${response.status}`);
+          }
         } catch (error) {
-          console.error("Error updating user:", error);
+          console.error("Error saving user data:", error);
+          showErrorScreenAndReload(error);
         }
       } else {
         gameOver.style.display = "none";
@@ -828,7 +837,7 @@ async function updateAnimalContainer(colorId) {
 
     setTimeout(async () => {
       const response = await fetch(
-        `/api/animals/available/html?colorId=${colorId}&limit=8`
+        `/api/animals/available-for-color?colorId=${colorId}`
       );
       const html = await response.text();
 
@@ -995,8 +1004,7 @@ async function confirmAnimal() {
   confirmationPanel.style.transition = "transform 1200ms ease-in";
   confirmationPanel.style.transform = "translateY(-1470px)";
 
-  user = await createUser();
-  setUser(user);
+  setUser(await createUser());
 
   const riddleScreen = document.getElementById("riddle-screen");
   riddleScreen.style.display = "block";
@@ -1038,7 +1046,7 @@ async function createUser() {
     return newUser;
   } catch (error) {
     console.error("Error creating user:", error);
-    showErrorScreenAndReload(error);
+    // showErrorScreenAndReload(error);
     return null;
   }
 }
@@ -1157,8 +1165,8 @@ async function confirmRejoinAnimal() {
   rejoinConfirmationPanel.style.transition = "transform 1s ease-in";
   rejoinConfirmationPanel.style.transform = "translateY(-1200px)";
 
-  user = await loginUser();
-  setUser(user);
+  const userData = await loginUser();
+  setUser(userData);
 
   setSaveAndExitButtonToActive();
 
@@ -1355,20 +1363,20 @@ async function saveAndExit() {
     inactivityScreen.style.pointerEvents === "auto";
 
   if (shouldShowExitPanelDetails() && !isInactivityScreenVisible) {
-    // I don't want to show the exit panel if they're inactive and not there anyway
     firstTimeSaveAndExit();
   } else {
     if (currentUser && currentGameState) {
       try {
-        const response = await fetch(`/api/users/${currentUser.id}`, {
-          method: "PUT",
+        const response = await fetch(`/api/signout`, {
+          method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            gameState: currentGameState,
+            userId: currentUser.id,
             scores: currentUser.scores,
             hasViewedExitPanel: currentUser.hasViewedExitPanel,
+            gameState: currentGameState,
           }),
         });
 
@@ -1376,9 +1384,7 @@ async function saveAndExit() {
           throw new Error(`Failed to save user data: ${response.status}`);
         }
 
-        const data = await response.json();
         setUser(null);
-
         returnToStartScreen();
         disableAllInput();
 
@@ -1412,14 +1418,14 @@ function handleInactivitySignOut() {
   }
 }
 
-function setUser(user) {
-  if (!user) {
+function setUser(userData) {
+  if (!userData) {
     currentUser = null;
     currentGameState = null;
     return;
   }
 
-  currentUser = user;
-  currentGameState = currentUser.gameState;
+  currentUser = userData.user;
+  currentGameState = userData.gameState;
   setHints(currentGameState.hintsRemaining);
 }
