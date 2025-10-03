@@ -652,9 +652,21 @@ button {
   position: absolute;
 }
 
+#color-options-container > div:nth-child(1) {
+  left: 106px;
+}
+#color-options-container > div:nth-child(2) {
+  left: 337px;
+}
+#color-options-container > div:nth-child(3) {
+  left: 576px;
+}
+#color-options-container > div:nth-child(4) {
+  left: 805px;
+}
+
 #rejoin-color-options-container {
   position: absolute;
-  height: 460px;
   top: 735px;
 }
 
@@ -708,19 +720,6 @@ button {
   height: 170px;
   z-index: 10;
   pointer-events: auto;
-}
-
-#color-options-container > div:nth-child(1) {
-  left: 106px;
-}
-#color-options-container > div:nth-child(2) {
-  left: 337px;
-}
-#color-options-container > div:nth-child(3) {
-  left: 576px;
-}
-#color-options-container > div:nth-child(4) {
-  left: 805px;
 }
 
 #color-text-container {
