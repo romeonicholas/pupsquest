@@ -233,8 +233,6 @@ app.listen(PORT, HOST, () => {
   console.log(`Started server on ${HOST}:${PORT}`);
 });
 
-console.log("Expired users deleted:", await deleteExpiredUsers());
-
 setInterval(async () => {
   try {
     const n = await deleteExpiredUsers();
