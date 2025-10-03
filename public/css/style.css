@@ -1038,6 +1038,7 @@ button {
 
 #version-text {
   position: absolute;
+  max-width: 30%;
   bottom: 100px;
   right: 10px;
   text-align: right;
