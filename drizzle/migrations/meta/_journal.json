@@ -1,0 +1,55 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1758108387853,
+      "tag": "0000_smart_callisto",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1758111175632,
+      "tag": "0001_tranquil_namor",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1758111426613,
+      "tag": "0002_polite_toxin",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1758118856308,
+      "tag": "0003_zippy_retro_girl",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1758122054868,
+      "tag": "0004_sad_frightful_four",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1758123380796,
+      "tag": "0005_uneven_sinister_six",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1758123697059,
+      "tag": "0006_aspiring_power_pack",
+      "breakpoints": true
+    }
+  ]
+}
