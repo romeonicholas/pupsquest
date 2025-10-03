@@ -8,7 +8,21 @@ import {
   riddleAnswerChoices,
   riddles,
 } from "./schema";
-import { eq, and, notInArray, sql } from "drizzle-orm";
+import { eq, and, notInArray, sql, lte, inArray } from "drizzle-orm";
+
+export async function getUserColors() {
+  const colors = await db
+    .select({
+      id: userColors.id,
+      name: userColors.name,
+      badgePath: userColors.badgePath,
+    })
+    .from(userColors)
+    .orderBy(sql`RANDOM()`)
+    .limit(8);
+
+  return colors;
+}
 
 export async function addUserAnimals(
   animals: { name: string; imgPath: string }[]
@@ -21,7 +35,10 @@ export async function addUserAnimals(
   return insertedAnimals;
 }
 
-export async function createUser(colorId: number, animalId: number) {
+export async function createUserAndGameState(
+  colorId: number,
+  animalId: number
+) {
   const [existingUser] = await db
     .select({ id: users.id })
     .from(users)
@@ -56,13 +73,119 @@ export async function createUser(colorId: number, animalId: number) {
     .returning();
 
   return {
-    user: newUser,
+    user: {
+      ...newUser,
+      scores: JSON.parse(newUser.scores || "[]"),
+    },
     gameState: {
       ...newGameState,
-      currentGuesses: JSON.parse(newGameState.currentGuesses),
-      riddleQueue: JSON.parse(newGameState.riddleQueue), // Parse back to array
-      currentShuffledChoices: JSON.parse(newGameState.currentShuffledChoices),
+      currentGuesses: JSON.parse(newGameState.currentGuesses || "[]"),
+      riddleQueue: JSON.parse(newGameState.riddleQueue || "[]"),
+      currentShuffledChoices: JSON.parse(
+        newGameState.currentShuffledChoices || "[]"
+      ),
     },
+  };
+}
+
+export async function getUserAndGameState(colorId: number, animalId: number) {
+  const [user] = await db
+    .select()
+    .from(users)
+    .where(and(eq(users.userColor, colorId), eq(users.userAnimal, animalId)))
+    .limit(1);
+
+  if (!user) {
+    return null;
+  }
+
+  const [gameState] = await db
+    .select()
+    .from(gameStates)
+    .where(eq(gameStates.userId, user.id))
+    .limit(1);
+
+  if (!gameState) {
+    throw new Error("Game state not found for the user.");
+  }
+
+  return {
+    user: {
+      ...user,
+      scores: JSON.parse(user.scores || "[]"),
+    },
+    gameState: {
+      ...gameState,
+      currentGuesses: JSON.parse(gameState.currentGuesses || "[]"),
+      riddleQueue: JSON.parse(gameState.riddleQueue || "[]"),
+      currentShuffledChoices: JSON.parse(
+        gameState.currentShuffledChoices || "[]"
+      ),
+    },
+  };
+}
+
+type UserInsert = typeof users.$inferInsert;
+type GameStateInsert = typeof gameStates.$inferInsert;
+
+export async function updateUserAndGameState(
+  userId: number,
+  userUpdates: Partial<UserInsert>,
+  gameStateUpdates: Partial<GameStateInsert>
+) {
+  const [updatedUser] = await db
+    .update(users)
+    .set(userUpdates)
+    .where(eq(users.id, userId))
+    .returning();
+
+  const [updatedGameState] = await db
+    .update(gameStates)
+    .set(gameStateUpdates)
+    .where(eq(gameStates.userId, userId))
+    .returning();
+
+  return {
+    user: updatedUser,
+    gameState: updatedGameState,
+  };
+}
+
+export async function deleteExpiredUsers() {
+  const expirationThreshold = Date.now() - 24 * 60 * 60 * 1000;
+
+  const usersToDelete = await db
+    .select({ id: users.id })
+    .from(users)
+    .where(lte(users.createdAt, expirationThreshold));
+
+  if (usersToDelete.length > 0) {
+    await db.delete(users).where(
+      inArray(
+        users.id,
+        usersToDelete.map((u) => u.id)
+      )
+    );
+  }
+
+  return usersToDelete.length;
+}
+
+export async function getAverageScore() {
+  const [result] = await db
+    .select({
+      averageScore: sql<number>`AVG(
+        CASE 
+          WHEN json_array_length(${users.scores}) = 0 THEN NULL
+          ELSE (SELECT AVG(CAST(value AS INTEGER)) FROM json_each(${users.scores}))
+        END
+      )`,
+    })
+    .from(users)
+    .where(sql`json_array_length(${users.scores}) > 0`);
+
+  return {
+    averageScore: result.averageScore || 0,
   };
 }
 
@@ -70,7 +193,7 @@ export async function getAvailableAnimalsForColor(colorId: number) {
   const takenAnimalIdsSubquery = db
     .select({ animalId: users.userAnimal })
     .from(users)
-    .where(eq(users.userAnimal, colorId));
+    .where(eq(users.userColor, colorId));
 
   const availableAnimals = await db
     .select({
@@ -84,6 +207,21 @@ export async function getAvailableAnimalsForColor(colorId: number) {
     .limit(8);
 
   return availableAnimals;
+}
+
+export async function getAllAnimalsFromUsersWithColor(colorId: number) {
+  const animals = await db
+    .select({
+      id: userAnimals.id,
+      name: userAnimals.name,
+      imgPath: userAnimals.imgPath,
+    })
+    .from(userAnimals)
+    .innerJoin(users, eq(users.userAnimal, userAnimals.id))
+    .where(eq(users.userColor, colorId))
+    .groupBy(userAnimals.id);
+
+  return animals;
 }
 
 export async function addUserColors(

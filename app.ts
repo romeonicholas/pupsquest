@@ -1,33 +1,22 @@
+import express from "express";
 import dotenv from "dotenv";
-dotenv.config({ path: ".env", quiet: true });
-
 import path from "path";
 import { fileURLToPath } from "url";
-import express from "express";
-import { db } from "./drizzle/db.ts";
+import { client } from "./drizzle/db.ts";
 
-// import {
-//   getRiddleById,
-//   getAllRiddlesWithChoices,
-// } from "./db/queries/riddles.js";
 import {
+  getUserColors,
   getAvailableAnimalsForColor,
-  createUser,
+  getAllAnimalsFromUsersWithColor,
+  createUserAndGameState,
+  getUserAndGameState,
+  updateUserAndGameState,
+  deleteExpiredUsers,
   getRiddle,
+  getAverageScore,
 } from "./drizzle/queries.ts";
-// import {
-//   getAllColors,
-//   getAvailableAnimalsForColor,
-//   createUser,
-// } from "./db/queries/userCreate.js";
-// import {
-//   getAllColorsFromUsers,
-//   getAllAnimalsFromUsersWithColor,
-//   getUserByColorAndAnimal,
-// } from "./db/queries/userLogin.js";
-// import { updateUser } from "./dbnpm/queries/userUpdate.js";
-// import { getAverageScore } from "./db/queries/stats.js";
-// import { removeExpiredUsers } from "./db/scripts/userRemoval.js";
+
+dotenv.config({ path: ".env", quiet: true });
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -40,153 +29,129 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const PORT = process.env.PORT || 3000;
+const PORT = Number(process.env.PORT) || 3000;
 const HOST = process.env.HOST || "0.0.0.0";
 
-// app.get("/api/animals", async (req, res) => {
-//   try {
-//     const animals = await getAllUserAnimals(db);
-//     res.json(animals);
-//   } catch (error) {
-//     console.error("Error fetching user animals:", error);
-//     res.status(500).json({ error: "Failed to fetch user animals" });
-//   }
-// });
+app.post("/api/signout", async (req, res) => {
+  try {
+    const { userId, scores, hasViewedExitPanel, gameState } = req.body;
 
-// app.get("/api/colors/from-users", async (req, res) => {
-//   try {
-//     const colors = await getAllColorsFromUsers(db);
-//     res.json(colors);
-//   } catch (error) {
-//     console.error("Error fetching user colors:", error);
-//     res.status(500).json({ error: "Failed to fetch user colors" });
-//   }
-// });
+    if (!userId || isNaN(userId)) {
+      return res.status(400).json({ error: "Invalid user ID" });
+    }
 
-// app.put("/api/users/:id", async (req, res) => {
-//   try {
-//     const userId = parseInt(req.params.id);
-//     const { gameState, scores, hasViewedExitPanel, ...otherFields } = req.body;
+    const processedGameState = {
+      ...gameState,
+      currentGuesses: JSON.stringify(gameState.currentGuesses || []),
+      riddleQueue: JSON.stringify(gameState.riddleQueue || []),
+      currentShuffledChoices: JSON.stringify(
+        gameState.currentShuffledChoices || []
+      ),
+      currentCorrectAnswerIndex: gameState.currentCorrectAnswerIndex ?? 0,
+      hintsRemaining: gameState.hintsRemaining ?? 7,
+      currentScore: gameState.currentScore ?? 0,
+    };
 
-//     if (!userId || isNaN(userId)) {
-//       return res.status(400).json({ error: "Invalid user ID" });
-//     }
+    const result = await updateUserAndGameState(
+      userId,
+      {
+        scores: JSON.stringify(scores || []),
+        hasViewedExitPanel: hasViewedExitPanel ? 1 : 0,
+      },
+      processedGameState
+    );
 
-//     if (
-//       !gameState &&
-//       !scores &&
-//       hasViewedExitPanel === undefined &&
-//       Object.keys(otherFields).length === 0
-//     ) {
-//       return res.status(400).json({ error: "No update data provided" });
-//     }
+    res.json({ message: "User and game state updated successfully: ", result });
+  } catch (error) {
+    console.error("Error updating user: ", error);
+    res.status(500).json({ error: "Failed to update user and game state" });
+  }
+});
 
-//     const result = await updateUser(db, userId, {
-//       gameState,
-//       scores,
-//       hasViewedExitPanel: hasViewedExitPanel ? 1 : 0,
-//       ...otherFields,
-//     });
-//     if (result.changes === 0) {
-//       return res.status(404).json({ error: "User not found" });
-//     }
+app.get("/api/users", async (req, res) => {
+  const colorId = Number(req.query.colorId);
+  const animalId = Number(req.query.animalId);
 
-//     res.json({ message: "User updated successfully", userId });
-//   } catch (error) {
-//     console.error("Error updating user:", error);
-//     res.status(500).json({ error: "Failed to update user" });
-//   }
-// });
+  if (isNaN(Number(colorId)) || isNaN(Number(animalId))) {
+    return res
+      .status(400)
+      .json({ error: "Missing or invalid colorId or animalId" });
+  }
 
-// app.get("/api/users", async (req, res) => {
-//   const { colorId, animalId } = req.query;
+  try {
+    const user = await getUserAndGameState(colorId, animalId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    res.json(user);
+  } catch (error) {
+    console.error("Error fetching user: ", error);
+    res.status(500).json({ error: "Failed to fetch user" });
+  }
+});
 
-//   if (!colorId || !animalId) {
-//     return res.status(400).json({ error: "Missing colorId or animalId" });
-//   }
-
-//   try {
-//     const user = await getUserByColorAndAnimal(db, colorId, animalId);
-//     if (!user) {
-//       return res.status(404).json({ error: "User not found" });
-//     }
-//     res.json(user);
-//   } catch (error) {
-//     console.error("Error fetching user:", error);
-//     res.status(500).json({ error: "Failed to fetch user" });
-//   }
-// });
-
-// app.get("/api/stats/average-score", async (req, res) => {
-//   try {
-//     const stats = await getAverageScore(db);
-//     res.json(stats);
-//   } catch (error) {
-//     console.error("Error calculating average scores:", error);
-//     res.status(500).json({ error: "Failed to calculate average scores" });
-//   }
-// });
+app.get("/api/stats/average-score", async (req, res) => {
+  try {
+    const data = await getAverageScore();
+    res.json(data);
+  } catch (error) {
+    console.error("Error calculating average scores: ", error);
+    res.status(500).json({ error: "Failed to calculate average scores" });
+  }
+});
 
 app.post("/api/users", async (req, res) => {
   try {
-    const { colorId, animalId } = req.body;
+    const colorId = Number(req.body.colorId);
+    const animalId = Number(req.body.animalId);
 
-    if (!colorId || !animalId) {
-      return res.status(400).json({ error: "Missing colorId or animalId" });
+    if (isNaN(colorId) || isNaN(animalId)) {
+      return res
+        .status(400)
+        .json({ error: "Missing or invalid colorId or animalId" });
     }
 
-    const newUser = await createUser(colorId, animalId);
+    const newUser = await createUserAndGameState(colorId, animalId);
 
     res.status(201).json(newUser);
   } catch (error) {
-    console.error("Error creating user:", error);
+    console.error("Error creating user: ", error);
 
     res.status(500).json({ error: "Failed to create user" });
   }
 });
 
-// app.get("/api/colors", async (req, res) => {
-//   try {
-//     const colors = await getAllColors(db);
-//     res.json(colors);
-//   } catch (error) {
-//     console.error("Error fetching colors:", error);
-//     res.status(500).json({ error: "Failed to fetch colors" });
-//   }
-// });
+app.get("/api/colors", async (req, res) => {
+  try {
+    const colors = await getUserColors();
+    res.json(colors);
+  } catch (error) {
+    console.error("Error fetching colors: ", error);
+    res.status(500).json({ error: "Failed to fetch colors" });
+  }
+});
 
-// app.get("/api/animals/existing", async (req, res) => {
-//   try {
-//     const colorId = req.query.colorId;
-//     const animals = await getAllAnimalsFromUsersWithColor(db, colorId);
-//     res.json(animals);
-//   } catch (error) {
-//     console.error("Error fetching existing animals:", error);
-//     res.status(500).json({ error: "Failed to fetch existing animals" });
-//   }
-// });
-
-// app.get("/api/animals/existing/html", async (req, res) => {
-//   const colorId = req.query.colorId;
-
-//   if (!colorId) {
-//     return res.status(400).send("<p>Error: Missing colorId</p>");
-//   }
-
-//   try {
-//     const animals = await getAllAnimalsFromUsersWithColor(db, colorId);
-//     res.render("partials/animal_options", { animals, isRejoin: true });
-//   } catch (error) {
-//     console.error("Error fetching animals:", error);
-//     res.status(500).send("<p>Error loading animals</p>");
-//   }
-// });
-
-app.get("/api/animals/available-for-color", async (req, res) => {
-  const colorId = req.query.colorId;
+app.get("/api/animals/existing/html", async (req, res) => {
+  const colorId = Number(req.query.colorId);
 
   if (!colorId) {
-    return res.status(400).json({ error: "Missing colorId" });
+    return res.status(400).send("<p>Error: Missing colorId</p>");
+  }
+
+  try {
+    const animals = await getAllAnimalsFromUsersWithColor(colorId);
+    res.render("partials/animal_options", { animals, isRejoin: true });
+  } catch (error) {
+    console.error("Error fetching animals: ", error);
+    res.status(500).send("<p>Error loading animals</p>");
+  }
+});
+
+app.get("/api/animals/available-for-color", async (req, res) => {
+  const colorId = Number(req.query.colorId);
+
+  if (isNaN(colorId)) {
+    return res.status(400).json({ error: "Missing or invalid colorId" });
   }
 
   try {
@@ -198,40 +163,26 @@ app.get("/api/animals/available-for-color", async (req, res) => {
   }
 });
 
-// app.get("/db", async (req, res) => {
-//   try {
-//     const data = await getAllDataForDashboard();
-//     res.render("dbReview", { data });
-//   } catch (error) {
-//     console.error("Error fetching dashboard data:", error);
-//     res.status(500).json({ error: "Failed to fetch dashboard data" });
-//   }
-// });
-
 app.get("/api/riddles/:id", async (req, res) => {
   try {
-    const riddleId = req.params.id;
+    const riddleId = Number(req.params.id);
+
+    if (isNaN(riddleId)) {
+      return res.status(400).json({ error: "Invalid riddle ID" });
+    }
+
     const riddle = await getRiddle(riddleId);
 
     if (!riddle) {
       return res.status(404).json({ error: "Riddle not found" });
     }
+
     res.json(riddle);
   } catch (error) {
     console.error("Error fetching riddle:", error);
     res.status(500).json({ error: "Failed to fetch riddle" });
   }
 });
-
-// app.get("/riddles", async (req, res) => {
-//   try {
-//     const data = await getAllRiddlesWithChoices(db);
-//     res.json(data);
-//   } catch (error) {
-//     console.error("Error fetching riddles:", error);
-//     res.status(500).json({ error: "Failed to fetch riddles" });
-//   }
-// });
 
 app.get("/", (request, response) => {
   const isVisitor = request.query.device === "visitor";
@@ -244,23 +195,36 @@ app.listen(PORT, HOST, () => {
   console.log(`Started server on ${HOST}:${PORT}`);
 });
 
-// console.log("Expired users removed:", removeExpiredUsers(db));
+console.log("Expired users deleted:", await deleteExpiredUsers());
 
-// setInterval(() => {
-//   try {
-//     const n = removeExpiredUsers(db);
-//     if (n) console.log(`[TTL] Deleted ${n} expired users`);
-//   } catch (e) {
-//     console.error("[TTL] cleanup failed:", e.message);
-//   }
-// }, 180 * 60 * 1000);
-
-process.on("SIGINT", () => {
+setInterval(async () => {
   try {
-    db.close();
+    const n = await deleteExpiredUsers();
+    if (n) console.log(`Deleted ${n} expired users`);
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error("Expired user deletion failed:", errorMessage);
+  }
+}, 180 * 60 * 1000);
+
+process.on("SIGINT", async () => {
+  try {
+    client.close();
     console.log("Database connection closed.");
   } catch (error) {
-    console.error("Error closing database:", error.message);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error("Error closing database:", errorMessage);
+  }
+  process.exit(0);
+});
+
+process.on("SIGTERM", async () => {
+  try {
+    client.close();
+    console.log("Database connection closed.");
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error("Error closing database:", errorMessage);
   }
   process.exit(0);
 });

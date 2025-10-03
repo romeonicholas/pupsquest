@@ -18,6 +18,7 @@ export const userAnimals = sqliteTable("userAnimals", {
 export const userColors = sqliteTable("userColors", {
   id: integer().primaryKey({ autoIncrement: true }),
   name: text().notNull().unique(),
+  hex: text().notNull().unique(),
   badgePath: text().notNull().unique(),
 });
 
