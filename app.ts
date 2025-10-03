@@ -184,9 +184,29 @@ app.get("/api/riddles/:id", async (req, res) => {
   }
 });
 
+app.get("/favicon.ico", (req, res) => {
+  res.status(204).end();
+});
+
 app.get("/", (request, response) => {
   const isVisitor = request.query.device === "visitor";
-  response.render("index", { isVisitor });
+  const date = new Date().toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+
+  if (!isVisitor) {
+    const time = new Date().toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    });
+    const ipAddress = request.ip;
+    console.log(`${date} ${time}: ${ipAddress} connected`);
+  }
+
+  response.render("index", { isVisitor, date });
 });
 
 app.use("/assets", express.static(path.join(__dirname, "public")));
