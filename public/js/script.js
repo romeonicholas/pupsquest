@@ -1178,7 +1178,6 @@ function selectRejoinAnimal(animalDisplayName, animalImgPath) {
   updateAnimalSelection(animalDisplayName, "rejoin");
   updateBadgeIcon(animalImgPath);
   const color = getSelectedColor("rejoin");
-  console.log(color);
   updateBadgeText(color, animalDisplayName);
 
   const confirmationPanel = document.getElementById(
