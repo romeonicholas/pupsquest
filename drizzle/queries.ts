@@ -25,6 +25,18 @@ export async function get4UserColors() {
   return colors;
 }
 
+export async function getUsedColorIds() {
+  const colors = await db
+    .select({
+      id: userColors.id,
+    })
+    .from(userColors)
+    .innerJoin(users, eq(users.userColor, userColors.id))
+    .groupBy(userColors.id);
+
+  return colors.map((c) => c.id);
+}
+
 export async function getAllUserColors() {
   const colors = await db
     .select({
