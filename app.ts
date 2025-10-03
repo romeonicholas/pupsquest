@@ -10,6 +10,7 @@ import {
   getAllUserColors,
   getAvailableAnimalsForColor,
   getAllAnimalsFromUsersWithColor,
+  getColorsAndAnimalsForUserCreation,
   createUserAndGameState,
   getUserAndGameState,
   updateUserAndGameState,
@@ -123,6 +124,24 @@ app.post("/api/users", async (req, res) => {
   }
 });
 
+app.get("/api/users/create-html", async (req, res) => {
+  try {
+    const combinations = await getColorsAndAnimalsForUserCreation();
+    const colors = combinations.map((combination) => combination.color);
+
+    res.render("partials/color_picker", { colors }, (err, html) => {
+      if (err) {
+        console.error("Error rendering template:", err);
+        return res.status(500).json({ error: "Error rendering template" });
+      }
+      res.json({ html: html, colors: colors });
+    });
+  } catch (error) {
+    console.error("Error fetching combinations: ", error);
+    res.status(500).json({ error: "Failed to fetch combinations" });
+  }
+});
+
 app.get("/api/colors", async (req, res) => {
   try {
     const colors = await getAllUserColors();
@@ -144,7 +163,6 @@ app.get("/api/colors/used", async (req, res) => {
 });
 
 app.get("/api/colors/html", async (req, res) => {
-  const isRejoin = req.query.isRejoin === "true";
   try {
     const colors = await get4UserColors();
     res.render("partials/color_picker", { colors, isRejoin }, (err, html) => {

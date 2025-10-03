@@ -769,18 +769,9 @@ function showUsePhoneScreen() {
   document.getElementById("use-phone-screen").style.display = "block";
 }
 
-async function updateColorOptions() {
-  try {
-    const response = await fetch("/api/colors/html?isRejoin=false");
-    const data = await response.json();
-
-    const colorPicker = document.getElementById("color-picker");
-    colorPicker.innerHTML = data.html;
-
-    return data.colors;
-  } catch (error) {
-    console.error("Error updating color options:", error);
-  }
+async function updateColorOptions(colorOptionsHtml) {
+  const colorPicker = document.getElementById("color-picker");
+  colorPicker.innerHTML = colorOptionsHtml;
 }
 
 // async function updateAnimalOptions(colors) {
@@ -801,7 +792,14 @@ async function showCreateNewUserScreen() {
   isTimerActive = true;
   startInactivityTimer();
 
-  const colors = await updateColorOptions();
+  try {
+    const result = await fetch("/api/users/create-html");
+    const data = await result.json();
+    updateColorOptions(data.html);
+  } catch (error) {
+    console.error("Error fetching possible user combinations:", error);
+  }
+
   // const animals = await updateAnimalOptions(colors);
 
   const createNewUserScreen = document.getElementById("create-new-user-screen");

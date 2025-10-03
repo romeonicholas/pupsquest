@@ -252,6 +252,21 @@ export async function getAllAnimalsFromUsersWithColor(colorId: number) {
   return animals;
 }
 
+export async function getColorsAndAnimalsForUserCreation() {
+  const colors = await get4UserColors();
+
+  const possibleUserCombinations = [];
+  for (const color of colors) {
+    const animals = await getAvailableAnimalsForColor(color.id);
+    possibleUserCombinations.push({
+      color: color,
+      animals: animals,
+    });
+  }
+
+  return possibleUserCombinations;
+}
+
 export async function addUserColors(
   colors: { name: string; hex: string; badgePath: string }[]
 ) {
