@@ -177,13 +177,46 @@ export async function seedAnimals() {
 
 export async function seedColors() {
   const colorsToSeed = [
-    { name: "Red", badgePath: "assets/images/userCreation/badge_red.png" },
+    {
+      name: "Red",
+      hex: "#D95A4C",
+      badgePath: "assets/images/userCreation/badge_red.png",
+    },
     {
       name: "Yellow",
+      hex: "#EBBD4F",
       badgePath: "assets/images/userCreation/badge_yellow.png",
     },
-    { name: "Green", badgePath: "assets/images/userCreation/badge_green.png" },
-    { name: "Blue", badgePath: "assets/images/userCreation/badge_blue.png" },
+    {
+      name: "Green",
+      hex: "#8AA653",
+      badgePath: "assets/images/userCreation/badge_green.png",
+    },
+    {
+      name: "Blue",
+      hex: "#59A4B2",
+      badgePath: "assets/images/userCreation/badge_blue.png",
+    },
+    {
+      name: "Purple",
+      hex: "#A67B9A",
+      badgePath: "assets/images/userCreation/badge_purple.png",
+    },
+    {
+      name: "Orange",
+      hex: "#EA8E48",
+      badgePath: "assets/images/userCreation/badge_orange.png",
+    },
+    {
+      name: "Brown",
+      hex: "#99785B",
+      badgePath: "assets/images/userCreation/badge_brown.png",
+    },
+    {
+      name: "Silver",
+      hex: "#B0B3AA",
+      badgePath: "assets/images/userCreation/badge_silver.png",
+    },
   ];
 
   return addUserColors(colorsToSeed);
