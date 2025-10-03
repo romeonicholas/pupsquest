@@ -654,15 +654,29 @@ button {
 
 #rejoin-color-options-container {
   position: absolute;
-  width: 870px;
   height: 460px;
   top: 735px;
-  left: 105px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  column-gap: 58px;
-  row-gap: 129px;
+}
+
+#rejoin-color-options-container > div {
+  position: absolute;
+}
+
+#rejoin-color-options-container > div:nth-child(4n + 1) {
+  left: 106px;
+}
+#rejoin-color-options-container > div:nth-child(4n + 2) {
+  left: 337px;
+}
+#rejoin-color-options-container > div:nth-child(4n + 3) {
+  left: 576px;
+}
+#rejoin-color-options-container > div:nth-child(4n + 4) {
+  left: 805px;
+}
+
+#rejoin-color-options-container > div:nth-child(n + 5) {
+  top: 301px;
 }
 
 .rejoin-color-option {
