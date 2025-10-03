@@ -1,16 +1,12 @@
 <div id="rejoin-screen">
   <div id="rejoin-color-picker">
-    <img src="/images/userCreation/color_picker.png" />
-    <div id="rejoin-color-picker-instructions">
-      To rejoin your game, select your badge color
-    </div>
+    <img
+      id="rejoin-color-picker-panel"
+      src="images/userCreation/rejoin_color_picker.png"
+    />
     <div id="rejoin-color-options-container">
-      <div id="option-red">
-        <button
-          id="button-red"
-          class="color-button"
-          onclick="rejoinSelectColor('red', 1)"
-        ></button>
+      <div class="rejoin-color-option">
+        <button onclick="rejoinSelectColor('red', 1)"></button>
         <img
           id="rejoin-red-selected"
           class="rejoin-color-selection-icon"
@@ -19,13 +15,19 @@
           data-id="1"
         />
       </div>
+      <div class="rejoin-color-option">
+        <button onclick="rejoinSelectColor('orange', 6)"></button>
+        <img
+          id="rejoin-orange-selected"
+          class="rejoin-color-selection-icon"
+          src="/images/userCreation/color_selected.png"
+          data-color="Orange"
+          data-id="6"
+        />
+      </div>
 
-      <div id="option-yellow">
-        <button
-          id="button-yellow"
-          class="color-button"
-          onclick="rejoinSelectColor('yellow', 2)"
-        ></button>
+      <div class="rejoin-color-option">
+        <button onclick="rejoinSelectColor('yellow', 2)"></button>
         <img
           id="rejoin-yellow-selected"
           class="rejoin-color-selection-icon"
@@ -34,13 +36,8 @@
           data-id="2"
         />
       </div>
-
-      <div id="option-green">
-        <button
-          id="button-green"
-          class="color-button"
-          onclick="rejoinSelectColor('green', 3)"
-        ></button>
+      <div class="rejoin-color-option">
+        <button onclick="rejoinSelectColor('green', 3)"></button>
         <img
           id="rejoin-green-selected"
           class="rejoin-color-selection-icon"
@@ -49,19 +46,44 @@
           data-id="3"
         />
       </div>
-
-      <div id="option-blue">
-        <button
-          id="button-blue"
-          class="color-button"
-          onclick="rejoinSelectColor('blue', 4)"
-        ></button>
+      <div class="rejoin-color-option">
+        <button onclick="rejoinSelectColor('brown', 7)"></button>
+        <img
+          id="rejoin-brown-selected"
+          class="rejoin-color-selection-icon"
+          src="/images/userCreation/color_selected.png"
+          data-color="Brown"
+          data-id="7"
+        />
+      </div>
+      <div class="rejoin-color-option">
+        <button onclick="rejoinSelectColor('blue', 4)"></button>
         <img
           id="rejoin-blue-selected"
           class="rejoin-color-selection-icon"
           src="/images/userCreation/color_selected.png"
           data-color="Blue"
           data-id="4"
+        />
+      </div>
+      <div class="rejoin-color-option">
+        <button onclick="rejoinSelectColor('purple', 5)"></button>
+        <img
+          id="rejoin-purple-selected"
+          class="rejoin-color-selection-icon"
+          src="/images/userCreation/color_selected.png"
+          data-color="Purple"
+          data-id="5"
+        />
+      </div>
+      <div class="rejoin-color-option">
+        <button onclick="rejoinSelectColor('silver', 8)"></button>
+        <img
+          id="rejoin-silver-selected"
+          class="rejoin-color-selection-icon"
+          src="/images/userCreation/color_selected.png"
+          data-color="Silver"
+          data-id="8"
         />
       </div>
     </div>

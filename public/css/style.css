@@ -636,16 +636,16 @@ button {
 
 #rejoin-color-picker {
   position: absolute;
-  top: 96px;
+  top: 0px;
   left: 0px;
+  transition: transform 1200ms ease-in;
+  transition-delay: 300ms;
   z-index: 6;
 }
 
 #color-options-container {
   position: absolute;
-  width: 1080px;
   top: 650px;
-  z-index: 0;
 }
 
 #color-options-container > div {
@@ -654,8 +654,32 @@ button {
 
 #rejoin-color-options-container {
   position: absolute;
-  width: 1080px;
-  top: 648px;
+  width: 870px;
+  height: 460px;
+  top: 735px;
+  left: 105px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  column-gap: 58px;
+  row-gap: 129px;
+}
+
+.rejoin-color-option {
+  display: inline-block;
+  position: relative;
+  width: 170px;
+  height: 170px;
+  margin-right: 0px;
+  pointer-events: none;
+}
+
+.rejoin-color-option button {
+  position: relative;
+  width: 170px;
+  height: 170px;
+  z-index: 10;
+  pointer-events: auto;
 }
 
 #color-options-container > div:nth-child(1) {
@@ -699,15 +723,6 @@ button {
 }
 #color-text-container > div:nth-child(4) {
   left: 811px;
-}
-
-#rejoin-color-picker-instructions {
-  position: absolute;
-  width: 100%;
-  top: 554px;
-  font-family: "Enriqueta";
-  font-size: 36px;
-  text-align: center;
 }
 
 .color-button {
@@ -764,9 +779,9 @@ button {
 
 #scrollable-container {
   position: absolute;
-  top: 1040px;
+  top: 761px;
   left: 34px;
-  height: 825px;
+  height: 1100px;
   overflow-y: auto;
   z-index: 5;
 }

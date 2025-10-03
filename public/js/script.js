@@ -825,7 +825,11 @@ function showColorPicker() {
 }
 
 function clearColorSelectionIndicators(prefix = "") {
-  const selectionIcons = document.querySelectorAll(".color-selection-icon");
+  const prefixStr = prefix ? `${prefix}-` : "";
+
+  const selectionIcons = document.querySelectorAll(
+    `.${prefixStr}color-selection-icon`
+  );
   selectionIcons.forEach((icon) => icon.classList.remove("selected"));
 }
 
@@ -1099,26 +1103,13 @@ function resetCreateNewUserScreen() {
 }
 
 async function rejoinSelectColor(colorDisplayName, colorId) {
-  const rejoinColorPickerInstructions = document.getElementById(
-    "rejoin-color-picker-instructions"
-  );
-  rejoinColorPickerInstructions.innerText = "Now select your animal";
-
-  resetBadge();
-  clearColorSelectionIndicators("rejoin");
   showColorSelectionIndicator(colorDisplayName, "rejoin");
   updateBadgeColor(colorDisplayName);
 
-  const rejoinConfirmationPanel = document.getElementById(
-    "rejoin-confirmation-panel"
-  );
-  rejoinConfirmationPanel.style.transform = "translateY(0px)";
+  const rejoinColorPicker = document.getElementById("rejoin-color-picker");
+  rejoinColorPicker.style.transform = "translateY(-1265px)";
 
-  await updateRejoinAnimalContainer(
-    colorId,
-    "rejoin-animal-options-container",
-    "/api/animals/existing/html"
-  );
+  await updateRejoinAnimalContainer(colorId);
 }
 
 async function updateRejoinAnimalContainer(colorId) {
@@ -1137,7 +1128,7 @@ async function updateRejoinAnimalContainer(colorId) {
 
     setTimeout(async () => {
       const response = await fetch(
-        `/api/animals/existing/html/?colorId=${colorId}`
+        `/api/animals/existing/html?colorId=${colorId}`
       );
       const html = await response.text();
 
@@ -1168,6 +1159,7 @@ function selectRejoinAnimal(animalDisplayName, animalImgPath) {
   updateAnimalSelection(animalDisplayName, "rejoin");
   updateBadgeIcon(animalImgPath);
   const color = getSelectedColor("rejoin");
+  console.log(color);
   updateBadgeText(color, animalDisplayName);
 
   const confirmationPanel = document.getElementById(
@@ -1240,11 +1232,8 @@ function resetRejoinScreen() {
   clearColorSelectionIndicators("rejoin");
   clearAnimalSelectionIndicators("rejoin");
 
-  const rejoinColorPickerInstructions = document.getElementById(
-    "rejoin-color-picker-instructions"
-  );
-  rejoinColorPickerInstructions.innerText =
-    "To rejoin your game, select your badge color.";
+  const rejoinColorPicker = document.getElementById("rejoin-color-picker");
+  rejoinColorPicker.style.transform = "translateY(0px)";
 
   const noAnimalsMessage = document.querySelector(".no-animals-message.rejoin");
   noAnimalsMessage.style.opacity = "0";
