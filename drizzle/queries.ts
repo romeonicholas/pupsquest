@@ -253,7 +253,7 @@ export async function getAllAnimalsFromUsersWithColor(colorId: number) {
 }
 
 export async function addUserColors(
-  colors: { name: string; badgePath: string }[]
+  colors: { name: string; hex: string; badgePath: string }[]
 ) {
   const insertedColors = await db
     .insert(userColors)
