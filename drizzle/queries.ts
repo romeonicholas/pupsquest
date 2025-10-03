@@ -10,11 +10,27 @@ import {
 } from "./schema";
 import { eq, and, notInArray, sql, lte, inArray } from "drizzle-orm";
 
-export async function getUserColors() {
+export async function get4UserColors() {
   const colors = await db
     .select({
       id: userColors.id,
       name: userColors.name,
+      hex: userColors.hex,
+      badgePath: userColors.badgePath,
+    })
+    .from(userColors)
+    .orderBy(sql`RANDOM()`)
+    .limit(4);
+
+  return colors;
+}
+
+export async function getAllUserColors() {
+  const colors = await db
+    .select({
+      id: userColors.id,
+      name: userColors.name,
+      hex: userColors.hex,
       badgePath: userColors.badgePath,
     })
     .from(userColors)
