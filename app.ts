@@ -124,21 +124,47 @@ app.post("/api/users", async (req, res) => {
   }
 });
 
+function renderPartial(res: express.Response, template: string, data: any) {
+  return new Promise((resolve, reject) => {
+    res.render(template, data, (err, html) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(html);
+      }
+    });
+  });
+}
+
 app.get("/api/users/create-html", async (req, res) => {
   try {
     const combinations = await getColorsAndAnimalsForUserCreation();
-    const colors = combinations.map((combination) => combination.color);
 
-    res.render("partials/color_picker", { colors }, (err, html) => {
-      if (err) {
-        console.error("Error rendering template:", err);
-        return res.status(500).json({ error: "Error rendering template" });
-      }
-      res.json({ html: html, colors: colors });
+    const colors = combinations.map((combination) => combination.color);
+    const colorPickerHtml = await renderPartial(res, "partials/color_picker", {
+      colors,
+    });
+
+    const animalOptionsHtmlByColorId = {};
+    for (const combination of combinations) {
+      const animalOptionsHtml = await renderPartial(
+        res,
+        "partials/animal_options",
+        {
+          animals: combination.animals,
+          isRejoin: false,
+        }
+      );
+      animalOptionsHtmlByColorId[combination.color.id] = animalOptionsHtml;
+    }
+
+    res.json({
+      colorPickerHtml: colorPickerHtml,
+      animalOptionsByColorId: animalOptionsHtmlByColorId,
     });
   } catch (error) {
-    console.error("Error fetching combinations: ", error);
-    res.status(500).json({ error: "Failed to fetch combinations" });
+    console.error("Error generating user creation HTML: ", error);
+    res.status(500).json({ error: "Failed to generate user creation HTML" });
   }
 });
 
@@ -165,7 +191,7 @@ app.get("/api/colors/used", async (req, res) => {
 app.get("/api/colors/html", async (req, res) => {
   try {
     const colors = await get4UserColors();
-    res.render("partials/color_picker", { colors, isRejoin }, (err, html) => {
+    res.render("partials/color_picker", { colors }, (err, html) => {
       if (err) {
         console.error("Error rendering template:", err);
         return res.status(500).json({ error: "Error rendering template" });
@@ -235,8 +261,8 @@ app.get("/favicon.ico", (req, res) => {
   res.status(204).end();
 });
 
-app.get("/", (request, response) => {
-  const isVisitor = request.query.device === "visitor";
+app.get("/", (req, res) => {
+  const isVisitor = req.query.device === "visitor";
   const date = new Date().toLocaleDateString("en-US", {
     year: "numeric",
     month: "short",
@@ -249,11 +275,11 @@ app.get("/", (request, response) => {
       minute: "2-digit",
       second: "2-digit",
     });
-    const ipAddress = request.ip;
+    const ipAddress = req.ip;
     console.log(`${date} ${time}: ${ipAddress} connected`);
   }
 
-  response.render("index", { isVisitor, date });
+  res.render("index", { isVisitor, date });
 });
 
 app.use("/assets", express.static(path.join(__dirname, "public")));
