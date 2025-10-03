@@ -4,6 +4,8 @@ const isVisitor =
 let currentUser = null;
 let currentGameState = null;
 
+let animalOptionsHtml = {};
+
 let inactivityTimeout;
 let inactivityConfirmationTimeout;
 const INACTIVITY_THRESHOLD = 25000;
@@ -769,24 +771,17 @@ function showUsePhoneScreen() {
   document.getElementById("use-phone-screen").style.display = "block";
 }
 
-async function updateColorOptions(colorOptionsHtml) {
+function updateColorOptions(colorOptionsHtml) {
   const colorPicker = document.getElementById("color-picker");
   colorPicker.innerHTML = colorOptionsHtml;
 }
 
-// async function updateAnimalOptions(colors) {
-//   try {
-//     const response = await fetch(`/api/animals/available/?colors=${colors.join(",")}`);
-//     const data = await response.json();
-
-//     const animalOptionsContainer = document.getElementById("animal-options-container");
-//     animalOptionsContainer.innerHTML = data.html;
-
-//     return data.animals;
-//   } catch (error) {
-//     console.error("Error updating animal options:", error);
-//   }
-// }
+function updateAnimalOptions(colorId) {
+  const animalOptionsContainer = document.getElementById(
+    "animal-options-container"
+  );
+  animalOptionsContainer.innerHTML = animalOptionsHtml[colorId] || "";
+}
 
 async function showCreateNewUserScreen() {
   isTimerActive = true;
@@ -795,12 +790,12 @@ async function showCreateNewUserScreen() {
   try {
     const result = await fetch("/api/users/create-html");
     const data = await result.json();
-    updateColorOptions(data.html);
+
+    updateColorOptions(data.colorPickerHtml);
+    animalOptionsHtml = data.animalOptionsByColorId;
   } catch (error) {
     console.error("Error fetching possible user combinations:", error);
   }
-
-  // const animals = await updateAnimalOptions(colors);
 
   const createNewUserScreen = document.getElementById("create-new-user-screen");
   createNewUserScreen.style.display = "block";
@@ -926,7 +921,10 @@ async function selectColor(colorDisplayName, colorId) {
   clearColorSelectionIndicators();
   showColorSelectionIndicator(colorDisplayName);
   updateBadgeColor(colorDisplayName);
-  await updateAnimalContainer(colorId);
+  // updateAnimalContainer();
+
+  // await updateAnimalContainer(colorId);
+  updateAnimalOptions(colorId);
 
   if (userCreationInstructions.style.transform !== "translateY(2210px)") {
     userCreationInstructions.style.transition = "transform 800ms ease-in";
