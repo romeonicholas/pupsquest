@@ -780,7 +780,16 @@ function updateAnimalOptions(colorId) {
   const animalOptionsContainer = document.getElementById(
     "animal-options-container"
   );
-  animalOptionsContainer.innerHTML = animalOptionsHtml[colorId] || "";
+
+  animalOptionsContainer.style.transition = "opacity 300ms ease-out";
+  animalOptionsContainer.style.opacity = "0";
+
+  setTimeout(() => {
+    animalOptionsContainer.innerHTML = animalOptionsHtml[colorId] || "";
+    animalOptionsContainer.offsetHeight;
+    animalOptionsContainer.style.transition = "opacity 300ms ease-in";
+    animalOptionsContainer.style.opacity = "1";
+  }, 200);
 }
 
 async function showCreateNewUserScreen() {
@@ -859,42 +868,6 @@ function updateBadgeColor(colorDisplayName) {
   badgeBase.src = `images/users/badges/${colorDisplayName}.png`;
 }
 
-async function updateAnimalContainer(colorId) {
-  try {
-    const animalOptionsContainer = document.getElementById(
-      "animal-options-container"
-    );
-    animalOptionsContainer.style.transition = "opacity 300ms ease-out";
-    animalOptionsContainer.style.opacity = "0";
-
-    const noAnimalsMessage = document.querySelector(".no-animals-message.new");
-    noAnimalsMessage.style.transition = "opacity 300ms ease-out";
-    noAnimalsMessage.style.opacity = "0";
-
-    setTimeout(async () => {
-      const response = await fetch(
-        `/api/animals/available-for-color?colorId=${colorId}`
-      );
-      const html = await response.text();
-
-      animalOptionsContainer.innerHTML = html;
-      animalOptionsContainer.offsetHeight;
-      animalOptionsContainer.style.transition = "opacity 300ms ease-in";
-      animalOptionsContainer.style.opacity = "1";
-
-      const animalsExist =
-        animalOptionsContainer.querySelectorAll(".animal-option").length > 0;
-      if (!animalsExist) {
-        noAnimalsMessage.style.transition = "opacity 300ms ease-in";
-        noAnimalsMessage.style.opacity = "1";
-      }
-    }, 200);
-  } catch (error) {
-    console.error("Error updating animal container:", error);
-    animalOptionsContainer.style.opacity = "1";
-  }
-}
-
 function resetBadge() {
   const badgeBase = document.getElementById("badge-base");
   badgeBase.src = "images/users/badges/gray.png";
@@ -921,9 +894,6 @@ async function selectColor(colorDisplayName, colorId) {
   clearColorSelectionIndicators();
   showColorSelectionIndicator(colorDisplayName);
   updateBadgeColor(colorDisplayName);
-  // updateAnimalContainer();
-
-  // await updateAnimalContainer(colorId);
   updateAnimalOptions(colorId);
 
   if (userCreationInstructions.style.transform !== "translateY(2210px)") {
