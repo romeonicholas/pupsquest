@@ -786,6 +786,10 @@ button {
   z-index: 5;
 }
 
+#scrollable-container::-webkit-scrollbar {
+  display: none;
+}
+
 #rejoin-animal-options-container {
   position: relative;
   width: 1012px;
@@ -993,7 +997,7 @@ button {
 .no-animals-message {
   opacity: 0;
   position: relative;
-  top: 1350px;
+  top: 1200px;
   width: 700px;
   margin-left: auto;
   margin-right: auto;
