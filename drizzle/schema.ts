@@ -133,6 +133,32 @@ export const gameStates = sqliteTable(
   ]
 );
 
+export const riddleAnalytics = sqliteTable(
+  "riddleAnalytics",
+  {
+    id: integer().primaryKey({ autoIncrement: true }),
+    riddleId: integer()
+      .notNull()
+      .references(() => riddles.id, { onDelete: "restrict" }),
+    createdAt: integer()
+      .notNull()
+      .default(sql`(strftime('%s','now'))`),
+    wasAnswered: integer().notNull().default(0),
+    isCorrect: integer(),
+    hintsUsed: integer(),
+  },
+  (table) => [
+    index("idx_ruo_riddleId").on(table.riddleId),
+    index("idx_ruo_createdAt").on(table.createdAt),
+    check("riddleAnalytics_check_1", sql`wasAnswered IN (0, 1)`),
+    check(
+      "riddleAnalytics_check_2",
+      sql`isCorrect IS NULL OR isCorrect IN (0, 1)`
+    ),
+    check("riddleAnalytics_check_3", sql`hintsUsed IS NULL OR hintsUsed >= 0`),
+  ]
+);
+
 export const migrations = sqliteTable("migrations", {
   id: integer().primaryKey({ autoIncrement: true }),
   filename: text().notNull(),
