@@ -94,6 +94,21 @@ export const users = sqliteTable(
   ]
 );
 
+export const userAnalytics = sqliteTable(
+  "userAnalytics",
+  {
+    id: integer().primaryKey({ autoIncrement: true }),
+    createdAt: integer()
+      .notNull()
+      .default(sql`(strftime('%s','now'))`),
+    createdLocally: integer().notNull().default(0),
+  },
+  (table) => [
+    index("idx_userAnalytics_createdAt").on(table.createdAt),
+    check("userAnalytics_check_1", sql`createdLocally IN (0, 1)`),
+  ]
+);
+
 export const gameStates = sqliteTable(
   "gameStates",
   {
