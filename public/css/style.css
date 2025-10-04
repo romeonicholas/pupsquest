@@ -281,7 +281,7 @@ button {
   transform: rotate(-36deg);
 }
 
-#user-panel-shadow {
+.user-panel-shadow {
   position: absolute;
   top: 516px;
   left: 0px;
