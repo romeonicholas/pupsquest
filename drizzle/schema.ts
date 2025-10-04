@@ -79,7 +79,9 @@ export const users = sqliteTable(
     userColor: integer()
       .notNull()
       .references(() => userColors.id),
-    createdAt: integer().default(sql`(strftime('%s','now'))`),
+    createdAt: integer()
+      .notNull()
+      .default(sql`(strftime('%s','now'))`),
     scores: text().default("[]"),
     hasViewedExitPanel: integer().default(0),
   },
