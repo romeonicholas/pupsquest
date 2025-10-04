@@ -131,7 +131,7 @@ function showErrorScreenAndReload(error) {
 
 function closeRiddleContainerFromBottom() {
   selectionLayer.style.transform = "translateY(0)";
-  riddleContainer.style.transform = "translateY(-1294px)";
+  riddleContainer.style.transform = "translateY(-1290px)";
   riddleTextLayerBackground.style.transform = "translateY(-1294px)";
 }
 
@@ -318,6 +318,11 @@ function transitionToRiddleScreen() {
 
   const createNewUserScreen = document.getElementById("create-new-user-screen");
   createNewUserScreen.style.display = "none";
+
+  const rejoinUserPanelShadow = document.querySelector(
+    "#rejoin-screen .user-panel-shadow"
+  );
+  rejoinUserPanelShadow.style.display = "none";
 
   const riddleScreen = document.getElementById("riddle-screen");
   riddleScreen.style.display = "block";
@@ -1209,6 +1214,11 @@ async function loginUser() {
 }
 
 function resetRejoinScreen() {
+  const rejoinUserPanelShadow = document.querySelector(
+    "#rejoin-screen .user-panel-shadow"
+  );
+  rejoinUserPanelShadow.style.display = "block";
+
   const rejoinScreen = document.getElementById("rejoin-screen");
   rejoinScreen.style.display = "none";
 
