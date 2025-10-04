@@ -84,11 +84,13 @@ export const users = sqliteTable(
       .default(sql`(strftime('%s','now'))`),
     scores: text().default("[]"),
     hasViewedExitPanel: integer().default(0),
+    createdLocally: integer().notNull().default(0),
   },
   (table) => [
     index("idx_users_createdAt").on(table.createdAt),
     check("users_check_5", sql`hasViewedExitPanel IN (0, 1)`),
     check("users_check_6", sql`json_valid(scores)`),
+    check("users_check_7", sql`createdLocally IN (0, 1)`),
   ]
 );
 
