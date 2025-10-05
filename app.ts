@@ -284,19 +284,18 @@ app.get("/", (req, res) => {
 
 app.use("/assets", express.static(path.join(__dirname, "public")));
 
-app.listen(PORT, HOST, () => {
+app.listen(PORT, HOST, async () => {
   console.log(`Started server on ${HOST}:${PORT}`);
-});
 
-setInterval(async () => {
   try {
-    const n = await deleteExpiredUsers();
-    if (n) console.log(`Deleted ${n} expired users`);
+    const numberOfDeletedUsers = await deleteExpiredUsers();
+    if (numberOfDeletedUsers)
+      console.log(`Deleted ${numberOfDeletedUsers} expired users`);
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     console.error("Expired user deletion failed:", errorMessage);
   }
-}, 180 * 60 * 1000);
+});
 
 process.on("SIGINT", async () => {
   try {
