@@ -66,7 +66,8 @@ export async function addUserAnimals(
 
 export async function createUserAndGameState(
   colorId: number,
-  animalId: number
+  animalId: number,
+  isVisitor: boolean
 ) {
   const [existingUser] = await db
     .select({ id: users.id })
@@ -83,6 +84,7 @@ export async function createUserAndGameState(
     .values({
       userColor: colorId,
       userAnimal: animalId,
+      createdLocally: isVisitor ? 0 : 1,
     })
     .returning();
 
@@ -190,7 +192,7 @@ export async function addUsersToAnalyticsTable(usersToDelete) {
 }
 
 export async function deleteExpiredUsers() {
-  const expirationThreshold = Date.now() - 24 * 60 * 60 * 1000;
+  const expirationThreshold = (Date.now() - 24 * 60 * 60 * 1000) / 1000;
 
   const usersToDelete = await db
     .select({

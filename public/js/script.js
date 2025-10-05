@@ -1038,6 +1038,7 @@ async function createUser() {
     const userData = {
       colorId: parseInt(selectedColorId),
       animalId: parseInt(selectedAnimalId),
+      isVisitor: isVisitor,
     };
 
     const response = await fetch("/api/users", {
