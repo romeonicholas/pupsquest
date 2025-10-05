@@ -39,16 +39,12 @@
       "indexes": {
         "answerChoices_key_unique": {
           "name": "answerChoices_key_unique",
-          "columns": [
-            "key"
-          ],
+          "columns": ["key"],
           "isUnique": true
         },
         "idx_answerChoices_display": {
           "name": "idx_answerChoices_display",
-          "columns": [
-            "display"
-          ],
+          "columns": ["display"],
           "isUnique": false
         }
       },
@@ -141,16 +137,12 @@
       "indexes": {
         "gameStates_userId_unique": {
           "name": "gameStates_userId_unique",
-          "columns": [
-            "userId"
-          ],
+          "columns": ["userId"],
           "isUnique": true
         },
         "idx_gameStates_userId": {
           "name": "idx_gameStates_userId",
-          "columns": [
-            "userId"
-          ],
+          "columns": ["userId"],
           "isUnique": false
         }
       },
@@ -159,12 +151,8 @@
           "name": "gameStates_userId_users_id_fk",
           "tableFrom": "gameStates",
           "tableTo": "users",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -247,8 +235,8 @@
           "autoincrement": false,
           "default": 0
         },
-        "isCorrect": {
-          "name": "isCorrect",
+        "wasAnsweredCorrectly": {
+          "name": "wasAnsweredCorrectly",
           "type": "integer",
           "primaryKey": false,
           "notNull": false,
@@ -265,16 +253,12 @@
       "indexes": {
         "idx_ruo_riddleId": {
           "name": "idx_ruo_riddleId",
-          "columns": [
-            "riddleId"
-          ],
+          "columns": ["riddleId"],
           "isUnique": false
         },
         "idx_ruo_createdAt": {
           "name": "idx_ruo_createdAt",
-          "columns": [
-            "createdAt"
-          ],
+          "columns": ["createdAt"],
           "isUnique": false
         }
       },
@@ -283,12 +267,8 @@
           "name": "riddleAnalytics_riddleId_riddles_id_fk",
           "tableFrom": "riddleAnalytics",
           "tableTo": "riddles",
-          "columnsFrom": [
-            "riddleId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["riddleId"],
+          "columnsTo": ["id"],
           "onDelete": "restrict",
           "onUpdate": "no action"
         }
@@ -302,7 +282,7 @@
         },
         "riddleAnalytics_check_2": {
           "name": "riddleAnalytics_check_2",
-          "value": "isCorrect IS NULL OR isCorrect IN (0, 1)"
+          "value": "wasAnsweredCorrectly IS NULL OR wasAnsweredCorrectly IN (0, 1)"
         },
         "riddleAnalytics_check_3": {
           "name": "riddleAnalytics_check_3",
@@ -345,16 +325,12 @@
       "indexes": {
         "idx_rac_choiceId": {
           "name": "idx_rac_choiceId",
-          "columns": [
-            "answerChoiceId"
-          ],
+          "columns": ["answerChoiceId"],
           "isUnique": false
         },
         "idx_rac_riddleId": {
           "name": "idx_rac_riddleId",
-          "columns": [
-            "riddleId"
-          ],
+          "columns": ["riddleId"],
           "isUnique": false
         }
       },
@@ -363,12 +339,8 @@
           "name": "riddleAnswerChoices_riddleId_riddles_id_fk",
           "tableFrom": "riddleAnswerChoices",
           "tableTo": "riddles",
-          "columnsFrom": [
-            "riddleId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["riddleId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -376,12 +348,8 @@
           "name": "riddleAnswerChoices_answerChoiceId_answerChoices_id_fk",
           "tableFrom": "riddleAnswerChoices",
           "tableTo": "answerChoices",
-          "columnsFrom": [
-            "answerChoiceId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["answerChoiceId"],
+          "columnsTo": ["id"],
           "onDelete": "restrict",
           "onUpdate": "no action"
         }
@@ -444,9 +412,7 @@
       "indexes": {
         "riddles_riddleKey_unique": {
           "name": "riddles_riddleKey_unique",
-          "columns": [
-            "riddleKey"
-          ],
+          "columns": ["riddleKey"],
           "isUnique": true
         }
       },
@@ -498,9 +464,7 @@
       "indexes": {
         "idx_userAnalytics_createdAt": {
           "name": "idx_userAnalytics_createdAt",
-          "columns": [
-            "createdAt"
-          ],
+          "columns": ["createdAt"],
           "isUnique": false
         }
       },
@@ -542,16 +506,12 @@
       "indexes": {
         "userAnimals_name_unique": {
           "name": "userAnimals_name_unique",
-          "columns": [
-            "name"
-          ],
+          "columns": ["name"],
           "isUnique": true
         },
         "userAnimals_imgPath_unique": {
           "name": "userAnimals_imgPath_unique",
-          "columns": [
-            "imgPath"
-          ],
+          "columns": ["imgPath"],
           "isUnique": true
         }
       },
@@ -595,23 +555,17 @@
       "indexes": {
         "userColors_name_unique": {
           "name": "userColors_name_unique",
-          "columns": [
-            "name"
-          ],
+          "columns": ["name"],
           "isUnique": true
         },
         "userColors_hex_unique": {
           "name": "userColors_hex_unique",
-          "columns": [
-            "hex"
-          ],
+          "columns": ["hex"],
           "isUnique": true
         },
         "userColors_badgePath_unique": {
           "name": "userColors_badgePath_unique",
-          "columns": [
-            "badgePath"
-          ],
+          "columns": ["badgePath"],
           "isUnique": true
         }
       },
@@ -680,9 +634,7 @@
       "indexes": {
         "idx_users_createdAt": {
           "name": "idx_users_createdAt",
-          "columns": [
-            "createdAt"
-          ],
+          "columns": ["createdAt"],
           "isUnique": false
         }
       },
@@ -691,12 +643,8 @@
           "name": "users_userAnimal_userAnimals_id_fk",
           "tableFrom": "users",
           "tableTo": "userAnimals",
-          "columnsFrom": [
-            "userAnimal"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["userAnimal"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -704,12 +652,8 @@
           "name": "users_userColor_userColors_id_fk",
           "tableFrom": "users",
           "tableTo": "userColors",
-          "columnsFrom": [
-            "userColor"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["userColor"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }

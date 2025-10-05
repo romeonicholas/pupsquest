@@ -144,7 +144,7 @@ export const riddleAnalytics = sqliteTable(
       .notNull()
       .default(sql`(strftime('%s','now'))`),
     wasAnswered: integer().notNull().default(0),
-    isCorrect: integer(),
+    wasAnsweredCorrectly: integer(),
     hintsUsed: integer(),
   },
   (table) => [
@@ -153,7 +153,7 @@ export const riddleAnalytics = sqliteTable(
     check("riddleAnalytics_check_1", sql`wasAnswered IN (0, 1)`),
     check(
       "riddleAnalytics_check_2",
-      sql`isCorrect IS NULL OR isCorrect IN (0, 1)`
+      sql`wasAnsweredCorrectly IS NULL OR wasAnsweredCorrectly IN (0, 1)`
     ),
     check("riddleAnalytics_check_3", sql`hintsUsed IS NULL OR hintsUsed >= 0`),
   ]
