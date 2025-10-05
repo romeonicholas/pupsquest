@@ -107,6 +107,7 @@ app.post("/api/users", async (req, res) => {
   try {
     const colorId = Number(req.body.colorId);
     const animalId = Number(req.body.animalId);
+    const isVisitor = req.body.isVisitor;
 
     if (isNaN(colorId) || isNaN(animalId)) {
       return res
@@ -114,7 +115,7 @@ app.post("/api/users", async (req, res) => {
         .json({ error: "Missing or invalid colorId or animalId" });
     }
 
-    const newUser = await createUserAndGameState(colorId, animalId);
+    const newUser = await createUserAndGameState(colorId, animalId, isVisitor);
 
     res.status(201).json(newUser);
   } catch (error) {
