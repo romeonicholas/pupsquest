@@ -3,6 +3,7 @@ import {
   userAnimals,
   userColors,
   users,
+  userAnalytics,
   gameStates,
   answerChoices,
   riddleAnswerChoices,
@@ -179,15 +180,30 @@ export async function updateUserAndGameState(
   };
 }
 
+export async function addUsersToAnalyticsTable(usersToDelete) {
+  const analyticsData = usersToDelete.map((user) => ({
+    createdAt: user.createdAt,
+    createdLocally: user.createdLocally,
+  }));
+
+  await db.insert(userAnalytics).values(analyticsData);
+}
+
 export async function deleteExpiredUsers() {
   const expirationThreshold = Date.now() - 24 * 60 * 60 * 1000;
 
   const usersToDelete = await db
-    .select({ id: users.id })
+    .select({
+      id: users.id,
+      createdAt: users.createdAt,
+      createdLocally: users.createdLocally,
+    })
     .from(users)
     .where(lte(users.createdAt, expirationThreshold));
 
   if (usersToDelete.length > 0) {
+    await addUsersToAnalyticsTable(usersToDelete);
+
     await db.delete(users).where(
       inArray(
         users.id,
