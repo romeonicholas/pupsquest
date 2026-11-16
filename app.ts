@@ -5,7 +5,6 @@ import { fileURLToPath } from "url";
 import { client } from "./drizzle/db.ts";
 
 import {
-  get4UserColors,
   getUsedColorIds,
   getAllUserColors,
   getAvailableAnimalsForColor,
@@ -190,21 +189,6 @@ app.get("/api/colors/used", async (req, res) => {
   }
 });
 
-app.get("/api/colors/html", async (req, res) => {
-  try {
-    const colors = await get4UserColors();
-    res.render("partials/color_picker", { colors }, (err, html) => {
-      if (err) {
-        console.error("Error rendering template:", err);
-        return res.status(500).json({ error: "Error rendering template" });
-      }
-      res.json({ html: html, colors: colors });
-    });
-  } catch (error) {
-    console.error("Error fetching colors:", error);
-    res.status(500).send("<p>Error loading colors</p>");
-  }
-});
 
 app.get("/api/animals/existing/html", async (req, res) => {
   const colorId = Number(req.query.colorId);
