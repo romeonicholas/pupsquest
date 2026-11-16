@@ -1284,21 +1284,6 @@ function startOver() {
 
 async function markExitPanelViewed() {
   currentUser.hasViewedExitPanel = true;
-
-  if (currentUser && !currentUser.hasViewedExitPanel) {
-    try {
-      await fetch(`/api/users/${currentUser.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          hasViewedExitPanel: true,
-        }),
-      });
-    } catch (error) {
-      console.error("Failed to update exit panel viewed status:", error);
-      currentUser.hasViewedExitPanel = false;
-    }
-  }
 }
 
 function shouldShowExitPanelDetails() {
