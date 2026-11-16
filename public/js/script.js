@@ -920,14 +920,6 @@ async function selectColor(colorDisplayName, colorId) {
   }
 }
 
-async function fetchAvailableAnimalsForColor(colorId) {
-  const response = await fetch(
-    `/api/animals/available/html?colorId=${colorId}&limit=8`
-  );
-  const html = await response.text();
-  return html;
-}
-
 function clearAnimalSelectionIndicators(prefix = "") {
   const selector = prefix
     ? `.${prefix}-animal-selection-icon`
