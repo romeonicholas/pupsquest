@@ -1,8 +1,6 @@
 import express from "express";
-import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
-import { client } from "./drizzle/db.ts";
 
 import {
   getUsedColorIds,
@@ -11,13 +9,10 @@ import {
   createUserAndGameState,
   getUserAndGameState,
   updateUserAndGameState,
-  deleteExpiredUsers,
   getRiddle,
   getAverageScore,
   addRiddleAnalytics,
 } from "./drizzle/queries.ts";
-
-dotenv.config({ path: ".env", quiet: true });
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -29,9 +24,6 @@ app.set("views", path.join(__dirname, "views"));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-const PORT = Number(process.env.PORT) || 3000;
-const HOST = process.env.HOST || "0.0.0.0";
 
 app.post("/api/signout", async (req, res) => {
   try {
@@ -257,37 +249,4 @@ app.get("/", (req, res) => {
   res.render("index", { isVisitor, date });
 });
 
-app.listen(PORT, HOST, async () => {
-  console.log(`Started server on ${HOST}:${PORT}`);
-
-  try {
-    const numberOfDeletedUsers = await deleteExpiredUsers();
-    if (numberOfDeletedUsers)
-      console.log(`Deleted ${numberOfDeletedUsers} expired users`);
-  } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    console.error("Expired user deletion failed:", errorMessage);
-  }
-});
-
-process.on("SIGINT", async () => {
-  try {
-    client.close();
-    console.log("Database connection closed.");
-  } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    console.error("Error closing database:", errorMessage);
-  }
-  process.exit(0);
-});
-
-process.on("SIGTERM", async () => {
-  try {
-    client.close();
-    console.log("Database connection closed.");
-  } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    console.error("Error closing database:", errorMessage);
-  }
-  process.exit(0);
-});
+export default app;
