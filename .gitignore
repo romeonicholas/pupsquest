@@ -11,3 +11,5 @@ node_modules
 *.db-shm
 
 public/fonts/Gotham-*
+
+test.db
