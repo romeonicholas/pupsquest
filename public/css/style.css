@@ -1,11 +1,7 @@
 @font-face {
-  font-family: "Gotham";
-  src: url("/fonts/Gotham-Medium.eot");
-  src:
-    url("/fonts/Gotham-Medium.eot") format("embedded-opentype"),
-    url("/fonts/Gotham-Medium.woff2") format("woff2"),
-    url("/fonts/Gotham-Medium.woff") format("woff"),
-    url("/fonts/Gotham-Medium.ttf") format("truetype");
+  font-family: "Montserrat";
+  src: url("/fonts/Montserrat-Medium.ttf") format("truetype");
+  font-display: swap;
 }
 
 @font-face {
@@ -219,7 +215,7 @@ button {
 }
 
 #color-animal-text {
-  font-family: "Gotham";
+  font-family: "Gotham", "Montserrat", sans-serif;
   font-size: 30px;
   line-height: 1.15;
   letter-spacing: 1.01px;
@@ -262,7 +258,7 @@ button {
 }
 
 .status-text {
-  font-family: "Gotham";
+  font-family: "Gotham", "Montserrat", sans-serif;
   font-size: 30px;
   letter-spacing: 0.02em;
   text-align: center;
@@ -483,7 +479,7 @@ button {
 
 #score-text {
   width: 860px;
-  font-family: Gotham;
+  font-family: "Gotham", "Montserrat", sans-serif;
   font-size: 72px;
   padding-bottom: 25px;
   text-align: center;
