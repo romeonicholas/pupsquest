@@ -14,7 +14,10 @@
     "dev": "nodemon --exec tsx app.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "seed": "tsx drizzle/seeds/index.ts",
-    "db:reset": "del local.db* && drizzle-kit push && npm run seed"
+    "db:reset": "del local.db* && drizzle-kit push && npm run seed",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "tsc"
   },
   "dependencies": {
     "@libsql/client": "^0.15.15",
@@ -25,8 +28,11 @@
   },
   "devDependencies": {
     "@types/express": "^5.0.3",
+    "@types/node": "^26.6.6",
     "drizzle-kit": "^0.31.4",
     "nodemon": "^3.1.10",
-    "tsx": "^4.20.5"
+    "prettier": "3.10.1",
+    "tsx": "^4.20.5",
+    "typescript": "^7.0.2"
   }
 }

@@ -101,7 +101,7 @@ function startInactivityConfirmationTimer() {
 
   inactivityConfirmationTimeout = setTimeout(
     currentUser ? saveAndExit : startOver,
-    INACTIVITY_CONFIRMATION_THRESHOLD
+    INACTIVITY_CONFIRMATION_THRESHOLD,
   );
 }
 
@@ -192,7 +192,7 @@ function restoreIncorrectGuesses() {
     currentGameState.currentGuesses.forEach((iconIndex) => {
       showIconBacking(iconIndex);
       const clickArea = document.getElementById(
-        `option-click-area-${iconIndex + 1}`
+        `option-click-area-${iconIndex + 1}`,
       );
       replaceElementToRemoveListeners(clickArea);
     });
@@ -244,7 +244,7 @@ function updateIconBackings(correctAnswerIndex) {
   const iconBackings = [iconBack1, iconBack2, iconBack3, iconBack4];
 
   const shuffledIncorrectBackings = [...incorrectAnswerBackings].sort(
-    () => Math.random() - 0.5
+    () => Math.random() - 0.5,
   );
   let incorrectIconIndex = 0;
 
@@ -275,11 +275,11 @@ function attachClickHandlers(correctAnswerIndex) {
 
     if (index === correctAnswerIndex) {
       newClickable.addEventListener("click", (event) =>
-        handleCorrectGuess(event.currentTarget, index)
+        handleCorrectGuess(event.currentTarget, index),
       );
     } else {
       newClickable.addEventListener("click", (event) =>
-        handleIncorrectGuess(event.currentTarget, index)
+        handleIncorrectGuess(event.currentTarget, index),
       );
     }
   });
@@ -320,7 +320,7 @@ function transitionToRiddleScreen() {
   createNewUserScreen.style.display = "none";
 
   const rejoinUserPanelShadow = document.querySelector(
-    "#rejoin-screen .user-panel-shadow"
+    "#rejoin-screen .user-panel-shadow",
   );
   rejoinUserPanelShadow.style.display = "none";
 
@@ -366,7 +366,7 @@ async function showRiddle() {
       updateRiddleAnswer(
         currentShuffledChoices[currentCorrectAnswerIndex].display,
         currentRiddle.answerDetails,
-        currentRiddle.answerImgPath
+        currentRiddle.answerImgPath,
       );
       updateStatusWheel(`RIDDLE ${getCurrentRiddleNumber()}`);
       const nextRiddleSheet = document.getElementById("next-riddle-sheet");
@@ -467,7 +467,7 @@ async function updateScoreText() {
   }
 
   const scoreComparisonTextContainer = document.getElementById(
-    "score-comparison-text"
+    "score-comparison-text",
   );
   if (currentGameState.currentScore > averageScore) {
     scoreComparisonTextContainer.innerHTML = `That's ${
@@ -489,7 +489,7 @@ function recordRiddleResult(wasAnsweredCorrectly) {
   fetch("/api/analytics/riddle", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ riddleId, wasAnsweredCorrectly, hintsUsed}),
+    body: JSON.stringify({ riddleId, wasAnsweredCorrectly, hintsUsed }),
   }).catch((error) => console.error("Error saving riddle analytics:", error));
 }
 
@@ -742,7 +742,7 @@ async function showRejoinGameScreen() {
     const usedColors = await response.json();
 
     const indicators = document.querySelectorAll(
-      ".color-unavailability-indicator"
+      ".color-unavailability-indicator",
     );
     indicators.forEach((indicator) => {
       const colorId = parseInt(indicator.getAttribute("data-color-id"), 10);
@@ -789,7 +789,7 @@ function updateColorOptions(colorOptionsHtml) {
 
 function updateAnimalOptions(colorId) {
   const animalOptionsContainer = document.getElementById(
-    "animal-options-container"
+    "animal-options-container",
   );
 
   animalOptionsContainer.style.transition = "opacity 300ms ease-out";
@@ -830,7 +830,7 @@ async function showCreateNewUserScreen() {
   exitContainer.style.display = "block";
 
   const riddleScreenConfirmationDummy = document.getElementById(
-    "riddle-screen-confirmation-dummy"
+    "riddle-screen-confirmation-dummy",
   );
   riddleScreenConfirmationDummy.style.display = "block";
 
@@ -839,7 +839,7 @@ async function showCreateNewUserScreen() {
 
 function showColorPicker() {
   const userCreationInstructions = document.getElementById(
-    "user-creation-instructions"
+    "user-creation-instructions",
   );
   const colorPicker = document.getElementById("color-picker");
 
@@ -860,7 +860,7 @@ function clearColorSelectionIndicators(prefix = "") {
   const prefixStr = prefix ? `${prefix}-` : "";
 
   const selectionIcons = document.querySelectorAll(
-    `.${prefixStr}color-selection-icon`
+    `.${prefixStr}color-selection-icon`,
   );
   selectionIcons.forEach((icon) => icon.classList.remove("selected"));
 }
@@ -869,7 +869,7 @@ function showColorSelectionIndicator(colorDisplayName, prefix = "") {
   const prefixStr = prefix ? `${prefix}-` : "";
 
   const selectedColorIcon = document.getElementById(
-    `${prefixStr}${colorDisplayName}-selected`
+    `${prefixStr}${colorDisplayName}-selected`,
   );
   selectedColorIcon.classList.add("selected");
 }
@@ -898,7 +898,7 @@ function hideConfirmationPanel() {
 
 async function selectColor(colorDisplayName, colorId) {
   const userCreationInstructions = document.getElementById(
-    "user-creation-instructions"
+    "user-creation-instructions",
   );
   resetBadge();
   hideConfirmationPanel();
@@ -928,7 +928,7 @@ function updateAnimalSelection(animalDisplayName, prefix = "") {
   const prefixStr = prefix ? `${prefix}-` : "";
 
   const animalSelectionIndicator = document.getElementById(
-    `${prefixStr}${animalDisplayName.toLowerCase()}-selected`
+    `${prefixStr}${animalDisplayName.toLowerCase()}-selected`,
   );
 
   animalSelectionIndicator?.classList.add("selected");
@@ -938,7 +938,7 @@ let currentBadgeIndex = 1;
 
 function updateBadgeIcon(animalImgPath) {
   const currentIcon = document.getElementById(
-    `badge-icon-${currentBadgeIndex}`
+    `badge-icon-${currentBadgeIndex}`,
   );
   const nextIndex = currentBadgeIndex === 1 ? 2 : 1;
   const nextIcon = document.getElementById(`badge-icon-${nextIndex}`);
@@ -958,7 +958,7 @@ function updateBadgeIcon(animalImgPath) {
 function getSelectedColor(prefix = "") {
   const prefixStr = prefix ? `${prefix}-` : "";
   const selectedColorIcon = document.querySelector(
-    `.${prefixStr}color-selection-icon.selected`
+    `.${prefixStr}color-selection-icon.selected`,
   );
   const color = selectedColorIcon
     ? selectedColorIcon.getAttribute("data-color")
@@ -1076,7 +1076,7 @@ function resetCreateNewUserScreen() {
   noAnimalsMessage.style.opacity = "0";
 
   const userCreationInstructions = document.getElementById(
-    "user-creation-instructions"
+    "user-creation-instructions",
   );
   const colorPicker = document.getElementById("color-picker");
   const badgeContainer = document.getElementById("badge-container");
@@ -1104,20 +1104,20 @@ async function rejoinSelectColor(colorDisplayName, colorId) {
 async function updateRejoinAnimalContainer(colorId) {
   try {
     const animalOptionsContainer = document.getElementById(
-      "rejoin-animal-options-container"
+      "rejoin-animal-options-container",
     );
     animalOptionsContainer.style.transition = "opacity 300ms ease-out";
     animalOptionsContainer.style.opacity = "0";
 
     const noAnimalsMessage = document.querySelector(
-      ".no-animals-message.rejoin"
+      ".no-animals-message.rejoin",
     );
     noAnimalsMessage.style.transition = "opacity 300ms ease-out";
     noAnimalsMessage.style.opacity = "0";
 
     setTimeout(async () => {
       const response = await fetch(
-        `/api/animals/existing/html?colorId=${colorId}`
+        `/api/animals/existing/html?colorId=${colorId}`,
       );
       const html = await response.text();
 
@@ -1134,7 +1134,7 @@ async function updateRejoinAnimalContainer(colorId) {
       }
 
       const scrollableContainer = document.getElementById(
-        "scrollable-container"
+        "scrollable-container",
       );
       scrollableContainer.scrollTop = 0;
     }, 200);
@@ -1151,7 +1151,7 @@ function selectRejoinAnimal(animalDisplayName, animalImgPath) {
   updateBadgeText(color, animalDisplayName);
 
   const confirmationPanel = document.getElementById(
-    "rejoin-confirmation-panel"
+    "rejoin-confirmation-panel",
   );
   confirmationPanel.style.transition = "transform 300ms ease-in";
   confirmationPanel.style.transform = "translateY(-165px)";
@@ -1159,7 +1159,7 @@ function selectRejoinAnimal(animalDisplayName, animalImgPath) {
 
 async function confirmRejoinAnimal() {
   const rejoinConfirmationPanel = document.getElementById(
-    "rejoin-confirmation-panel"
+    "rejoin-confirmation-panel",
   );
   rejoinConfirmationPanel.style.transitionDelay = "50ms";
   rejoinConfirmationPanel.style.transition = "transform 1s ease-in";
@@ -1171,7 +1171,7 @@ async function confirmRejoinAnimal() {
   setSaveAndExitButtonToActive();
 
   const riddleScreenConfirmationDummy = document.getElementById(
-    "riddle-screen-confirmation-dummy"
+    "riddle-screen-confirmation-dummy",
   );
   riddleScreenConfirmationDummy.style.display = "none";
 
@@ -1194,7 +1194,7 @@ async function loginUser() {
         headers: {
           "Content-Type": "application/json",
         },
-      }
+      },
     );
 
     if (!response.ok) {
@@ -1214,7 +1214,7 @@ async function loginUser() {
 
 function resetRejoinScreen() {
   const rejoinUserPanelShadow = document.querySelector(
-    "#rejoin-screen .user-panel-shadow"
+    "#rejoin-screen .user-panel-shadow",
   );
   rejoinUserPanelShadow.style.display = "block";
 
@@ -1232,12 +1232,12 @@ function resetRejoinScreen() {
   noAnimalsMessage.style.opacity = "0";
 
   const rejoinAnimalOptionsContainer = document.getElementById(
-    "rejoin-animal-options-container"
+    "rejoin-animal-options-container",
   );
   rejoinAnimalOptionsContainer.innerHTML = "";
 
   const rejoinConfirmationPanel = document.getElementById(
-    "rejoin-confirmation-panel"
+    "rejoin-confirmation-panel",
   );
 
   rejoinConfirmationPanel.style.transitionDelay = "0ms";

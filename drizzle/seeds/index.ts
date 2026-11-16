@@ -1,5 +1,5 @@
-import { seedAnimals, seedColors } from "./users";
-import { seedAnswerChoices, seedRiddles } from "./riddles";
+import { seedAnimals, seedColors } from "./users.ts";
+import { seedAnswerChoices, seedRiddles } from "./riddles.ts";
 
 async function seedDatabase() {
   await seedAnimals();

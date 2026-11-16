@@ -46,7 +46,7 @@ app.post("/api/signout", async (req, res) => {
       currentGuesses: JSON.stringify(gameState.currentGuesses || []),
       riddleQueue: JSON.stringify(gameState.riddleQueue || []),
       currentShuffledChoices: JSON.stringify(
-        gameState.currentShuffledChoices || []
+        gameState.currentShuffledChoices || [],
       ),
       currentCorrectAnswerIndex: gameState.currentCorrectAnswerIndex ?? 0,
       hintsRemaining: gameState.hintsRemaining ?? 7,
@@ -59,7 +59,7 @@ app.post("/api/signout", async (req, res) => {
         scores: JSON.stringify(scores || []),
         hasViewedExitPanel: hasViewedExitPanel ? 1 : 0,
       },
-      processedGameState
+      processedGameState,
     );
 
     res.json({ message: "User and game state updated successfully: ", result });
@@ -124,7 +124,7 @@ app.post("/api/users", async (req, res) => {
 });
 
 function renderPartial(res: express.Response, template: string, data: any) {
-  return new Promise((resolve, reject) => {
+  return new Promise<string>((resolve, reject) => {
     res.render(template, data, (err, html) => {
       if (err) {
         reject(err);
@@ -144,7 +144,7 @@ app.get("/api/users/create-html", async (req, res) => {
       colors,
     });
 
-    const animalOptionsHtmlByColorId = {};
+    const animalOptionsHtmlByColorId: Record<number, string> = {};
     for (const combination of combinations) {
       const animalOptionsHtml = await renderPartial(
         res,
@@ -152,7 +152,7 @@ app.get("/api/users/create-html", async (req, res) => {
         {
           animals: combination.animals,
           isRejoin: false,
-        }
+        },
       );
       animalOptionsHtmlByColorId[combination.color.id] = animalOptionsHtml;
     }
@@ -177,7 +177,6 @@ app.get("/api/colors/used", async (req, res) => {
   }
 });
 
-
 app.get("/api/animals/existing/html", async (req, res) => {
   const colorId = Number(req.query.colorId);
 
@@ -193,8 +192,6 @@ app.get("/api/animals/existing/html", async (req, res) => {
     res.status(500).send("<p>Error loading animals</p>");
   }
 });
-
-
 
 app.get("/api/riddles/:id", async (req, res) => {
   try {

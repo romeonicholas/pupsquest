@@ -28,7 +28,7 @@ export const answerChoices = sqliteTable(
     display: text().notNull(),
     imgPath: text().notNull(),
   },
-  (table) => [index("idx_answerChoices_display").on(table.display)]
+  (table) => [index("idx_answerChoices_display").on(table.display)],
 );
 
 export const riddles = sqliteTable(
@@ -45,7 +45,7 @@ export const riddles = sqliteTable(
     check("riddles_check_1", sql`json_valid(body)`),
     check("riddles_check_2", sql`json_type(body) = 'array'`),
     check("riddles_check_3", sql`json_array_length(body) > 0`),
-  ]
+  ],
 );
 
 export const riddleAnswerChoices = sqliteTable(
@@ -64,7 +64,7 @@ export const riddleAnswerChoices = sqliteTable(
     index("idx_rac_choiceId").on(table.answerChoiceId),
     index("idx_rac_riddleId").on(table.riddleId),
     check("riddleAnswerChoices_check_4", sql`slotIndex BETWEEN 0 AND 3`),
-  ]
+  ],
 );
 
 export const users = sqliteTable(
@@ -89,7 +89,7 @@ export const users = sqliteTable(
     check("users_check_5", sql`hasViewedExitPanel IN (0, 1)`),
     check("users_check_6", sql`json_valid(scores)`),
     check("users_check_7", sql`createdLocally IN (0, 1)`),
-  ]
+  ],
 );
 
 export const userAnalytics = sqliteTable(
@@ -104,7 +104,7 @@ export const userAnalytics = sqliteTable(
   (table) => [
     index("idx_userAnalytics_createdAt").on(table.createdAt),
     check("userAnalytics_check_1", sql`createdLocally IN (0, 1)`),
-  ]
+  ],
 );
 
 export const gameStates = sqliteTable(
@@ -128,7 +128,7 @@ export const gameStates = sqliteTable(
     index("idx_gameStates_userId").on(table.userId),
     check("gameStates_check_1", sql`json_valid(currentGuesses)`),
     check("gameStates_check_2", sql`json_valid(currentShuffledChoices)`),
-  ]
+  ],
 );
 
 export const riddleAnalytics = sqliteTable(
@@ -151,8 +151,8 @@ export const riddleAnalytics = sqliteTable(
     check("riddleAnalytics_check_1", sql`wasAnswered IN (0, 1)`),
     check(
       "riddleAnalytics_check_2",
-      sql`wasAnsweredCorrectly IS NULL OR wasAnsweredCorrectly IN (0, 1)`
+      sql`wasAnsweredCorrectly IS NULL OR wasAnsweredCorrectly IN (0, 1)`,
     ),
     check("riddleAnalytics_check_3", sql`hintsUsed IS NULL OR hintsUsed >= 0`),
-  ]
+  ],
 );
