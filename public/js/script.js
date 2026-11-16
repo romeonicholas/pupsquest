@@ -1282,7 +1282,7 @@ function startOver() {
   }, 600);
 }
 
-async function markExitPanelViewed() {
+function markExitPanelViewed() {
   currentUser.hasViewedExitPanel = true;
 }
 
