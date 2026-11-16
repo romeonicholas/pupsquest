@@ -1,11 +1,14 @@
 {
   "name": "pupsquest",
   "version": "1.0.0",
+  "private": true,
   "description": "",
   "license": "ISC",
   "author": "",
   "type": "module",
-  "main": "app.js",
+  "engines": {
+    "node": ">=24"
+  },
   "scripts": {
     "start": "tsx app.ts",
     "dev": "nodemon --exec tsx app.ts",
