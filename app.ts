@@ -6,7 +6,6 @@ import { client } from "./drizzle/db.ts";
 
 import {
   getUsedColorIds,
-  getAllUserColors,
   getAvailableAnimalsForColor,
   getAllAnimalsFromUsersWithColor,
   getColorsAndAnimalsForUserCreation,
@@ -166,16 +165,6 @@ app.get("/api/users/create-html", async (req, res) => {
   } catch (error) {
     console.error("Error generating user creation HTML: ", error);
     res.status(500).json({ error: "Failed to generate user creation HTML" });
-  }
-});
-
-app.get("/api/colors", async (req, res) => {
-  try {
-    const colors = await getAllUserColors();
-    res.json(colors);
-  } catch (error) {
-    console.error("Error fetching colors: ", error);
-    res.status(500).json({ error: "Failed to fetch colors" });
   }
 });
 
