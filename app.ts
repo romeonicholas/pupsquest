@@ -5,10 +5,7 @@ import { fileURLToPath } from "url";
 import { client } from "./drizzle/db.ts";
 
 import {
-  get4UserColors,
   getUsedColorIds,
-  getAllUserColors,
-  getAvailableAnimalsForColor,
   getAllAnimalsFromUsersWithColor,
   getColorsAndAnimalsForUserCreation,
   createUserAndGameState,
@@ -27,7 +24,7 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 app.set("view engine", "ejs");
-app.use(express.static("public"));
+app.use(express.static(path.join(__dirname, "public")));
 app.set("views", path.join(__dirname, "views"));
 
 app.use(express.json());
@@ -170,16 +167,6 @@ app.get("/api/users/create-html", async (req, res) => {
   }
 });
 
-app.get("/api/colors", async (req, res) => {
-  try {
-    const colors = await getAllUserColors();
-    res.json(colors);
-  } catch (error) {
-    console.error("Error fetching colors: ", error);
-    res.status(500).json({ error: "Failed to fetch colors" });
-  }
-});
-
 app.get("/api/colors/used", async (req, res) => {
   try {
     const colors = await getUsedColorIds();
@@ -190,21 +177,6 @@ app.get("/api/colors/used", async (req, res) => {
   }
 });
 
-app.get("/api/colors/html", async (req, res) => {
-  try {
-    const colors = await get4UserColors();
-    res.render("partials/color_picker", { colors }, (err, html) => {
-      if (err) {
-        console.error("Error rendering template:", err);
-        return res.status(500).json({ error: "Error rendering template" });
-      }
-      res.json({ html: html, colors: colors });
-    });
-  } catch (error) {
-    console.error("Error fetching colors:", error);
-    res.status(500).send("<p>Error loading colors</p>");
-  }
-});
 
 app.get("/api/animals/existing/html", async (req, res) => {
   const colorId = Number(req.query.colorId);
@@ -222,21 +194,7 @@ app.get("/api/animals/existing/html", async (req, res) => {
   }
 });
 
-app.get("/api/animals/available-for-color", async (req, res) => {
-  const colorId = Number(req.query.colorId);
 
-  if (isNaN(colorId)) {
-    return res.status(400).json({ error: "Missing or invalid colorId" });
-  }
-
-  try {
-    const animals = await getAvailableAnimalsForColor(colorId);
-    res.render("partials/animal_options", { animals, isRejoin: false });
-  } catch (error) {
-    console.error("Error fetching animals:", error);
-    res.status(500).json({ error: "Failed to fetch animals" });
-  }
-});
 
 app.get("/api/riddles/:id", async (req, res) => {
   try {
@@ -301,8 +259,6 @@ app.get("/", (req, res) => {
 
   res.render("index", { isVisitor, date });
 });
-
-app.use("/assets", express.static(path.join(__dirname, "public")));
 
 app.listen(PORT, HOST, async () => {
   console.log(`Started server on ${HOST}:${PORT}`);

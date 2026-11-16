@@ -39,21 +39,6 @@ export async function getUsedColorIds() {
   return colors.map((c) => c.id);
 }
 
-export async function getAllUserColors() {
-  const colors = await db
-    .select({
-      id: userColors.id,
-      name: userColors.name,
-      hex: userColors.hex,
-      badgePath: userColors.badgePath,
-    })
-    .from(userColors)
-    .orderBy(sql`RANDOM()`)
-    .limit(8);
-
-  return colors;
-}
-
 export async function addUserAnimals(
   animals: { name: string; imgPath: string }[]
 ) {

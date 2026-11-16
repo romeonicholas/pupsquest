@@ -1,11 +1,9 @@
 import {
   sqliteTable,
-  AnySQLiteColumn,
   check,
   integer,
   text,
   index,
-  foreignKey,
 } from "drizzle-orm/sqlite-core";
 import { sql } from "drizzle-orm";
 
@@ -158,11 +156,3 @@ export const riddleAnalytics = sqliteTable(
     check("riddleAnalytics_check_3", sql`hintsUsed IS NULL OR hintsUsed >= 0`),
   ]
 );
-
-export const migrations = sqliteTable("migrations", {
-  id: integer().primaryKey({ autoIncrement: true }),
-  filename: text().notNull(),
-  executedAt: integer("executed_at")
-    .default(sql`(strftime('%s','now'))`)
-    .notNull(),
-});

@@ -439,13 +439,6 @@ function disableAllInput() {
   }
 }
 
-function disableRiddleInput() {
-  const riddleScreen = document.getElementById("riddle-screen");
-  if (riddleScreen) {
-    riddleScreen.style.pointerEvents = "none";
-  }
-}
-
 function enableAllInput() {
   const container = document.getElementById("container");
   if (container) {
@@ -883,12 +876,12 @@ function showColorSelectionIndicator(colorDisplayName, prefix = "") {
 
 function updateBadgeColor(colorDisplayName) {
   const badgeBase = document.getElementById("badge-base");
-  badgeBase.src = `images/users/badges/${colorDisplayName}.png`;
+  badgeBase.src = `/images/users/badges/${colorDisplayName}.png`;
 }
 
 function resetBadge() {
   const badgeBase = document.getElementById("badge-base");
-  badgeBase.src = "images/users/badges/gray.png";
+  badgeBase.src = "/images/users/badges/gray.png";
 
   const badgeIcons = document.querySelectorAll(".badge-icon");
   badgeIcons.forEach((icon) => icon.classList.remove("visible"));
@@ -918,14 +911,6 @@ async function selectColor(colorDisplayName, colorId) {
     userCreationInstructions.style.transition = "transform 800ms ease-in";
     userCreationInstructions.style.transform = "translateY(2210px)";
   }
-}
-
-async function fetchAvailableAnimalsForColor(colorId) {
-  const response = await fetch(
-    `/api/animals/available/html?colorId=${colorId}&limit=8`
-  );
-  const html = await response.text();
-  return html;
 }
 
 function clearAnimalSelectionIndicators(prefix = "") {
@@ -1290,23 +1275,8 @@ function startOver() {
   }, 600);
 }
 
-async function markExitPanelViewed() {
+function markExitPanelViewed() {
   currentUser.hasViewedExitPanel = true;
-
-  if (currentUser && !currentUser.hasViewedExitPanel) {
-    try {
-      await fetch(`/api/users/${currentUser.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          hasViewedExitPanel: true,
-        }),
-      });
-    } catch (error) {
-      console.error("Failed to update exit panel viewed status:", error);
-      currentUser.hasViewedExitPanel = false;
-    }
-  }
 }
 
 function shouldShowExitPanelDetails() {
