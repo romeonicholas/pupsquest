@@ -3,7 +3,7 @@ dotenv.config({ path: ".env", quiet: true });
 
 import { drizzle } from "drizzle-orm/libsql";
 import { createClient } from "@libsql/client";
-import * as schema from "./schema";
+import * as schema from "./schema.ts";
 
 const dbUrl = process.env.DB_FILE_NAME;
 

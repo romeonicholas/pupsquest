@@ -1,4 +1,4 @@
-import { db } from "./db";
+import { db } from "./db.ts";
 import {
   userAnimals,
   userColors,
@@ -9,7 +9,7 @@ import {
   riddleAnswerChoices,
   riddles,
   riddleAnalytics,
-} from "./schema";
+} from "./schema.ts";
 import { eq, and, notInArray, sql, lte, inArray } from "drizzle-orm";
 
 export async function get4UserColors() {
