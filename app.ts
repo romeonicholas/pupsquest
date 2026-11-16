@@ -9,10 +9,11 @@ import {
   createUserAndGameState,
   getUserAndGameState,
   updateUserAndGameState,
-  getRiddle,
   getAverageScore,
   addRiddleAnalytics,
 } from "./drizzle/queries.ts";
+
+import riddlesRouter from "./routes/riddles.ts";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -185,44 +186,7 @@ app.get("/api/animals/existing/html", async (req, res) => {
   }
 });
 
-app.get("/api/riddles/:id", async (req, res) => {
-  try {
-    const riddleId = Number(req.params.id);
-
-    if (isNaN(riddleId)) {
-      return res.status(400).json({ error: "Invalid riddle ID" });
-    }
-
-    const riddle = await getRiddle(riddleId);
-
-    if (!riddle) {
-      return res.status(404).json({ error: "Riddle not found" });
-    }
-
-    res.json(riddle);
-  } catch (error) {
-    console.error("Error fetching riddle:", error);
-    res.status(500).json({ error: "Failed to fetch riddle" });
-  }
-});
-
-app.post("/api/analytics/riddle", async (req, res) => {
-  const riddleId = Number(req.body.riddleId);
-  const hintsUsed = Number(req.body.hintsUsed);
-  const wasAnsweredCorrectly = Boolean(req.body.wasAnsweredCorrectly);
-
-  if (isNaN(riddleId) || isNaN(hintsUsed)) {
-    return res.status(400).json({ error: "Invalid riddle analytics data" });
-  }
-
-  try {
-    await addRiddleAnalytics(riddleId, wasAnsweredCorrectly, hintsUsed);
-    res.status(201).end();
-  } catch (error) {
-    console.error("Error saving riddle analytics:", error);
-    res.status(500).json({ error: "Failed to save riddle analytics" });
-  }
-});
+app.use(riddlesRouter);
 
 app.get("/favicon.ico", (req, res) => {
   res.status(204).end();
