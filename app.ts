@@ -124,7 +124,7 @@ app.post("/api/users", async (req, res) => {
 });
 
 function renderPartial(res: express.Response, template: string, data: any) {
-  return new Promise((resolve, reject) => {
+  return new Promise<string>((resolve, reject) => {
     res.render(template, data, (err, html) => {
       if (err) {
         reject(err);
@@ -144,7 +144,7 @@ app.get("/api/users/create-html", async (req, res) => {
       colors,
     });
 
-    const animalOptionsHtmlByColorId = {};
+    const animalOptionsHtmlByColorId: Record<number, string> = {};
     for (const combination of combinations) {
       const animalOptionsHtml = await renderPartial(
         res,

@@ -168,7 +168,9 @@ export async function updateUserAndGameState(
   };
 }
 
-export async function addUsersToAnalyticsTable(usersToDelete) {
+export async function addUsersToAnalyticsTable(
+  usersToDelete: { createdAt: number; createdLocally: number }[],
+) {
   const analyticsData = usersToDelete.map((user) => ({
     createdAt: user.createdAt,
     createdLocally: user.createdLocally,
