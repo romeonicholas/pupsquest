@@ -876,12 +876,12 @@ function showColorSelectionIndicator(colorDisplayName, prefix = "") {
 
 function updateBadgeColor(colorDisplayName) {
   const badgeBase = document.getElementById("badge-base");
-  badgeBase.src = `images/users/badges/${colorDisplayName}.png`;
+  badgeBase.src = `/images/users/badges/${colorDisplayName}.png`;
 }
 
 function resetBadge() {
   const badgeBase = document.getElementById("badge-base");
-  badgeBase.src = "images/users/badges/gray.png";
+  badgeBase.src = "/images/users/badges/gray.png";
 
   const badgeIcons = document.querySelectorAll(".badge-icon");
   badgeIcons.forEach((icon) => icon.classList.remove("visible"));
