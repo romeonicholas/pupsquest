@@ -17,6 +17,7 @@ import {
   deleteExpiredUsers,
   getRiddle,
   getAverageScore,
+  addRiddleAnalytics,
 } from "./drizzle/queries.ts";
 
 dotenv.config({ path: ".env", quiet: true });
@@ -107,6 +108,7 @@ app.post("/api/users", async (req, res) => {
   try {
     const colorId = Number(req.body.colorId);
     const animalId = Number(req.body.animalId);
+    const isVisitor = req.body.isVisitor;
 
     if (isNaN(colorId) || isNaN(animalId)) {
       return res
@@ -114,7 +116,7 @@ app.post("/api/users", async (req, res) => {
         .json({ error: "Missing or invalid colorId or animalId" });
     }
 
-    const newUser = await createUserAndGameState(colorId, animalId);
+    const newUser = await createUserAndGameState(colorId, animalId, isVisitor);
 
     res.status(201).json(newUser);
   } catch (error) {
@@ -257,6 +259,24 @@ app.get("/api/riddles/:id", async (req, res) => {
   }
 });
 
+app.post("/api/analytics/riddle", async (req, res) => {
+  const riddleId = Number(req.body.riddleId);
+  const hintsUsed = Number(req.body.hintsUsed);
+  const wasAnsweredCorrectly = Boolean(req.body.wasAnsweredCorrectly);
+
+  if (isNaN(riddleId) || isNaN(hintsUsed)) {
+    return res.status(400).json({ error: "Invalid riddle analytics data" });
+  }
+
+  try {
+    await addRiddleAnalytics(riddleId, wasAnsweredCorrectly, hintsUsed);
+    res.status(201).end();
+  } catch (error) {
+    console.error("Error saving riddle analytics:", error);
+    res.status(500).json({ error: "Failed to save riddle analytics" });
+  }
+});
+
 app.get("/favicon.ico", (req, res) => {
   res.status(204).end();
 });
@@ -284,19 +304,18 @@ app.get("/", (req, res) => {
 
 app.use("/assets", express.static(path.join(__dirname, "public")));
 
-app.listen(PORT, HOST, () => {
+app.listen(PORT, HOST, async () => {
   console.log(`Started server on ${HOST}:${PORT}`);
-});
 
-setInterval(async () => {
   try {
-    const n = await deleteExpiredUsers();
-    if (n) console.log(`Deleted ${n} expired users`);
+    const numberOfDeletedUsers = await deleteExpiredUsers();
+    if (numberOfDeletedUsers)
+      console.log(`Deleted ${numberOfDeletedUsers} expired users`);
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     console.error("Expired user deletion failed:", errorMessage);
   }
-}, 180 * 60 * 1000);
+});
 
 process.on("SIGINT", async () => {
   try {

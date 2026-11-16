@@ -489,6 +489,17 @@ async function updateScoreText() {
   }
 }
 
+function recordRiddleResult(wasAnsweredCorrectly) {
+  const riddleId = currentGameState.riddleQueue[currentGameState.queueCursor];
+  const hintsUsed = currentGameState.currentGuesses.length;
+
+  fetch("/api/analytics/riddle", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ riddleId, wasAnsweredCorrectly, hintsUsed}),
+  }).catch((error) => console.error("Error saving riddle analytics:", error));
+}
+
 async function handleIncorrectGuess(clickedArea, iconIndex) {
   disableAllInput();
   replaceElementToRemoveListeners(clickedArea);
@@ -501,6 +512,7 @@ async function handleIncorrectGuess(clickedArea, iconIndex) {
     currentGameState.currentGuesses.length >= 3 ||
     currentGameState.hintsRemaining <= 0
   ) {
+    recordRiddleResult(false);
     currentGameState.currentGuesses = [];
     setTimeout(async () => {
       riddleTextLayerBackground.style.transition = "transform 1s ease-in";
@@ -575,6 +587,7 @@ function handleCorrectGuess(clickedArea, iconIndex) {
   replaceElementToRemoveListeners(clickedArea);
 
   currentGameState.currentScore++;
+  recordRiddleResult(true);
   currentGameState.currentGuesses = [];
   showIconBacking(iconIndex);
 
@@ -1038,6 +1051,7 @@ async function createUser() {
     const userData = {
       colorId: parseInt(selectedColorId),
       animalId: parseInt(selectedAnimalId),
+      isVisitor: isVisitor,
     };
 
     const response = await fetch("/api/users", {

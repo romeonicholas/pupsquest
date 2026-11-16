@@ -3,10 +3,12 @@ import {
   userAnimals,
   userColors,
   users,
+  userAnalytics,
   gameStates,
   answerChoices,
   riddleAnswerChoices,
   riddles,
+  riddleAnalytics,
 } from "./schema";
 import { eq, and, notInArray, sql, lte, inArray } from "drizzle-orm";
 
@@ -65,7 +67,8 @@ export async function addUserAnimals(
 
 export async function createUserAndGameState(
   colorId: number,
-  animalId: number
+  animalId: number,
+  isVisitor: boolean
 ) {
   const [existingUser] = await db
     .select({ id: users.id })
@@ -82,6 +85,7 @@ export async function createUserAndGameState(
     .values({
       userColor: colorId,
       userAnimal: animalId,
+      createdLocally: isVisitor ? 0 : 1,
     })
     .returning();
 
@@ -179,15 +183,30 @@ export async function updateUserAndGameState(
   };
 }
 
+export async function addUsersToAnalyticsTable(usersToDelete) {
+  const analyticsData = usersToDelete.map((user) => ({
+    createdAt: user.createdAt,
+    createdLocally: user.createdLocally,
+  }));
+
+  await db.insert(userAnalytics).values(analyticsData);
+}
+
 export async function deleteExpiredUsers() {
-  const expirationThreshold = Date.now() - 24 * 60 * 60 * 1000;
+  const expirationThreshold = (Date.now() - 24 * 60 * 60 * 1000) / 1000;
 
   const usersToDelete = await db
-    .select({ id: users.id })
+    .select({
+      id: users.id,
+      createdAt: users.createdAt,
+      createdLocally: users.createdLocally,
+    })
     .from(users)
     .where(lte(users.createdAt, expirationThreshold));
 
   if (usersToDelete.length > 0) {
+    await addUsersToAnalyticsTable(usersToDelete);
+
     await db.delete(users).where(
       inArray(
         users.id,
@@ -376,4 +395,18 @@ export async function addRiddles(
 
     await db.insert(riddleAnswerChoices).values(riddleAnswerChoiceEntries);
   }
+}
+
+
+export async function addRiddleAnalytics(
+  riddleId: number,
+  wasAnsweredCorrectly: boolean,
+  hintsUsed: number
+) {
+  await db.insert(riddleAnalytics).values({
+    riddleId,
+    wasAnswered: 1,
+    wasAnsweredCorrectly: wasAnsweredCorrectly ? 1 : 0,
+    hintsUsed,
+  });
 }
