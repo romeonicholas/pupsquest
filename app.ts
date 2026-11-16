@@ -3,18 +3,16 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 import {
-  getUsedColorIds,
   getAllAnimalsFromUsersWithColor,
   getColorsAndAnimalsForUserCreation,
   createUserAndGameState,
   getUserAndGameState,
   updateUserAndGameState,
-  getAverageScore,
-  addRiddleAnalytics,
 } from "./drizzle/queries.ts";
 
 import riddlesRouter from "./routes/riddles.ts";
 import colorsRouter from "./routes/colors.ts";
+import analyticsRouter from "./routes/analytics.ts";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -85,15 +83,7 @@ app.get("/api/users", async (req, res) => {
   }
 });
 
-app.get("/api/stats/average-score", async (req, res) => {
-  try {
-    const data = await getAverageScore();
-    res.json(data);
-  } catch (error) {
-    console.error("Error calculating average scores: ", error);
-    res.status(500).json({ error: "Failed to calculate average scores" });
-  }
-});
+app.use(analyticsRouter);
 
 app.post("/api/users", async (req, res) => {
   try {
