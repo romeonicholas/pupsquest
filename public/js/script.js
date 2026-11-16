@@ -439,13 +439,6 @@ function disableAllInput() {
   }
 }
 
-function disableRiddleInput() {
-  const riddleScreen = document.getElementById("riddle-screen");
-  if (riddleScreen) {
-    riddleScreen.style.pointerEvents = "none";
-  }
-}
-
 function enableAllInput() {
   const container = document.getElementById("container");
   if (container) {
