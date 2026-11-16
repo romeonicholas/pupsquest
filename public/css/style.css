@@ -1,7 +1,8 @@
 @font-face {
   font-family: "Gotham";
   src: url("/fonts/Gotham-Medium.eot");
-  src: url("/fonts/Gotham-Medium.eot") format("embedded-opentype"),
+  src:
+    url("/fonts/Gotham-Medium.eot") format("embedded-opentype"),
     url("/fonts/Gotham-Medium.woff2") format("woff2"),
     url("/fonts/Gotham-Medium.woff") format("woff"),
     url("/fonts/Gotham-Medium.ttf") format("truetype");
@@ -10,7 +11,8 @@
 @font-face {
   font-family: "Enriqueta";
   src: url("/fonts/Enriqueta-Regular.eot");
-  src: url("/fonts/Enriqueta-Regular.eot") format("embedded-opentype"),
+  src:
+    url("/fonts/Enriqueta-Regular.eot") format("embedded-opentype"),
     url("/fonts/Enriqueta-Regular.woff2") format("woff2"),
     url("/fonts/Enriqueta-Regular.woff") format("woff"),
     url("/fonts/Enriqueta-Regular.ttf") format("truetype");
@@ -19,7 +21,8 @@
 @font-face {
   font-family: "Enriqueta SemiBold";
   src: url("/fonts/Enriqueta SemiBold.eot");
-  src: url("/fonts/Enriqueta SemiBold.eot") format("embedded-opentype"),
+  src:
+    url("/fonts/Enriqueta SemiBold.eot") format("embedded-opentype"),
     url("/fonts/Enriqueta SemiBold.woff2") format("woff2"),
     url("/fonts/Enriqueta SemiBold.woff") format("woff"),
     url("/fonts/Enriqueta SemiBold.ttf") format("truetype");

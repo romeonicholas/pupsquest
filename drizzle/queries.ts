@@ -40,7 +40,7 @@ export async function getUsedColorIds() {
 }
 
 export async function addUserAnimals(
-  animals: { name: string; imgPath: string }[]
+  animals: { name: string; imgPath: string }[],
 ) {
   const insertedAnimals = await db
     .insert(userAnimals)
@@ -53,7 +53,7 @@ export async function addUserAnimals(
 export async function createUserAndGameState(
   colorId: number,
   animalId: number,
-  isVisitor: boolean
+  isVisitor: boolean,
 ) {
   const [existingUser] = await db
     .select({ id: users.id })
@@ -99,7 +99,7 @@ export async function createUserAndGameState(
       currentGuesses: JSON.parse(newGameState.currentGuesses || "[]"),
       riddleQueue: JSON.parse(newGameState.riddleQueue || "[]"),
       currentShuffledChoices: JSON.parse(
-        newGameState.currentShuffledChoices || "[]"
+        newGameState.currentShuffledChoices || "[]",
       ),
     },
   };
@@ -136,7 +136,7 @@ export async function getUserAndGameState(colorId: number, animalId: number) {
       currentGuesses: JSON.parse(gameState.currentGuesses || "[]"),
       riddleQueue: JSON.parse(gameState.riddleQueue || "[]"),
       currentShuffledChoices: JSON.parse(
-        gameState.currentShuffledChoices || "[]"
+        gameState.currentShuffledChoices || "[]",
       ),
     },
   };
@@ -148,7 +148,7 @@ type GameStateInsert = typeof gameStates.$inferInsert;
 export async function updateUserAndGameState(
   userId: number,
   userUpdates: Partial<UserInsert>,
-  gameStateUpdates: Partial<GameStateInsert>
+  gameStateUpdates: Partial<GameStateInsert>,
 ) {
   const [updatedUser] = await db
     .update(users)
@@ -195,8 +195,8 @@ export async function deleteExpiredUsers() {
     await db.delete(users).where(
       inArray(
         users.id,
-        usersToDelete.map((u) => u.id)
-      )
+        usersToDelete.map((u) => u.id),
+      ),
     );
   }
 
@@ -272,7 +272,7 @@ export async function getColorsAndAnimalsForUserCreation() {
 }
 
 export async function addUserColors(
-  colors: { name: string; hex: string; badgePath: string }[]
+  colors: { name: string; hex: string; badgePath: string }[],
 ) {
   const insertedColors = await db
     .insert(userColors)
@@ -283,7 +283,7 @@ export async function addUserColors(
 }
 
 export async function addAnswerChoices(
-  choicesToSeed: { key: string; display: string; imgPath: string }[]
+  choicesToSeed: { key: string; display: string; imgPath: string }[],
 ) {
   const insertedChoices = await db
     .insert(answerChoices)
@@ -312,7 +312,7 @@ export async function getRiddle(riddleId: number) {
     .from(answerChoices)
     .innerJoin(
       riddleAnswerChoices,
-      eq(answerChoices.id, riddleAnswerChoices.answerChoiceId)
+      eq(answerChoices.id, riddleAnswerChoices.answerChoiceId),
     )
     .where(eq(riddleAnswerChoices.riddleId, riddle.id))
     .orderBy(riddleAnswerChoices.slotIndex);
@@ -342,7 +342,7 @@ export async function addRiddles(
     answerDetails: string;
     answerImgPath: string;
     answerChoiceKeys: string[];
-  }[]
+  }[],
 ) {
   const allAnswerChoices = await db
     .select({
@@ -369,7 +369,7 @@ export async function addRiddles(
     const newRiddleId = newRiddle.id;
 
     const choiceIds = riddleData.answerChoiceKeys.map((key) =>
-      answerChoiceMap.get(key)
+      answerChoiceMap.get(key),
     );
 
     const riddleAnswerChoiceEntries = choiceIds.map((choiceId, index) => ({
@@ -382,11 +382,10 @@ export async function addRiddles(
   }
 }
 
-
 export async function addRiddleAnalytics(
   riddleId: number,
   wasAnsweredCorrectly: boolean,
-  hintsUsed: number
+  hintsUsed: number,
 ) {
   await db.insert(riddleAnalytics).values({
     riddleId,
