@@ -6,7 +6,6 @@ import { client } from "./drizzle/db.ts";
 
 import {
   getUsedColorIds,
-  getAvailableAnimalsForColor,
   getAllAnimalsFromUsersWithColor,
   getColorsAndAnimalsForUserCreation,
   createUserAndGameState,
@@ -195,21 +194,7 @@ app.get("/api/animals/existing/html", async (req, res) => {
   }
 });
 
-app.get("/api/animals/available-for-color", async (req, res) => {
-  const colorId = Number(req.query.colorId);
 
-  if (isNaN(colorId)) {
-    return res.status(400).json({ error: "Missing or invalid colorId" });
-  }
-
-  try {
-    const animals = await getAvailableAnimalsForColor(colorId);
-    res.render("partials/animal_options", { animals, isRejoin: false });
-  } catch (error) {
-    console.error("Error fetching animals:", error);
-    res.status(500).json({ error: "Failed to fetch animals" });
-  }
-});
 
 app.get("/api/riddles/:id", async (req, res) => {
   try {
