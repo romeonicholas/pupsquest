@@ -17,6 +17,7 @@ import {
   deleteExpiredUsers,
   getRiddle,
   getAverageScore,
+  addRiddleAnalytics,
 } from "./drizzle/queries.ts";
 
 dotenv.config({ path: ".env", quiet: true });
@@ -255,6 +256,19 @@ app.get("/api/riddles/:id", async (req, res) => {
   } catch (error) {
     console.error("Error fetching riddle:", error);
     res.status(500).json({ error: "Failed to fetch riddle" });
+  }
+});
+
+app.post("/api/analytics/riddle", async (req, res) => {
+  const riddleId = Number(req.body.riddleId);
+  const wasAnsweredCorrectly = Boolean(req.body.wasAnsweredCorrectly);
+
+  try {
+    await addRiddleAnalytics(riddleId, wasAnsweredCorrectly);
+    res.status(201).end();
+  } catch (error) {
+    console.error("Error saving riddle analytics:", error);
+    res.status(500).json({ error: "Failed to save riddle analytics" });
   }
 });
 

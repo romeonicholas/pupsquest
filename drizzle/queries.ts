@@ -8,6 +8,7 @@ import {
   answerChoices,
   riddleAnswerChoices,
   riddles,
+  riddleAnalytics,
 } from "./schema";
 import { eq, and, notInArray, sql, lte, inArray } from "drizzle-orm";
 
@@ -394,4 +395,16 @@ export async function addRiddles(
 
     await db.insert(riddleAnswerChoices).values(riddleAnswerChoiceEntries);
   }
+}
+
+
+export async function addRiddleAnalytics(
+  riddleId: number,
+  wasAnsweredCorrectly: boolean,
+) {
+  await db.insert(riddleAnalytics).values({
+    riddleId,
+    wasAnswered: 1,
+    wasAnsweredCorrectly: wasAnsweredCorrectly ? 1 : 0,
+  });
 }
