@@ -14,6 +14,7 @@ import {
 } from "./drizzle/queries.ts";
 
 import riddlesRouter from "./routes/riddles.ts";
+import colorsRouter from "./routes/colors.ts";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -160,15 +161,7 @@ app.get("/api/users/create-html", async (req, res) => {
   }
 });
 
-app.get("/api/colors/used", async (req, res) => {
-  try {
-    const colors = await getUsedColorIds();
-    res.json(colors);
-  } catch (error) {
-    console.error("Error fetching used colors: ", error);
-    res.status(500).json({ error: "Failed to fetch used colors" });
-  }
-});
+app.use(colorsRouter);
 
 app.get("/api/animals/existing/html", async (req, res) => {
   const colorId = Number(req.query.colorId);
