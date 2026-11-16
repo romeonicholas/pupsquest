@@ -401,10 +401,12 @@ export async function addRiddles(
 export async function addRiddleAnalytics(
   riddleId: number,
   wasAnsweredCorrectly: boolean,
+  hintsUsed: number
 ) {
   await db.insert(riddleAnalytics).values({
     riddleId,
     wasAnswered: 1,
     wasAnsweredCorrectly: wasAnsweredCorrectly ? 1 : 0,
+    hintsUsed,
   });
 }

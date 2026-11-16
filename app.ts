@@ -261,10 +261,15 @@ app.get("/api/riddles/:id", async (req, res) => {
 
 app.post("/api/analytics/riddle", async (req, res) => {
   const riddleId = Number(req.body.riddleId);
+  const hintsUsed = Number(req.body.hintsUsed);
   const wasAnsweredCorrectly = Boolean(req.body.wasAnsweredCorrectly);
 
+  if (isNaN(riddleId) || isNaN(hintsUsed)) {
+    return res.status(400).json({ error: "Invalid riddle analytics data" });
+  }
+
   try {
-    await addRiddleAnalytics(riddleId, wasAnsweredCorrectly);
+    await addRiddleAnalytics(riddleId, wasAnsweredCorrectly, hintsUsed);
     res.status(201).end();
   } catch (error) {
     console.error("Error saving riddle analytics:", error);

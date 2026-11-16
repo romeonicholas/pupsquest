@@ -496,7 +496,7 @@ function recordRiddleResult(wasAnsweredCorrectly) {
   fetch("/api/analytics/riddle", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ riddleId, wasAnsweredCorrectly }),
+    body: JSON.stringify({ riddleId, wasAnsweredCorrectly, hintsUsed}),
   }).catch((error) => console.error("Error saving riddle analytics:", error));
 }
 
