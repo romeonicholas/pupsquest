@@ -7,6 +7,7 @@ import {
   boolean,
   timestamp,
   jsonb,
+  uniqueIndex,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 
@@ -94,7 +95,13 @@ export const users = pgTable(
     hasViewedExitPanel: boolean().notNull().default(false),
     createdLocally: boolean().notNull().default(false),
   },
-  (table) => [index("idx_users_createdAt").on(table.createdAt)],
+  (table) => [
+    index("idx_users_createdAt").on(table.createdAt),
+    uniqueIndex("users_color_animal_unique").on(
+      table.userColor,
+      table.userAnimal,
+    ),
+  ],
 );
 
 export const userAnalytics = pgTable(
