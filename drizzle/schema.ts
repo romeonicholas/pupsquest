@@ -33,14 +33,20 @@ export const answerChoices = pgTable(
   (table) => [index("idx_answerChoices_display").on(table.display)],
 );
 
-export const riddles = pgTable("riddles", {
-  id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  riddleKey: text().notNull().unique(),
-  headline: text().notNull(),
-  body: text().notNull(),
-  answerDetails: text().notNull(),
-  answerImgPath: text().notNull(),
-});
+export const riddles = pgTable(
+  "riddles",
+  {
+    id: integer().primaryKey().generatedAlwaysAsIdentity(),
+    riddleKey: text().notNull().unique(),
+    headline: text().notNull(),
+    body: text().array().notNull(),
+    answerDetails: text().notNull(),
+    answerImgPath: text().notNull(),
+  },
+  (table) => [
+    check("riddles_body_not_empty", sql`cardinality(${table.body}) > 0`),
+  ],
+);
 
 export const riddleAnswerChoices = pgTable(
   "riddleAnswerChoices",

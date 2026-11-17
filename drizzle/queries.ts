@@ -315,7 +315,7 @@ export async function getRiddle(riddleId: number) {
     id: riddle.id,
     riddleKey: riddle.riddleKey,
     headline: riddle.headline,
-    body: JSON.parse(riddle.body),
+    body: riddle.body,
     answerDetails: riddle.answerDetails,
     answerImgPath: riddle.answerImgPath,
     answerChoices: answerChoicesForRiddle.map((choice) => ({
@@ -354,7 +354,7 @@ export async function addRiddles(
       .values({
         riddleKey: riddleData.riddleKey,
         headline: riddleData.headline,
-        body: JSON.stringify(riddleData.bodyLines),
+        body: riddleData.bodyLines,
         answerDetails: riddleData.answerDetails,
         answerImgPath: riddleData.answerImgPath,
       })
