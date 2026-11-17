@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 
 test.use({ viewport: { width: 1080, height: 1920 }, hasTouch: true });
 
-test("create a user, answer a riddle correctly", async ({ page }) => {
+test("create a user, answer a riddle correctly, sign out", async ({ page }) => {
   await page.goto("/");
 
   await page.locator("#museum-new-game-button").tap();
@@ -41,4 +41,9 @@ test("create a user, answer a riddle correctly", async ({ page }) => {
   }
 
   await expect(page.locator("#answer-correct-text")).toBeVisible();
+
+  await page.locator("#save-exit-button").tap();
+  await page.locator("#sign-out-button").tap();
+
+  await expect(page.locator("#museum-new-game-button")).toBeVisible();
 });
