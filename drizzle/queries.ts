@@ -180,7 +180,11 @@ export async function addUsersToAnalyticsTable(
 }
 
 export async function deleteExpiredUsers() {
-  const expirationThreshold = (Date.now() - 24 * 60 * 60 * 1000) / 1000;
+  const expirationThreshold = new Date();
+  expirationThreshold.setDate(expirationThreshold.getDate() - 1);
+  const expirationThresholdInSeconds = Math.floor(
+    expirationThreshold.getTime() / 1000,
+  );
 
   const usersToDelete = await db
     .select({
@@ -189,7 +193,7 @@ export async function deleteExpiredUsers() {
       createdLocally: users.createdLocally,
     })
     .from(users)
-    .where(lte(users.createdAt, expirationThreshold));
+    .where(lte(users.createdAt, expirationThresholdInSeconds));
 
   if (usersToDelete.length > 0) {
     await addUsersToAnalyticsTable(usersToDelete);
