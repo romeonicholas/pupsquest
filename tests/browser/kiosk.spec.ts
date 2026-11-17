@@ -8,6 +8,11 @@ async function createUserAndStartRiddles(page: Page) {
   await page.locator("#user-creation-instructions-button").tap();
 
   const colorButton = page.locator("#color-picker .color-button").first();
+  const colorName = (await colorButton.getAttribute("id"))!.replace(
+    "button-",
+    "",
+  );
+
   await colorButton.tap();
 
   const animalOption = page
@@ -28,6 +33,8 @@ async function createUserAndStartRiddles(page: Page) {
   await expect(page.locator("#status-wheel-container")).toContainText(
     "RIDDLE 1",
   );
+
+  return { colorName, animalName };
 }
 
 test("create a user, go to first riddle", async ({ page }) => {
@@ -88,4 +95,39 @@ test("sign out via Sign Out button in open exit panel", async ({ page }) => {
   await page.locator("#sign-out-button").tap();
 
   await expect(page.locator("#museum-new-game-button")).toBeVisible();
+});
+
+test("rejoin game after signing out", async ({ page }) => {
+  const { colorName, animalName } = await createUserAndStartRiddles(page);
+  await page.locator("#save-exit-button").tap();
+  await page.locator("#sign-out-button").tap();
+  await page.locator("#museum-rejoin-game-button").tap();
+
+  await expect(
+    page
+      .locator(".rejoin-color-option", {
+        has: page.locator(`#rejoin-${colorName}-selected`),
+      })
+      .locator(".color-unavailability-indicator"),
+  ).not.toHaveClass(/active/);
+
+  await page
+    .locator(".rejoin-color-option", {
+      has: page.locator(`#rejoin-${colorName}-selected`),
+    })
+    .locator("button")
+    .tap();
+
+  await page
+    .locator("#rejoin-animal-options-container .animal-option", {
+      hasText: animalName,
+    })
+    .locator(".animal-button")
+    .tap();
+
+  await page.locator("#rejoin-screen #animal-confirmation-button").tap();
+
+  await expect(page.locator("#status-wheel-container")).toContainText(
+    "RIDDLE 1",
+  );
 });
