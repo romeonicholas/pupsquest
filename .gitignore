@@ -13,3 +13,4 @@ node_modules
 public/fonts/Gotham-*
 
 test.db
+test-results/
