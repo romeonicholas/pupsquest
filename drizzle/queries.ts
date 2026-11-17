@@ -205,18 +205,16 @@ export async function deleteExpiredUsers() {
   return usersToDelete.length;
 }
 
+//Still wonky, scores should probably be an actual array soon
 export async function getAverageScore() {
   const [result] = await db
     .select({
       averageScore: sql<number>`AVG(
-        CASE 
-          WHEN json_array_length(${users.scores}) = 0 THEN NULL
-          ELSE (SELECT AVG(CAST(value AS INTEGER)) FROM json_each(${users.scores}))
-        END
-      )`,
+        (SELECT AVG(value::integer) FROM jsonb_array_elements_text(${users.scores}::jsonb))
+      )::float`,
     })
     .from(users)
-    .where(sql`json_array_length(${users.scores}) > 0`);
+    .where(sql`jsonb_array_length(${users.scores}::jsonb) > 0`);
 
   return {
     averageScore: result.averageScore || 0,
