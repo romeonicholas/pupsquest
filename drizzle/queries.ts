@@ -91,12 +91,7 @@ export async function createUserAndGameState(
 
   return {
     user: newUser,
-    gameState: {
-      ...newGameState,
-      currentGuesses: newGameState.currentGuesses || [],
-      riddleQueue: newGameState.riddleQueue || [],
-      currentShuffledChoices: newGameState.currentShuffledChoices,
-    },
+    gameState: newGameState,
   };
 }
 
@@ -123,12 +118,7 @@ export async function getUserAndGameState(colorId: number, animalId: number) {
 
   return {
     user,
-    gameState: {
-      ...gameState,
-      currentGuesses: gameState.currentGuesses || [],
-      riddleQueue: gameState.riddleQueue || [],
-      currentShuffledChoices: gameState.currentShuffledChoices,
-    },
+    gameState,
   };
 }
 
