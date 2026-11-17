@@ -59,7 +59,7 @@ test("answer a riddle correctly on first attempt and go to next riddle", async (
   );
 });
 
-test("first time sign out shows the full sign out panel, cancel closes it, second time signs out immediately", async ({
+test("open sign out panel (first time), close it, sign out via Save & Exit", async ({
   page,
 }) => {
   await createUserAndStartRiddles(page);
@@ -74,6 +74,18 @@ test("first time sign out shows the full sign out panel, cancel closes it, secon
   await expect(page.locator("#cancel-button")).not.toBeVisible();
 
   await page.locator("#save-exit-button").tap();
+
+  await expect(page.locator("#museum-new-game-button")).toBeVisible();
+});
+
+test("sign out via Sign Out button in open exit panel", async ({ page }) => {
+  await createUserAndStartRiddles(page);
+  await page.locator("#save-exit-button").tap();
+
+  await expect(page.locator("#sign-out-button")).toBeVisible();
+  await expect(page.locator("#cancel-button")).toBeVisible();
+
+  await page.locator("#sign-out-button").tap();
 
   await expect(page.locator("#museum-new-game-button")).toBeVisible();
 });
