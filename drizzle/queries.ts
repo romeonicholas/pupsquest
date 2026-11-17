@@ -95,9 +95,7 @@ export async function createUserAndGameState(
       ...newGameState,
       currentGuesses: newGameState.currentGuesses || [],
       riddleQueue: newGameState.riddleQueue || [],
-      currentShuffledChoices: JSON.parse(
-        newGameState.currentShuffledChoices || "[]",
-      ),
+      currentShuffledChoices: newGameState.currentShuffledChoices,
     },
   };
 }
@@ -129,9 +127,7 @@ export async function getUserAndGameState(colorId: number, animalId: number) {
       ...gameState,
       currentGuesses: gameState.currentGuesses || [],
       riddleQueue: gameState.riddleQueue || [],
-      currentShuffledChoices: JSON.parse(
-        gameState.currentShuffledChoices || "[]",
-      ),
+      currentShuffledChoices: gameState.currentShuffledChoices,
     },
   };
 }

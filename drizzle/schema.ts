@@ -6,8 +6,17 @@ import {
   index,
   boolean,
   timestamp,
+  jsonb,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
+
+type ShuffledChoice = {
+  id: number;
+  display: string;
+  imgPath: string;
+  slotIndex: number;
+  isCorrect: boolean;
+};
 
 export const userAnimals = pgTable("userAnimals", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
@@ -112,7 +121,10 @@ export const gameStates = pgTable(
     startingIndex: integer().notNull().default(0),
     riddleQueue: integer().array().notNull(),
     queueCursor: integer().notNull().default(0),
-    currentShuffledChoices: text().notNull().default("[]"),
+    currentShuffledChoices: jsonb()
+      .$type<ShuffledChoice[]>()
+      .notNull()
+      .default([]),
     currentCorrectAnswerIndex: integer().notNull().default(0),
   },
   (table) => [index("idx_gameStates_userId").on(table.userId)],

@@ -22,9 +22,7 @@ router.post("/api/signout", async (req, res) => {
       queueCursor: gameState.queueCursor,
       currentGuesses: gameState.currentGuesses || [],
       riddleQueue: gameState.riddleQueue || [],
-      currentShuffledChoices: JSON.stringify(
-        gameState.currentShuffledChoices || [],
-      ),
+      currentShuffledChoices: gameState.currentShuffledChoices || [],
       currentCorrectAnswerIndex: gameState.currentCorrectAnswerIndex ?? 0,
       hintsRemaining: gameState.hintsRemaining ?? 7,
       currentScore: gameState.currentScore ?? 0,
