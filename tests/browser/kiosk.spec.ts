@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 
 test.use({ viewport: { width: 1080, height: 1920 }, hasTouch: true });
 
-test("create a user", async ({ page }) => {
+test("create a user, answer a riddle correctly", async ({ page }) => {
   await page.goto("/");
 
   await page.locator("#museum-new-game-button").tap();
@@ -29,4 +29,20 @@ test("create a user", async ({ page }) => {
   await expect(page.locator("#status-wheel-container")).toContainText(
     "RIDDLE 1",
   );
+
+  const statusWheel = page.locator("#status-wheel-container");
+  await expect(statusWheel).toContainText("RIDDLE 1");
+
+  for (let option = 1; option <= 4; option++) {
+    const backing = await page
+      .locator(`#icon-back-${option}`)
+      .getAttribute("src");
+
+    //only way to know correct answer right now x_x
+    if (backing?.includes("answer_backing_correct")) {
+      await page.locator(`#option-click-area-${option}`).tap();
+    }
+  }
+
+  await expect(page.locator("#answer-correct-text")).toBeVisible();
 });
