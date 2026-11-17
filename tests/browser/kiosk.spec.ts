@@ -26,10 +26,6 @@ test("create a user, answer a riddle correctly", async ({ page }) => {
     .tap();
   await page.locator("#transition-to-riddles-button").tap();
 
-  await expect(page.locator("#status-wheel-container")).toContainText(
-    "RIDDLE 1",
-  );
-
   const statusWheel = page.locator("#status-wheel-container");
   await expect(statusWheel).toContainText("RIDDLE 1");
 
