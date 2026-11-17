@@ -131,3 +131,8 @@ test("rejoin game after signing out", async ({ page }) => {
     "RIDDLE 1",
   );
 });
+
+test("the 'Use your phone!' button is visible", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.locator("#use-phone-button")).toBeVisible();
+});
