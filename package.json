@@ -13,6 +13,7 @@
     "start": "tsx server.ts",
     "dev": "nodemon --exec tsx server.ts",
     "test": "vitest run",
+    "test:browser": "playwright test",
     "seed": "tsx drizzle/seeds/index.ts",
     "db:reset": "del local.db* && drizzle-kit push && npm run seed",
     "format": "prettier --write .",
@@ -27,6 +28,7 @@
     "express": "^5.1.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.65.1",
     "@types/express": "^5.0.3",
     "@types/node": "^26.6.6",
     "@types/supertest": "^7.2.1",
