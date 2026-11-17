@@ -1,10 +1,9 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, type Page } from "@playwright/test";
 
 test.use({ viewport: { width: 1080, height: 1920 }, hasTouch: true });
 
-test("create a user, answer a riddle correctly, sign out", async ({ page }) => {
+async function createUserAndStartRiddles(page: Page) {
   await page.goto("/");
-
   await page.locator("#museum-new-game-button").tap();
   await page.locator("#user-creation-instructions-button").tap();
 
@@ -26,8 +25,13 @@ test("create a user, answer a riddle correctly, sign out", async ({ page }) => {
     .tap();
   await page.locator("#transition-to-riddles-button").tap();
 
-  const statusWheel = page.locator("#status-wheel-container");
-  await expect(statusWheel).toContainText("RIDDLE 1");
+  await expect(page.locator("#status-wheel-container")).toContainText(
+    "RIDDLE 1",
+  );
+}
+
+test("create a user, answer a riddle correctly, sign out", async ({ page }) => {
+  await createUserAndStartRiddles(page);
 
   for (let option = 1; option <= 4; option++) {
     const backing = await page
