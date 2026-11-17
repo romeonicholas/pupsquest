@@ -1,10 +1,19 @@
-import { rmSync } from "fs";
 import { execSync } from "child_process";
+import { Client } from "pg";
 
-export default function setup() {
-  const env = { ...process.env, DB_FILE_NAME: "file:test.db" };
+const testDatabaseUrl =
+  "postgres://pupsquest:pupsquest@localhost:5432/pupsquest_test";
 
-  rmSync("test.db", { force: true });
+export default async function setup() {
+  const admin = new Client({
+    connectionString: "postgres://pupsquest:pupsquest@localhost:5432/postgres",
+  });
+  await admin.connect();
+  await admin.query("DROP DATABASE IF EXISTS pupsquest_test WITH (FORCE)");
+  await admin.query("CREATE DATABASE pupsquest_test");
+  await admin.end();
+
+  const env = { ...process.env, DATABASE_URL: testDatabaseUrl };
   execSync("npx drizzle-kit push", { env, stdio: "inherit" });
   execSync("npm run seed", { env, stdio: "inherit" });
 }
