@@ -4,13 +4,13 @@ import { createUserAndStartRiddles } from "./helpers.ts";
 test.use({ viewport: { width: 1080, height: 1920 }, hasTouch: true });
 
 test("create a user, go to first riddle", async ({ page }) => {
-  await createUserAndStartRiddles(page);
+  await createUserAndStartRiddles(page, "kiosk");
 });
 
 test("answer a riddle correctly on first attempt and go to next riddle", async ({
   page,
 }) => {
-  await createUserAndStartRiddles(page);
+  await createUserAndStartRiddles(page, "kiosk");
 
   for (let option = 1; option <= 4; option++) {
     const backing = await page
@@ -35,7 +35,7 @@ test("answer a riddle correctly on first attempt and go to next riddle", async (
 test("open sign out panel (first time), close it, sign out via Save & Exit", async ({
   page,
 }) => {
-  await createUserAndStartRiddles(page);
+  await createUserAndStartRiddles(page, "kiosk");
   await page.locator("#save-exit-button").tap();
 
   await expect(page.locator("#sign-out-button")).toBeVisible();
@@ -52,7 +52,7 @@ test("open sign out panel (first time), close it, sign out via Save & Exit", asy
 });
 
 test("sign out via Sign Out button in open exit panel", async ({ page }) => {
-  await createUserAndStartRiddles(page);
+  await createUserAndStartRiddles(page, "kiosk");
   await page.locator("#save-exit-button").tap();
 
   await expect(page.locator("#sign-out-button")).toBeVisible();
@@ -64,7 +64,10 @@ test("sign out via Sign Out button in open exit panel", async ({ page }) => {
 });
 
 test("rejoin game after signing out", async ({ page }) => {
-  const { colorName, animalName } = await createUserAndStartRiddles(page);
+  const { colorName, animalName } = await createUserAndStartRiddles(
+    page,
+    "kiosk",
+  );
   await page.locator("#save-exit-button").tap();
   await page.locator("#sign-out-button").tap();
   await page.locator("#museum-rejoin-game-button").tap();
