@@ -25,22 +25,14 @@ export const answerChoices = pgTable(
   (table) => [index("idx_answerChoices_display").on(table.display)],
 );
 
-export const riddles = pgTable(
-  "riddles",
-  {
-    id: integer().primaryKey().generatedAlwaysAsIdentity(),
-    riddleKey: text().notNull().unique(),
-    headline: text().notNull(),
-    body: text().notNull(),
-    answerDetails: text().notNull(),
-    answerImgPath: text().notNull(),
-  },
-  (table) => [
-    check("riddles_check_1", sql`json_valid(body)`),
-    check("riddles_check_2", sql`json_type(body) = 'array'`),
-    check("riddles_check_3", sql`json_array_length(body) > 0`),
-  ],
-);
+export const riddles = pgTable("riddles", {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  riddleKey: text().notNull().unique(),
+  headline: text().notNull(),
+  body: text().notNull(),
+  answerDetails: text().notNull(),
+  answerImgPath: text().notNull(),
+});
 
 export const riddleAnswerChoices = pgTable(
   "riddleAnswerChoices",
@@ -57,7 +49,10 @@ export const riddleAnswerChoices = pgTable(
   (table) => [
     index("idx_rac_choiceId").on(table.answerChoiceId),
     index("idx_rac_riddleId").on(table.riddleId),
-    check("riddleAnswerChoices_check_4", sql`slotIndex BETWEEN 0 AND 3`),
+    check(
+      "riddleAnswerChoices_check_4",
+      sql`${table.slotIndex} BETWEEN 0 AND 3`,
+    ),
   ],
 );
 
@@ -73,16 +68,15 @@ export const users = pgTable(
       .references(() => userColors.id),
     createdAt: integer()
       .notNull()
-      .default(sql`(strftime('%s','now'))`),
+      .default(sql`extract(epoch from now())::integer`),
     scores: text().default("[]"),
     hasViewedExitPanel: integer().default(0),
     createdLocally: integer().notNull().default(0),
   },
   (table) => [
     index("idx_users_createdAt").on(table.createdAt),
-    check("users_check_5", sql`hasViewedExitPanel IN (0, 1)`),
-    check("users_check_6", sql`json_valid(scores)`),
-    check("users_check_7", sql`createdLocally IN (0, 1)`),
+    check("users_check_5", sql`${table.hasViewedExitPanel} IN (0, 1)`),
+    check("users_check_7", sql`${table.createdLocally} IN (0, 1)`),
   ],
 );
 
@@ -92,12 +86,12 @@ export const userAnalytics = pgTable(
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     createdAt: integer()
       .notNull()
-      .default(sql`(strftime('%s','now'))`),
+      .default(sql`extract(epoch from now())::integer`),
     createdLocally: integer().notNull().default(0),
   },
   (table) => [
     index("idx_userAnalytics_createdAt").on(table.createdAt),
-    check("userAnalytics_check_1", sql`createdLocally IN (0, 1)`),
+    check("userAnalytics_check_1", sql`${table.createdLocally} IN (0, 1)`),
   ],
 );
 
@@ -118,11 +112,7 @@ export const gameStates = pgTable(
     currentShuffledChoices: text().notNull().default("[]"),
     currentCorrectAnswerIndex: integer().notNull().default(0),
   },
-  (table) => [
-    index("idx_gameStates_userId").on(table.userId),
-    check("gameStates_check_1", sql`json_valid(currentGuesses)`),
-    check("gameStates_check_2", sql`json_valid(currentShuffledChoices)`),
-  ],
+  (table) => [index("idx_gameStates_userId").on(table.userId)],
 );
 
 export const riddleAnalytics = pgTable(
@@ -134,7 +124,7 @@ export const riddleAnalytics = pgTable(
       .references(() => riddles.id, { onDelete: "restrict" }),
     createdAt: integer()
       .notNull()
-      .default(sql`(strftime('%s','now'))`),
+      .default(sql`extract(epoch from now())::integer`),
     wasAnswered: integer().notNull().default(0),
     wasAnsweredCorrectly: integer(),
     hintsUsed: integer(),
@@ -142,11 +132,14 @@ export const riddleAnalytics = pgTable(
   (table) => [
     index("idx_ruo_riddleId").on(table.riddleId),
     index("idx_ruo_createdAt").on(table.createdAt),
-    check("riddleAnalytics_check_1", sql`wasAnswered IN (0, 1)`),
+    check("riddleAnalytics_check_1", sql`${table.wasAnswered} IN (0, 1)`),
     check(
       "riddleAnalytics_check_2",
-      sql`wasAnsweredCorrectly IS NULL OR wasAnsweredCorrectly IN (0, 1)`,
+      sql`${table.wasAnsweredCorrectly} IS NULL OR ${table.wasAnsweredCorrectly} IN (0, 1)`,
     ),
-    check("riddleAnalytics_check_3", sql`hintsUsed IS NULL OR hintsUsed >= 0`),
+    check(
+      "riddleAnalytics_check_3",
+      sql`${table.hintsUsed} IS NULL OR ${table.hintsUsed} >= 0`,
+    ),
   ],
 );
