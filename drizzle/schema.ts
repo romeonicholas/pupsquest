@@ -5,41 +5,46 @@ import {
   text,
   index,
 } from "drizzle-orm/sqlite-core";
+import {
+  pgTable,
+  integer as pgInteger,
+  text as pgText,
+} from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 
-export const userAnimals = sqliteTable("userAnimals", {
-  id: integer().primaryKey({ autoIncrement: true }),
-  name: text().notNull().unique(),
-  imgPath: text().notNull().unique(),
+export const userAnimals = pgTable("userAnimals", {
+  id: pgInteger().primaryKey().generatedAlwaysAsIdentity(),
+  name: pgText().notNull().unique(),
+  imgPath: pgText().notNull().unique(),
 });
 
-export const userColors = sqliteTable("userColors", {
-  id: integer().primaryKey({ autoIncrement: true }),
-  name: text().notNull().unique(),
-  hex: text().notNull().unique(),
-  badgePath: text().notNull().unique(),
+export const userColors = pgTable("userColors", {
+  id: pgInteger().primaryKey().generatedAlwaysAsIdentity(),
+  name: pgText().notNull().unique(),
+  hex: pgText().notNull().unique(),
+  badgePath: pgText().notNull().unique(),
 });
 
-export const answerChoices = sqliteTable(
+export const answerChoices = pgTable(
   "answerChoices",
   {
-    id: integer().primaryKey({ autoIncrement: true }),
-    key: text().notNull().unique(),
-    display: text().notNull(),
-    imgPath: text().notNull(),
+    id: pgInteger().primaryKey().generatedAlwaysAsIdentity(),
+    key: pgText().notNull().unique(),
+    display: pgText().notNull(),
+    imgPath: pgText().notNull(),
   },
   (table) => [index("idx_answerChoices_display").on(table.display)],
 );
 
-export const riddles = sqliteTable(
+export const riddles = pgTable(
   "riddles",
   {
-    id: integer().primaryKey({ autoIncrement: true }),
-    riddleKey: text().notNull().unique(),
-    headline: text().notNull(),
-    body: text().notNull(),
-    answerDetails: text().notNull(),
-    answerImgPath: text().notNull(),
+    id: pgInteger().primaryKey().generatedAlwaysAsIdentity(),
+    riddleKey: pgText().notNull().unique(),
+    headline: pgText().notNull(),
+    body: pgText().notNull(),
+    answerDetails: pgText().notNull(),
+    answerImgPath: pgText().notNull(),
   },
   (table) => [
     check("riddles_check_1", sql`json_valid(body)`),
@@ -48,17 +53,17 @@ export const riddles = sqliteTable(
   ],
 );
 
-export const riddleAnswerChoices = sqliteTable(
+export const riddleAnswerChoices = pgTable(
   "riddleAnswerChoices",
   {
-    id: integer().primaryKey({ autoIncrement: true }),
-    riddleId: integer()
+    id: pgInteger().primaryKey().generatedAlwaysAsIdentity(),
+    riddleId: pgInteger()
       .notNull()
       .references(() => riddles.id, { onDelete: "cascade" }),
-    answerChoiceId: integer()
+    answerChoiceId: pgInteger()
       .notNull()
       .references(() => answerChoices.id, { onDelete: "restrict" }),
-    slotIndex: integer().notNull(),
+    slotIndex: pgInteger().notNull(),
   },
   (table) => [
     index("idx_rac_choiceId").on(table.answerChoiceId),
@@ -67,22 +72,22 @@ export const riddleAnswerChoices = sqliteTable(
   ],
 );
 
-export const users = sqliteTable(
+export const users = pgTable(
   "users",
   {
-    id: integer().primaryKey({ autoIncrement: true }),
-    userAnimal: integer()
+    id: pgInteger().primaryKey().generatedAlwaysAsIdentity(),
+    userAnimal: pgInteger()
       .notNull()
       .references(() => userAnimals.id),
-    userColor: integer()
+    userColor: pgInteger()
       .notNull()
       .references(() => userColors.id),
-    createdAt: integer()
+    createdAt: pgInteger()
       .notNull()
       .default(sql`(strftime('%s','now'))`),
-    scores: text().default("[]"),
-    hasViewedExitPanel: integer().default(0),
-    createdLocally: integer().notNull().default(0),
+    scores: pgText().default("[]"),
+    hasViewedExitPanel: pgInteger().default(0),
+    createdLocally: pgInteger().notNull().default(0),
   },
   (table) => [
     index("idx_users_createdAt").on(table.createdAt),
@@ -92,14 +97,14 @@ export const users = sqliteTable(
   ],
 );
 
-export const userAnalytics = sqliteTable(
+export const userAnalytics = pgTable(
   "userAnalytics",
   {
-    id: integer().primaryKey({ autoIncrement: true }),
-    createdAt: integer()
+    id: pgInteger().primaryKey().generatedAlwaysAsIdentity(),
+    createdAt: pgInteger()
       .notNull()
       .default(sql`(strftime('%s','now'))`),
-    createdLocally: integer().notNull().default(0),
+    createdLocally: pgInteger().notNull().default(0),
   },
   (table) => [
     index("idx_userAnalytics_createdAt").on(table.createdAt),
@@ -107,22 +112,22 @@ export const userAnalytics = sqliteTable(
   ],
 );
 
-export const gameStates = sqliteTable(
+export const gameStates = pgTable(
   "gameStates",
   {
-    id: integer().primaryKey({ autoIncrement: true }),
-    userId: integer()
+    id: pgInteger().primaryKey().generatedAlwaysAsIdentity(),
+    userId: pgInteger()
       .notNull()
       .references(() => users.id, { onDelete: "cascade" })
       .unique(),
-    currentGuesses: text().notNull().default("[]"),
-    hintsRemaining: integer().notNull().default(7),
-    currentScore: integer().notNull().default(0),
-    startingIndex: integer().notNull().default(0),
-    riddleQueue: text().notNull(),
-    queueCursor: integer().notNull().default(0),
-    currentShuffledChoices: text().notNull().default("[]"),
-    currentCorrectAnswerIndex: integer().notNull().default(0),
+    currentGuesses: pgText().notNull().default("[]"),
+    hintsRemaining: pgInteger().notNull().default(7),
+    currentScore: pgInteger().notNull().default(0),
+    startingIndex: pgInteger().notNull().default(0),
+    riddleQueue: pgText().notNull(),
+    queueCursor: pgInteger().notNull().default(0),
+    currentShuffledChoices: pgText().notNull().default("[]"),
+    currentCorrectAnswerIndex: pgInteger().notNull().default(0),
   },
   (table) => [
     index("idx_gameStates_userId").on(table.userId),
@@ -131,19 +136,19 @@ export const gameStates = sqliteTable(
   ],
 );
 
-export const riddleAnalytics = sqliteTable(
+export const riddleAnalytics = pgTable(
   "riddleAnalytics",
   {
-    id: integer().primaryKey({ autoIncrement: true }),
-    riddleId: integer()
+    id: pgInteger().primaryKey().generatedAlwaysAsIdentity(),
+    riddleId: pgInteger()
       .notNull()
       .references(() => riddles.id, { onDelete: "restrict" }),
-    createdAt: integer()
+    createdAt: pgInteger()
       .notNull()
       .default(sql`(strftime('%s','now'))`),
-    wasAnswered: integer().notNull().default(0),
-    wasAnsweredCorrectly: integer(),
-    hintsUsed: integer(),
+    wasAnswered: pgInteger().notNull().default(0),
+    wasAnsweredCorrectly: pgInteger(),
+    hintsUsed: pgInteger(),
   },
   (table) => [
     index("idx_ruo_riddleId").on(table.riddleId),
