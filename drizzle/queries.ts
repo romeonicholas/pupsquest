@@ -85,7 +85,7 @@ export async function createUserAndGameState(
     .insert(gameStates)
     .values({
       userId: newUser.id,
-      riddleQueue: JSON.stringify(queue),
+      riddleQueue: queue,
     })
     .returning();
 
@@ -94,7 +94,7 @@ export async function createUserAndGameState(
     gameState: {
       ...newGameState,
       currentGuesses: JSON.parse(newGameState.currentGuesses || "[]"),
-      riddleQueue: JSON.parse(newGameState.riddleQueue || "[]"),
+      riddleQueue: newGameState.riddleQueue || [],
       currentShuffledChoices: JSON.parse(
         newGameState.currentShuffledChoices || "[]",
       ),
@@ -128,7 +128,7 @@ export async function getUserAndGameState(colorId: number, animalId: number) {
     gameState: {
       ...gameState,
       currentGuesses: JSON.parse(gameState.currentGuesses || "[]"),
-      riddleQueue: JSON.parse(gameState.riddleQueue || "[]"),
+      riddleQueue: gameState.riddleQueue || [],
       currentShuffledChoices: JSON.parse(
         gameState.currentShuffledChoices || "[]",
       ),
