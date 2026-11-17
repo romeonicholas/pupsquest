@@ -1,11 +1,4 @@
-import { check, index } from "drizzle-orm/sqlite-core";
-import {
-  pgTable,
-  integer,
-  text,
-  check as pgCheck,
-  index as pgIndex,
-} from "drizzle-orm/pg-core";
+import { pgTable, integer, text, check, index } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 
 export const userAnimals = pgTable("userAnimals", {
@@ -29,7 +22,7 @@ export const answerChoices = pgTable(
     display: text().notNull(),
     imgPath: text().notNull(),
   },
-  (table) => [pgIndex("idx_answerChoices_display").on(table.display)],
+  (table) => [index("idx_answerChoices_display").on(table.display)],
 );
 
 export const riddles = pgTable(
@@ -43,9 +36,9 @@ export const riddles = pgTable(
     answerImgPath: text().notNull(),
   },
   (table) => [
-    pgCheck("riddles_check_1", sql`json_valid(body)`),
-    pgCheck("riddles_check_2", sql`json_type(body) = 'array'`),
-    pgCheck("riddles_check_3", sql`json_array_length(body) > 0`),
+    check("riddles_check_1", sql`json_valid(body)`),
+    check("riddles_check_2", sql`json_type(body) = 'array'`),
+    check("riddles_check_3", sql`json_array_length(body) > 0`),
   ],
 );
 
@@ -62,9 +55,9 @@ export const riddleAnswerChoices = pgTable(
     slotIndex: integer().notNull(),
   },
   (table) => [
-    pgIndex("idx_rac_choiceId").on(table.answerChoiceId),
-    pgIndex("idx_rac_riddleId").on(table.riddleId),
-    pgCheck("riddleAnswerChoices_check_4", sql`slotIndex BETWEEN 0 AND 3`),
+    index("idx_rac_choiceId").on(table.answerChoiceId),
+    index("idx_rac_riddleId").on(table.riddleId),
+    check("riddleAnswerChoices_check_4", sql`slotIndex BETWEEN 0 AND 3`),
   ],
 );
 
@@ -86,10 +79,10 @@ export const users = pgTable(
     createdLocally: integer().notNull().default(0),
   },
   (table) => [
-    pgIndex("idx_users_createdAt").on(table.createdAt),
-    pgCheck("users_check_5", sql`hasViewedExitPanel IN (0, 1)`),
-    pgCheck("users_check_6", sql`json_valid(scores)`),
-    pgCheck("users_check_7", sql`createdLocally IN (0, 1)`),
+    index("idx_users_createdAt").on(table.createdAt),
+    check("users_check_5", sql`hasViewedExitPanel IN (0, 1)`),
+    check("users_check_6", sql`json_valid(scores)`),
+    check("users_check_7", sql`createdLocally IN (0, 1)`),
   ],
 );
 
@@ -103,8 +96,8 @@ export const userAnalytics = pgTable(
     createdLocally: integer().notNull().default(0),
   },
   (table) => [
-    pgIndex("idx_userAnalytics_createdAt").on(table.createdAt),
-    pgCheck("userAnalytics_check_1", sql`createdLocally IN (0, 1)`),
+    index("idx_userAnalytics_createdAt").on(table.createdAt),
+    check("userAnalytics_check_1", sql`createdLocally IN (0, 1)`),
   ],
 );
 
@@ -126,9 +119,9 @@ export const gameStates = pgTable(
     currentCorrectAnswerIndex: integer().notNull().default(0),
   },
   (table) => [
-    pgIndex("idx_gameStates_userId").on(table.userId),
-    pgCheck("gameStates_check_1", sql`json_valid(currentGuesses)`),
-    pgCheck("gameStates_check_2", sql`json_valid(currentShuffledChoices)`),
+    index("idx_gameStates_userId").on(table.userId),
+    check("gameStates_check_1", sql`json_valid(currentGuesses)`),
+    check("gameStates_check_2", sql`json_valid(currentShuffledChoices)`),
   ],
 );
 
@@ -147,16 +140,13 @@ export const riddleAnalytics = pgTable(
     hintsUsed: integer(),
   },
   (table) => [
-    pgIndex("idx_ruo_riddleId").on(table.riddleId),
-    pgIndex("idx_ruo_createdAt").on(table.createdAt),
-    pgCheck("riddleAnalytics_check_1", sql`wasAnswered IN (0, 1)`),
-    pgCheck(
+    index("idx_ruo_riddleId").on(table.riddleId),
+    index("idx_ruo_createdAt").on(table.createdAt),
+    check("riddleAnalytics_check_1", sql`wasAnswered IN (0, 1)`),
+    check(
       "riddleAnalytics_check_2",
       sql`wasAnsweredCorrectly IS NULL OR wasAnsweredCorrectly IN (0, 1)`,
     ),
-    pgCheck(
-      "riddleAnalytics_check_3",
-      sql`hintsUsed IS NULL OR hintsUsed >= 0`,
-    ),
+    check("riddleAnalytics_check_3", sql`hintsUsed IS NULL OR hintsUsed >= 0`),
   ],
 );
