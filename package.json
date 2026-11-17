@@ -25,12 +25,14 @@
     "dotenv": "^17.2.2",
     "drizzle-orm": "^0.44.5",
     "ejs": "^3.1.10",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "pg": "^8.23.1"
   },
   "devDependencies": {
     "@playwright/test": "^1.65.1",
     "@types/express": "^5.0.3",
     "@types/node": "^26.6.6",
+    "@types/pg": "^8.23.1",
     "@types/supertest": "^7.2.1",
     "drizzle-kit": "^0.31.4",
     "nodemon": "^3.1.10",
