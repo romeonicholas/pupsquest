@@ -80,6 +80,12 @@ router.post("/api/users", async (req, res) => {
 
     const newUser = await createUserAndGameState(colorId, animalId, isVisitor);
 
+    if (!newUser) {
+      return res
+        .status(409)
+        .json({ error: "This color and animal combination is already taken" });
+    }
+
     res.status(201).json(newUser);
   } catch (error) {
     console.error("Error creating user: ", error);

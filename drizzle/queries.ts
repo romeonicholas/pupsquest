@@ -55,16 +55,6 @@ export async function createUserAndGameState(
   animalId: number,
   isVisitor: boolean,
 ) {
-  const [existingUser] = await db
-    .select({ id: users.id })
-    .from(users)
-    .where(and(eq(users.userColor, colorId), eq(users.userAnimal, animalId)))
-    .limit(1);
-
-  if (existingUser) {
-    throw new Error("This color and animal combination is already taken.");
-  }
-
   const [newUser] = await db
     .insert(users)
     .values({
@@ -72,7 +62,12 @@ export async function createUserAndGameState(
       userAnimal: animalId,
       createdLocally: !isVisitor,
     })
+    .onConflictDoNothing()
     .returning();
+
+  if (!newUser) {
+    return null;
+  }
 
   const riddleIds = await db
     .select({ id: riddles.id })
