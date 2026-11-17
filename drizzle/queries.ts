@@ -90,10 +90,7 @@ export async function createUserAndGameState(
     .returning();
 
   return {
-    user: {
-      ...newUser,
-      scores: JSON.parse(newUser.scores || "[]"),
-    },
+    user: newUser,
     gameState: {
       ...newGameState,
       currentGuesses: JSON.parse(newGameState.currentGuesses || "[]"),
@@ -127,10 +124,7 @@ export async function getUserAndGameState(colorId: number, animalId: number) {
   }
 
   return {
-    user: {
-      ...user,
-      scores: JSON.parse(user.scores || "[]"),
-    },
+    user,
     gameState: {
       ...gameState,
       currentGuesses: JSON.parse(gameState.currentGuesses || "[]"),
@@ -206,16 +200,15 @@ export async function deleteExpiredUsers() {
   return usersToDelete.length;
 }
 
-//Still wonky, scores should probably be an actual array soon
 export async function getAverageScore() {
   const [result] = await db
     .select({
       averageScore: sql<number>`AVG(
-        (SELECT AVG(value::integer) FROM jsonb_array_elements_text(${users.scores}::jsonb))
+         (SELECT AVG(score) FROM unnest(${users.scores}) AS score)
       )::float`,
     })
     .from(users)
-    .where(sql`jsonb_array_length(${users.scores}::jsonb) > 0`);
+    .where(sql`cardinality(${users.scores}) > 0`);
 
   return {
     averageScore: result.averageScore || 0,

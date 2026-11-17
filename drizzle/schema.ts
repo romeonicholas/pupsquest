@@ -75,7 +75,7 @@ export const users = pgTable(
       .notNull()
       .references(() => userColors.id),
     createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
-    scores: text().default("[]"),
+    scores: integer().array().notNull().default([]),
     hasViewedExitPanel: boolean().notNull().default(false),
     createdLocally: boolean().notNull().default(false),
   },

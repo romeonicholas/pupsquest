@@ -33,7 +33,7 @@ router.post("/api/signout", async (req, res) => {
     const result = await updateUserAndGameState(
       userId,
       {
-        scores: JSON.stringify(scores || []),
+        scores: scores || [],
         hasViewedExitPanel: Boolean(hasViewedExitPanel),
       },
       processedGameState,
