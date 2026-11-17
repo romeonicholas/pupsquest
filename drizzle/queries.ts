@@ -70,7 +70,7 @@ export async function createUserAndGameState(
     .values({
       userColor: colorId,
       userAnimal: animalId,
-      createdLocally: isVisitor ? 0 : 1,
+      createdLocally: !isVisitor,
     })
     .returning();
 
@@ -169,7 +169,7 @@ export async function updateUserAndGameState(
 }
 
 export async function addUsersToAnalyticsTable(
-  usersToDelete: { createdAt: number; createdLocally: number }[],
+  usersToDelete: { createdAt: number; createdLocally: boolean }[],
 ) {
   const analyticsData = usersToDelete.map((user) => ({
     createdAt: user.createdAt,
@@ -393,8 +393,8 @@ export async function addRiddleAnalytics(
 ) {
   await db.insert(riddleAnalytics).values({
     riddleId,
-    wasAnswered: 1,
-    wasAnsweredCorrectly: wasAnsweredCorrectly ? 1 : 0,
+    wasAnswered: true,
+    wasAnsweredCorrectly: wasAnsweredCorrectly,
     hintsUsed,
   });
 }

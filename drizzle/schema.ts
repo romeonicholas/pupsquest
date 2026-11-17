@@ -1,4 +1,11 @@
-import { pgTable, integer, text, check, index } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  integer,
+  text,
+  check,
+  index,
+  boolean,
+} from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 
 export const userAnimals = pgTable("userAnimals", {
@@ -70,14 +77,10 @@ export const users = pgTable(
       .notNull()
       .default(sql`extract(epoch from now())::integer`),
     scores: text().default("[]"),
-    hasViewedExitPanel: integer().default(0),
-    createdLocally: integer().notNull().default(0),
+    hasViewedExitPanel: boolean().notNull().default(false),
+    createdLocally: boolean().notNull().default(false),
   },
-  (table) => [
-    index("idx_users_createdAt").on(table.createdAt),
-    check("users_check_5", sql`${table.hasViewedExitPanel} IN (0, 1)`),
-    check("users_check_7", sql`${table.createdLocally} IN (0, 1)`),
-  ],
+  (table) => [index("idx_users_createdAt").on(table.createdAt)],
 );
 
 export const userAnalytics = pgTable(
@@ -87,12 +90,9 @@ export const userAnalytics = pgTable(
     createdAt: integer()
       .notNull()
       .default(sql`extract(epoch from now())::integer`),
-    createdLocally: integer().notNull().default(0),
+    createdLocally: boolean().notNull().default(false),
   },
-  (table) => [
-    index("idx_userAnalytics_createdAt").on(table.createdAt),
-    check("userAnalytics_check_1", sql`${table.createdLocally} IN (0, 1)`),
-  ],
+  (table) => [index("idx_userAnalytics_createdAt").on(table.createdAt)],
 );
 
 export const gameStates = pgTable(
@@ -125,18 +125,13 @@ export const riddleAnalytics = pgTable(
     createdAt: integer()
       .notNull()
       .default(sql`extract(epoch from now())::integer`),
-    wasAnswered: integer().notNull().default(0),
-    wasAnsweredCorrectly: integer(),
+    wasAnswered: boolean().notNull().default(false),
+    wasAnsweredCorrectly: boolean(),
     hintsUsed: integer(),
   },
   (table) => [
     index("idx_ruo_riddleId").on(table.riddleId),
     index("idx_ruo_createdAt").on(table.createdAt),
-    check("riddleAnalytics_check_1", sql`${table.wasAnswered} IN (0, 1)`),
-    check(
-      "riddleAnalytics_check_2",
-      sql`${table.wasAnsweredCorrectly} IS NULL OR ${table.wasAnsweredCorrectly} IN (0, 1)`,
-    ),
     check(
       "riddleAnalytics_check_3",
       sql`${table.hintsUsed} IS NULL OR ${table.hintsUsed} >= 0`,

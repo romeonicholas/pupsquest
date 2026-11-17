@@ -34,7 +34,7 @@ router.post("/api/signout", async (req, res) => {
       userId,
       {
         scores: JSON.stringify(scores || []),
-        hasViewedExitPanel: hasViewedExitPanel ? 1 : 0,
+        hasViewedExitPanel: Boolean(hasViewedExitPanel),
       },
       processedGameState,
     );
