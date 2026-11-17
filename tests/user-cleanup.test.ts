@@ -16,7 +16,6 @@ describe("deleteExpiredUsers", () => {
 
     const twoDaysAgo = new Date();
     twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
-    const twoDaysAgoInSeconds = Math.floor(twoDaysAgo.getTime() / 1000);
     const twoDayOldUser = await request(app)
       .post("/api/users")
       .send({ colorId: 8, animalId: 7 })
@@ -24,7 +23,7 @@ describe("deleteExpiredUsers", () => {
 
     await db
       .update(users)
-      .set({ createdAt: twoDaysAgoInSeconds })
+      .set({ createdAt: twoDaysAgo })
       .where(eq(users.id, twoDayOldUser.body.user.id));
 
     await deleteExpiredUsers();

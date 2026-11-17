@@ -169,7 +169,7 @@ export async function updateUserAndGameState(
 }
 
 export async function addUsersToAnalyticsTable(
-  usersToDelete: { createdAt: number; createdLocally: boolean }[],
+  usersToDelete: { createdAt: Date; createdLocally: boolean }[],
 ) {
   const analyticsData = usersToDelete.map((user) => ({
     createdAt: user.createdAt,
@@ -182,9 +182,6 @@ export async function addUsersToAnalyticsTable(
 export async function deleteExpiredUsers() {
   const expirationThreshold = new Date();
   expirationThreshold.setDate(expirationThreshold.getDate() - 1);
-  const expirationThresholdInSeconds = Math.floor(
-    expirationThreshold.getTime() / 1000,
-  );
 
   const usersToDelete = await db
     .select({
@@ -193,7 +190,7 @@ export async function deleteExpiredUsers() {
       createdLocally: users.createdLocally,
     })
     .from(users)
-    .where(lte(users.createdAt, expirationThresholdInSeconds));
+    .where(lte(users.createdAt, expirationThreshold));
 
   if (usersToDelete.length > 0) {
     await addUsersToAnalyticsTable(usersToDelete);

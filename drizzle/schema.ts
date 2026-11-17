@@ -5,6 +5,7 @@ import {
   check,
   index,
   boolean,
+  timestamp,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 
@@ -73,9 +74,7 @@ export const users = pgTable(
     userColor: integer()
       .notNull()
       .references(() => userColors.id),
-    createdAt: integer()
-      .notNull()
-      .default(sql`extract(epoch from now())::integer`),
+    createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
     scores: text().default("[]"),
     hasViewedExitPanel: boolean().notNull().default(false),
     createdLocally: boolean().notNull().default(false),
@@ -87,9 +86,7 @@ export const userAnalytics = pgTable(
   "userAnalytics",
   {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
-    createdAt: integer()
-      .notNull()
-      .default(sql`extract(epoch from now())::integer`),
+    createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
     createdLocally: boolean().notNull().default(false),
   },
   (table) => [index("idx_userAnalytics_createdAt").on(table.createdAt)],
@@ -122,9 +119,7 @@ export const riddleAnalytics = pgTable(
     riddleId: integer()
       .notNull()
       .references(() => riddles.id, { onDelete: "restrict" }),
-    createdAt: integer()
-      .notNull()
-      .default(sql`extract(epoch from now())::integer`),
+    createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
     wasAnswered: boolean().notNull().default(false),
     wasAnsweredCorrectly: boolean(),
     hintsUsed: integer(),
