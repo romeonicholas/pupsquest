@@ -10,6 +10,10 @@ export default defineConfig({
   webServer: {
     command: "tsx tests/browser/reset-db.ts && npm start",
     url: "http://localhost:3001",
-    env: { DB_FILE_NAME: "file:browser.db", PORT: "3001" },
+    env: {
+      DATABASE_URL:
+        "postgres://pupsquest:pupsquest@localhost:5432/pupsquest_browser",
+      PORT: "3001",
+    },
   },
 });
