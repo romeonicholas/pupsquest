@@ -30,7 +30,13 @@ async function createUserAndStartRiddles(page: Page) {
   );
 }
 
-test("create a user, answer a riddle correctly, sign out", async ({ page }) => {
+test("create a user, go to first riddle", async ({ page }) => {
+  await createUserAndStartRiddles(page);
+});
+
+test("answer a riddle correctly on first attempt and go to next riddle", async ({
+  page,
+}) => {
   await createUserAndStartRiddles(page);
 
   for (let option = 1; option <= 4; option++) {
@@ -46,8 +52,28 @@ test("create a user, answer a riddle correctly, sign out", async ({ page }) => {
 
   await expect(page.locator("#answer-correct-text")).toBeVisible();
 
+  await page.locator("#next-riddle-button").tap();
+
+  await expect(page.locator("#status-wheel-container")).toContainText(
+    "RIDDLE 2",
+  );
+});
+
+test("first time sign out shows the full sign out panel, cancel closes it, second time signs out immediately", async ({
+  page,
+}) => {
+  await createUserAndStartRiddles(page);
   await page.locator("#save-exit-button").tap();
-  await page.locator("#sign-out-button").tap();
+
+  await expect(page.locator("#sign-out-button")).toBeVisible();
+  await expect(page.locator("#cancel-button")).toBeVisible();
+
+  await page.locator("#cancel-button").tap();
+
+  await expect(page.locator("#sign-out-button")).not.toBeVisible();
+  await expect(page.locator("#cancel-button")).not.toBeVisible();
+
+  await page.locator("#save-exit-button").tap();
 
   await expect(page.locator("#museum-new-game-button")).toBeVisible();
 });
