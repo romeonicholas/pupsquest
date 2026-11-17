@@ -93,7 +93,7 @@ export async function createUserAndGameState(
     user: newUser,
     gameState: {
       ...newGameState,
-      currentGuesses: JSON.parse(newGameState.currentGuesses || "[]"),
+      currentGuesses: newGameState.currentGuesses || [],
       riddleQueue: newGameState.riddleQueue || [],
       currentShuffledChoices: JSON.parse(
         newGameState.currentShuffledChoices || "[]",
@@ -127,7 +127,7 @@ export async function getUserAndGameState(colorId: number, animalId: number) {
     user,
     gameState: {
       ...gameState,
-      currentGuesses: JSON.parse(gameState.currentGuesses || "[]"),
+      currentGuesses: gameState.currentGuesses || [],
       riddleQueue: gameState.riddleQueue || [],
       currentShuffledChoices: JSON.parse(
         gameState.currentShuffledChoices || "[]",

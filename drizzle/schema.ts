@@ -100,7 +100,7 @@ export const gameStates = pgTable(
       .notNull()
       .references(() => users.id, { onDelete: "cascade" })
       .unique(),
-    currentGuesses: text().notNull().default("[]"),
+    currentGuesses: integer().array().notNull().default([]),
     hintsRemaining: integer().notNull().default(7),
     currentScore: integer().notNull().default(0),
     startingIndex: integer().notNull().default(0),
