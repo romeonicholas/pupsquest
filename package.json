@@ -10,12 +10,12 @@
     "node": ">=24"
   },
   "scripts": {
-    "start": "tsx server.ts",
-    "dev": "nodemon --exec tsx server.ts",
+    "start": "node server.ts",
+    "dev": "node --watch server.ts",
     "test": "vitest run",
     "test:browser": "playwright test",
-    "seed": "tsx drizzle/seeds/index.ts",
-    "db:migrate": "tsx drizzle/migrate.ts",
+    "seed": "node drizzle/seeds/index.ts",
+    "db:migrate": "node drizzle/migrate.ts",
     "db:reset": "docker compose up -d --wait && docker compose exec db psql -U pupsquest -c \"drop schema public cascade; drop schema if exists drizzle cascade; create schema public;\" && npm run db:migrate && npm run seed",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
@@ -35,10 +35,8 @@
     "@types/pg": "^8.23.1",
     "@types/supertest": "^7.2.1",
     "drizzle-kit": "^0.31.4",
-    "nodemon": "^3.1.10",
     "prettier": "3.10.1",
     "supertest": "^7.3.2",
-    "tsx": "^4.20.5",
     "typescript": "^7.0.2",
     "vitest": "^5.1.0"
   }
