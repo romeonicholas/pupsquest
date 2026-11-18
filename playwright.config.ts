@@ -8,7 +8,7 @@ export default defineConfig({
     screenshot: "only-on-failure",
   },
   webServer: {
-    command: "tsx tests/browser/reset-db.ts && npm start",
+    command: "node tests/browser/reset-db.ts && npm start",
     url: "http://localhost:3001",
     env: {
       DATABASE_URL:
