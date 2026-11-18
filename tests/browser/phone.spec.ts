@@ -9,8 +9,8 @@ test("the phone version of the start screen loads", async ({ page }) => {
 });
 
 test("the 'Use your phone!' button is not visisble", async ({ page }) => {
-  await page.goto("/?device=visitor");
-  await expect(page.locator("use-phone-button")).not.toBeVisible();
+  await page.goto("/");
+  await expect(page.locator("#use-phone-button")).not.toBeVisible();
 });
 
 test("a phone user isn't saved as created on the kiosk", async ({ page }) => {

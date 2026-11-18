@@ -41,7 +41,7 @@ export async function getUsedColorIds() {
 export async function createUserAndGameState(
   colorId: number,
   animalId: number,
-  isVisitor: boolean,
+  isKiosk: boolean,
 ) {
   return await db.transaction(async (tx) => {
     const [newUser] = await tx
@@ -49,7 +49,7 @@ export async function createUserAndGameState(
       .values({
         userColor: colorId,
         userAnimal: animalId,
-        createdLocally: !isVisitor,
+        createdLocally: isKiosk,
       })
       .onConflictDoNothing()
       .returning();
