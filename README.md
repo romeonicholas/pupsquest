@@ -4,3 +4,7 @@ npm install
 docker compose up -d
 npm run db:reset
 npm run dev
+
+Run tests:
+npm test (vitest for the api)
+npm run test:browser (playwright for visual/e2e stuff)
