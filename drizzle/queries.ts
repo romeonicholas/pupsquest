@@ -135,17 +135,6 @@ export async function updateUserAndGameState(
   });
 }
 
-export async function addUsersToAnalyticsTable(
-  usersToDelete: { createdAt: Date; createdLocally: boolean }[],
-) {
-  const analyticsData = usersToDelete.map((user) => ({
-    createdAt: user.createdAt,
-    createdLocally: user.createdLocally,
-  }));
-
-  await db.insert(userAnalytics).values(analyticsData);
-}
-
 export async function deleteExpiredUsers() {
   return await db.transaction(async (tx) => {
     const expirationThreshold = new Date();
@@ -161,7 +150,11 @@ export async function deleteExpiredUsers() {
       .where(lte(users.createdAt, expirationThreshold));
 
     if (usersToDelete.length > 0) {
-      await addUsersToAnalyticsTable(usersToDelete);
+      const analyticsData = usersToDelete.map((user) => ({
+        createdAt: user.createdAt,
+        createdLocally: user.createdLocally,
+      }));
+      await tx.insert(userAnalytics).values(analyticsData);
 
       await tx.delete(users).where(
         inArray(
