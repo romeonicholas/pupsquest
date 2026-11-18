@@ -92,7 +92,7 @@ export const users = pgTable(
     createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
     scores: integer().array().notNull().default([]),
     hasViewedExitPanel: boolean().notNull().default(false),
-    createdLocally: boolean().notNull().default(false),
+    createdOnKiosk: boolean().notNull().default(false),
   },
   (table) => [
     index("idx_users_created_at").on(table.createdAt),
@@ -108,7 +108,7 @@ export const userAnalytics = pgTable(
   {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
-    createdLocally: boolean().notNull().default(false),
+    createdOnKiosk: boolean().notNull().default(false),
   },
   (table) => [index("idx_user_analytics_created_at").on(table.createdAt)],
 );
