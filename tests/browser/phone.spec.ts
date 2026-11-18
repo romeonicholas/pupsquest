@@ -4,7 +4,7 @@ import { createUserAndStartRiddles } from "./helpers.ts";
 test.use({ ...devices["iPhone 13"] });
 
 test("the phone version of the start screen loads", async ({ page }) => {
-  await page.goto("/?device=visitor");
+  await page.goto("/");
   await expect(page.locator("#visitor-new-game-button")).toBeVisible();
 });
 
