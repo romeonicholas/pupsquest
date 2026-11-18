@@ -43,39 +43,41 @@ export async function createUserAndGameState(
   animalId: number,
   isVisitor: boolean,
 ) {
-  const [newUser] = await db
-    .insert(users)
-    .values({
-      userColor: colorId,
-      userAnimal: animalId,
-      createdLocally: !isVisitor,
-    })
-    .onConflictDoNothing()
-    .returning();
+  return await db.transaction(async (tx) => {
+    const [newUser] = await tx
+      .insert(users)
+      .values({
+        userColor: colorId,
+        userAnimal: animalId,
+        createdLocally: !isVisitor,
+      })
+      .onConflictDoNothing()
+      .returning();
 
-  if (!newUser) {
-    return null;
-  }
+    if (!newUser) {
+      return null;
+    }
 
-  const riddleIds = await db
-    .select({ id: riddles.id })
-    .from(riddles)
-    .orderBy(sql`RANDOM()`);
+    const riddleIds = await tx
+      .select({ id: riddles.id })
+      .from(riddles)
+      .orderBy(sql`RANDOM()`);
 
-  const queue = riddleIds.map((r) => r.id);
+    const queue = riddleIds.map((r) => r.id);
 
-  const [newGameState] = await db
-    .insert(gameStates)
-    .values({
-      userId: newUser.id,
-      riddleQueue: queue,
-    })
-    .returning();
+    const [newGameState] = await tx
+      .insert(gameStates)
+      .values({
+        userId: newUser.id,
+        riddleQueue: queue,
+      })
+      .returning();
 
-  return {
-    user: newUser,
-    gameState: newGameState,
-  };
+    return {
+      user: newUser,
+      gameState: newGameState,
+    };
+  });
 }
 
 export async function getUserAndGameState(colorId: number, animalId: number) {
@@ -113,60 +115,57 @@ export async function updateUserAndGameState(
   userUpdates: Partial<UserInsert>,
   gameStateUpdates: Partial<GameStateInsert>,
 ) {
-  const [updatedUser] = await db
-    .update(users)
-    .set(userUpdates)
-    .where(eq(users.id, userId))
-    .returning();
+  return await db.transaction(async (tx) => {
+    const [updatedUser] = await tx
+      .update(users)
+      .set(userUpdates)
+      .where(eq(users.id, userId))
+      .returning();
 
-  const [updatedGameState] = await db
-    .update(gameStates)
-    .set(gameStateUpdates)
-    .where(eq(gameStates.userId, userId))
-    .returning();
+    const [updatedGameState] = await tx
+      .update(gameStates)
+      .set(gameStateUpdates)
+      .where(eq(gameStates.userId, userId))
+      .returning();
 
-  return {
-    user: updatedUser,
-    gameState: updatedGameState,
-  };
-}
-
-export async function addUsersToAnalyticsTable(
-  usersToDelete: { createdAt: Date; createdLocally: boolean }[],
-) {
-  const analyticsData = usersToDelete.map((user) => ({
-    createdAt: user.createdAt,
-    createdLocally: user.createdLocally,
-  }));
-
-  await db.insert(userAnalytics).values(analyticsData);
+    return {
+      user: updatedUser,
+      gameState: updatedGameState,
+    };
+  });
 }
 
 export async function deleteExpiredUsers() {
-  const expirationThreshold = new Date();
-  expirationThreshold.setDate(expirationThreshold.getDate() - 1);
+  return await db.transaction(async (tx) => {
+    const expirationThreshold = new Date();
+    expirationThreshold.setDate(expirationThreshold.getDate() - 1);
 
-  const usersToDelete = await db
-    .select({
-      id: users.id,
-      createdAt: users.createdAt,
-      createdLocally: users.createdLocally,
-    })
-    .from(users)
-    .where(lte(users.createdAt, expirationThreshold));
+    const usersToDelete = await tx
+      .select({
+        id: users.id,
+        createdAt: users.createdAt,
+        createdLocally: users.createdLocally,
+      })
+      .from(users)
+      .where(lte(users.createdAt, expirationThreshold));
 
-  if (usersToDelete.length > 0) {
-    await addUsersToAnalyticsTable(usersToDelete);
+    if (usersToDelete.length > 0) {
+      const analyticsData = usersToDelete.map((user) => ({
+        createdAt: user.createdAt,
+        createdLocally: user.createdLocally,
+      }));
+      await tx.insert(userAnalytics).values(analyticsData);
 
-    await db.delete(users).where(
-      inArray(
-        users.id,
-        usersToDelete.map((u) => u.id),
-      ),
-    );
-  }
+      await tx.delete(users).where(
+        inArray(
+          users.id,
+          usersToDelete.map((u) => u.id),
+        ),
+      );
+    }
 
-  return usersToDelete.length;
+    return usersToDelete.length;
+  });
 }
 
 export async function getAverageScore() {
@@ -335,43 +334,45 @@ export async function addRiddles(
     answerChoiceKeys: string[];
   }[],
 ) {
-  const allAnswerChoices = await db
-    .select({
-      id: answerChoices.id,
-      key: answerChoices.key,
-    })
-    .from(answerChoices);
+  return await db.transaction(async (tx) => {
+    const allAnswerChoices = await tx
+      .select({
+        id: answerChoices.id,
+        key: answerChoices.key,
+      })
+      .from(answerChoices);
 
-  const answerChoiceMap = new Map();
-  allAnswerChoices.forEach((ac) => answerChoiceMap.set(ac.key, ac.id));
+    const answerChoiceMap = new Map();
+    allAnswerChoices.forEach((ac) => answerChoiceMap.set(ac.key, ac.id));
 
-  for (const riddleData of riddlesToSeed) {
-    const riddleContent = {
-      headline: riddleData.headline,
-      body: riddleData.bodyLines,
-      answerDetails: riddleData.answerDetails,
-      answerImgPath: riddleData.answerImgPath,
-    };
+    for (const riddleData of riddlesToSeed) {
+      const riddleContent = {
+        headline: riddleData.headline,
+        body: riddleData.bodyLines,
+        answerDetails: riddleData.answerDetails,
+        answerImgPath: riddleData.answerImgPath,
+      };
 
-    const [riddle] = await db
-      .insert(riddles)
-      .values({ riddleKey: riddleData.riddleKey, ...riddleContent })
-      .onConflictDoUpdate({ target: riddles.riddleKey, set: riddleContent })
-      .returning();
+      const [riddle] = await tx
+        .insert(riddles)
+        .values({ riddleKey: riddleData.riddleKey, ...riddleContent })
+        .onConflictDoUpdate({ target: riddles.riddleKey, set: riddleContent })
+        .returning();
 
-    const choiceIds = riddleData.answerChoiceKeys.map((key) =>
-      answerChoiceMap.get(key),
-    );
+      const choiceIds = riddleData.answerChoiceKeys.map((key) =>
+        answerChoiceMap.get(key),
+      );
 
-    const riddleAnswerChoiceEntries = choiceIds.map((choiceId, index) => ({
-      riddleId: riddle.id,
-      answerChoiceId: choiceId,
-      slotIndex: index,
-    }));
+      const riddleAnswerChoiceEntries = choiceIds.map((choiceId, index) => ({
+        riddleId: riddle.id,
+        answerChoiceId: choiceId,
+        slotIndex: index,
+      }));
 
-    await db
-      .delete(riddleAnswerChoices)
-      .where(eq(riddleAnswerChoices.riddleId, riddle.id));
-    await db.insert(riddleAnswerChoices).values(riddleAnswerChoiceEntries);
-  }
+      await tx
+        .delete(riddleAnswerChoices)
+        .where(eq(riddleAnswerChoices.riddleId, riddle.id));
+      await tx.insert(riddleAnswerChoices).values(riddleAnswerChoiceEntries);
+    }
+  });
 }

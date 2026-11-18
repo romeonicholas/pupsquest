@@ -85,6 +85,13 @@ describe("POST /api/signout", () => {
   it("only works with a user id", async () => {
     await request(app).post("/api/signout").send({ gameState: {} }).expect(400);
   });
+
+  it("returns not found for users that don't exist", async () => {
+    await request(app)
+      .post("/api/signout")
+      .send({ userId: 999999, scores: [], gameState: {} })
+      .expect(404);
+  });
 });
 
 describe("GET /api/animals/existing/html", () => {
