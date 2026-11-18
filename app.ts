@@ -1,6 +1,7 @@
 import express, { type Request, type Response } from "express";
 import path from "path";
 import { fileURLToPath } from "url";
+import { config } from "./config.ts";
 
 import healthRouter from "./routes/health.ts";
 import riddlesRouter from "./routes/riddles.ts";
@@ -12,6 +13,11 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
+
+if (config.mode === "online") {
+  app.set("trust proxy", 1);
+}
+
 app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "public")));
 app.set("views", path.join(__dirname, "views"));
@@ -46,10 +52,12 @@ function renderGame(req: Request, res: Response, isKiosk: boolean) {
     console.log(`${date} ${time}: ${ipAddress} connected`);
   }
 
-  res.render("index", { isKiosk, date });
+  res.render("index", { isKiosk, isMuseum: config.mode === "museum", date });
 }
 
 app.get("/", (req, res) => renderGame(req, res, false));
-app.get("/kiosk", (req, res) => renderGame(req, res, true));
+if (config.mode === "museum") {
+  app.get("/kiosk", (req, res) => renderGame(req, res, true));
+}
 
 export default app;
