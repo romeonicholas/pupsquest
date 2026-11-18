@@ -1,4 +1,4 @@
-import express from "express";
+import express, { type Request, type Response } from "express";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -29,15 +29,14 @@ app.get("/favicon.ico", (req, res) => {
   res.status(204).end();
 });
 
-app.get("/", (req, res) => {
-  const isVisitor = req.query.device === "visitor";
+function renderGame(req: Request, res: Response, isKiosk: boolean) {
   const date = new Date().toLocaleDateString("en-US", {
     year: "numeric",
     month: "short",
     day: "numeric",
   });
 
-  if (!isVisitor) {
+  if (isKiosk) {
     const time = new Date().toLocaleTimeString("en-US", {
       hour: "2-digit",
       minute: "2-digit",
@@ -47,7 +46,10 @@ app.get("/", (req, res) => {
     console.log(`${date} ${time}: ${ipAddress} connected`);
   }
 
-  res.render("index", { isVisitor, date });
-});
+  res.render("index", { isKiosk, date });
+}
+
+app.get("/", (req, res) => renderGame(req, res, false));
+app.get("/kiosk", (req, res) => renderGame(req, res, true));
 
 export default app;
