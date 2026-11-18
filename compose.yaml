@@ -14,6 +14,17 @@ services:
       test: ["CMD-SHELL", "pg_isready -h localhost -U pupsquest -d pupsquest"]
       interval: 1s
       retries: 30
+
+  setup:
+    profiles: [museum]
+    build: .
+    command: sh -c "node drizzle/migrate.ts && node drizzle/seeds/index.ts"
+    environment:
+      DATABASE_URL: postgres://pupsquest:pupsquest@db:5432/pupsquest
+    depends_on:
+      db:
+        condition: service_healthy
+
   app:
     profiles: [museum]
     build: .
@@ -23,6 +34,9 @@ services:
       DATABASE_URL: postgres://pupsquest:pupsquest@db:5432/pupsquest
     ports:
       - "3000:3000"
+    depends_on:
+      setup:
+        condition: service_completed_successfully
 
 volumes:
   pgdata:
