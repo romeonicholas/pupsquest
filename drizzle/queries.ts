@@ -65,7 +65,7 @@ export async function createUserAndGameState(
 
     const queue = riddleIds.map((r) => r.id);
 
-    const [newGameState] = await db
+    const [newGameState] = await tx
       .insert(gameStates)
       .values({
         userId: newUser.id,
