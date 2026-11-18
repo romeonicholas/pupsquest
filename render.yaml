@@ -7,7 +7,7 @@ services:
     plan: free
     region: frankfurt
     healthCheckPath: /healthz
-    dockerCommand: sh -c "node drizzle/migrate.ts && node drizzle/seeds/index.ts && node server.ts"
+    dockerCommand: npm run start:online
     envVars:
       - key: APP_MODE
         value: online
