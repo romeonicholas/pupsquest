@@ -18,7 +18,6 @@ export async function get4UserColors() {
       id: userColors.id,
       name: userColors.name,
       hex: userColors.hex,
-      badgePath: userColors.badgePath,
     })
     .from(userColors)
     .orderBy(sql`RANDOM()`)
@@ -246,9 +245,7 @@ export async function getColorsAndAnimalsForUserCreation() {
   return possibleUserCombinations;
 }
 
-export async function addUserColors(
-  colors: { name: string; hex: string; badgePath: string }[],
-) {
+export async function addUserColors(colors: { name: string; hex: string }[]) {
   const insertedColors = await db
     .insert(userColors)
     .values(colors)

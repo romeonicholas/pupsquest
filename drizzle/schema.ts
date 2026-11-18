@@ -29,7 +29,6 @@ export const userColors = pgTable("userColors", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   name: text().notNull().unique(),
   hex: text().notNull().unique(),
-  badgePath: text().notNull().unique(),
 });
 
 export const answerChoices = pgTable(
