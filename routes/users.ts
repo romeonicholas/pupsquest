@@ -6,6 +6,7 @@ import {
   getColorsAndAnimalsForUserCreation,
   getAllAnimalsFromUsersWithColor,
 } from "../drizzle/queries.ts";
+import { parseId } from "./parse-input.ts";
 
 const router = Router();
 
@@ -13,7 +14,7 @@ router.post("/api/signout", async (req, res) => {
   try {
     const { userId, scores, hasViewedExitPanel, gameState } = req.body;
 
-    if (!userId || isNaN(userId)) {
+    if (!userId || !parseId(userId)) {
       return res.status(400).json({ error: "Invalid user ID" });
     }
 
