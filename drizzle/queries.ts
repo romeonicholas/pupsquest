@@ -43,39 +43,41 @@ export async function createUserAndGameState(
   animalId: number,
   isVisitor: boolean,
 ) {
-  const [newUser] = await db
-    .insert(users)
-    .values({
-      userColor: colorId,
-      userAnimal: animalId,
-      createdLocally: !isVisitor,
-    })
-    .onConflictDoNothing()
-    .returning();
+  return await db.transaction(async (tx) => {
+    const [newUser] = await tx
+      .insert(users)
+      .values({
+        userColor: colorId,
+        userAnimal: animalId,
+        createdLocally: !isVisitor,
+      })
+      .onConflictDoNothing()
+      .returning();
 
-  if (!newUser) {
-    return null;
-  }
+    if (!newUser) {
+      return null;
+    }
 
-  const riddleIds = await db
-    .select({ id: riddles.id })
-    .from(riddles)
-    .orderBy(sql`RANDOM()`);
+    const riddleIds = await tx
+      .select({ id: riddles.id })
+      .from(riddles)
+      .orderBy(sql`RANDOM()`);
 
-  const queue = riddleIds.map((r) => r.id);
+    const queue = riddleIds.map((r) => r.id);
 
-  const [newGameState] = await db
-    .insert(gameStates)
-    .values({
-      userId: newUser.id,
-      riddleQueue: queue,
-    })
-    .returning();
+    const [newGameState] = await db
+      .insert(gameStates)
+      .values({
+        userId: newUser.id,
+        riddleQueue: queue,
+      })
+      .returning();
 
-  return {
-    user: newUser,
-    gameState: newGameState,
-  };
+    return {
+      user: newUser,
+      gameState: newGameState,
+    };
+  });
 }
 
 export async function getUserAndGameState(colorId: number, animalId: number) {
