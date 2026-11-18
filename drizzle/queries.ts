@@ -38,17 +38,6 @@ export async function getUsedColorIds() {
   return colors.map((c) => c.id);
 }
 
-export async function addUserAnimals(
-  animals: { name: string; imgPath: string }[],
-) {
-  const insertedAnimals = await db
-    .insert(userAnimals)
-    .values(animals)
-    .onConflictDoNothing()
-    .returning();
-  return insertedAnimals;
-}
-
 export async function createUserAndGameState(
   colorId: number,
   animalId: number,
@@ -245,26 +234,6 @@ export async function getColorsAndAnimalsForUserCreation() {
   return possibleUserCombinations;
 }
 
-export async function addUserColors(colors: { name: string; hex: string }[]) {
-  const insertedColors = await db
-    .insert(userColors)
-    .values(colors)
-    .onConflictDoNothing()
-    .returning();
-  return insertedColors;
-}
-
-export async function addAnswerChoices(
-  choicesToSeed: { key: string; display: string; imgPath: string }[],
-) {
-  const insertedChoices = await db
-    .insert(answerChoices)
-    .values(choicesToSeed)
-    .onConflictDoNothing()
-    .returning();
-  return insertedChoices;
-}
-
 export async function getRiddle(riddleId: number) {
   const [riddle] = await db
     .select()
@@ -306,6 +275,56 @@ export async function getRiddle(riddleId: number) {
   };
 }
 
+export async function addRiddleAnalytics(
+  riddleId: number,
+  wasAnsweredCorrectly: boolean,
+  hintsUsed: number,
+) {
+  await db.insert(riddleAnalytics).values({
+    riddleId,
+    wasAnswered: true,
+    wasAnsweredCorrectly: wasAnsweredCorrectly,
+    hintsUsed,
+  });
+}
+
+export async function addUserColors(colors: { name: string; hex: string }[]) {
+  for (const color of colors) {
+    await db
+      .insert(userColors)
+      .values(color)
+      .onConflictDoUpdate({ target: userColors.name, set: { hex: color.hex } });
+  }
+}
+
+export async function addUserAnimals(
+  animals: { name: string; imgPath: string }[],
+) {
+  for (const animal of animals) {
+    await db
+      .insert(userAnimals)
+      .values(animal)
+      .onConflictDoUpdate({
+        target: userAnimals.name,
+        set: { imgPath: animal.imgPath },
+      });
+  }
+}
+
+export async function addAnswerChoices(
+  choicesToSeed: { key: string; display: string; imgPath: string }[],
+) {
+  for (const choice of choicesToSeed) {
+    await db
+      .insert(answerChoices)
+      .values(choice)
+      .onConflictDoUpdate({
+        target: answerChoices.key,
+        set: { display: choice.display, imgPath: choice.imgPath },
+      });
+  }
+}
+
 export async function addRiddles(
   riddlesToSeed: {
     riddleKey: string;
@@ -327,42 +346,32 @@ export async function addRiddles(
   allAnswerChoices.forEach((ac) => answerChoiceMap.set(ac.key, ac.id));
 
   for (const riddleData of riddlesToSeed) {
-    const [newRiddle] = await db
-      .insert(riddles)
-      .values({
-        riddleKey: riddleData.riddleKey,
-        headline: riddleData.headline,
-        body: riddleData.bodyLines,
-        answerDetails: riddleData.answerDetails,
-        answerImgPath: riddleData.answerImgPath,
-      })
-      .returning();
+    const riddleContent = {
+      headline: riddleData.headline,
+      body: riddleData.bodyLines,
+      answerDetails: riddleData.answerDetails,
+      answerImgPath: riddleData.answerImgPath,
+    };
 
-    const newRiddleId = newRiddle.id;
+    const [riddle] = await db
+      .insert(riddles)
+      .values({ riddleKey: riddleData.riddleKey, ...riddleContent })
+      .onConflictDoUpdate({ target: riddles.riddleKey, set: riddleContent })
+      .returning();
 
     const choiceIds = riddleData.answerChoiceKeys.map((key) =>
       answerChoiceMap.get(key),
     );
 
     const riddleAnswerChoiceEntries = choiceIds.map((choiceId, index) => ({
-      riddleId: newRiddleId,
+      riddleId: riddle.id,
       answerChoiceId: choiceId,
       slotIndex: index,
     }));
 
+    await db
+      .delete(riddleAnswerChoices)
+      .where(eq(riddleAnswerChoices.riddleId, riddle.id));
     await db.insert(riddleAnswerChoices).values(riddleAnswerChoiceEntries);
   }
-}
-
-export async function addRiddleAnalytics(
-  riddleId: number,
-  wasAnsweredCorrectly: boolean,
-  hintsUsed: number,
-) {
-  await db.insert(riddleAnalytics).values({
-    riddleId,
-    wasAnswered: true,
-    wasAnsweredCorrectly: wasAnsweredCorrectly,
-    hintsUsed,
-  });
 }
