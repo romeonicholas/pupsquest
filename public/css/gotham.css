@@ -1,0 +1,5 @@
+@font-face {
+  font-family: "Gotham";
+  src: url("/fonts/Gotham-Medium.woff2") format("woff2");
+  font-display: swap;
+}
