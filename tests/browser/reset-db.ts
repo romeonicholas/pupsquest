@@ -9,5 +9,5 @@ await admin.query("DROP DATABASE IF EXISTS pupsquest_browser WITH (FORCE)");
 await admin.query("CREATE DATABASE pupsquest_browser");
 await admin.end();
 
-execSync("npx drizzle-kit push", { stdio: "inherit" });
+execSync("npm run db:migrate", { stdio: "inherit" });
 execSync("npm run seed", { stdio: "inherit" });

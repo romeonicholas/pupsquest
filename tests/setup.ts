@@ -14,6 +14,6 @@ export default async function setup() {
   await admin.end();
 
   const env = { ...process.env, DATABASE_URL: testDatabaseUrl };
-  execSync("npx drizzle-kit push", { env, stdio: "inherit" });
+  execSync("npm run db:migrate", { env, stdio: "inherit" });
   execSync("npm run seed", { env, stdio: "inherit" });
 }

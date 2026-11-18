@@ -15,7 +15,8 @@
     "test": "vitest run",
     "test:browser": "playwright test",
     "seed": "tsx drizzle/seeds/index.ts",
-    "db:reset": "docker compose up -d --wait && docker compose exec db psql -U pupsquest -c \"drop schema public cascade; create schema public;\" && drizzle-kit push && npm run seed",
+    "db:migrate": "tsx drizzle/migrate.ts",
+    "db:reset": "docker compose up -d --wait && docker compose exec db psql -U pupsquest -c \"drop schema public cascade; drop schema if exists drizzle cascade; create schema public;\" && npm run db:migrate && npm run seed",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "typecheck": "tsc"
