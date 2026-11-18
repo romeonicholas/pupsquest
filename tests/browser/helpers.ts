@@ -5,10 +5,10 @@ export async function createUserAndStartRiddles(
   device: "kiosk" | "phone",
 ) {
   if (device === "phone") {
-    await page.goto("/?device=visitor");
+    await page.goto("/");
     await page.locator("#visitor-new-game-button").tap();
   } else {
-    await page.goto("/");
+    await page.goto("/kiosk");
     await page.locator("#museum-new-game-button").tap();
   }
 

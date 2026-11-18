@@ -13,6 +13,16 @@ test("the 'Use your phone!' button is not visisble", async ({ page }) => {
   await expect(page.locator("use-phone-button")).not.toBeVisible();
 });
 
+test("a phone user isn't saved as created on the kiosk", async ({ page }) => {
+  const createRequest = page.waitForRequest(
+    (request) =>
+      request.url().endsWith("/api/users") && request.method() === "POST",
+  );
+  await createUserAndStartRiddles(page, "phone");
+
+  expect((await createRequest).postDataJSON().isKiosk).toBe(false);
+});
+
 test("create a user, go to first riddle", async ({ page }) => {
   await createUserAndStartRiddles(page, "phone");
 });
