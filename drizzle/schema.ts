@@ -19,34 +19,34 @@ type ShuffledChoice = {
   isCorrect: boolean;
 };
 
-export const userAnimals = pgTable("userAnimals", {
+export const userAnimals = pgTable("user_animals", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   name: text().notNull().unique(),
-  imgPath: text().notNull().unique(),
+  imgPath: text().notNull().unique("user_animals_img_path_unique"),
 });
 
-export const userColors = pgTable("userColors", {
+export const userColors = pgTable("user_colors", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   name: text().notNull().unique(),
   hex: text().notNull().unique(),
 });
 
 export const answerChoices = pgTable(
-  "answerChoices",
+  "answer_choices",
   {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     key: text().notNull().unique(),
     display: text().notNull(),
     imgPath: text().notNull(),
   },
-  (table) => [index("idx_answerChoices_display").on(table.display)],
+  (table) => [index("idx_answer_choices_display").on(table.display)],
 );
 
 export const riddles = pgTable(
   "riddles",
   {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
-    riddleKey: text().notNull().unique(),
+    riddleKey: text().notNull().unique("riddles_riddle_key_unique"),
     headline: text().notNull(),
     body: text().array().notNull(),
     answerDetails: text().notNull(),
@@ -58,7 +58,7 @@ export const riddles = pgTable(
 );
 
 export const riddleAnswerChoices = pgTable(
-  "riddleAnswerChoices",
+  "riddle_answer_choices",
   {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     riddleId: integer()
@@ -70,10 +70,10 @@ export const riddleAnswerChoices = pgTable(
     slotIndex: integer().notNull(),
   },
   (table) => [
-    index("idx_rac_choiceId").on(table.answerChoiceId),
-    index("idx_rac_riddleId").on(table.riddleId),
+    index("idx_rac_choice_id").on(table.answerChoiceId),
+    index("idx_rac_riddle_id").on(table.riddleId),
     check(
-      "riddleAnswerChoices_check_4",
+      "riddle_answer_choices_slot_index_check",
       sql`${table.slotIndex} BETWEEN 0 AND 3`,
     ),
   ],
@@ -95,7 +95,7 @@ export const users = pgTable(
     createdLocally: boolean().notNull().default(false),
   },
   (table) => [
-    index("idx_users_createdAt").on(table.createdAt),
+    index("idx_users_created_at").on(table.createdAt),
     uniqueIndex("users_color_animal_unique").on(
       table.userColor,
       table.userAnimal,
@@ -104,23 +104,23 @@ export const users = pgTable(
 );
 
 export const userAnalytics = pgTable(
-  "userAnalytics",
+  "user_analytics",
   {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
     createdLocally: boolean().notNull().default(false),
   },
-  (table) => [index("idx_userAnalytics_createdAt").on(table.createdAt)],
+  (table) => [index("idx_user_analytics_created_at").on(table.createdAt)],
 );
 
 export const gameStates = pgTable(
-  "gameStates",
+  "game_states",
   {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     userId: integer()
       .notNull()
       .references(() => users.id, { onDelete: "cascade" })
-      .unique(),
+      .unique("game_states_user_id_unique"),
     currentGuesses: integer().array().notNull().default([]),
     hintsRemaining: integer().notNull().default(7),
     currentScore: integer().notNull().default(0),
@@ -133,11 +133,11 @@ export const gameStates = pgTable(
       .default([]),
     currentCorrectAnswerIndex: integer().notNull().default(0),
   },
-  (table) => [index("idx_gameStates_userId").on(table.userId)],
+  (table) => [index("idx_game_states_user_id").on(table.userId)],
 );
 
 export const riddleAnalytics = pgTable(
-  "riddleAnalytics",
+  "riddle_analytics",
   {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     riddleId: integer()
@@ -149,10 +149,10 @@ export const riddleAnalytics = pgTable(
     hintsUsed: integer(),
   },
   (table) => [
-    index("idx_ruo_riddleId").on(table.riddleId),
-    index("idx_ruo_createdAt").on(table.createdAt),
+    index("idx_ruo_riddle_id").on(table.riddleId),
+    index("idx_ruo_created_at").on(table.createdAt),
     check(
-      "riddleAnalytics_check_3",
+      "riddle_analytics_check_hints_used_check",
       sql`${table.hintsUsed} IS NULL OR ${table.hintsUsed} >= 0`,
     ),
   ],

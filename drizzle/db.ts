@@ -12,4 +12,4 @@ if (!dbUrl) {
 }
 
 export const pool = new Pool({ connectionString: dbUrl });
-export const db = drizzle(pool, { schema });
+export const db = drizzle(pool, { schema, casing: "snake_case" });
