@@ -39,6 +39,10 @@ router.post("/api/signout", async (req, res) => {
       processedGameState,
     );
 
+    if (!result.user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
     res.json({ message: "User and game state updated successfully: ", result });
   } catch (error) {
     console.error("Error updating user: ", error);
