@@ -141,9 +141,9 @@ router.get("/api/users/create-html", async (req, res) => {
 });
 
 router.get("/api/animals/existing/html", async (req, res) => {
-  const colorId = Number(req.query.colorId);
+  const colorId = parseId(req.query.colorId);
 
-  if (!colorId) {
+  if (colorId == null) {
     return res.status(400).send("<p>Error: Missing colorId</p>");
   }
 

@@ -1,13 +1,14 @@
 import { Router } from "express";
 import { getRiddle } from "../drizzle/queries.ts";
+import { parseId } from "./parse-input.ts";
 
 const router = Router();
 
 router.get("/api/riddles/:id", async (req, res) => {
   try {
-    const riddleId = Number(req.params.id);
+    const riddleId = parseId(req.params.id);
 
-    if (isNaN(riddleId)) {
+    if (riddleId == null) {
       return res.status(400).json({ error: "Invalid riddle ID" });
     }
 

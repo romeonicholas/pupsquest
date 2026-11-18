@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { getAverageScore, addRiddleAnalytics } from "../drizzle/queries.ts";
+import { parseId, parseCount } from "./parse-input.ts";
 
 const router = Router();
 
@@ -14,11 +15,11 @@ router.get("/api/stats/average-score", async (req, res) => {
 });
 
 router.post("/api/analytics/riddle", async (req, res) => {
-  const riddleId = Number(req.body.riddleId);
-  const hintsUsed = Number(req.body.hintsUsed);
+  const riddleId = parseId(req.body.riddleId);
+  const hintsUsed = parseCount(req.body.hintsUsed);
   const wasAnsweredCorrectly = Boolean(req.body.wasAnsweredCorrectly);
 
-  if (isNaN(riddleId) || isNaN(hintsUsed)) {
+  if (riddleId == null || hintsUsed == null) {
     return res.status(400).json({ error: "Invalid riddle analytics data" });
   }
 
