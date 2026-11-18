@@ -67,3 +67,6 @@ jobs:
           tags: |
             ghcr.io/romeonicholas/pupsquest:latest
             ghcr.io/romeonicholas/pupsquest:${{ github.sha }}
+      - run: curl -fsS -X POST "$RENDER_DEPLOY_HOOK_URL"
+        env:
+          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
