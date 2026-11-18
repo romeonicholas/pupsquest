@@ -1,205 +1,303 @@
 {
-  "version": "6",
-  "dialect": "sqlite",
-  "id": "3b518fc7-5764-47ce-9173-db728c4ddce5",
+  "id": "17a1f12f-e4f0-4de8-b404-7d224ac12baf",
   "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "7",
+  "dialect": "postgresql",
   "tables": {
-    "answerChoices": {
-      "name": "answerChoices",
+    "public.answer_choices": {
+      "name": "answer_choices",
+      "schema": "",
       "columns": {
         "id": {
           "name": "id",
           "type": "integer",
           "primaryKey": true,
           "notNull": true,
-          "autoincrement": true
+          "identity": {
+            "type": "always",
+            "name": "answer_choices_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "2147483647",
+            "cache": "1",
+            "cycle": false
+          }
         },
         "key": {
           "name": "key",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
         "display": {
           "name": "display",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
-        "imgPath": {
-          "name": "imgPath",
+        "img_path": {
+          "name": "img_path",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         }
       },
       "indexes": {
-        "idx_answerChoices_display": {
-          "name": "idx_answerChoices_display",
+        "idx_answer_choices_display": {
+          "name": "idx_answer_choices_display",
           "columns": [
-            "display"
+            {
+              "expression": "display",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
           ],
-          "isUnique": false
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "checkConstraints": {
-        "riddles_check_1": {
-          "name": "riddles_check_1",
-          "value": "json_valid(body"
-        },
-        "riddles_check_2": {
-          "name": "riddles_check_2",
-          "value": "json_type(body"
-        },
-        "riddles_check_3": {
-          "name": "riddles_check_3",
-          "value": "json_array_length(body"
-        },
-        "riddleAnswerChoices_check_4": {
-          "name": "riddleAnswerChoices_check_4",
-          "value": "slotIndex BETWEEN 0 AND 3"
-        },
-        "users_check_5": {
-          "name": "users_check_5",
-          "value": "hasViewedExitPanel IN (0, 1"
-        },
-        "users_check_6": {
-          "name": "users_check_6",
-          "value": "json_valid(gameState"
+      "uniqueConstraints": {
+        "answer_choices_key_unique": {
+          "name": "answer_choices_key_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "key"
+          ]
         }
-      }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
     },
-    "migrations": {
-      "name": "migrations",
+    "public.game_states": {
+      "name": "game_states",
+      "schema": "",
       "columns": {
         "id": {
           "name": "id",
           "type": "integer",
           "primaryKey": true,
           "notNull": true,
-          "autoincrement": true
+          "identity": {
+            "type": "always",
+            "name": "game_states_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "2147483647",
+            "cache": "1",
+            "cycle": false
+          }
         },
-        "filename": {
-          "name": "filename",
-          "type": "text",
+        "user_id": {
+          "name": "user_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "current_guesses": {
+          "name": "current_guesses",
+          "type": "integer[]",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false
+          "default": "'{}'"
         },
-        "executed_at": {
-          "name": "executed_at",
+        "hints_remaining": {
+          "name": "hints_remaining",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false,
-          "default": "(strftime('%s','now'))"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "checkConstraints": {
-        "riddles_check_1": {
-          "name": "riddles_check_1",
-          "value": "json_valid(body"
+          "default": 7
         },
-        "riddles_check_2": {
-          "name": "riddles_check_2",
-          "value": "json_type(body"
-        },
-        "riddles_check_3": {
-          "name": "riddles_check_3",
-          "value": "json_array_length(body"
-        },
-        "riddleAnswerChoices_check_4": {
-          "name": "riddleAnswerChoices_check_4",
-          "value": "slotIndex BETWEEN 0 AND 3"
-        },
-        "users_check_5": {
-          "name": "users_check_5",
-          "value": "hasViewedExitPanel IN (0, 1"
-        },
-        "users_check_6": {
-          "name": "users_check_6",
-          "value": "json_valid(gameState"
-        }
-      }
-    },
-    "riddleAnswerChoices": {
-      "name": "riddleAnswerChoices",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "integer",
-          "primaryKey": true,
-          "notNull": true,
-          "autoincrement": true
-        },
-        "riddleId": {
-          "name": "riddleId",
+        "current_score": {
+          "name": "current_score",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false
+          "default": 0
         },
-        "answerChoiceId": {
-          "name": "answerChoiceId",
+        "starting_index": {
+          "name": "starting_index",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false
+          "default": 0
         },
-        "slotIndex": {
-          "name": "slotIndex",
+        "riddle_queue": {
+          "name": "riddle_queue",
+          "type": "integer[]",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "queue_cursor": {
+          "name": "queue_cursor",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false
+          "default": 0
+        },
+        "current_shuffled_choices": {
+          "name": "current_shuffled_choices",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'[]'::jsonb"
+        },
+        "current_correct_answer_index": {
+          "name": "current_correct_answer_index",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
         }
       },
       "indexes": {
-        "idx_rac_choiceId": {
-          "name": "idx_rac_choiceId",
+        "idx_game_states_user_id": {
+          "name": "idx_game_states_user_id",
           "columns": [
-            "answerChoiceId"
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
           ],
-          "isUnique": false
-        },
-        "idx_rac_riddleId": {
-          "name": "idx_rac_riddleId",
-          "columns": [
-            "riddleId"
-          ],
-          "isUnique": false
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
-        "riddleAnswerChoices_riddleId_riddles_id_fk": {
-          "name": "riddleAnswerChoices_riddleId_riddles_id_fk",
-          "tableFrom": "riddleAnswerChoices",
-          "tableTo": "riddles",
+        "game_states_user_id_users_id_fk": {
+          "name": "game_states_user_id_users_id_fk",
+          "tableFrom": "game_states",
+          "tableTo": "users",
           "columnsFrom": [
-            "riddleId"
+            "user_id"
           ],
           "columnsTo": [
             "id"
           ],
           "onDelete": "cascade",
           "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "game_states_user_id_unique": {
+          "name": "game_states_user_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "user_id"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.riddle_analytics": {
+      "name": "riddle_analytics",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "always",
+            "name": "riddle_analytics_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "2147483647",
+            "cache": "1",
+            "cycle": false
+          }
         },
-        "riddleAnswerChoices_answerChoiceId_answerChoices_id_fk": {
-          "name": "riddleAnswerChoices_answerChoiceId_answerChoices_id_fk",
-          "tableFrom": "riddleAnswerChoices",
-          "tableTo": "answerChoices",
+        "riddle_id": {
+          "name": "riddle_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "was_answered": {
+          "name": "was_answered",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "was_answered_correctly": {
+          "name": "was_answered_correctly",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "hints_used": {
+          "name": "hints_used",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "idx_ruo_riddle_id": {
+          "name": "idx_ruo_riddle_id",
+          "columns": [
+            {
+              "expression": "riddle_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "idx_ruo_created_at": {
+          "name": "idx_ruo_created_at",
+          "columns": [
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "riddle_analytics_riddle_id_riddles_id_fk": {
+          "name": "riddle_analytics_riddle_id_riddles_id_fk",
+          "tableFrom": "riddle_analytics",
+          "tableTo": "riddles",
           "columnsFrom": [
-            "answerChoiceId"
+            "riddle_id"
           ],
           "columnsTo": [
             "id"
@@ -210,294 +308,480 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
+      "policies": {},
       "checkConstraints": {
-        "riddles_check_1": {
-          "name": "riddles_check_1",
-          "value": "json_valid(body"
-        },
-        "riddles_check_2": {
-          "name": "riddles_check_2",
-          "value": "json_type(body"
-        },
-        "riddles_check_3": {
-          "name": "riddles_check_3",
-          "value": "json_array_length(body"
-        },
-        "riddleAnswerChoices_check_4": {
-          "name": "riddleAnswerChoices_check_4",
-          "value": "slotIndex BETWEEN 0 AND 3"
-        },
-        "users_check_5": {
-          "name": "users_check_5",
-          "value": "hasViewedExitPanel IN (0, 1"
-        },
-        "users_check_6": {
-          "name": "users_check_6",
-          "value": "json_valid(gameState"
+        "riddle_analytics_check_hints_used_check": {
+          "name": "riddle_analytics_check_hints_used_check",
+          "value": "\"riddle_analytics\".\"hints_used\" IS NULL OR \"riddle_analytics\".\"hints_used\" >= 0"
         }
-      }
+      },
+      "isRLSEnabled": false
     },
-    "riddles": {
-      "name": "riddles",
+    "public.riddle_answer_choices": {
+      "name": "riddle_answer_choices",
+      "schema": "",
       "columns": {
         "id": {
           "name": "id",
           "type": "integer",
           "primaryKey": true,
           "notNull": true,
-          "autoincrement": true
+          "identity": {
+            "type": "always",
+            "name": "riddle_answer_choices_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "2147483647",
+            "cache": "1",
+            "cycle": false
+          }
         },
-        "riddleKey": {
-          "name": "riddleKey",
+        "riddle_id": {
+          "name": "riddle_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "answer_choice_id": {
+          "name": "answer_choice_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "slot_index": {
+          "name": "slot_index",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "idx_rac_choice_id": {
+          "name": "idx_rac_choice_id",
+          "columns": [
+            {
+              "expression": "answer_choice_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "idx_rac_riddle_id": {
+          "name": "idx_rac_riddle_id",
+          "columns": [
+            {
+              "expression": "riddle_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "riddle_answer_choices_riddle_id_riddles_id_fk": {
+          "name": "riddle_answer_choices_riddle_id_riddles_id_fk",
+          "tableFrom": "riddle_answer_choices",
+          "tableTo": "riddles",
+          "columnsFrom": [
+            "riddle_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "riddle_answer_choices_answer_choice_id_answer_choices_id_fk": {
+          "name": "riddle_answer_choices_answer_choice_id_answer_choices_id_fk",
+          "tableFrom": "riddle_answer_choices",
+          "tableTo": "answer_choices",
+          "columnsFrom": [
+            "answer_choice_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "riddle_answer_choices_slot_index_check": {
+          "name": "riddle_answer_choices_slot_index_check",
+          "value": "\"riddle_answer_choices\".\"slot_index\" BETWEEN 0 AND 3"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.riddles": {
+      "name": "riddles",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "always",
+            "name": "riddles_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "2147483647",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "riddle_key": {
+          "name": "riddle_key",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
         "headline": {
           "name": "headline",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
         "body": {
           "name": "body",
-          "type": "text",
+          "type": "text[]",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
-        "answerDetails": {
-          "name": "answerDetails",
+        "answer_details": {
+          "name": "answer_details",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
-        "answerImgPath": {
-          "name": "answerImgPath",
+        "answer_img_path": {
+          "name": "answer_img_path",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         }
       },
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "checkConstraints": {
-        "riddles_check_1": {
-          "name": "riddles_check_1",
-          "value": "json_valid(body"
-        },
-        "riddles_check_2": {
-          "name": "riddles_check_2",
-          "value": "json_type(body"
-        },
-        "riddles_check_3": {
-          "name": "riddles_check_3",
-          "value": "json_array_length(body"
-        },
-        "riddleAnswerChoices_check_4": {
-          "name": "riddleAnswerChoices_check_4",
-          "value": "slotIndex BETWEEN 0 AND 3"
-        },
-        "users_check_5": {
-          "name": "users_check_5",
-          "value": "hasViewedExitPanel IN (0, 1"
-        },
-        "users_check_6": {
-          "name": "users_check_6",
-          "value": "json_valid(gameState"
+      "uniqueConstraints": {
+        "riddles_riddle_key_unique": {
+          "name": "riddles_riddle_key_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "riddle_key"
+          ]
         }
-      }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "riddles_body_not_empty": {
+          "name": "riddles_body_not_empty",
+          "value": "cardinality(\"riddles\".\"body\") > 0"
+        }
+      },
+      "isRLSEnabled": false
     },
-    "userAnimals": {
-      "name": "userAnimals",
+    "public.user_analytics": {
+      "name": "user_analytics",
+      "schema": "",
       "columns": {
         "id": {
           "name": "id",
           "type": "integer",
           "primaryKey": true,
           "notNull": true,
-          "autoincrement": true
+          "identity": {
+            "type": "always",
+            "name": "user_analytics_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "2147483647",
+            "cache": "1",
+            "cycle": false
+          }
         },
-        "name": {
-          "name": "name",
-          "type": "text",
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false
+          "default": "now()"
         },
-        "imgPath": {
-          "name": "imgPath",
-          "type": "text",
+        "created_locally": {
+          "name": "created_locally",
+          "type": "boolean",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "checkConstraints": {
-        "riddles_check_1": {
-          "name": "riddles_check_1",
-          "value": "json_valid(body"
-        },
-        "riddles_check_2": {
-          "name": "riddles_check_2",
-          "value": "json_type(body"
-        },
-        "riddles_check_3": {
-          "name": "riddles_check_3",
-          "value": "json_array_length(body"
-        },
-        "riddleAnswerChoices_check_4": {
-          "name": "riddleAnswerChoices_check_4",
-          "value": "slotIndex BETWEEN 0 AND 3"
-        },
-        "users_check_5": {
-          "name": "users_check_5",
-          "value": "hasViewedExitPanel IN (0, 1"
-        },
-        "users_check_6": {
-          "name": "users_check_6",
-          "value": "json_valid(gameState"
-        }
-      }
-    },
-    "userColors": {
-      "name": "userColors",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "integer",
-          "primaryKey": true,
-          "notNull": true,
-          "autoincrement": true
-        },
-        "name": {
-          "name": "name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "badgePath": {
-          "name": "badgePath",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "checkConstraints": {
-        "riddles_check_1": {
-          "name": "riddles_check_1",
-          "value": "json_valid(body"
-        },
-        "riddles_check_2": {
-          "name": "riddles_check_2",
-          "value": "json_type(body"
-        },
-        "riddles_check_3": {
-          "name": "riddles_check_3",
-          "value": "json_array_length(body"
-        },
-        "riddleAnswerChoices_check_4": {
-          "name": "riddleAnswerChoices_check_4",
-          "value": "slotIndex BETWEEN 0 AND 3"
-        },
-        "users_check_5": {
-          "name": "users_check_5",
-          "value": "hasViewedExitPanel IN (0, 1"
-        },
-        "users_check_6": {
-          "name": "users_check_6",
-          "value": "json_valid(gameState"
-        }
-      }
-    },
-    "users": {
-      "name": "users",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "integer",
-          "primaryKey": true,
-          "notNull": true,
-          "autoincrement": true
-        },
-        "userAnimal": {
-          "name": "userAnimal",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "userColor": {
-          "name": "userColor",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "gameState": {
-          "name": "gameState",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "'{\"currentRiddleId\":0,\"currentGuesses\":[],\"hintsRemaining\":7,\"currentScore\":0,\"startingIndex\":0,\"currentShuffledChoices\":[],\"currentCorrectAnswerIndex\":0}'"
-        },
-        "createdAt": {
-          "name": "createdAt",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "scores": {
-          "name": "scores",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false,
-          "default": "'[]'"
-        },
-        "hasViewedExitPanel": {
-          "name": "hasViewedExitPanel",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false,
-          "default": 0
+          "default": false
         }
       },
       "indexes": {
-        "idx_users_createdAt": {
-          "name": "idx_users_createdAt",
+        "idx_user_analytics_created_at": {
+          "name": "idx_user_analytics_created_at",
           "columns": [
-            "createdAt"
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
           ],
-          "isUnique": false
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.user_animals": {
+      "name": "user_animals",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "always",
+            "name": "user_animals_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "2147483647",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "img_path": {
+          "name": "img_path",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "user_animals_name_unique": {
+          "name": "user_animals_name_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "name"
+          ]
+        },
+        "user_animals_img_path_unique": {
+          "name": "user_animals_img_path_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "img_path"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.user_colors": {
+      "name": "user_colors",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "always",
+            "name": "user_colors_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "2147483647",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "hex": {
+          "name": "hex",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "user_colors_name_unique": {
+          "name": "user_colors_name_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "name"
+          ]
+        },
+        "user_colors_hex_unique": {
+          "name": "user_colors_hex_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "hex"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.users": {
+      "name": "users",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "always",
+            "name": "users_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "2147483647",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "user_animal": {
+          "name": "user_animal",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_color": {
+          "name": "user_color",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "scores": {
+          "name": "scores",
+          "type": "integer[]",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'{}'"
+        },
+        "has_viewed_exit_panel": {
+          "name": "has_viewed_exit_panel",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "created_locally": {
+          "name": "created_locally",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        }
+      },
+      "indexes": {
+        "idx_users_created_at": {
+          "name": "idx_users_created_at",
+          "columns": [
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "users_color_animal_unique": {
+          "name": "users_color_animal_unique",
+          "columns": [
+            {
+              "expression": "user_color",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "user_animal",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
-        "users_userAnimal_userAnimals_id_fk": {
-          "name": "users_userAnimal_userAnimals_id_fk",
+        "users_user_animal_user_animals_id_fk": {
+          "name": "users_user_animal_user_animals_id_fk",
           "tableFrom": "users",
-          "tableTo": "userAnimals",
+          "tableTo": "user_animals",
           "columnsFrom": [
-            "userAnimal"
+            "user_animal"
           ],
           "columnsTo": [
             "id"
@@ -505,12 +789,12 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "users_userColor_userColors_id_fk": {
-          "name": "users_userColor_userColors_id_fk",
+        "users_user_color_user_colors_id_fk": {
+          "name": "users_user_color_user_colors_id_fk",
           "tableFrom": "users",
-          "tableTo": "userColors",
+          "tableTo": "user_colors",
           "columnsFrom": [
-            "userColor"
+            "user_color"
           ],
           "columnsTo": [
             "id"
@@ -521,42 +805,20 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
-      "checkConstraints": {
-        "riddles_check_1": {
-          "name": "riddles_check_1",
-          "value": "json_valid(body"
-        },
-        "riddles_check_2": {
-          "name": "riddles_check_2",
-          "value": "json_type(body"
-        },
-        "riddles_check_3": {
-          "name": "riddles_check_3",
-          "value": "json_array_length(body"
-        },
-        "riddleAnswerChoices_check_4": {
-          "name": "riddleAnswerChoices_check_4",
-          "value": "slotIndex BETWEEN 0 AND 3"
-        },
-        "users_check_5": {
-          "name": "users_check_5",
-          "value": "hasViewedExitPanel IN (0, 1"
-        },
-        "users_check_6": {
-          "name": "users_check_6",
-          "value": "json_valid(gameState"
-        }
-      }
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
     }
   },
-  "views": {},
   "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
   "_meta": {
+    "columns": {},
     "schemas": {},
-    "tables": {},
-    "columns": {}
-  },
-  "internal": {
-    "indexes": {}
+    "tables": {}
   }
 }

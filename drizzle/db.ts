@@ -1,15 +1,15 @@
 import dotenv from "dotenv";
 dotenv.config({ path: ".env", quiet: true });
 
-import { drizzle } from "drizzle-orm/libsql";
-import { createClient } from "@libsql/client";
+import { drizzle } from "drizzle-orm/node-postgres";
+import { Pool } from "pg";
 import * as schema from "./schema.ts";
 
-const dbUrl = process.env.DB_FILE_NAME;
+const dbUrl = process.env.DATABASE_URL;
 
 if (!dbUrl) {
-  throw new Error("DB_FILE_NAME is not set");
+  throw new Error("DATABASE_URL is not set");
 }
 
-export const client = createClient({ url: dbUrl });
-export const db = drizzle(client, { schema });
+export const pool = new Pool({ connectionString: dbUrl });
+export const db = drizzle(pool, { schema, casing: "snake_case" });

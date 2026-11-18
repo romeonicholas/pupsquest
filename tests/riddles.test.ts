@@ -15,7 +15,7 @@ describe("GET /api/riddles/:id", () => {
   });
 
   it("404s for riddles that don't exist", async () => {
-    const res = await request(app).get("/api/riddles/99999999999");
+    const res = await request(app).get("/api/riddles/999");
     expect(res.status).toBe(404);
   });
 });

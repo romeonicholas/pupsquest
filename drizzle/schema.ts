@@ -1,57 +1,66 @@
 import {
-  sqliteTable,
-  check,
+  pgTable,
   integer,
   text,
+  check,
   index,
-} from "drizzle-orm/sqlite-core";
+  boolean,
+  timestamp,
+  jsonb,
+  uniqueIndex,
+} from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 
-export const userAnimals = sqliteTable("userAnimals", {
-  id: integer().primaryKey({ autoIncrement: true }),
+type ShuffledChoice = {
+  id: number;
+  display: string;
+  imgPath: string;
+  slotIndex: number;
+  isCorrect: boolean;
+};
+
+export const userAnimals = pgTable("user_animals", {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
   name: text().notNull().unique(),
-  imgPath: text().notNull().unique(),
+  imgPath: text().notNull().unique("user_animals_img_path_unique"),
 });
 
-export const userColors = sqliteTable("userColors", {
-  id: integer().primaryKey({ autoIncrement: true }),
+export const userColors = pgTable("user_colors", {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
   name: text().notNull().unique(),
   hex: text().notNull().unique(),
-  badgePath: text().notNull().unique(),
 });
 
-export const answerChoices = sqliteTable(
-  "answerChoices",
+export const answerChoices = pgTable(
+  "answer_choices",
   {
-    id: integer().primaryKey({ autoIncrement: true }),
+    id: integer().primaryKey().generatedAlwaysAsIdentity(),
     key: text().notNull().unique(),
     display: text().notNull(),
     imgPath: text().notNull(),
   },
-  (table) => [index("idx_answerChoices_display").on(table.display)],
+  (table) => [index("idx_answer_choices_display").on(table.display)],
 );
 
-export const riddles = sqliteTable(
+export const riddles = pgTable(
   "riddles",
   {
-    id: integer().primaryKey({ autoIncrement: true }),
-    riddleKey: text().notNull().unique(),
+    id: integer().primaryKey().generatedAlwaysAsIdentity(),
+    riddleKey: text().notNull().unique("riddles_riddle_key_unique"),
     headline: text().notNull(),
-    body: text().notNull(),
+    body: text().array().notNull(),
     answerDetails: text().notNull(),
     answerImgPath: text().notNull(),
   },
   (table) => [
-    check("riddles_check_1", sql`json_valid(body)`),
-    check("riddles_check_2", sql`json_type(body) = 'array'`),
-    check("riddles_check_3", sql`json_array_length(body) > 0`),
+    check("riddles_body_not_empty", sql`cardinality(${table.body}) > 0`),
   ],
 );
 
-export const riddleAnswerChoices = sqliteTable(
-  "riddleAnswerChoices",
+export const riddleAnswerChoices = pgTable(
+  "riddle_answer_choices",
   {
-    id: integer().primaryKey({ autoIncrement: true }),
+    id: integer().primaryKey().generatedAlwaysAsIdentity(),
     riddleId: integer()
       .notNull()
       .references(() => riddles.id, { onDelete: "cascade" }),
@@ -61,98 +70,90 @@ export const riddleAnswerChoices = sqliteTable(
     slotIndex: integer().notNull(),
   },
   (table) => [
-    index("idx_rac_choiceId").on(table.answerChoiceId),
-    index("idx_rac_riddleId").on(table.riddleId),
-    check("riddleAnswerChoices_check_4", sql`slotIndex BETWEEN 0 AND 3`),
+    index("idx_rac_choice_id").on(table.answerChoiceId),
+    index("idx_rac_riddle_id").on(table.riddleId),
+    check(
+      "riddle_answer_choices_slot_index_check",
+      sql`${table.slotIndex} BETWEEN 0 AND 3`,
+    ),
   ],
 );
 
-export const users = sqliteTable(
+export const users = pgTable(
   "users",
   {
-    id: integer().primaryKey({ autoIncrement: true }),
+    id: integer().primaryKey().generatedAlwaysAsIdentity(),
     userAnimal: integer()
       .notNull()
       .references(() => userAnimals.id),
     userColor: integer()
       .notNull()
       .references(() => userColors.id),
-    createdAt: integer()
-      .notNull()
-      .default(sql`(strftime('%s','now'))`),
-    scores: text().default("[]"),
-    hasViewedExitPanel: integer().default(0),
-    createdLocally: integer().notNull().default(0),
+    createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
+    scores: integer().array().notNull().default([]),
+    hasViewedExitPanel: boolean().notNull().default(false),
+    createdLocally: boolean().notNull().default(false),
   },
   (table) => [
-    index("idx_users_createdAt").on(table.createdAt),
-    check("users_check_5", sql`hasViewedExitPanel IN (0, 1)`),
-    check("users_check_6", sql`json_valid(scores)`),
-    check("users_check_7", sql`createdLocally IN (0, 1)`),
+    index("idx_users_created_at").on(table.createdAt),
+    uniqueIndex("users_color_animal_unique").on(
+      table.userColor,
+      table.userAnimal,
+    ),
   ],
 );
 
-export const userAnalytics = sqliteTable(
-  "userAnalytics",
+export const userAnalytics = pgTable(
+  "user_analytics",
   {
-    id: integer().primaryKey({ autoIncrement: true }),
-    createdAt: integer()
-      .notNull()
-      .default(sql`(strftime('%s','now'))`),
-    createdLocally: integer().notNull().default(0),
+    id: integer().primaryKey().generatedAlwaysAsIdentity(),
+    createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
+    createdLocally: boolean().notNull().default(false),
   },
-  (table) => [
-    index("idx_userAnalytics_createdAt").on(table.createdAt),
-    check("userAnalytics_check_1", sql`createdLocally IN (0, 1)`),
-  ],
+  (table) => [index("idx_user_analytics_created_at").on(table.createdAt)],
 );
 
-export const gameStates = sqliteTable(
-  "gameStates",
+export const gameStates = pgTable(
+  "game_states",
   {
-    id: integer().primaryKey({ autoIncrement: true }),
+    id: integer().primaryKey().generatedAlwaysAsIdentity(),
     userId: integer()
       .notNull()
       .references(() => users.id, { onDelete: "cascade" })
-      .unique(),
-    currentGuesses: text().notNull().default("[]"),
+      .unique("game_states_user_id_unique"),
+    currentGuesses: integer().array().notNull().default([]),
     hintsRemaining: integer().notNull().default(7),
     currentScore: integer().notNull().default(0),
     startingIndex: integer().notNull().default(0),
-    riddleQueue: text().notNull(),
+    riddleQueue: integer().array().notNull(),
     queueCursor: integer().notNull().default(0),
-    currentShuffledChoices: text().notNull().default("[]"),
+    currentShuffledChoices: jsonb()
+      .$type<ShuffledChoice[]>()
+      .notNull()
+      .default([]),
     currentCorrectAnswerIndex: integer().notNull().default(0),
   },
-  (table) => [
-    index("idx_gameStates_userId").on(table.userId),
-    check("gameStates_check_1", sql`json_valid(currentGuesses)`),
-    check("gameStates_check_2", sql`json_valid(currentShuffledChoices)`),
-  ],
+  (table) => [index("idx_game_states_user_id").on(table.userId)],
 );
 
-export const riddleAnalytics = sqliteTable(
-  "riddleAnalytics",
+export const riddleAnalytics = pgTable(
+  "riddle_analytics",
   {
-    id: integer().primaryKey({ autoIncrement: true }),
+    id: integer().primaryKey().generatedAlwaysAsIdentity(),
     riddleId: integer()
       .notNull()
       .references(() => riddles.id, { onDelete: "restrict" }),
-    createdAt: integer()
-      .notNull()
-      .default(sql`(strftime('%s','now'))`),
-    wasAnswered: integer().notNull().default(0),
-    wasAnsweredCorrectly: integer(),
+    createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
+    wasAnswered: boolean().notNull().default(false),
+    wasAnsweredCorrectly: boolean(),
     hintsUsed: integer(),
   },
   (table) => [
-    index("idx_ruo_riddleId").on(table.riddleId),
-    index("idx_ruo_createdAt").on(table.createdAt),
-    check("riddleAnalytics_check_1", sql`wasAnswered IN (0, 1)`),
+    index("idx_ruo_riddle_id").on(table.riddleId),
+    index("idx_ruo_created_at").on(table.createdAt),
     check(
-      "riddleAnalytics_check_2",
-      sql`wasAnsweredCorrectly IS NULL OR wasAnsweredCorrectly IN (0, 1)`,
+      "riddle_analytics_check_hints_used_check",
+      sql`${table.hintsUsed} IS NULL OR ${table.hintsUsed} >= 0`,
     ),
-    check("riddleAnalytics_check_3", sql`hintsUsed IS NULL OR hintsUsed >= 0`),
   ],
 );

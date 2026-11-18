@@ -1,8 +1,6 @@
-Definitely going to forget these again
-
-Create .env with DB_FILE_NAME=file:local.db
+Create .env with DATABASE_URL=postgres://pupsquest:pupsquest@localhost:5432/pupsquest
 
 npm install
-npx drizzle-kit push
-npm run seed
+docker compose up -d
+npm run db:reset
 npm run dev

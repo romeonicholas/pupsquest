@@ -1,3 +1,4 @@
+import { pool } from "../db.ts";
 import { seedAnimals, seedColors } from "./users.ts";
 import { seedAnswerChoices, seedRiddles } from "./riddles.ts";
 
@@ -8,4 +9,5 @@ async function seedDatabase() {
   await seedRiddles();
 }
 
-seedDatabase();
+await seedDatabase();
+await pool.end();

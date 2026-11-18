@@ -20,7 +20,7 @@ describe("POST /api/users", () => {
     await request(app)
       .post("/api/users")
       .send({ colorId: 5, animalId: 19 })
-      .expect(500);
+      .expect(409);
   });
 
   it("fails for colors/animal ids that aren't numbers", async () => {

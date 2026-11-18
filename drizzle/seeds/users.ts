@@ -180,42 +180,34 @@ export async function seedColors() {
     {
       name: "Red",
       hex: "#D95A4C",
-      badgePath: "/images/userCreation/badge_red.png",
     },
     {
       name: "Yellow",
       hex: "#EBBD4F",
-      badgePath: "/images/userCreation/badge_yellow.png",
     },
     {
       name: "Green",
       hex: "#8AA653",
-      badgePath: "/images/userCreation/badge_green.png",
     },
     {
       name: "Blue",
       hex: "#59A4B2",
-      badgePath: "/images/userCreation/badge_blue.png",
     },
     {
       name: "Purple",
       hex: "#A67B9A",
-      badgePath: "/images/userCreation/badge_purple.png",
     },
     {
       name: "Orange",
       hex: "#EA8E48",
-      badgePath: "/images/userCreation/badge_orange.png",
     },
     {
       name: "Brown",
       hex: "#99785B",
-      badgePath: "/images/userCreation/badge_brown.png",
     },
     {
       name: "Silver",
       hex: "#B0B3AA",
-      badgePath: "/images/userCreation/badge_silver.png",
     },
   ];
 

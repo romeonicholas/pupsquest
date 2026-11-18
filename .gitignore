@@ -1,16 +1,5 @@
 node_modules
-
-# Environment variables
 .env
-
-# Logs
 *.log
-
-*.db
-*.db-wal
-*.db-shm
-
 public/fonts/Gotham-*
-
-test.db
 test-results/

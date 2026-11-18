@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 import app from "./app.ts";
-import { client } from "./drizzle/db.ts";
+import { pool } from "./drizzle/db.ts";
 import { deleteExpiredUsers } from "./drizzle/queries.ts";
 
 dotenv.config({ path: ".env", quiet: true });
@@ -23,7 +23,7 @@ app.listen(PORT, HOST, async () => {
 
 process.on("SIGINT", async () => {
   try {
-    client.close();
+    await pool.end();
     console.log("Database connection closed.");
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
@@ -34,7 +34,7 @@ process.on("SIGINT", async () => {
 
 process.on("SIGTERM", async () => {
   try {
-    client.close();
+    await pool.end();
     console.log("Database connection closed.");
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);

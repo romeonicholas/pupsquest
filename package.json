@@ -15,22 +15,24 @@
     "test": "vitest run",
     "test:browser": "playwright test",
     "seed": "tsx drizzle/seeds/index.ts",
-    "db:reset": "del local.db* && drizzle-kit push && npm run seed",
+    "db:migrate": "tsx drizzle/migrate.ts",
+    "db:reset": "docker compose up -d --wait && docker compose exec db psql -U pupsquest -c \"drop schema public cascade; drop schema if exists drizzle cascade; create schema public;\" && npm run db:migrate && npm run seed",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "typecheck": "tsc"
   },
   "dependencies": {
-    "@libsql/client": "^0.15.15",
     "dotenv": "^17.2.2",
     "drizzle-orm": "^0.44.5",
     "ejs": "^3.1.10",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "pg": "^8.23.1"
   },
   "devDependencies": {
     "@playwright/test": "^1.65.1",
     "@types/express": "^5.0.3",
     "@types/node": "^26.6.6",
+    "@types/pg": "^8.23.1",
     "@types/supertest": "^7.2.1",
     "drizzle-kit": "^0.31.4",
     "nodemon": "^3.1.10",

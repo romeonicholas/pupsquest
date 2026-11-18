@@ -18,12 +18,11 @@ router.post("/api/signout", async (req, res) => {
     }
 
     const processedGameState = {
-      ...gameState,
-      currentGuesses: JSON.stringify(gameState.currentGuesses || []),
-      riddleQueue: JSON.stringify(gameState.riddleQueue || []),
-      currentShuffledChoices: JSON.stringify(
-        gameState.currentShuffledChoices || [],
-      ),
+      startingIndex: gameState.startingIndex,
+      queueCursor: gameState.queueCursor,
+      currentGuesses: gameState.currentGuesses || [],
+      riddleQueue: gameState.riddleQueue || [],
+      currentShuffledChoices: gameState.currentShuffledChoices || [],
       currentCorrectAnswerIndex: gameState.currentCorrectAnswerIndex ?? 0,
       hintsRemaining: gameState.hintsRemaining ?? 7,
       currentScore: gameState.currentScore ?? 0,
@@ -32,8 +31,8 @@ router.post("/api/signout", async (req, res) => {
     const result = await updateUserAndGameState(
       userId,
       {
-        scores: JSON.stringify(scores || []),
-        hasViewedExitPanel: hasViewedExitPanel ? 1 : 0,
+        scores: scores || [],
+        hasViewedExitPanel: Boolean(hasViewedExitPanel),
       },
       processedGameState,
     );
@@ -80,6 +79,12 @@ router.post("/api/users", async (req, res) => {
     }
 
     const newUser = await createUserAndGameState(colorId, animalId, isVisitor);
+
+    if (!newUser) {
+      return res
+        .status(409)
+        .json({ error: "This color and animal combination is already taken" });
+    }
 
     res.status(201).json(newUser);
   } catch (error) {
