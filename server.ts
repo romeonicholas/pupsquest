@@ -8,9 +8,7 @@ dotenv.config({ path: ".env", quiet: true });
 const PORT = Number(process.env.PORT) || 3000;
 const HOST = process.env.HOST || "0.0.0.0";
 
-app.listen(PORT, HOST, async () => {
-  console.log(`Started server on ${HOST}:${PORT}`);
-
+async function cleanUpExpiredUsers() {
   try {
     const numberOfDeletedUsers = await deleteExpiredUsers();
     if (numberOfDeletedUsers)
@@ -19,6 +17,12 @@ app.listen(PORT, HOST, async () => {
     const errorMessage = error instanceof Error ? error.message : String(error);
     console.error("Expired user deletion failed:", errorMessage);
   }
+}
+
+app.listen(PORT, HOST, async () => {
+  console.log(`Started server on ${HOST}:${PORT}`);
+  await cleanUpExpiredUsers();
+  setInterval(cleanUpExpiredUsers, 60 * 60 * 1000);
 });
 
 process.on("SIGINT", async () => {
