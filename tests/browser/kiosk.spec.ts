@@ -3,6 +3,16 @@ import { createUserAndStartRiddles } from "./helpers.ts";
 
 test.use({ viewport: { width: 1080, height: 1920 }, hasTouch: true });
 
+test("a kiosk user is saved as created on the kiosk", async ({ page }) => {
+  const createRequest = page.waitForRequest(
+    (request) =>
+      request.url().endsWith("/api/users") && request.method() === "POST",
+  );
+  await createUserAndStartRiddles(page, "kiosk");
+
+  expect((await createRequest).postDataJSON().isKiosk).toBe(true);
+});
+
 test("create a user, go to first riddle", async ({ page }) => {
   await createUserAndStartRiddles(page, "kiosk");
 });
@@ -102,6 +112,6 @@ test("rejoin game after signing out", async ({ page }) => {
 });
 
 test("the 'Use your phone!' button is visible", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/kiosk");
   await expect(page.locator("#use-phone-button")).toBeVisible();
 });

@@ -41,7 +41,7 @@ export async function getUsedColorIds() {
 export async function createUserAndGameState(
   colorId: number,
   animalId: number,
-  isVisitor: boolean,
+  isKiosk: boolean,
 ) {
   return await db.transaction(async (tx) => {
     const [newUser] = await tx
@@ -49,7 +49,7 @@ export async function createUserAndGameState(
       .values({
         userColor: colorId,
         userAnimal: animalId,
-        createdLocally: !isVisitor,
+        createdOnKiosk: isKiosk,
       })
       .onConflictDoNothing()
       .returning();
@@ -144,7 +144,7 @@ export async function deleteExpiredUsers() {
       .select({
         id: users.id,
         createdAt: users.createdAt,
-        createdLocally: users.createdLocally,
+        createdOnKiosk: users.createdOnKiosk,
       })
       .from(users)
       .where(lte(users.createdAt, expirationThreshold));
@@ -152,7 +152,7 @@ export async function deleteExpiredUsers() {
     if (usersToDelete.length > 0) {
       const analyticsData = usersToDelete.map((user) => ({
         createdAt: user.createdAt,
-        createdLocally: user.createdLocally,
+        createdOnKiosk: user.createdOnKiosk,
       }));
       await tx.insert(userAnalytics).values(analyticsData);
 

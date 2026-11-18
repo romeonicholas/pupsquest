@@ -1,6 +1,4 @@
-const isVisitor =
-  new URLSearchParams(window.location.search).get("device") === "visitor";
-
+const isKiosk = document.body.dataset.device === "kiosk";
 let currentUser = null;
 let currentGameState = null;
 
@@ -89,7 +87,7 @@ document.addEventListener("scroll", startInactivityTimer);
 document.addEventListener("touchstart", startInactivityTimer);
 
 function startInactivityTimer() {
-  if (!isTimerActive || isVisitor) {
+  if (!isTimerActive || !isKiosk) {
     return;
   }
   clearTimeout(inactivityTimeout);
@@ -1036,7 +1034,7 @@ async function createUser() {
     const userData = {
       colorId: parseInt(selectedColorId),
       animalId: parseInt(selectedAnimalId),
-      isVisitor: isVisitor,
+      isKiosk: isKiosk,
     };
 
     const response = await fetch("/api/users", {

@@ -6,6 +6,7 @@ export default defineConfig({
     env: {
       DATABASE_URL:
         "postgres://pupsquest:pupsquest@localhost:5432/pupsquest_test",
+      APP_MODE: "museum",
     },
     globalSetup: "./tests/setup.ts",
     setupFiles: "./tests/reset-user-data.ts",

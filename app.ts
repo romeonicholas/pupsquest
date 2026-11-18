@@ -1,7 +1,9 @@
-import express from "express";
+import express, { type Request, type Response } from "express";
 import path from "path";
 import { fileURLToPath } from "url";
+import { config } from "./config.ts";
 
+import healthRouter from "./routes/health.ts";
 import riddlesRouter from "./routes/riddles.ts";
 import colorsRouter from "./routes/colors.ts";
 import analyticsRouter from "./routes/analytics.ts";
@@ -11,6 +13,11 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
+
+if (config.mode === "online") {
+  app.set("trust proxy", 1);
+}
+
 app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "public")));
 app.set("views", path.join(__dirname, "views"));
@@ -18,27 +25,24 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use(healthRouter);
 app.use(analyticsRouter);
-
 app.use(colorsRouter);
-
 app.use(riddlesRouter);
-
 app.use(usersRouter);
 
 app.get("/favicon.ico", (req, res) => {
   res.status(204).end();
 });
 
-app.get("/", (req, res) => {
-  const isVisitor = req.query.device === "visitor";
+function renderGame(req: Request, res: Response, isKiosk: boolean) {
   const date = new Date().toLocaleDateString("en-US", {
     year: "numeric",
     month: "short",
     day: "numeric",
   });
 
-  if (!isVisitor) {
+  if (isKiosk) {
     const time = new Date().toLocaleTimeString("en-US", {
       hour: "2-digit",
       minute: "2-digit",
@@ -48,7 +52,12 @@ app.get("/", (req, res) => {
     console.log(`${date} ${time}: ${ipAddress} connected`);
   }
 
-  res.render("index", { isVisitor, date });
-});
+  res.render("index", { isKiosk, isMuseum: config.mode === "museum", date });
+}
+
+app.get("/", (req, res) => renderGame(req, res, false));
+if (config.mode === "museum") {
+  app.get("/kiosk", (req, res) => renderGame(req, res, true));
+}
 
 export default app;
