@@ -1,12 +1,7 @@
-import dotenv from "dotenv";
 import app from "./app.ts";
+import { config } from "./config.ts";
 import { pool } from "./drizzle/db.ts";
 import { deleteExpiredUsers } from "./drizzle/queries.ts";
-
-dotenv.config({ path: ".env", quiet: true });
-
-const PORT = Number(process.env.PORT) || 3000;
-const HOST = process.env.HOST || "0.0.0.0";
 
 async function cleanUpExpiredUsers() {
   try {
@@ -19,8 +14,10 @@ async function cleanUpExpiredUsers() {
   }
 }
 
-app.listen(PORT, HOST, async () => {
-  console.log(`Started server on ${HOST}:${PORT}`);
+app.listen(config.port, config.host, async () => {
+  console.log(
+    `Server starting in ${config.mode} mode (${config.host}:${config.port})`,
+  );
   await cleanUpExpiredUsers();
   setInterval(cleanUpExpiredUsers, 60 * 60 * 1000);
 });
@@ -28,7 +25,7 @@ app.listen(PORT, HOST, async () => {
 process.on("SIGINT", async () => {
   try {
     await pool.end();
-    console.log("Database connection closed.");
+    console.log("Database connection closed");
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     console.error("Error closing database:", errorMessage);
@@ -39,7 +36,7 @@ process.on("SIGINT", async () => {
 process.on("SIGTERM", async () => {
   try {
     await pool.end();
-    console.log("Database connection closed.");
+    console.log("Database connection closed");
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     console.error("Error closing database:", errorMessage);
