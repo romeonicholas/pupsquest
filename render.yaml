@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: pupsquest
+    runtime: image
+    image:
+      url: ghcr.io/romeonicholas/pupsquest:latest
+    plan: free
+    region: frankfurt
+    healthCheckPath: /healthz
+    dockerCommand: npm run start:online
+    envVars:
+      - key: APP_MODE
+        value: online
+      - key: DATABASE_URL
+        fromDatabase:
+          name: pupsquest-db
+          property: connectionString
+
+databases:
+  - name: pupsquest-db
+    plan: free
+    region: frankfurt
+    postgresMajorVersion: "18"
