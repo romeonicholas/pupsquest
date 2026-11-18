@@ -8,7 +8,7 @@
     <script src="/js/script.js" defer></script>
   </head>
 
-  <body>
+  <body data-device="<%= isKiosk ? "kiosk" : "phone" %>">
     <div id="container">
       <div id="clip-path">
         <%- include('error_screen') %><%- include('inactivity_screen') %> <%-

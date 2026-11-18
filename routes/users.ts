@@ -76,7 +76,7 @@ router.post("/api/users", async (req, res) => {
   try {
     const colorId = parseId(req.body.colorId);
     const animalId = parseId(req.body.animalId);
-    const isVisitor = req.body.isVisitor;
+    const isKiosk = Boolean(req.body.isKiosk);
 
     if (colorId == null || animalId == null) {
       return res
@@ -84,7 +84,7 @@ router.post("/api/users", async (req, res) => {
         .json({ error: "Missing or invalid colorId or animalId" });
     }
 
-    const newUser = await createUserAndGameState(colorId, animalId, isVisitor);
+    const newUser = await createUserAndGameState(colorId, animalId, isKiosk);
 
     if (!newUser) {
       return res
