@@ -2,6 +2,7 @@ import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
 
+import healthRouter from "./routes/health.ts";
 import riddlesRouter from "./routes/riddles.ts";
 import colorsRouter from "./routes/colors.ts";
 import analyticsRouter from "./routes/analytics.ts";
@@ -18,12 +19,10 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use(healthRouter);
 app.use(analyticsRouter);
-
 app.use(colorsRouter);
-
 app.use(riddlesRouter);
-
 app.use(usersRouter);
 
 app.get("/favicon.ico", (req, res) => {
