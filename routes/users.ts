@@ -12,9 +12,10 @@ const router = Router();
 
 router.post("/api/signout", async (req, res) => {
   try {
-    const { userId, scores, hasViewedExitPanel, gameState } = req.body;
+    const { scores, hasViewedExitPanel, gameState } = req.body;
+    const userId = parseId(req.body.userId);
 
-    if (!userId || !parseId(userId)) {
+    if (userId == null) {
       return res.status(400).json({ error: "Invalid user ID" });
     }
 
@@ -46,10 +47,10 @@ router.post("/api/signout", async (req, res) => {
 });
 
 router.get("/api/users", async (req, res) => {
-  const colorId = Number(req.query.colorId);
-  const animalId = Number(req.query.animalId);
+  const colorId = parseId(req.query.colorId);
+  const animalId = parseId(req.query.animalId);
 
-  if (isNaN(Number(colorId)) || isNaN(Number(animalId))) {
+  if (colorId == null || animalId == null) {
     return res
       .status(400)
       .json({ error: "Missing or invalid colorId or animalId" });
@@ -69,11 +70,11 @@ router.get("/api/users", async (req, res) => {
 
 router.post("/api/users", async (req, res) => {
   try {
-    const colorId = Number(req.body.colorId);
-    const animalId = Number(req.body.animalId);
+    const colorId = parseId(req.body.colorId);
+    const animalId = parseId(req.body.animalId);
     const isVisitor = req.body.isVisitor;
 
-    if (isNaN(colorId) || isNaN(animalId)) {
+    if (colorId == null || animalId == null) {
       return res
         .status(400)
         .json({ error: "Missing or invalid colorId or animalId" });
