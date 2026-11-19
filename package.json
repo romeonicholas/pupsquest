@@ -20,7 +20,8 @@
     "db:reset": "docker compose up -d --wait && docker compose exec db psql -U pupsquest -c \"drop schema public cascade; drop schema if exists drizzle cascade; create schema public;\" && npm run db:migrate && npm run seed",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "lint": "oxlint --type-aware --deny-warnings"
   },
   "dependencies": {
     "dotenv": "^17.2.2",
@@ -36,6 +37,8 @@
     "@types/pg": "^8.23.1",
     "@types/supertest": "^7.2.1",
     "drizzle-kit": "^0.31.4",
+    "oxlint": "^1.94.0",
+    "oxlint-tsgolint": "^7.0.2007",
     "prettier": "3.10.1",
     "supertest": "^7.3.2",
     "typescript": "^7.0.2",
