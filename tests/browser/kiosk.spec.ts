@@ -1,5 +1,5 @@
 import { test, expect, type Page } from "@playwright/test";
-import { createUserAndStartRiddles } from "./helpers.ts";
+import { createUserAndStartRiddles, findAnswerOption } from "./helpers.ts";
 
 test.use({ viewport: { width: 1080, height: 1920 }, hasTouch: true });
 
@@ -120,21 +120,8 @@ test("selecting the wrong answer reveals a hint, hints left goes down", async ({
   page,
 }) => {
   await createUserAndStartRiddles(page, "kiosk");
-
-  let wrongOption = 0;
-  let correctOption = 0;
-
-  //omg this is so hard to track, candidate #1 for refactor
-  for (let option = 1; option <= 4; option++) {
-    const iconBack = await page
-      .locator(`#icon-back-${option}`)
-      .getAttribute("src");
-    if (iconBack?.includes("answer_backing_correct")) {
-      correctOption = option;
-    } else {
-      wrongOption = option;
-    }
-  }
+  const wrongOption = await findAnswerOption(page, "wrong");
+  const correctOption = await findAnswerOption(page, "correct");
 
   const wrongArea = page.locator(`#option-click-area-${wrongOption}`);
   const correctArea = page.locator(`#option-click-area-${correctOption}`);

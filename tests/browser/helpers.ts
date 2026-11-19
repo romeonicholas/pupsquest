@@ -43,3 +43,20 @@ export async function createUserAndStartRiddles(
 
   return { colorName, animalName };
 }
+
+export async function findAnswerOption(page: Page, kind: "correct" | "wrong") {
+  for (let option = 1; option <= 4; option++) {
+    const iconBack = await page
+      .locator(`#icon-back-${option}`)
+      .getAttribute("src");
+    if (iconBack?.includes("answer_backing_correct")) {
+      if (kind === "correct") return option;
+    } else {
+      if (kind === "wrong") return option;
+    }
+  }
+
+  throw new Error(
+    `No ${kind} option found, check if riddle was solved or failed`,
+  );
+}
