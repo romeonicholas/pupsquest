@@ -343,3 +343,24 @@ test("user can't rejoin with a color that has no animals", async ({ page }) => {
     }
   }
 });
+
+test("the error screen appears if saving fails, and the site reloads", async ({
+  page,
+}) => {
+  await page.clock.install();
+  await createUserAndStartRiddles(page, "kiosk");
+  await page.route("**/api/signout", (route) => route.fulfill({ status: 500 }));
+
+  await page.locator("#save-exit-button").tap();
+  await page.locator("#sign-out-button").tap();
+
+  const errorScreen = page.locator("#error-screen");
+  await expect(errorScreen).toBeVisible();
+
+  const reload = page.waitForEvent("load");
+  await page.clock.fastForward(6_000);
+  await reload;
+
+  await expect(errorScreen).toBeHidden();
+  await expect(page.locator("#museum-new-game-button")).toBeInViewport();
+});
