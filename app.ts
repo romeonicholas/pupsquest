@@ -27,6 +27,7 @@ app.set("views", path.join(__dirname, "views"));
 app.use(
   pinoHttp({
     logger,
+    autoLogging: { ignore: (req) => req.url === "/healthz" },
     serializers: {
       req: (req) => ({ method: req.method, url: req.url }),
       res: (res) => ({ statusCode: res.statusCode }),
