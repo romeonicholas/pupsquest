@@ -26,3 +26,11 @@ test("a phone user isn't saved as created on the kiosk", async ({ page }) => {
 test("create a user, go to first riddle", async ({ page }) => {
   await createUserAndStartRiddles(page, "phone");
 });
+
+test("phone users never see the inactivity screen", async ({ page }) => {
+  await page.clock.install();
+  await createUserAndStartRiddles(page, "phone");
+
+  await page.clock.fastForward(60_000);
+  await expect(page.locator("#inactivity-screen")).toHaveCSS("opacity", "0");
+});

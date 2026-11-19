@@ -1,4 +1,4 @@
-import { expect, type Page } from "@playwright/test";
+import { expect, type Page, type Locator } from "@playwright/test";
 
 export async function createUserAndStartRiddles(
   page: Page,
@@ -42,4 +42,123 @@ export async function createUserAndStartRiddles(
   );
 
   return { colorName, animalName };
+}
+
+async function answerWasTapped(page: Page, option: number) {
+  const back = await page.locator(`#icon-back-${option}`).boundingBox();
+  const front = await page.locator(`#icon-front-${option}`).boundingBox();
+
+  return Math.abs(front!.y - back!.y) > 1;
+}
+
+export async function findAvailableAnswerOption(
+  page: Page,
+  kind: "correct" | "wrong",
+) {
+  for (let option = 1; option <= 4; option++) {
+    if (await answerWasTapped(page, option)) continue;
+
+    const iconBack = await page
+      .locator(`#icon-back-${option}`)
+      .getAttribute("src");
+    if (iconBack?.includes("answer_backing_correct")) {
+      if (kind === "correct") return option;
+    } else {
+      if (kind === "wrong") return option;
+    }
+  }
+
+  throw new Error(
+    `No available ${kind} option found, check if riddle was solved or failed`,
+  );
+}
+
+export async function waitUntilTappable(page: Page, option: number) {
+  await page.locator(`#option-click-area-${option}`).tap({ trial: true });
+}
+
+export async function restingPosition(locator: Locator) {
+  let previous = await locator.boundingBox();
+
+  while (true) {
+    await locator.page().waitForTimeout(300);
+    const current = await locator.boundingBox();
+
+    if (current?.x === previous?.x && current?.y === previous?.y) {
+      return current!;
+    }
+    previous = current;
+  }
+}
+
+export async function tapAnswer(page: Page, kind: "correct" | "wrong") {
+  const option = await findAvailableAnswerOption(page, kind);
+
+  await waitUntilTappable(page, option);
+  await page.locator(`#option-click-area-${option}`).tap();
+  await restingPosition(page.locator(`#icon-front-${option}`));
+
+  return option;
+}
+
+export async function playUntilGameOver(page: Page) {
+  await createUserAndStartRiddles(page, "kiosk");
+  const statusWheel = page.locator("#status-wheel-container");
+  const nextRiddleButton = page.locator("#next-riddle-button");
+
+  await tapAnswer(page, "correct");
+  await nextRiddleButton.tap();
+  await expect(statusWheel).toContainText("RIDDLE 2");
+
+  await tapAnswer(page, "wrong");
+  await tapAnswer(page, "wrong");
+  await tapAnswer(page, "wrong");
+
+  await nextRiddleButton.tap();
+  await expect(statusWheel).toContainText("RIDDLE 3");
+
+  await tapAnswer(page, "wrong");
+  await tapAnswer(page, "wrong");
+  await tapAnswer(page, "wrong");
+
+  await nextRiddleButton.tap();
+  await expect(statusWheel).toContainText("RIDDLE 4");
+
+  await tapAnswer(page, "wrong");
+}
+
+export async function rejoinsAs(
+  page: Page,
+  colorName: string,
+  animalName: string,
+) {
+  await page.locator("#museum-rejoin-game-button").tap();
+
+  await expect(
+    page
+      .locator(".rejoin-color-option", {
+        has: page.locator(`#rejoin-${colorName}-selected`),
+      })
+      .locator(".color-unavailability-indicator"),
+  ).not.toHaveClass(/active/);
+
+  await page
+    .locator(".rejoin-color-option", {
+      has: page.locator(`#rejoin-${colorName}-selected`),
+    })
+    .locator("button")
+    .tap();
+
+  await page
+    .locator("#rejoin-animal-options-container .animal-option", {
+      hasText: animalName,
+    })
+    .locator(".animal-button")
+    .tap();
+
+  await page.locator("#rejoin-screen #animal-confirmation-button").tap();
+
+  await expect(page.locator("#status-wheel-container")).toContainText(
+    "RIDDLE 1",
+  );
 }
