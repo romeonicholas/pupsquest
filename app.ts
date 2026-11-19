@@ -56,13 +56,7 @@ function renderGame(req: Request, res: Response, isKiosk: boolean) {
   });
 
   if (isKiosk) {
-    const time = new Date().toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-    });
-    const ipAddress = req.ip;
-    console.log(`${date} ${time}: ${ipAddress} connected`);
+    logger.info({ ipAddress: req.ip }, "Kiosk connected to server");
   }
 
   res.render("index", { isKiosk, isMuseum: config.mode === "museum", date });
