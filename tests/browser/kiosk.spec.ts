@@ -277,3 +277,46 @@ test("the 'Use your phone!' screen opens and closes", async ({ page }) => {
   await expect(page.locator("#museum-new-game-button")).toBeInViewport();
   await expect(page.locator("#use-phone-screen")).toBeHidden();
 });
+
+test("hitting start over before finishing user creation cleras out selections and badge", async ({
+  page,
+}) => {
+  await page.goto("/kiosk");
+  await page.locator("#museum-new-game-button").tap();
+  await page.locator("#user-creation-instructions-button").tap();
+
+  await page.locator("#color-picker .color-button").first().tap();
+
+  const animalOption = page
+    .locator("#animal-options-container .animal-option")
+    .first();
+  const animalName = await animalOption
+    .locator(".animal-icon-text")
+    .innerText();
+  await animalOption.locator(".animal-button").tap();
+
+  const selectedColor = page.locator(
+    "#color-picker .color-selection-icon.selected",
+  );
+  const selectedAnimal = page.locator(
+    "#animal-options-container .animal-selection-icon.selected",
+  );
+  const badgeText = page.locator("#badge-text-container");
+
+  await expect(selectedColor).toHaveCount(1);
+  await expect(selectedAnimal).toHaveCount(1);
+  await expect(badgeText).toHaveClass(/visible/);
+  await expect(badgeText).toContainText(animalName);
+
+  await page.locator("#start-over-button").tap();
+  await expect(page.locator("#museum-new-game-button")).toBeInViewport();
+
+  await page.locator("#museum-new-game-button").tap();
+
+  await expect(
+    page.locator("#user-creation-instructions-button"),
+  ).toBeInViewport();
+  await expect(selectedColor).toHaveCount(0);
+  await expect(selectedAnimal).toHaveCount(0);
+  await expect(badgeText).not.toHaveClass(/visible/);
+});
