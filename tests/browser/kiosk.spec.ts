@@ -225,3 +225,20 @@ test("rejoining a game in progress keeps answer order, wrong guesses, hint count
   );
   expect(hintBar.x - hintStrip.x).toBeCloseTo(47, 0);
 });
+
+test("when 25 seconds go by without interaction, show inactivity screen", async ({
+  page,
+}) => {
+  await page.clock.install();
+  await createUserAndStartRiddles(page, "kiosk");
+  const inactivityScreen = page.locator("#inactivity-screen");
+
+  await page.clock.fastForward(25_000);
+  await expect(inactivityScreen).toHaveCSS("opacity", "1");
+
+  await page.locator("#inactivity-stay-here").tap();
+  await expect(inactivityScreen).toHaveCSS("opacity", "0");
+  await expect(page.locator("#status-wheel-container")).toContainText(
+    "RIDDLE 1",
+  );
+});
