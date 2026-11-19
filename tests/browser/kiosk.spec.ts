@@ -231,14 +231,32 @@ test("when 25 seconds go by without interaction, show inactivity screen", async 
 }) => {
   await page.clock.install();
   await createUserAndStartRiddles(page, "kiosk");
+
   const inactivityScreen = page.locator("#inactivity-screen");
 
   await page.clock.fastForward(25_000);
+
   await expect(inactivityScreen).toHaveCSS("opacity", "1");
 
   await page.locator("#inactivity-stay-here").tap();
+
   await expect(inactivityScreen).toHaveCSS("opacity", "0");
   await expect(page.locator("#status-wheel-container")).toContainText(
     "RIDDLE 1",
   );
+});
+
+test("8 seconds after inactivity screen appears, game returns to start screen", async ({
+  page,
+}) => {
+  await page.clock.install();
+  await createUserAndStartRiddles(page, "kiosk");
+
+  await page.clock.fastForward(25_000);
+
+  await expect(page.locator("#inactivity-screen")).toHaveCSS("opacity", "1");
+
+  await page.clock.fastForward(8_000);
+
+  await expect(page.locator("#museum-new-game-button")).toBeVisible();
 });
