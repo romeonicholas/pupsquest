@@ -1,5 +1,10 @@
-import { test, expect, type Page } from "@playwright/test";
-import { createUserAndStartRiddles, findAnswerOption } from "./helpers.ts";
+import { test, expect } from "@playwright/test";
+import {
+  createUserAndStartRiddles,
+  findAnswerOption,
+  waitUntilTappable,
+  restingPosition,
+} from "./helpers.ts";
 
 test.use({ viewport: { width: 1080, height: 1920 }, hasTouch: true });
 
@@ -120,27 +125,24 @@ test("selecting the wrong answer reveals a hint, hints left goes down", async ({
   page,
 }) => {
   await createUserAndStartRiddles(page, "kiosk");
+
   const wrongOption = await findAnswerOption(page, "wrong");
   const correctOption = await findAnswerOption(page, "correct");
-
-  const wrongArea = page.locator(`#option-click-area-${wrongOption}`);
-  const correctArea = page.locator(`#option-click-area-${correctOption}`);
   const wrongIcon = page.locator(`#icon-front-${wrongOption}`);
   const selectionPanel = page.locator("#selection-layer");
   const hintCounter = page.locator("#hint-count-foreground");
 
-  await wrongArea.tap({ trial: true }); // buttons active again
-  const panelBefore = (await selectionPanel.boundingBox())!;
-  const iconBefore = (await wrongIcon.boundingBox())!;
-  const counterBefore = (await hintCounter.boundingBox())!;
+  await waitUntilTappable(page, wrongOption);
+  const panelBefore = await restingPosition(selectionPanel);
+  const iconBefore = await restingPosition(wrongIcon);
+  const counterBefore = await restingPosition(hintCounter);
 
-  await wrongArea.tap();
+  await page.locator(`#option-click-area-${wrongOption}`).tap();
 
-  await correctArea.tap({ trial: true }); // remaining buttons active
-  await page.waitForTimeout(500);
-  const panelAfter = (await selectionPanel.boundingBox())!;
-  const iconAfter = (await wrongIcon.boundingBox())!;
-  const counterAfter = (await hintCounter.boundingBox())!;
+  await waitUntilTappable(page, correctOption);
+  const panelAfter = await restingPosition(selectionPanel);
+  const iconAfter = await restingPosition(wrongIcon);
+  const counterAfter = await restingPosition(hintCounter);
 
   expect(panelAfter.y - panelBefore.y).toBeCloseTo(222, 0);
 

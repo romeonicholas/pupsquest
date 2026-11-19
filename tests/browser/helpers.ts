@@ -1,4 +1,4 @@
-import { expect, type Page } from "@playwright/test";
+import { expect, type Page, type Locator } from "@playwright/test";
 
 export async function createUserAndStartRiddles(
   page: Page,
@@ -59,4 +59,22 @@ export async function findAnswerOption(page: Page, kind: "correct" | "wrong") {
   throw new Error(
     `No ${kind} option found, check if riddle was solved or failed`,
   );
+}
+
+export async function waitUntilTappable(page: Page, option: number) {
+  await page.locator(`#option-click-area-${option}`).tap({ trial: true });
+}
+
+export async function restingPosition(locator: Locator) {
+  let previous = await locator.boundingBox();
+
+  while (true) {
+    await locator.page().waitForTimeout(300);
+    const current = await locator.boundingBox();
+
+    if (current?.x === previous?.x && current?.y === previous?.y) {
+      return current!;
+    }
+    previous = current;
+  }
 }
