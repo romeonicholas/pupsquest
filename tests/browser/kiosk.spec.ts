@@ -320,3 +320,26 @@ test("hitting start over before finishing user creation cleras out selections an
   await expect(selectedAnimal).toHaveCount(0);
   await expect(badgeText).not.toHaveClass(/visible/);
 });
+
+test("user can't rejoin with a color that has no animals", async ({ page }) => {
+  const usedColorIds = [1, 3, 7];
+  await page.route("**/api/colors/used", (route) =>
+    route.fulfill({ json: usedColorIds }),
+  );
+
+  await page.goto("/kiosk");
+  await page.locator("#museum-rejoin-game-button").tap();
+
+  const allColorIds = [1, 2, 3, 4, 5, 6, 7, 8];
+
+  for (const colorId of allColorIds) {
+    const indicator = page.locator(
+      `.color-unavailability-indicator[data-color-id="${colorId}"]`,
+    );
+    if (usedColorIds.includes(colorId)) {
+      await expect(indicator).not.toHaveClass(/active/);
+    } else {
+      await expect(indicator).toHaveClass(/active/);
+    }
+  }
+});
