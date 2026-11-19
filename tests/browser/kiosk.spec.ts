@@ -265,3 +265,15 @@ test("8 seconds after inactivity screen appears, user gets saved and signed out"
 
   await expect(page.locator("#museum-new-game-button")).toBeInViewport();
 });
+
+test("the 'Use your phone!' screen opens and closes", async ({ page }) => {
+  await page.goto("/kiosk");
+
+  await page.locator("#use-phone-button").tap();
+  await expect(page.locator("#use-phone-screen")).toBeVisible();
+  await expect(page.locator("#museum-new-game-button")).not.toBeInViewport();
+
+  await page.locator("#use-phone-back-button").tap();
+  await expect(page.locator("#museum-new-game-button")).toBeInViewport();
+  await expect(page.locator("#use-phone-screen")).toBeHidden();
+});
