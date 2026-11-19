@@ -152,3 +152,34 @@ test("selecting the wrong answer reveals a hint, hints left goes down", async ({
   expect(iconMovedInPanel).toBeCloseTo(234, 0);
   expect(counterAfter.x - counterBefore.x).toBeCloseTo(-47, 0);
 });
+
+test("after 3 wrong guesses show wrong answer and riddle info", async ({
+  page,
+}) => {
+  await createUserAndStartRiddles(page, "kiosk");
+
+  const wrongOptions: number[] = [];
+  for (let option = 1; option <= 4; option++) {
+    const backing = await page
+      .locator(`#icon-back-${option}`)
+      .getAttribute("src");
+    if (!backing?.includes("answer_backing_correct")) {
+      wrongOptions.push(option);
+    }
+  }
+
+  const hintCounter = page.locator("#hint-count-foreground");
+  const counterBefore = await restingPosition(hintCounter);
+
+  await waitUntilTappable(page, wrongOptions[0]);
+
+  for (const option of wrongOptions) {
+    await waitUntilTappable(page, option);
+    await page.locator(`#option-click-area-${option}`).tap();
+  }
+
+  await expect(page.locator("#answer-incorrect-text")).toBeVisible();
+
+  const counterAfter = await restingPosition(hintCounter);
+  expect(counterAfter.x - counterBefore.x).toBeCloseTo(-3 * 47, 0);
+});
