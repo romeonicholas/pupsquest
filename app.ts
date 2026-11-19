@@ -2,6 +2,8 @@ import express, { type Request, type Response } from "express";
 import path from "path";
 import { fileURLToPath } from "url";
 import { config } from "./config.ts";
+import { pinoHttp } from "pino-http";
+import { logger } from "./logger.ts";
 
 import healthRouter from "./routes/health.ts";
 import riddlesRouter from "./routes/riddles.ts";
@@ -21,6 +23,17 @@ if (config.mode === "online") {
 app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "public")));
 app.set("views", path.join(__dirname, "views"));
+
+app.use(
+  pinoHttp({
+    logger,
+    autoLogging: { ignore: (req) => req.url === "/healthz" },
+    serializers: {
+      req: (req) => ({ method: req.method, url: req.url }),
+      res: (res) => ({ statusCode: res.statusCode }),
+    },
+  }),
+);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -43,13 +56,7 @@ function renderGame(req: Request, res: Response, isKiosk: boolean) {
   });
 
   if (isKiosk) {
-    const time = new Date().toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-    });
-    const ipAddress = req.ip;
-    console.log(`${date} ${time}: ${ipAddress} connected`);
+    logger.info({ ipAddress: req.ip }, "Kiosk connected to server");
   }
 
   res.render("index", { isKiosk, isMuseum: config.mode === "museum", date });

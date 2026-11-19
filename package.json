@@ -28,7 +28,9 @@
     "drizzle-orm": "^0.44.5",
     "ejs": "^3.1.10",
     "express": "^5.1.0",
-    "pg": "^8.23.1"
+    "pg": "^8.23.1",
+    "pino": "^10.4.0",
+    "pino-http": "^11.0.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.65.1",
@@ -39,6 +41,7 @@
     "drizzle-kit": "^0.31.4",
     "oxlint": "^1.94.0",
     "oxlint-tsgolint": "^7.0.2007",
+    "pino-pretty": "^13.2.0",
     "prettier": "3.10.1",
     "supertest": "^7.3.2",
     "typescript": "^7.0.2",

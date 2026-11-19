@@ -7,6 +7,7 @@ import {
   getAllAnimalsFromUsersWithColor,
 } from "../drizzle/queries.ts";
 import { parseId } from "./parse-input.ts";
+import { logger } from "../logger.ts";
 
 const router = Router();
 
@@ -45,7 +46,7 @@ router.post("/api/signout", async (req, res) => {
 
     res.json({ message: "User and game state updated successfully: ", result });
   } catch (error) {
-    console.error("Error updating user: ", error);
+    logger.error({ err: error }, "Error updating user");
     res.status(500).json({ error: "Failed to update user and game state" });
   }
 });
@@ -67,7 +68,7 @@ router.get("/api/users", async (req, res) => {
     }
     res.json(user);
   } catch (error) {
-    console.error("Error fetching user: ", error);
+    logger.error({ err: error }, "Error fetching user");
     res.status(500).json({ error: "Failed to fetch user" });
   }
 });
@@ -94,8 +95,7 @@ router.post("/api/users", async (req, res) => {
 
     res.status(201).json(newUser);
   } catch (error) {
-    console.error("Error creating user: ", error);
-
+    logger.error({ err: error }, "Error creating user");
     res.status(500).json({ error: "Failed to create user" });
   }
 });
@@ -139,7 +139,7 @@ router.get("/api/users/create-html", async (req, res) => {
       animalOptionsByColorId: animalOptionsHtmlByColorId,
     });
   } catch (error) {
-    console.error("Error generating user creation HTML: ", error);
+    logger.error({ err: error }, "Error generating user creation HTML");
     res.status(500).json({ error: "Failed to generate user creation HTML" });
   }
 });
@@ -155,7 +155,7 @@ router.get("/api/animals/existing/html", async (req, res) => {
     const animals = await getAllAnimalsFromUsersWithColor(colorId);
     res.render("partials/animal_options", { animals, isRejoin: true });
   } catch (error) {
-    console.error("Error fetching animals: ", error);
+    logger.error({ err: error }, "Error fetching animals");
     res.status(500).send("<p>Error loading animals</p>");
   }
 });

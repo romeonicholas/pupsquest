@@ -2,6 +2,10 @@ services:
   db:
     image: postgres:18
     restart: unless-stopped
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
     environment:
       POSTGRES_USER: pupsquest
       POSTGRES_PASSWORD: pupsquest
@@ -15,7 +19,12 @@ services:
 
   setup:
     image: ghcr.io/romeonicholas/pupsquest:latest
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
     command: sh -c "node drizzle/migrate.ts && node drizzle/seeds/index.ts"
+
     environment:
       DATABASE_URL: postgres://pupsquest:pupsquest@db:5432/pupsquest
     depends_on:
@@ -25,6 +34,10 @@ services:
   app:
     image: ghcr.io/romeonicholas/pupsquest:latest
     restart: unless-stopped
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
     environment:
       APP_MODE: museum
       DATABASE_URL: postgres://pupsquest:pupsquest@db:5432/pupsquest

@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { getRiddle } from "../drizzle/queries.ts";
 import { parseId } from "./parse-input.ts";
+import { logger } from "../logger.ts";
 
 const router = Router();
 
@@ -20,7 +21,7 @@ router.get("/api/riddles/:id", async (req, res) => {
 
     res.json(riddle);
   } catch (error) {
-    console.error("Error fetching riddle:", error);
+    logger.error({ err: error }, "Error fetching riddle");
     res.status(500).json({ error: "Failed to fetch riddle" });
   }
 });

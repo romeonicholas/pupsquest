@@ -7,6 +7,7 @@ export default defineConfig({
       DATABASE_URL:
         "postgres://pupsquest:pupsquest@localhost:5432/pupsquest_test",
       APP_MODE: "museum",
+      LOG_LEVEL: "silent",
     },
     globalSetup: "./tests/setup.ts",
     setupFiles: "./tests/reset-user-data.ts",
