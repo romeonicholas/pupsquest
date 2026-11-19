@@ -28,7 +28,7 @@ app.listen(config.port, config.host, async () => {
   setInterval(cleanUpExpiredUsers, 60 * 60 * 1000);
 });
 
-process.on("SIGINT", async () => {
+async function shutDownServer() {
   try {
     await pool.end();
     logger.info("Database connection closed");
@@ -36,14 +36,7 @@ process.on("SIGINT", async () => {
     logger.error({ err: error }, "Error closing database");
   }
   process.exit(0);
-});
+}
 
-process.on("SIGTERM", async () => {
-  try {
-    await pool.end();
-    logger.info("Database connection closed");
-  } catch (error) {
-    logger.error({ err: error }, "Error closing database");
-  }
-  process.exit(0);
-});
+process.on("SIGINT", shutDownServer);
+process.on("SIGTERM", shutDownServer);
