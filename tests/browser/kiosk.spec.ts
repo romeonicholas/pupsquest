@@ -195,3 +195,28 @@ test("game over shows comparison to average score", async ({ page }) => {
     "That's 2 less than the average score this week",
   );
 });
+
+test("starting a new game after game over starts at riddle 1 with 7 hints", async ({
+  page,
+}) => {
+  test.slow();
+
+  await playUntilGameOver(page);
+
+  const statusWheel = page.locator("#status-wheel-container");
+
+  await expect(statusWheel).toContainText("GAME OVER");
+
+  await page.locator("#next-riddle-button").tap();
+
+  await expect(statusWheel).toContainText("RIDDLE 1");
+
+  const hintContainer = (await page
+    .locator("#hint-count-layer")
+    .boundingBox())!;
+  const hintStrip = await restingPosition(
+    page.locator("#hint-count-foreground"),
+  );
+
+  expect(hintStrip.x).toBeCloseTo(hintContainer.x, 0);
+});
