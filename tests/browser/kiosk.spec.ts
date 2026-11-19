@@ -6,6 +6,7 @@ import {
   restingPosition,
   tapAnswer,
   playUntilGameOver,
+  rejoinsAs,
 } from "./helpers.ts";
 
 test.use({ viewport: { width: 1080, height: 1920 }, hasTouch: true });
@@ -78,35 +79,7 @@ test("rejoin game after signing out", async ({ page }) => {
   );
   await page.locator("#save-exit-button").tap();
   await page.locator("#sign-out-button").tap();
-  await page.locator("#museum-rejoin-game-button").tap();
-
-  await expect(
-    page
-      .locator(".rejoin-color-option", {
-        has: page.locator(`#rejoin-${colorName}-selected`),
-      })
-      .locator(".color-unavailability-indicator"),
-  ).not.toHaveClass(/active/);
-
-  await page
-    .locator(".rejoin-color-option", {
-      has: page.locator(`#rejoin-${colorName}-selected`),
-    })
-    .locator("button")
-    .tap();
-
-  await page
-    .locator("#rejoin-animal-options-container .animal-option", {
-      hasText: animalName,
-    })
-    .locator(".animal-button")
-    .tap();
-
-  await page.locator("#rejoin-screen #animal-confirmation-button").tap();
-
-  await expect(page.locator("#status-wheel-container")).toContainText(
-    "RIDDLE 1",
-  );
+  await rejoinsAs(page, colorName, animalName);
 });
 
 test("the 'Use your phone!' button is visible", async ({ page }) => {
@@ -232,25 +205,7 @@ test("rejoining a game in progress keeps answer order, wrong guesses, hint count
 
   await page.locator("#save-exit-button").tap();
   await page.locator("#sign-out-button").tap();
-
-  await page.locator("#museum-rejoin-game-button").tap();
-  await page
-    .locator(".rejoin-color-option", {
-      has: page.locator(`#rejoin-${colorName}-selected`),
-    })
-    .locator("button")
-    .tap();
-  await page
-    .locator("#rejoin-animal-options-container .animal-option", {
-      hasText: animalName,
-    })
-    .locator(".animal-button")
-    .tap();
-  await page.locator("#rejoin-screen #animal-confirmation-button").tap();
-
-  await expect(page.locator("#status-wheel-container")).toContainText(
-    "RIDDLE 1",
-  );
+  await rejoinsAs(page, colorName, animalName);
 
   const correctOption = await findAvailableAnswerOption(page, "correct");
   await waitUntilTappable(page, correctOption);

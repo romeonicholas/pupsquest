@@ -126,3 +126,39 @@ export async function playUntilGameOver(page: Page) {
 
   await tapAnswer(page, "wrong");
 }
+
+export async function rejoinsAs(
+  page: Page,
+  colorName: string,
+  animalName: string,
+) {
+  await page.locator("#museum-rejoin-game-button").tap();
+
+  await expect(
+    page
+      .locator(".rejoin-color-option", {
+        has: page.locator(`#rejoin-${colorName}-selected`),
+      })
+      .locator(".color-unavailability-indicator"),
+  ).not.toHaveClass(/active/);
+
+  await page
+    .locator(".rejoin-color-option", {
+      has: page.locator(`#rejoin-${colorName}-selected`),
+    })
+    .locator("button")
+    .tap();
+
+  await page
+    .locator("#rejoin-animal-options-container .animal-option", {
+      hasText: animalName,
+    })
+    .locator(".animal-button")
+    .tap();
+
+  await page.locator("#rejoin-screen #animal-confirmation-button").tap();
+
+  await expect(page.locator("#status-wheel-container")).toContainText(
+    "RIDDLE 1",
+  );
+}
