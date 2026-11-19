@@ -246,17 +246,22 @@ test("when 25 seconds go by without interaction, show inactivity screen", async 
   );
 });
 
-test("8 seconds after inactivity screen appears, game returns to start screen", async ({
+test("8 seconds after inactivity screen appears, user gets saved and signed out", async ({
   page,
 }) => {
   await page.clock.install();
   await createUserAndStartRiddles(page, "kiosk");
+
+  const saveRequest = page.waitForRequest((request) =>
+    request.url().endsWith("/api/signout"),
+  );
 
   await page.clock.fastForward(25_000);
 
   await expect(page.locator("#inactivity-screen")).toHaveCSS("opacity", "1");
 
   await page.clock.fastForward(8_000);
+  await saveRequest;
 
   await expect(page.locator("#museum-new-game-button")).toBeVisible();
 });
