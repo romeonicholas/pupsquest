@@ -28,16 +28,7 @@ test("answer a riddle correctly on first attempt and go to next riddle", async (
 }) => {
   await createUserAndStartRiddles(page, "kiosk");
 
-  for (let option = 1; option <= 4; option++) {
-    const backing = await page
-      .locator(`#icon-back-${option}`)
-      .getAttribute("src");
-
-    //only way to know correct answer right now x_x
-    if (backing?.includes("answer_backing_correct")) {
-      await page.locator(`#option-click-area-${option}`).tap();
-    }
-  }
+  await tapAnswer(page, "correct");
 
   await expect(page.locator("#answer-correct-text")).toBeVisible();
 
@@ -138,7 +129,7 @@ test("selecting the wrong answer reveals a hint, hints left goes down", async ({
   const iconBefore = await restingPosition(wrongIcon);
   const counterBefore = await restingPosition(hintCounter);
 
-  await page.locator(`#option-click-area-${wrongOption}`).tap();
+  await tapAnswer(page, "wrong");
 
   await waitUntilTappable(page, correctOption);
   const panelAfter = await restingPosition(selectionPanel);
