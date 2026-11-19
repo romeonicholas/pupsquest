@@ -2,22 +2,28 @@ import app from "./app.ts";
 import { config } from "./config.ts";
 import { pool } from "./drizzle/db.ts";
 import { deleteExpiredUsers } from "./drizzle/queries.ts";
+import { logger } from "./logger.ts";
 
 async function cleanUpExpiredUsers() {
   try {
     const numberOfDeletedUsers = await deleteExpiredUsers();
-    if (numberOfDeletedUsers)
-      console.log(`Deleted ${numberOfDeletedUsers} expired users`);
+    if (numberOfDeletedUsers) {
+      logger.info(
+        { deletedUsers: numberOfDeletedUsers },
+        "Deleted expired users",
+      );
+    }
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    console.error("Expired user deletion failed:", errorMessage);
+    logger.error({ err: error }, "Expired user deletion failed");
   }
 }
 
 app.listen(config.port, config.host, async () => {
-  console.log(
-    `Server starting in ${config.mode} mode (${config.host}:${config.port})`,
+  logger.info(
+    { mode: config.mode, host: config.host, port: config.port },
+    "Server started",
   );
+
   await cleanUpExpiredUsers();
   setInterval(cleanUpExpiredUsers, 60 * 60 * 1000);
 });
@@ -25,10 +31,9 @@ app.listen(config.port, config.host, async () => {
 process.on("SIGINT", async () => {
   try {
     await pool.end();
-    console.log("Database connection closed");
+    logger.info("Database connection closed");
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    console.error("Error closing database:", errorMessage);
+    logger.error({ err: error }, "Error closing database");
   }
   process.exit(0);
 });
@@ -36,10 +41,9 @@ process.on("SIGINT", async () => {
 process.on("SIGTERM", async () => {
   try {
     await pool.end();
-    console.log("Database connection closed");
+    logger.info("Database connection closed");
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    console.error("Error closing database:", errorMessage);
+    logger.error({ err: error }, "Error closing database");
   }
   process.exit(0);
 });
