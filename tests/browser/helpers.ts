@@ -44,8 +44,20 @@ export async function createUserAndStartRiddles(
   return { colorName, animalName };
 }
 
-export async function findAnswerOption(page: Page, kind: "correct" | "wrong") {
+async function answerWasTapped(page: Page, option: number) {
+  const back = await page.locator(`#icon-back-${option}`).boundingBox();
+  const front = await page.locator(`#icon-front-${option}`).boundingBox();
+
+  return Math.abs(front!.y - back!.y) > 1;
+}
+
+export async function findAvailableAnswerOption(
+  page: Page,
+  kind: "correct" | "wrong",
+) {
   for (let option = 1; option <= 4; option++) {
+    if (await answerWasTapped(page, option)) continue;
+
     const iconBack = await page
       .locator(`#icon-back-${option}`)
       .getAttribute("src");
@@ -57,7 +69,7 @@ export async function findAnswerOption(page: Page, kind: "correct" | "wrong") {
   }
 
   throw new Error(
-    `No ${kind} option found, check if riddle was solved or failed`,
+    `No available ${kind} option found, check if riddle was solved or failed`,
   );
 }
 
@@ -77,4 +89,14 @@ export async function restingPosition(locator: Locator) {
     }
     previous = current;
   }
+}
+
+export async function tapAnswer(page: Page, kind: "correct" | "wrong") {
+  const option = await findAvailableAnswerOption(page, kind);
+
+  await waitUntilTappable(page, option);
+  await page.locator(`#option-click-area-${option}`).tap();
+  await restingPosition(page.locator(`#icon-front-${option}`));
+
+  return option;
 }

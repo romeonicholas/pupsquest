@@ -1,9 +1,10 @@
 import { test, expect } from "@playwright/test";
 import {
   createUserAndStartRiddles,
-  findAnswerOption,
+  findAvailableAnswerOption,
   waitUntilTappable,
   restingPosition,
+  tapAnswer,
 } from "./helpers.ts";
 
 test.use({ viewport: { width: 1080, height: 1920 }, hasTouch: true });
@@ -126,8 +127,8 @@ test("selecting the wrong answer reveals a hint, hints left goes down", async ({
 }) => {
   await createUserAndStartRiddles(page, "kiosk");
 
-  const wrongOption = await findAnswerOption(page, "wrong");
-  const correctOption = await findAnswerOption(page, "correct");
+  const wrongOption = await findAvailableAnswerOption(page, "wrong");
+  const correctOption = await findAvailableAnswerOption(page, "correct");
   const wrongIcon = page.locator(`#icon-front-${wrongOption}`);
   const selectionPanel = page.locator("#selection-layer");
   const hintCounter = page.locator("#hint-count-foreground");
@@ -157,26 +158,12 @@ test("after 3 wrong guesses show wrong answer and riddle info", async ({
   page,
 }) => {
   await createUserAndStartRiddles(page, "kiosk");
-
-  const wrongOptions: number[] = [];
-  for (let option = 1; option <= 4; option++) {
-    const backing = await page
-      .locator(`#icon-back-${option}`)
-      .getAttribute("src");
-    if (!backing?.includes("answer_backing_correct")) {
-      wrongOptions.push(option);
-    }
-  }
-
   const hintCounter = page.locator("#hint-count-foreground");
   const counterBefore = await restingPosition(hintCounter);
 
-  await waitUntilTappable(page, wrongOptions[0]);
-
-  for (const option of wrongOptions) {
-    await waitUntilTappable(page, option);
-    await page.locator(`#option-click-area-${option}`).tap();
-  }
+  await tapAnswer(page, "wrong");
+  await tapAnswer(page, "wrong");
+  await tapAnswer(page, "wrong");
 
   await expect(page.locator("#answer-incorrect-text")).toBeVisible();
 
