@@ -161,3 +161,39 @@ test("after 3 wrong guesses show wrong answer and riddle info", async ({
   const counterAfter = await restingPosition(hintCounter);
   expect(counterAfter.x - counterBefore.x).toBeCloseTo(-3 * 47, 0);
 });
+
+test("after 7 wrong answers the game ends and user score is saved", async ({
+  page,
+}) => {
+  test.slow();
+  await createUserAndStartRiddles(page, "kiosk");
+  const statusWheel = page.locator("#status-wheel-container");
+  const nextRiddleButton = page.locator("#next-riddle-button");
+
+  await tapAnswer(page, "correct");
+  await nextRiddleButton.tap();
+  await expect(statusWheel).toContainText("RIDDLE 2");
+
+  await tapAnswer(page, "wrong");
+  await tapAnswer(page, "wrong");
+  await tapAnswer(page, "wrong");
+
+  await nextRiddleButton.tap();
+  await expect(statusWheel).toContainText("RIDDLE 3");
+
+  await tapAnswer(page, "wrong");
+  await tapAnswer(page, "wrong");
+  await tapAnswer(page, "wrong");
+
+  await nextRiddleButton.tap();
+  await expect(statusWheel).toContainText("RIDDLE 4");
+
+  await tapAnswer(page, "wrong");
+
+  const saveRequest = page.waitForRequest((request) =>
+    request.url().endsWith("/api/signout"),
+  );
+  await expect(statusWheel).toContainText("GAME OVER");
+  await expect(page.locator("#game-over")).toBeVisible();
+  expect((await saveRequest).postDataJSON().scores).toEqual([1]);
+});
