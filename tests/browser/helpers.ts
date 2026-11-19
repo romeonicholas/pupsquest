@@ -100,3 +100,29 @@ export async function tapAnswer(page: Page, kind: "correct" | "wrong") {
 
   return option;
 }
+
+export async function playUntilGameOver(page: Page) {
+  await createUserAndStartRiddles(page, "kiosk");
+  const statusWheel = page.locator("#status-wheel-container");
+  const nextRiddleButton = page.locator("#next-riddle-button");
+
+  await tapAnswer(page, "correct");
+  await nextRiddleButton.tap();
+  await expect(statusWheel).toContainText("RIDDLE 2");
+
+  await tapAnswer(page, "wrong");
+  await tapAnswer(page, "wrong");
+  await tapAnswer(page, "wrong");
+
+  await nextRiddleButton.tap();
+  await expect(statusWheel).toContainText("RIDDLE 3");
+
+  await tapAnswer(page, "wrong");
+  await tapAnswer(page, "wrong");
+  await tapAnswer(page, "wrong");
+
+  await nextRiddleButton.tap();
+  await expect(statusWheel).toContainText("RIDDLE 4");
+
+  await tapAnswer(page, "wrong");
+}
