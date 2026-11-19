@@ -197,3 +197,40 @@ test("after 7 wrong answers the game ends and user score is saved", async ({
   await expect(page.locator("#game-over")).toBeVisible();
   expect((await saveRequest).postDataJSON().scores).toEqual([1]);
 });
+
+test("game over shows comparison to average score", async ({ page }) => {
+  test.slow();
+
+  await page.route("**/api/stats/average-score", (route) =>
+    route.fulfill({ json: { averageScore: 3 } }),
+  );
+
+  await createUserAndStartRiddles(page, "kiosk");
+  const statusWheel = page.locator("#status-wheel-container");
+  const nextRiddleButton = page.locator("#next-riddle-button");
+
+  await tapAnswer(page, "correct");
+  await nextRiddleButton.tap();
+  await expect(statusWheel).toContainText("RIDDLE 2");
+
+  await tapAnswer(page, "wrong");
+  await tapAnswer(page, "wrong");
+  await tapAnswer(page, "wrong");
+
+  await nextRiddleButton.tap();
+  await expect(statusWheel).toContainText("RIDDLE 3");
+
+  await tapAnswer(page, "wrong");
+  await tapAnswer(page, "wrong");
+  await tapAnswer(page, "wrong");
+
+  await nextRiddleButton.tap();
+  await expect(statusWheel).toContainText("RIDDLE 4");
+
+  await tapAnswer(page, "wrong");
+
+  await expect(page.locator("#score-text")).toHaveText("You solved 1 riddle!");
+  await expect(page.locator("#score-comparison-text")).toHaveText(
+    "That's 2 less than the average score this week",
+  );
+});
