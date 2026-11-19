@@ -220,3 +220,53 @@ test("starting a new game after game over starts at riddle 1 with 7 hints", asyn
 
   expect(hintStrip.x).toBeCloseTo(hintContainer.x, 0);
 });
+
+test("rejoining a game in progress keeps answer order, wrong guesses, hint count", async ({
+  page,
+}) => {
+  const { colorName, animalName } = await createUserAndStartRiddles(
+    page,
+    "kiosk",
+  );
+  const wrongOption = await tapAnswer(page, "wrong");
+
+  await page.locator("#save-exit-button").tap();
+  await page.locator("#sign-out-button").tap();
+
+  await page.locator("#museum-rejoin-game-button").tap();
+  await page
+    .locator(".rejoin-color-option", {
+      has: page.locator(`#rejoin-${colorName}-selected`),
+    })
+    .locator("button")
+    .tap();
+  await page
+    .locator("#rejoin-animal-options-container .animal-option", {
+      hasText: animalName,
+    })
+    .locator(".animal-button")
+    .tap();
+  await page.locator("#rejoin-screen #animal-confirmation-button").tap();
+
+  await expect(page.locator("#status-wheel-container")).toContainText(
+    "RIDDLE 1",
+  );
+
+  const correctOption = await findAvailableAnswerOption(page, "correct");
+  await waitUntilTappable(page, correctOption);
+
+  const iconBack = await restingPosition(
+    page.locator(`#icon-back-${wrongOption}`),
+  );
+  const iconFront = await restingPosition(
+    page.locator(`#icon-front-${wrongOption}`),
+  );
+
+  expect(iconFront.y - iconBack.y).toBeCloseTo(234, 0);
+
+  const hintBar = (await page.locator("#hint-count-layer").boundingBox())!;
+  const hintStrip = await restingPosition(
+    page.locator("#hint-count-foreground"),
+  );
+  expect(hintBar.x - hintStrip.x).toBeCloseTo(47, 0);
+});
