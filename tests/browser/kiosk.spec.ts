@@ -57,7 +57,7 @@ test("open sign out panel (first time), close it, sign out via Save & Exit", asy
 
   await page.locator("#save-exit-button").tap();
 
-  await expect(page.locator("#museum-new-game-button")).toBeVisible();
+  await expect(page.locator("#museum-new-game-button")).toBeInViewport();
 });
 
 test("sign out via Sign Out button in open exit panel", async ({ page }) => {
@@ -69,7 +69,7 @@ test("sign out via Sign Out button in open exit panel", async ({ page }) => {
 
   await page.locator("#sign-out-button").tap();
 
-  await expect(page.locator("#museum-new-game-button")).toBeVisible();
+  await expect(page.locator("#museum-new-game-button")).toBeInViewport();
 });
 
 test("rejoin game after signing out", async ({ page }) => {
@@ -263,5 +263,5 @@ test("8 seconds after inactivity screen appears, user gets saved and signed out"
   await page.clock.fastForward(8_000);
   await saveRequest;
 
-  await expect(page.locator("#museum-new-game-button")).toBeVisible();
+  await expect(page.locator("#museum-new-game-button")).toBeInViewport();
 });
