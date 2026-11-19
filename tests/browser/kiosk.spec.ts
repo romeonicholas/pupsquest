@@ -115,3 +115,51 @@ test("the 'Use your phone!' button is visible", async ({ page }) => {
   await page.goto("/kiosk");
   await expect(page.locator("#use-phone-button")).toBeVisible();
 });
+
+test("selecting the wrong answer reveals a hint, hints left goes down", async ({
+  page,
+}) => {
+  await createUserAndStartRiddles(page, "kiosk");
+
+  let wrongOption = 0;
+  let correctOption = 0;
+
+  //omg this is so hard to track, candidate #1 for refactor
+  for (let option = 1; option <= 4; option++) {
+    const iconBack = await page
+      .locator(`#icon-back-${option}`)
+      .getAttribute("src");
+    if (iconBack?.includes("answer_backing_correct")) {
+      correctOption = option;
+    } else {
+      wrongOption = option;
+    }
+  }
+
+  const wrongArea = page.locator(`#option-click-area-${wrongOption}`);
+  const correctArea = page.locator(`#option-click-area-${correctOption}`);
+  const wrongIcon = page.locator(`#icon-front-${wrongOption}`);
+  const selectionPanel = page.locator("#selection-layer");
+  const hintCounter = page.locator("#hint-count-foreground");
+
+  await wrongArea.tap({ trial: true }); // buttons active again
+  const panelBefore = (await selectionPanel.boundingBox())!;
+  const iconBefore = (await wrongIcon.boundingBox())!;
+  const counterBefore = (await hintCounter.boundingBox())!;
+
+  await wrongArea.tap();
+
+  await correctArea.tap({ trial: true }); // remaining buttons active
+  await page.waitForTimeout(500);
+  const panelAfter = (await selectionPanel.boundingBox())!;
+  const iconAfter = (await wrongIcon.boundingBox())!;
+  const counterAfter = (await hintCounter.boundingBox())!;
+
+  expect(panelAfter.y - panelBefore.y).toBeCloseTo(222, 0);
+
+  const iconMovedInPanel =
+    iconAfter.y - panelAfter.y - (iconBefore.y - panelBefore.y);
+
+  expect(iconMovedInPanel).toBeCloseTo(234, 0);
+  expect(counterAfter.x - counterBefore.x).toBeCloseTo(-47, 0);
+});
