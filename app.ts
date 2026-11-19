@@ -2,6 +2,8 @@ import express, { type Request, type Response } from "express";
 import path from "path";
 import { fileURLToPath } from "url";
 import { config } from "./config.ts";
+import { pinoHttp } from "pino-http";
+import { logger } from "./logger.ts";
 
 import healthRouter from "./routes/health.ts";
 import riddlesRouter from "./routes/riddles.ts";
@@ -21,6 +23,16 @@ if (config.mode === "online") {
 app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "public")));
 app.set("views", path.join(__dirname, "views"));
+
+app.use(
+  pinoHttp({
+    logger,
+    serializers: {
+      req: (req) => ({ method: req.method, url: req.url }),
+      res: (res) => ({ statusCode: res.statusCode }),
+    },
+  }),
+);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
