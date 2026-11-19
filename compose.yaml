@@ -15,30 +15,5 @@ services:
       interval: 1s
       retries: 30
 
-  setup:
-    profiles: [museum]
-    build: .
-    command: sh -c "node drizzle/migrate.ts && node drizzle/seeds/index.ts"
-    environment:
-      DATABASE_URL: postgres://pupsquest:pupsquest@db:5432/pupsquest
-    depends_on:
-      db:
-        condition: service_healthy
-
-  app:
-    profiles: [museum]
-    build: .
-    restart: unless-stopped
-    environment:
-      APP_MODE: museum
-      DATABASE_URL: postgres://pupsquest:pupsquest@db:5432/pupsquest
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./public/fonts/Gotham-Medium.woff2:/app/public/fonts/Gotham-Medium.woff2:ro
-    depends_on:
-      setup:
-        condition: service_completed_successfully
-
 volumes:
   pgdata:
