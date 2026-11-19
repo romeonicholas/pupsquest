@@ -1,0 +1,40 @@
+services:
+  db:
+    image: postgres:18
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: pupsquest
+      POSTGRES_PASSWORD: pupsquest
+      POSTGRES_DB: pupsquest
+    volumes:
+      - pgdata:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h localhost -U pupsquest -d pupsquest"]
+      interval: 1s
+      retries: 30
+
+  setup:
+    image: ghcr.io/romeonicholas/pupsquest:latest
+    command: sh -c "node drizzle/migrate.ts && node drizzle/seeds/index.ts"
+    environment:
+      DATABASE_URL: postgres://pupsquest:pupsquest@db:5432/pupsquest
+    depends_on:
+      db:
+        condition: service_healthy
+
+  app:
+    image: ghcr.io/romeonicholas/pupsquest:latest
+    restart: unless-stopped
+    environment:
+      APP_MODE: museum
+      DATABASE_URL: postgres://pupsquest:pupsquest@db:5432/pupsquest
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./fonts/Gotham-Medium.woff2:/app/public/fonts/Gotham-Medium.woff2:ro
+    depends_on:
+      setup:
+        condition: service_completed_successfully
+
+volumes:
+  pgdata:
