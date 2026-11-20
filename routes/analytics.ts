@@ -25,8 +25,12 @@ router.post("/api/analytics/riddle", async (req, res) => {
   }
 
   try {
-    await addRiddleAnalytics(riddleId, wasAnsweredCorrectly, hintsUsed);
-    res.status(201).end();
+    const savedResult = await addRiddleAnalytics(
+      riddleId,
+      wasAnsweredCorrectly,
+      hintsUsed,
+    );
+    res.status(201).json(savedResult);
   } catch (error) {
     logger.error({ err: error }, "Error saving riddle analytics");
     res.status(500).json({ error: "Failed to save riddle analytics" });

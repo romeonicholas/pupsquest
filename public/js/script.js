@@ -1,3 +1,15 @@
+import {
+  getRiddle,
+  getAverageScore,
+  getUsedColors,
+  getCreationOptions,
+  getRejoinOptions,
+  getUser,
+  saveRiddleResult,
+  saveGame,
+  createUser,
+} from "./api.js";
+
 const isKiosk = document.body.dataset.device === "kiosk";
 let currentUser = null;
 let currentGameState = null;
@@ -10,7 +22,6 @@ const INACTIVITY_THRESHOLD = 25000;
 const INACTIVITY_CONFIRMATION_THRESHOLD = 8000;
 let isTimerActive = false;
 
-let currentRiddle = null;
 let currentShuffledChoices = [];
 let currentCorrectAnswerIndex = null;
 
@@ -20,10 +31,6 @@ const incorrectAnswerBackings = [
   "/images/riddles/ui/answer_backing_wrong_2.png",
   "/images/riddles/ui/answer_backing_wrong_3.png",
 ];
-
-const badgeBase = document.getElementById("badge-base");
-const badgeIcon = document.getElementById("badge-icon");
-const colorAnimalText = document.getElementById("color-animal-text");
 
 const riddleScreen = document.getElementById("riddle-screen");
 const statusWheelContainer = document.getElementById("status-wheel-container");
@@ -42,11 +49,6 @@ const iconBack2 = document.getElementById("icon-back-2");
 const iconBack3 = document.getElementById("icon-back-3");
 const iconBack4 = document.getElementById("icon-back-4");
 
-const clickAreaOption1 = document.getElementById("option-click-area-1");
-const clickAreaOption2 = document.getElementById("option-click-area-2");
-const clickAreaOption3 = document.getElementById("option-click-area-3");
-const clickAreaOption4 = document.getElementById("option-click-area-4");
-
 const optionText1 = document.getElementById("option-text-1");
 const optionText2 = document.getElementById("option-text-2");
 const optionText3 = document.getElementById("option-text-3");
@@ -61,9 +63,6 @@ const answerImg = document.getElementById("answer-img");
 
 const hintCountForeground = document.getElementById("hint-count-foreground");
 
-const backToStartButton = document.getElementById("back-to-start-button");
-
-const nextRiddleButton = document.getElementById("next-riddle-button");
 const riddleContainer = document.getElementById("riddle-container");
 const riddleTextLayerBackground = document.getElementById("riddle-text");
 const selectionLayer = document.getElementById("selection-layer");
@@ -72,13 +71,13 @@ const actions = {
   "save-and-exit": () => saveAndExit(),
   "cancel-exit": () => cancelExit(),
   "start-over": () => startOver(),
-  "new-game": () => {
+  "new-game": async () => {
     lowerStartScreen();
-    showCreateNewUserScreen();
+    await showCreateNewUserScreen();
   },
-  "rejoin-game": () => {
+  "rejoin-game": async () => {
     lowerStartScreen();
-    showRejoinGameScreen();
+    await showRejoinGameScreen();
   },
   "use-phone": () => {
     lowerStartScreen();
@@ -218,7 +217,6 @@ function updateRiddleElements(riddle) {
 
   currentShuffledChoices = shuffledChoices;
   currentCorrectAnswerIndex = correctAnswerIndex;
-  currentRiddle = riddle;
 }
 
 function restoreRiddleState(riddle) {
@@ -237,7 +235,6 @@ function restoreRiddleState(riddle) {
 
   currentShuffledChoices = shuffledChoices;
   currentCorrectAnswerIndex = correctAnswerIndex;
-  currentRiddle = riddle;
 }
 
 function restoreIncorrectGuesses() {
@@ -384,7 +381,7 @@ function transitionToRiddleScreen() {
   nextRiddleSheet.style.visibility = "hidden";
 
   setTimeout(() => {
-    showRiddle();
+    void showRiddle();
   }, 50);
 }
 
@@ -397,13 +394,7 @@ async function showRiddle() {
     currentGameState.riddleQueue[currentGameState.queueCursor];
 
   try {
-    const response = await fetch(`/api/riddles/${currentRiddleId}`);
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch riddle: ${response.status}`);
-    }
-
-    const currentRiddle = await response.json();
+    const currentRiddle = await getRiddle(currentRiddleId);
 
     const isRejoining =
       currentGameState.currentShuffledChoices &&
@@ -502,8 +493,7 @@ function enableAllInput() {
 async function updateScoreText() {
   let averageScore = 0;
   try {
-    const response = await fetch("/api/stats/average-score");
-    const data = await response.json();
+    const data = await getAverageScore();
     averageScore = Math.round(data.averageScore);
   } catch (error) {
     console.error("Error fetching average score:", error);
@@ -539,11 +529,9 @@ function recordRiddleResult(wasAnsweredCorrectly) {
   const riddleId = currentGameState.riddleQueue[currentGameState.queueCursor];
   const hintsUsed = currentGameState.currentGuesses.length;
 
-  fetch("/api/analytics/riddle", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ riddleId, wasAnsweredCorrectly, hintsUsed }),
-  }).catch((error) => console.error("Error saving riddle analytics:", error));
+  saveRiddleResult(riddleId, wasAnsweredCorrectly, hintsUsed).catch((error) =>
+    console.error("Error saving riddle analytics:", error),
+  );
 }
 
 async function handleIncorrectGuess(clickedArea, iconIndex) {
@@ -586,22 +574,12 @@ async function handleIncorrectGuess(clickedArea, iconIndex) {
         currentGameState.currentScore = 0;
 
         try {
-          const response = await fetch(`/api/signout`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              userId: currentUser.id,
-              scores: currentUser.scores,
-              hasViewedExitPanel: currentUser.hasViewedExitPanel,
-              gameState: currentGameState,
-            }),
-          });
-
-          if (!response.ok) {
-            throw new Error(`Failed to save user data: ${response.status}`);
-          }
+          await saveGame(
+            currentUser.id,
+            currentUser.scores,
+            currentUser.hasViewedExitPanel,
+            currentGameState,
+          );
         } catch (error) {
           console.error("Error saving user data:", error);
           showErrorScreenAndReload(error);
@@ -770,7 +748,7 @@ function returnToStartScreen() {
   startScreen.style.transform = "translateY(0)";
   startScreen.style.opacity = "0";
 
-  startScreen.offsetHeight;
+  void startScreen.offsetHeight;
 
   setTimeout(() => {
     startScreen.style.transition = "opacity 500ms ease-in";
@@ -791,9 +769,7 @@ function setUsePhoneScreenToDisplayNone() {
 
 async function showRejoinGameScreen() {
   try {
-    const response = await fetch("/api/colors/used");
-    const usedColors = await response.json();
-
+    const usedColors = await getUsedColors();
     const indicators = document.querySelectorAll(
       ".color-unavailability-indicator",
     );
@@ -889,7 +865,7 @@ function updateAnimalOptions(colorId) {
     animalOptionsContainer.replaceChildren(
       ...animals.map((animal) => buildAnimalOption(animal, "create")),
     );
-    animalOptionsContainer.offsetHeight;
+    void animalOptionsContainer.offsetHeight;
     animalOptionsContainer.style.transition = "opacity 300ms ease-in";
     animalOptionsContainer.style.opacity = "1";
   }, 200);
@@ -939,8 +915,7 @@ async function showCreateNewUserScreen() {
   startInactivityTimer();
 
   try {
-    const response = await fetch("/api/users/creation-options");
-    creationOptions = await response.json();
+    creationOptions = await getCreationOptions();
     renderColorOptions(creationOptions);
   } catch (error) {
     console.error("Error fetching possible user combinations:", error);
@@ -1145,7 +1120,7 @@ async function confirmAnimal() {
   confirmationPanel.style.transition = "transform 1200ms ease-in";
   confirmationPanel.style.transform = "translateY(-1470px)";
 
-  setUser(await createUser());
+  setUser(await createUserFromSelection());
 
   const riddleScreen = document.getElementById("riddle-screen");
   riddleScreen.style.display = "block";
@@ -1153,7 +1128,7 @@ async function confirmAnimal() {
   setSaveAndExitButtonToActive();
 }
 
-async function createUser() {
+async function createUserFromSelection() {
   try {
     const selectedColorId = getSelectedColorId();
     const selectedAnimalId = getSelectedAnimalId();
@@ -1162,30 +1137,11 @@ async function createUser() {
       throw new Error("Please select both a color and an animal.");
     }
 
-    const userData = {
-      colorId: parseInt(selectedColorId),
-      animalId: parseInt(selectedAnimalId),
-      isKiosk: isKiosk,
-    };
-
-    const response = await fetch("/api/users", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(userData),
-    });
-
-    if (!response.ok) {
-      const errorData = await response
-        .json()
-        .catch(() => ({ error: "Unknown error" }));
-      throw new Error(errorData.error || `Server error: ${response.status}`);
-    }
-
-    const newUser = await response.json();
-
-    return newUser;
+    return await createUser(
+      Number(selectedColorId),
+      Number(selectedAnimalId),
+      isKiosk,
+    );
   } catch (error) {
     console.error("Error creating user:", error);
     // showErrorScreenAndReload(error);
@@ -1245,16 +1201,13 @@ async function updateRejoinAnimalContainer(colorId) {
     noAnimalsMessage.style.opacity = "0";
 
     setTimeout(async () => {
-      const response = await fetch(
-        `/api/users/rejoin-options?colorId=${colorId}`,
-      );
-      const animals = await response.json();
+      const animals = await getRejoinOptions(colorId);
 
       animalOptionsContainer.replaceChildren(
         ...animals.map((animal) => buildAnimalOption(animal, "rejoin")),
       );
 
-      animalOptionsContainer.offsetHeight;
+      void animalOptionsContainer.offsetHeight;
       animalOptionsContainer.style.transition = "opacity 300ms ease-in";
       animalOptionsContainer.style.opacity = "1";
 
@@ -1317,24 +1270,9 @@ async function loginUser() {
       throw new Error("Please select both a color and an animal.");
     }
 
-    const response = await fetch(
-      `/api/users/?colorId=${selectedColorId}&animalId=${selectedAnimalId}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      },
-    );
+    const user = await getUser(selectedColorId, selectedAnimalId);
 
-    if (!response.ok) {
-      const errorData = await response
-        .json()
-        .catch(() => ({ error: "Unknown error" }));
-      throw new Error(errorData.error || `Server error: ${response.status}`);
-    }
-
-    return await response.json();
+    return user;
   } catch (error) {
     console.error("Error logging in user:", error);
     showErrorScreenAndReload(error);
@@ -1484,22 +1422,12 @@ async function saveAndExit() {
   } else {
     if (currentUser && currentGameState) {
       try {
-        const response = await fetch(`/api/signout`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            userId: currentUser.id,
-            scores: currentUser.scores,
-            hasViewedExitPanel: currentUser.hasViewedExitPanel,
-            gameState: currentGameState,
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error(`Failed to save user data: ${response.status}`);
-        }
+        await saveGame(
+          currentUser.id,
+          currentUser.scores,
+          currentUser.hasViewedExitPanel,
+          currentGameState,
+        );
 
         setUser(null);
         returnToStartScreen();
@@ -1524,12 +1452,12 @@ async function saveAndExit() {
   }
 }
 
-function handleInactivitySignOut() {
+async function handleInactivitySignOut() {
   clearTimeout(inactivityTimeout);
   clearTimeout(inactivityConfirmationTimeout);
 
   if (currentUser && currentGameState) {
-    saveAndExit();
+    await saveAndExit();
   } else {
     startOver();
   }
