@@ -1,4 +1,4 @@
-import { getRiddle } from "./api.js";
+import { getRiddle, getAverageScore } from "./api.js";
 
 const isKiosk = document.body.dataset.device === "kiosk";
 let currentUser = null;
@@ -496,15 +496,7 @@ function enableAllInput() {
 }
 
 async function updateScoreText() {
-  let averageScore = 0;
-  try {
-    const response = await fetch("/api/stats/average-score");
-    const data = await response.json();
-    averageScore = Math.round(data.averageScore);
-  } catch (error) {
-    console.error("Error fetching average score:", error);
-  }
-
+  const averageScore = await getAverageScore();
   const scoreTextContainer = document.getElementById("score-text");
 
   if (currentGameState.currentScore == 0) {
