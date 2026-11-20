@@ -94,25 +94,6 @@ describe("POST /api/signout", () => {
   });
 });
 
-describe("GET /api/animals/existing/html", () => {
-  it("gets animals for a color id", async () => {
-    await request(app)
-      .post("/api/users")
-      .send({ colorId: 3, animalId: 5 })
-      .expect(201);
-
-    const res = await request(app)
-      .get("/api/animals/existing/html?colorId=3")
-      .expect(200);
-
-    expect(res.text).toContain("Bullfrog");
-  });
-
-  it("fails without color id", async () => {
-    await request(app).get("/api/animals/existing/html").expect(400);
-  });
-});
-
 describe("GET /api/users/rejoin-options", () => {
   it("gets animals in use for a color id, including when none are", async () => {
     await request(app)

@@ -110,22 +110,6 @@ router.get("/api/users/creation-options", async (req, res) => {
   }
 });
 
-router.get("/api/animals/existing/html", async (req, res) => {
-  const colorId = parseId(req.query.colorId);
-
-  if (colorId == null) {
-    return res.status(400).send("<p>Error: Missing colorId</p>");
-  }
-
-  try {
-    const animals = await getAllAnimalsFromUsersWithColor(colorId);
-    res.render("partials/animal_options", { animals, isRejoin: true });
-  } catch (error) {
-    logger.error({ err: error }, "Error fetching animals");
-    res.status(500).send("<p>Error loading animals</p>");
-  }
-});
-
 router.get("/api/users/rejoin-options", async (req, res) => {
   const colorId = parseId(req.query.colorId);
 
