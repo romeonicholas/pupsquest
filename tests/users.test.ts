@@ -122,3 +122,27 @@ describe("GET /api/users/create-html", () => {
     // not great, can probably check every button later
   });
 });
+
+describe("GET /api/users/creation-options", () => {
+  it("returns 4 colors and 1-8 animals that are still available", async () => {
+    const res = await request(app)
+      .get("/api/users/creation-options")
+      .expect(200);
+
+    expect(res.body).toHaveLength(4);
+
+    const firstOption = res.body[0];
+    expect(firstOption.color).toEqual({
+      id: expect.any(Number),
+      name: expect.any(String),
+      hex: expect.any(String),
+    });
+
+    expect(firstOption.animals.length).toBeGreaterThan(0);
+    expect(firstOption.animals[0]).toEqual({
+      id: expect.any(Number),
+      name: expect.any(String),
+      imgPath: expect.any(String),
+    });
+  });
+});
