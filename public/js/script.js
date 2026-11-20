@@ -9,12 +9,11 @@ import {
   saveGame,
   createUser,
 } from "./api.js";
+import { state } from "./state.js";
 
 const isKiosk = document.body.dataset.device === "kiosk";
 let currentUser = null;
 let currentGameState = null;
-
-let creationOptions = [];
 
 let inactivityTimeout;
 let inactivityConfirmationTimeout;
@@ -851,7 +850,9 @@ function updateAnimalOptions(colorId) {
   const animalOptionsContainer = document.getElementById(
     "animal-options-container",
   );
-  const option = creationOptions.find((option) => option.color.id === colorId);
+  const option = state.creationOptions.find(
+    (option) => option.color.id === colorId,
+  );
   const animals = option ? option.animals : [];
 
   animalOptionsContainer.style.transition = "opacity 300ms ease-out";
@@ -911,8 +912,8 @@ async function showCreateNewUserScreen() {
   startInactivityTimer();
 
   try {
-    creationOptions = await getCreationOptions();
-    renderColorOptions(creationOptions);
+    state.creationOptions = await getCreationOptions();
+    renderColorOptions(state.creationOptions);
   } catch (error) {
     console.error("Error fetching possible user combinations:", error);
   }
