@@ -892,27 +892,31 @@ function updateAnimalOptions(colorId) {
 }
 
 function buildAnimalOption(animal) {
-  const template = document.getElementById("animal-option-template");
+  const animalOptionTemplate = document.getElementById(
+    "animal-option-template",
+  );
   const key = animal.name.toLowerCase();
-  const option = template.content
+  const animalOption = animalOptionTemplate.content
     .querySelector(".animal-option")
     .cloneNode(true);
 
-  option.querySelector(".animal-icon").src = animal.imgPath;
+  const animalIcon = animalOption.querySelector(".animal-icon");
+  animalIcon.src = animal.imgPath;
 
-  const checkmark = option.querySelector(".animal-selection-icon");
-  checkmark.id = `${key}-selected`;
-  checkmark.dataset.animal = animal.id;
+  const animalCheckmark = animalOption.querySelector(".animal-selection-icon");
+  animalCheckmark.id = `${key}-selected`;
+  animalCheckmark.dataset.animal = animal.id;
 
-  option.querySelector(".animal-icon-text").textContent = animal.name;
+  const animalNameLabel = animalOption.querySelector(".animal-icon-text");
+  animalNameLabel.textContent = animal.name;
 
-  const button = option.querySelector(".animal-button");
-  button.id = `button-${key}`;
-  button.dataset.action = "select-animal";
-  button.dataset.animalName = animal.name;
-  button.dataset.imgPath = animal.imgPath;
+  const animalButton = animalOption.querySelector(".animal-button");
+  animalButton.id = `button-${key}`;
+  animalButton.dataset.action = "select-animal";
+  animalButton.dataset.animalName = animal.name;
+  animalButton.dataset.imgPath = animal.imgPath;
 
-  return option;
+  return animalOption;
 }
 
 async function showCreateNewUserScreen() {
