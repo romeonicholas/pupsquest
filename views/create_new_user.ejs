@@ -1,11 +1,15 @@
 <div id="create-new-user-screen">
   <%- include('partials/user_panel_shadow') %>
 
-  <div id="color-picker"></div>
+  <div id="color-picker">
+    <img id="color-picker-panel" src="/images/userCreation/color_picker.png" />
+    <div id="color-options-container"></div>
+    <div id="color-text-container"></div>
+  </div>
 
   <div id="user-creation-instructions">
     <img src="/images/userCreation/user_creation_instructions.png" />
-     <button
+    <button
       id="user-creation-instructions-button"
       data-action="show-color-picker"
     ></button>

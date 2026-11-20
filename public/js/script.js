@@ -2,7 +2,7 @@ const isKiosk = document.body.dataset.device === "kiosk";
 let currentUser = null;
 let currentGameState = null;
 
-let animalOptionsHtml = {};
+let creationOptions = [];
 
 let inactivityTimeout;
 let inactivityConfirmationTimeout;
@@ -97,6 +97,10 @@ const actions = {
   "rejoin-select-color": (button) =>
     rejoinSelectColor(button.dataset.color, Number(button.dataset.colorId)),
   "confirm-rejoin-animal": () => confirmRejoinAnimal(),
+  "select-color": (button) =>
+    selectColor(button.dataset.color, Number(button.dataset.colorId)),
+  "select-animal": (button) =>
+    selectAnimal(button.dataset.animalName, button.dataset.imgPath),
 };
 
 document.addEventListener("click", (event) => {
@@ -829,25 +833,86 @@ function showUsePhoneScreen() {
   document.getElementById("use-phone-screen").style.display = "block";
 }
 
-function updateColorOptions(colorOptionsHtml) {
-  const colorPicker = document.getElementById("color-picker");
-  colorPicker.innerHTML = colorOptionsHtml;
+function renderColorOptions(colorOptions) {
+  const colorOptionsContainer = document.getElementById(
+    "color-options-container",
+  );
+  const colorNamesContainer = document.getElementById("color-text-container");
+  const colorOptionTemplate = document.getElementById("color-option-template");
+  const colorNameTemplate = document.getElementById("color-name-template");
+
+  colorOptionsContainer.replaceChildren();
+  colorNamesContainer.replaceChildren();
+
+  for (const { color } of colorOptions) {
+    const key = color.name.toLowerCase();
+
+    const colorOption = colorOptionTemplate.content
+      .querySelector(".color-option")
+      .cloneNode(true);
+    colorOption.id = `option-${key}`;
+    colorOption.style.backgroundColor = color.hex;
+
+    const colorButton = colorOption.querySelector(".color-button");
+    colorButton.id = `button-${key}`;
+    colorButton.dataset.color = key;
+    colorButton.dataset.colorId = color.id;
+
+    const colorCheckmark = colorOption.querySelector(".color-selection-icon");
+    colorCheckmark.id = `${key}-selected`;
+    colorCheckmark.dataset.color = color.name;
+    colorCheckmark.dataset.id = color.id;
+
+    colorOptionsContainer.append(colorOption);
+
+    const colorNameLabel = colorNameTemplate.content
+      .querySelector(".color-text")
+      .cloneNode(true);
+    colorNameLabel.textContent = color.name;
+    colorNamesContainer.append(colorNameLabel);
+  }
 }
 
 function updateAnimalOptions(colorId) {
   const animalOptionsContainer = document.getElementById(
     "animal-options-container",
   );
+  const option = creationOptions.find((option) => option.color.id === colorId);
+  const animals = option ? option.animals : [];
 
   animalOptionsContainer.style.transition = "opacity 300ms ease-out";
   animalOptionsContainer.style.opacity = "0";
 
   setTimeout(() => {
-    animalOptionsContainer.innerHTML = animalOptionsHtml[colorId] || "";
+    animalOptionsContainer.replaceChildren(...animals.map(buildAnimalOption));
     animalOptionsContainer.offsetHeight;
     animalOptionsContainer.style.transition = "opacity 300ms ease-in";
     animalOptionsContainer.style.opacity = "1";
   }, 200);
+}
+
+function buildAnimalOption(animal) {
+  const template = document.getElementById("animal-option-template");
+  const key = animal.name.toLowerCase();
+  const option = template.content
+    .querySelector(".animal-option")
+    .cloneNode(true);
+
+  option.querySelector(".animal-icon").src = animal.imgPath;
+
+  const checkmark = option.querySelector(".animal-selection-icon");
+  checkmark.id = `${key}-selected`;
+  checkmark.dataset.animal = animal.id;
+
+  option.querySelector(".animal-icon-text").textContent = animal.name;
+
+  const button = option.querySelector(".animal-button");
+  button.id = `button-${key}`;
+  button.dataset.action = "select-animal";
+  button.dataset.animalName = animal.name;
+  button.dataset.imgPath = animal.imgPath;
+
+  return option;
 }
 
 async function showCreateNewUserScreen() {
@@ -855,11 +920,9 @@ async function showCreateNewUserScreen() {
   startInactivityTimer();
 
   try {
-    const result = await fetch("/api/users/create-html");
-    const data = await result.json();
-
-    updateColorOptions(data.colorPickerHtml);
-    animalOptionsHtml = data.animalOptionsByColorId;
+    const response = await fetch("/api/users/creation-options");
+    creationOptions = await response.json();
+    renderColorOptions(creationOptions);
   } catch (error) {
     console.error("Error fetching possible user combinations:", error);
   }
