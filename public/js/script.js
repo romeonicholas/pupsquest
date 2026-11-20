@@ -17,7 +17,7 @@ let inactivityTimeout;
 let inactivityConfirmationTimeout;
 const INACTIVITY_THRESHOLD = 25000;
 const INACTIVITY_CONFIRMATION_THRESHOLD = 8000;
-let isTimerActive = false;
+let isWatchingForInactivity = false;
 let onNoResponse = () => {};
 
 const correctAnswerBacking = "/images/riddles/ui/answer_backing_correct.png";
@@ -135,7 +135,7 @@ setUpInactivity({
 });
 
 function startInactivityTimer() {
-  if (!isTimerActive || !isKiosk) {
+  if (!isWatchingForInactivity || !isKiosk) {
     return;
   }
   clearTimeout(inactivityTimeout);
@@ -171,12 +171,12 @@ function dismissInactivityScreen() {
 }
 
 function startWatchingForInactivity() {
-  isTimerActive = true;
+  isWatchingForInactivity = true;
   startInactivityTimer();
 }
 
 function stopWatchingForInactivity() {
-  isTimerActive = false;
+  isWatchingForInactivity = false;
   clearInactivityTimers();
 }
 
