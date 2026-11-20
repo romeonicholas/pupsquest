@@ -173,6 +173,10 @@ function startWatchingForInactivity() {
 
 function stopWatchingForInactivity() {
   isTimerActive = false;
+  clearInactivityTimers();
+}
+
+function clearInactivityTimers() {
   clearTimeout(inactivityTimeout);
   clearTimeout(inactivityConfirmationTimeout);
 }
@@ -1417,8 +1421,8 @@ function hideExitDetails() {
 }
 
 async function saveAndExit() {
-  clearTimeout(inactivityTimeout);
-  clearTimeout(inactivityConfirmationTimeout);
+  clearInactivityTimers();
+
   const inactivityScreen = document.getElementById("inactivity-screen");
   const isInactivityScreenVisible =
     inactivityScreen.style.opacity === "1" &&
@@ -1460,8 +1464,7 @@ async function saveAndExit() {
 }
 
 async function handleInactivitySignOut() {
-  clearTimeout(inactivityTimeout);
-  clearTimeout(inactivityConfirmationTimeout);
+  clearInactivityTimers();
 
   if (state.currentUser && state.currentGameState) {
     await saveAndExit();
