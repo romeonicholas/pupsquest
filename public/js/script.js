@@ -136,7 +136,7 @@ setUpInactivity({
   onNoResponse: () => (state.currentUser ? saveAndExit() : startOver()),
 });
 
-function startInactivityTimer() {
+function restartInactivityTimer() {
   if (!isWatchingForInactivity || !isInactivityEnabled) {
     return;
   }
@@ -169,12 +169,12 @@ function hideInactivityScreen() {
 function dismissInactivityScreen() {
   hideInactivityScreen();
   clearTimeout(inactivityConfirmationTimeout);
-  startInactivityTimer();
+  restartInactivityTimer();
 }
 
 function startWatchingForInactivity() {
   isWatchingForInactivity = true;
-  startInactivityTimer();
+  restartInactivityTimer();
 }
 
 function stopWatchingForInactivity() {
@@ -199,10 +199,10 @@ function setUpInactivity(options) {
   isInactivityEnabled = options.isKiosk;
   onNoResponse = options.onNoResponse;
 
-  document.addEventListener("mousemove", startInactivityTimer);
-  document.addEventListener("keydown", startInactivityTimer);
-  document.addEventListener("scroll", startInactivityTimer);
-  document.addEventListener("touchstart", startInactivityTimer);
+  document.addEventListener("mousemove", restartInactivityTimer);
+  document.addEventListener("keydown", restartInactivityTimer);
+  document.addEventListener("scroll", restartInactivityTimer);
+  document.addEventListener("touchstart", restartInactivityTimer);
 }
 
 function showErrorScreenAndReload(error) {
