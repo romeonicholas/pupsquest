@@ -22,9 +22,6 @@ const INACTIVITY_THRESHOLD = 25000;
 const INACTIVITY_CONFIRMATION_THRESHOLD = 8000;
 let isTimerActive = false;
 
-let currentShuffledChoices = [];
-let currentCorrectAnswerIndex = null;
-
 const correctAnswerBacking = "/images/riddles/ui/answer_backing_correct.png";
 const incorrectAnswerBackings = [
   "/images/riddles/ui/answer_backing_wrong_1.png",
@@ -214,9 +211,6 @@ function updateRiddleElements(riddle) {
   updateSelectionTexts(shuffledChoices);
   updateIconBackings(correctAnswerIndex);
   attachClickHandlers(correctAnswerIndex);
-
-  currentShuffledChoices = shuffledChoices;
-  currentCorrectAnswerIndex = correctAnswerIndex;
 }
 
 function restoreRiddleState(riddle) {
@@ -232,9 +226,6 @@ function restoreRiddleState(riddle) {
 
   restoreIncorrectGuesses();
   restoreVisibleHints();
-
-  currentShuffledChoices = shuffledChoices;
-  currentCorrectAnswerIndex = correctAnswerIndex;
 }
 
 function restoreIncorrectGuesses() {
@@ -406,9 +397,14 @@ async function showRiddle() {
       updateRiddleElements(currentRiddle);
     }
 
+    const correctChoice =
+      currentGameState.currentShuffledChoices[
+        currentGameState.currentCorrectAnswerIndex
+      ];
+
     setTimeout(() => {
       updateRiddleAnswer(
-        currentShuffledChoices[currentCorrectAnswerIndex].display,
+        correctChoice.display,
         currentRiddle.answerDetails,
         currentRiddle.answerImgPath,
       );
