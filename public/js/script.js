@@ -72,18 +72,27 @@ const actions = {
   "save-and-exit": () => saveAndExit(),
   "cancel-exit": () => cancelExit(),
   "start-over": () => startOver(),
+  "new-game": () => {
+    lowerStartScreen();
+    showCreateNewUserScreen();
+  },
+  "rejoin-game": () => {
+    lowerStartScreen();
+    showRejoinGameScreen();
+  },
+  "use-phone": () => {
+    lowerStartScreen();
+    showUsePhoneScreen();
+  },
 };
 
 document.addEventListener("click", (event) => {
   const button = event.target.closest("[data-action]");
   if (!button) return;
 
-  if (button.dataset.action === "save-and-exit") {
-    saveAndExit();
-  } else if (button.dataset.action === "cancel-exit") {
-    cancelExit();
-  } else if (button.dataset.action === "start-over") {
-    startOver();
+  const action = actions[button.dataset.action];
+  if (action) {
+    action(button);
   }
 });
 
