@@ -1,4 +1,4 @@
-import { getRiddle, getAverageScore } from "./api.js";
+import { getRiddle, getAverageScore, getUsedColors } from "./api.js";
 
 const isKiosk = document.body.dataset.device === "kiosk";
 let currentUser = null;
@@ -779,9 +779,7 @@ function setUsePhoneScreenToDisplayNone() {
 
 async function showRejoinGameScreen() {
   try {
-    const response = await fetch("/api/colors/used");
-    const usedColors = await response.json();
-
+    const usedColors = await getUsedColors();
     const indicators = document.querySelectorAll(
       ".color-unavailability-indicator",
     );

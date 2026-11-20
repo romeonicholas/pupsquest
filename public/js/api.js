@@ -13,3 +13,8 @@ export async function getAverageScore() {
   const data = await response.json();
   return Math.round(data.averageScore);
 }
+
+export async function getUsedColors() {
+  const response = await fetch("/api/colors/used");
+  return response.json();
+}
