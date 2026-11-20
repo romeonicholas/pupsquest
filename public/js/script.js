@@ -488,7 +488,14 @@ function enableAllInput() {
 }
 
 async function updateScoreText() {
-  const averageScore = await getAverageScore();
+  let averageScore = 0;
+  try {
+    const data = await getAverageScore();
+    averageScore = Math.round(data.averageScore);
+  } catch (error) {
+    console.error("Error fetching average score:", error);
+  }
+
   const scoreTextContainer = document.getElementById("score-text");
 
   if (currentGameState.currentScore == 0) {
