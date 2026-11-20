@@ -56,3 +56,12 @@ export function saveRiddleResult(riddleId, wasAnsweredCorrectly, hintsUsed) {
     hintsUsed,
   });
 }
+
+export function saveGame(userId, scores, hasViewedExitPanel, gameState) {
+  return postJson("/api/signout", {
+    userId,
+    scores,
+    hasViewedExitPanel,
+    gameState,
+  });
+}

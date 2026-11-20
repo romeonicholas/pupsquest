@@ -6,6 +6,7 @@ import {
   getRejoinOptions,
   getUser,
   saveRiddleResult,
+  saveGame,
 } from "./api.js";
 
 const isKiosk = document.body.dataset.device === "kiosk";
@@ -572,22 +573,12 @@ async function handleIncorrectGuess(clickedArea, iconIndex) {
         currentGameState.currentScore = 0;
 
         try {
-          const response = await fetch(`/api/signout`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              userId: currentUser.id,
-              scores: currentUser.scores,
-              hasViewedExitPanel: currentUser.hasViewedExitPanel,
-              gameState: currentGameState,
-            }),
-          });
-
-          if (!response.ok) {
-            throw new Error(`Failed to save user data: ${response.status}`);
-          }
+          await saveGame(
+            currentUser.id,
+            currentUser.scores,
+            currentUser.hasViewedExitPanel,
+            currentGameState,
+          );
         } catch (error) {
           console.error("Error saving user data:", error);
           showErrorScreenAndReload(error);
@@ -1449,22 +1440,12 @@ async function saveAndExit() {
   } else {
     if (currentUser && currentGameState) {
       try {
-        const response = await fetch(`/api/signout`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            userId: currentUser.id,
-            scores: currentUser.scores,
-            hasViewedExitPanel: currentUser.hasViewedExitPanel,
-            gameState: currentGameState,
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error(`Failed to save user data: ${response.status}`);
-        }
+        await saveGame(
+          currentUser.id,
+          currentUser.scores,
+          currentUser.hasViewedExitPanel,
+          currentGameState,
+        );
 
         setUser(null);
         returnToStartScreen();
