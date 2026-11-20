@@ -1,4 +1,4 @@
-import { Router, type Response } from "express";
+import { Router } from "express";
 import {
   updateUserAndGameState,
   getUserAndGameState,
@@ -97,50 +97,6 @@ router.post("/api/users", async (req, res) => {
   } catch (error) {
     logger.error({ err: error }, "Error creating user");
     res.status(500).json({ error: "Failed to create user" });
-  }
-});
-
-function renderPartial(res: Response, template: string, data: any) {
-  return new Promise<string>((resolve, reject) => {
-    res.render(template, data, (err, html) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(html);
-      }
-    });
-  });
-}
-
-router.get("/api/users/create-html", async (req, res) => {
-  try {
-    const combinations = await getColorsAndAnimalsForUserCreation();
-
-    const colors = combinations.map((combination) => combination.color);
-    const colorPickerHtml = await renderPartial(res, "partials/color_picker", {
-      colors,
-    });
-
-    const animalOptionsHtmlByColorId: Record<number, string> = {};
-    for (const combination of combinations) {
-      const animalOptionsHtml = await renderPartial(
-        res,
-        "partials/animal_options",
-        {
-          animals: combination.animals,
-          isRejoin: false,
-        },
-      );
-      animalOptionsHtmlByColorId[combination.color.id] = animalOptionsHtml;
-    }
-
-    res.json({
-      colorPickerHtml: colorPickerHtml,
-      animalOptionsByColorId: animalOptionsHtmlByColorId,
-    });
-  } catch (error) {
-    logger.error({ err: error }, "Error generating user creation HTML");
-    res.status(500).json({ error: "Failed to generate user creation HTML" });
   }
 });
 

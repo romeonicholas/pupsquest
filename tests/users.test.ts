@@ -146,16 +146,6 @@ describe("GET /api/users/rejoin-options", () => {
   });
 });
 
-describe("GET /api/users/create-html", () => {
-  it("returns the animal/color selection template with four colors", async () => {
-    const res = await request(app).get("/api/users/create-html").expect(200);
-
-    expect(res.body.colorPickerHtml).toContain("<");
-    expect(Object.keys(res.body.animalOptionsByColorId).length).toBe(4);
-    // not great, can probably check every button later
-  });
-});
-
 describe("GET /api/users/creation-options", () => {
   it("returns 4 colors and 1-8 animals that are still available", async () => {
     const res = await request(app)
