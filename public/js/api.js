@@ -17,3 +17,7 @@ export function getAverageScore() {
 export function getUsedColors() {
   return getJson("/api/colors/used");
 }
+
+export function getCreationOption() {
+  return getJson("/api/users/creation-options");
+}

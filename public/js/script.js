@@ -1,4 +1,9 @@
-import { getRiddle, getAverageScore, getUsedColors } from "./api.js";
+import {
+  getRiddle,
+  getAverageScore,
+  getUsedColors,
+  getCreationOptions,
+} from "./api.js";
 
 const isKiosk = document.body.dataset.device === "kiosk";
 let currentUser = null;
@@ -925,8 +930,7 @@ async function showCreateNewUserScreen() {
   startInactivityTimer();
 
   try {
-    const response = await fetch("/api/users/creation-options");
-    creationOptions = await response.json();
+    const creationOptions = await getCreationOptions();
     renderColorOptions(creationOptions);
   } catch (error) {
     console.error("Error fetching possible user combinations:", error);
