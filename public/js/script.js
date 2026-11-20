@@ -84,6 +84,10 @@ const actions = {
     lowerStartScreen();
     showUsePhoneScreen();
   },
+  "return-to-start": () => {
+    returnToStartScreen();
+    setUsePhoneScreenToDisplayNone();
+  },
 };
 
 document.addEventListener("click", (event) => {
@@ -93,6 +97,10 @@ document.addEventListener("click", (event) => {
   const action = actions[button.dataset.action];
   if (action) {
     action(button);
+  } else {
+    console.warn(
+      `Action ${button.dataset.action} doesn't exist, nothing was done`,
+    );
   }
 });
 
