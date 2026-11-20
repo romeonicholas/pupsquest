@@ -932,7 +932,7 @@ async function showCreateNewUserScreen() {
   startInactivityTimer();
 
   try {
-    const creationOptions = await getCreationOptions();
+    creationOptions = await getCreationOptions();
     renderColorOptions(creationOptions);
   } catch (error) {
     console.error("Error fetching possible user combinations:", error);
