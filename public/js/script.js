@@ -81,13 +81,13 @@ const actions = {
   "save-and-exit": () => saveAndExit(),
   "cancel-exit": () => cancelExit(),
   "start-over": () => startOver(),
-  "new-game": () => {
+  "new-game": async () => {
     lowerStartScreen();
-    showCreateNewUserScreen();
+    await showCreateNewUserScreen();
   },
-  "rejoin-game": () => {
+  "rejoin-game": async () => {
     lowerStartScreen();
-    showRejoinGameScreen();
+    await showRejoinGameScreen();
   },
   "use-phone": () => {
     lowerStartScreen();
