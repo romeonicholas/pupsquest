@@ -3,6 +3,7 @@ import {
   getAverageScore,
   getUsedColors,
   getCreationOptions,
+  getRejoinOptions,
 } from "./api.js";
 
 const isKiosk = document.body.dataset.device === "kiosk";
@@ -1235,10 +1236,7 @@ async function updateRejoinAnimalContainer(colorId) {
     noAnimalsMessage.style.opacity = "0";
 
     setTimeout(async () => {
-      const response = await fetch(
-        `/api/users/rejoin-options?colorId=${colorId}`,
-      );
-      const animals = await response.json();
+      const animals = await getRejoinOptions(colorId);
 
       animalOptionsContainer.replaceChildren(
         ...animals.map((animal) => buildAnimalOption(animal, "rejoin")),

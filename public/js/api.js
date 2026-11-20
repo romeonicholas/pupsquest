@@ -18,6 +18,10 @@ export function getUsedColors() {
   return getJson("/api/colors/used");
 }
 
-export function getCreationOption() {
+export function getCreationOptions() {
   return getJson("/api/users/creation-options");
+}
+
+export function getRejoinOptions(colorId) {
+  return getJson(`/api/users/rejoin-options?colorId=${colorId}`);
 }
