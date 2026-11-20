@@ -19,6 +19,7 @@ const INACTIVITY_THRESHOLD = 25000;
 const INACTIVITY_CONFIRMATION_THRESHOLD = 8000;
 let isWatchingForInactivity = false;
 let onNoResponse = () => {};
+let isInactivityEnabled = false;
 
 const correctAnswerBacking = "/images/riddles/ui/answer_backing_correct.png";
 const incorrectAnswerBackings = [
@@ -131,11 +132,12 @@ document.addEventListener("contextmenu", function (e) {
 });
 
 setUpInactivity({
+  isKiosk,
   onNoResponse: () => (state.currentUser ? saveAndExit() : startOver()),
 });
 
 function startInactivityTimer() {
-  if (!isWatchingForInactivity || !isKiosk) {
+  if (!isWatchingForInactivity || !isInactivityEnabled) {
     return;
   }
   clearTimeout(inactivityTimeout);
@@ -194,6 +196,7 @@ function isInactivityScreenShowing() {
 }
 
 function setUpInactivity(options) {
+  isInactivityEnabled = options.isKiosk;
   onNoResponse = options.onNoResponse;
 
   document.addEventListener("mousemove", startInactivityTimer);
