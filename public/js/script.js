@@ -12,7 +12,6 @@ import {
 import { state } from "./state.js";
 
 const isKiosk = document.body.dataset.device === "kiosk";
-let currentUser = null;
 let currentGameState = null;
 
 let inactivityTimeout;
@@ -148,7 +147,7 @@ function startInactivityConfirmationTimer() {
   clearTimeout(inactivityConfirmationTimeout);
 
   inactivityConfirmationTimeout = setTimeout(
-    currentUser ? saveAndExit : startOver,
+    state.currentUser ? saveAndExit : startOver,
     INACTIVITY_CONFIRMATION_THRESHOLD,
   );
 }
@@ -565,14 +564,14 @@ async function handleIncorrectGuess(clickedArea, iconIndex) {
         nextRiddleSheet.style.display = "none";
         resetHints();
 
-        currentUser.scores.push(currentGameState.currentScore);
+        state.currentUser.scores.push(currentGameState.currentScore);
         currentGameState.currentScore = 0;
 
         try {
           await saveGame(
-            currentUser.id,
-            currentUser.scores,
-            currentUser.hasViewedExitPanel,
+            state.currentUser.id,
+            state.currentUser.scores,
+            state.currentUser.hasViewedExitPanel,
             currentGameState,
           );
         } catch (error) {
@@ -1341,11 +1340,11 @@ function startOver() {
 }
 
 function markExitPanelViewed() {
-  currentUser.hasViewedExitPanel = true;
+  state.currentUser.hasViewedExitPanel = true;
 }
 
 function shouldShowExitPanelDetails() {
-  return currentUser && !currentUser.hasViewedExitPanel;
+  return state.currentUser && !state.currentUser.hasViewedExitPanel;
 }
 
 function firstTimeSaveAndExit() {
@@ -1417,12 +1416,12 @@ async function saveAndExit() {
   if (shouldShowExitPanelDetails() && !isInactivityScreenVisible) {
     firstTimeSaveAndExit();
   } else {
-    if (currentUser && currentGameState) {
+    if (state.currentUser && currentGameState) {
       try {
         await saveGame(
-          currentUser.id,
-          currentUser.scores,
-          currentUser.hasViewedExitPanel,
+          state.currentUser.id,
+          state.currentUser.scores,
+          state.currentUser.hasViewedExitPanel,
           currentGameState,
         );
 
@@ -1453,7 +1452,7 @@ async function handleInactivitySignOut() {
   clearTimeout(inactivityTimeout);
   clearTimeout(inactivityConfirmationTimeout);
 
-  if (currentUser && currentGameState) {
+  if (state.currentUser && currentGameState) {
     await saveAndExit();
   } else {
     startOver();
@@ -1462,12 +1461,12 @@ async function handleInactivitySignOut() {
 
 function setUser(userData) {
   if (!userData) {
-    currentUser = null;
+    state.currentUser = null;
     currentGameState = null;
     return;
   }
 
-  currentUser = userData.user;
+  state.currentUser = userData.user;
   currentGameState = userData.gameState;
   setHints(currentGameState.hintsRemaining);
 }
