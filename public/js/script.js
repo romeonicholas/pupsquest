@@ -158,10 +158,14 @@ function showInactivityScreen() {
   startInactivityConfirmationTimer();
 }
 
-function dismissInactivityScreen() {
+function hideInactivityScreen() {
   const inactivityScreen = document.getElementById("inactivity-screen");
   inactivityScreen.style.opacity = "0";
   inactivityScreen.style.pointerEvents = "none";
+}
+
+function dismissInactivityScreen() {
+  hideInactivityScreen();
   clearTimeout(inactivityConfirmationTimeout);
   startInactivityTimer();
 }
@@ -783,9 +787,7 @@ function returnToStartScreen() {
     startScreen.style.transition = "opacity 500ms ease-in";
     startScreen.style.opacity = "1";
 
-    const inactivityScreen = document.getElementById("inactivity-screen");
-    inactivityScreen.style.opacity = "0";
-    inactivityScreen.style.pointerEvents = "none";
+    hideInactivityScreen();
   }, 10);
 }
 
