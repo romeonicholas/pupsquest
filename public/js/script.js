@@ -181,6 +181,14 @@ function clearInactivityTimers() {
   clearTimeout(inactivityConfirmationTimeout);
 }
 
+function isInactivityScreenShowing() {
+  const inactivityScreen = document.getElementById("inactivity-screen");
+  return (
+    inactivityScreen.style.opacity === "1" &&
+    inactivityScreen.style.pointerEvents === "auto"
+  );
+}
+
 function showErrorScreenAndReload(error) {
   console.error("An error occurred:", error);
   const errorScreen = document.getElementById("error-screen");
@@ -1422,11 +1430,7 @@ function hideExitDetails() {
 
 async function saveAndExit() {
   clearInactivityTimers();
-
-  const inactivityScreen = document.getElementById("inactivity-screen");
-  const isInactivityScreenVisible =
-    inactivityScreen.style.opacity === "1" &&
-    inactivityScreen.style.pointerEvents === "auto";
+  const isInactivityScreenVisible = isInactivityScreenShowing();
 
   if (shouldShowExitPanelDetails() && !isInactivityScreenVisible) {
     firstTimeSaveAndExit();
