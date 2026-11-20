@@ -26,11 +26,18 @@ describe("GET /api/stats/average-score", () => {
 });
 
 describe("POST /api/analytics/riddle", () => {
-  it("saves how user answered a riddle", async () => {
-    await request(app)
+  it("saves how user answered a riddle, returns it", async () => {
+    const res = await request(app)
       .post("/api/analytics/riddle")
       .send({ riddleId: 1, wasAnsweredCorrectly: true, hintsUsed: 2 })
       .expect(201);
+
+    expect(res.body).toMatchObject({
+      riddleId: 1,
+      wasAnswered: true,
+      wasAnsweredCorrectly: true,
+      hintsUsed: 2,
+    });
   });
 
   it("fails on string riddle ids", async () => {
