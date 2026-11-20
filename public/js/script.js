@@ -101,6 +101,8 @@ const actions = {
     selectColor(button.dataset.color, Number(button.dataset.colorId)),
   "select-animal": (button) =>
     selectAnimal(button.dataset.animalName, button.dataset.imgPath),
+  "select-rejoin-animal": (button) =>
+    selectRejoinAnimal(button.dataset.animalName, button.dataset.imgPath),
 };
 
 document.addEventListener("click", (event) => {
@@ -919,6 +921,38 @@ function buildAnimalOption(animal) {
   return animalOption;
 }
 
+function buildRejoinAnimalOption(animal) {
+  const animalOptionTemplate = document.getElementById(
+    "animal-option-template",
+  );
+  const key = animal.name.toLowerCase();
+  const animalOption = animalOptionTemplate.content
+    .querySelector(".animal-option")
+    .cloneNode(true);
+
+  const animalIcon = animalOption.querySelector(".animal-icon");
+  animalIcon.src = animal.imgPath;
+
+  const animalCheckmark = animalOption.querySelector(".animal-selection-icon");
+  animalCheckmark.id = `rejoin-${key}-selected`;
+  animalCheckmark.dataset.animal = animal.id;
+  animalCheckmark.classList.replace(
+    "animal-selection-icon",
+    "rejoin-animal-selection-icon",
+  );
+
+  const animalNameLabel = animalOption.querySelector(".animal-icon-text");
+  animalNameLabel.textContent = animal.name;
+
+  const animalButton = animalOption.querySelector(".animal-button");
+  animalButton.id = `button-${key}`;
+  animalButton.dataset.action = "select-rejoin-animal";
+  animalButton.dataset.animalName = animal.name;
+  animalButton.dataset.imgPath = animal.imgPath;
+
+  return animalOption;
+}
+
 async function showCreateNewUserScreen() {
   isTimerActive = true;
   startInactivityTimer();
@@ -1231,18 +1265,19 @@ async function updateRejoinAnimalContainer(colorId) {
 
     setTimeout(async () => {
       const response = await fetch(
-        `/api/animals/existing/html?colorId=${colorId}`,
+        `/api/users/rejoin-options?colorId=${colorId}`,
       );
-      const html = await response.text();
+      const animals = await response.json();
 
-      animalOptionsContainer.innerHTML = html;
+      animalOptionsContainer.replaceChildren(
+        ...animals.map(buildRejoinAnimalOption),
+      );
+
       animalOptionsContainer.offsetHeight;
       animalOptionsContainer.style.transition = "opacity 300ms ease-in";
       animalOptionsContainer.style.opacity = "1";
 
-      const animalsExist =
-        animalOptionsContainer.querySelectorAll(".animal-option").length > 0;
-      if (!animalsExist) {
+      if (animals.length === 0) {
         noAnimalsMessage.style.transition = "opacity 300ms ease-in";
         noAnimalsMessage.style.opacity = "1";
       }
