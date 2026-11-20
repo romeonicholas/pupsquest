@@ -10,14 +10,17 @@ import {
   createUser,
 } from "./api.js";
 import { state } from "./state.js";
+import {
+  setUpInactivity,
+  startWatchingForInactivity,
+  stopWatchingForInactivity,
+  clearInactivityTimers,
+  isInactivityScreenShowing,
+  hideInactivityScreen,
+  dismissInactivityScreen,
+} from "./inactivity.js";
 
 const isKiosk = document.body.dataset.device === "kiosk";
-
-let inactivityTimeout;
-let inactivityConfirmationTimeout;
-const INACTIVITY_THRESHOLD = 25000;
-const INACTIVITY_CONFIRMATION_THRESHOLD = 8000;
-let isTimerActive = false;
 
 const correctAnswerBacking = "/images/riddles/ui/answer_backing_correct.png";
 const incorrectAnswerBackings = [
@@ -129,42 +132,10 @@ document.addEventListener("contextmenu", function (e) {
   e.preventDefault();
 });
 
-document.addEventListener("mousemove", startInactivityTimer);
-document.addEventListener("keydown", startInactivityTimer);
-document.addEventListener("scroll", startInactivityTimer);
-document.addEventListener("touchstart", startInactivityTimer);
-
-function startInactivityTimer() {
-  if (!isTimerActive || !isKiosk) {
-    return;
-  }
-  clearTimeout(inactivityTimeout);
-  inactivityTimeout = setTimeout(showInactivityScreen, INACTIVITY_THRESHOLD);
-}
-
-function startInactivityConfirmationTimer() {
-  clearTimeout(inactivityConfirmationTimeout);
-
-  inactivityConfirmationTimeout = setTimeout(
-    state.currentUser ? saveAndExit : startOver,
-    INACTIVITY_CONFIRMATION_THRESHOLD,
-  );
-}
-
-function showInactivityScreen() {
-  const inactivityScreen = document.getElementById("inactivity-screen");
-  inactivityScreen.style.opacity = "1";
-  inactivityScreen.style.pointerEvents = "auto";
-  startInactivityConfirmationTimer();
-}
-
-function dismissInactivityScreen() {
-  const inactivityScreen = document.getElementById("inactivity-screen");
-  inactivityScreen.style.opacity = "0";
-  inactivityScreen.style.pointerEvents = "none";
-  clearTimeout(inactivityConfirmationTimeout);
-  startInactivityTimer();
-}
+setUpInactivity({
+  isKiosk,
+  onNoResponse: () => (state.currentUser ? saveAndExit() : startOver()),
+});
 
 function showErrorScreenAndReload(error) {
   console.error("An error occurred:", error);
@@ -737,8 +708,7 @@ function lowerStartScreen() {
 }
 
 function returnToStartScreen() {
-  clearTimeout(inactivityTimeout);
-  isTimerActive = false;
+  stopWatchingForInactivity();
   const startScreen = document.getElementById("start-screen");
   startScreen.style.display = "block";
 
@@ -752,9 +722,7 @@ function returnToStartScreen() {
     startScreen.style.transition = "opacity 500ms ease-in";
     startScreen.style.opacity = "1";
 
-    const inactivityScreen = document.getElementById("inactivity-screen");
-    inactivityScreen.style.opacity = "0";
-    inactivityScreen.style.pointerEvents = "none";
+    hideInactivityScreen();
   }, 10);
 }
 
@@ -783,8 +751,7 @@ async function showRejoinGameScreen() {
     console.error("Error fetching used colors:", error);
   }
 
-  isTimerActive = true;
-  startInactivityTimer();
+  startWatchingForInactivity();
 
   document.getElementById("rejoin-screen").style.display = "block";
   document.getElementById("user-panel").style.display = "block";
@@ -800,8 +767,7 @@ async function showRejoinGameScreen() {
 }
 
 function showUsePhoneScreen() {
-  isTimerActive = true;
-  startInactivityTimer();
+  startWatchingForInactivity();
 
   document.getElementById("rejoin-screen").style.display = "none";
   document.getElementById("user-panel").style.display = "none";
@@ -911,8 +877,7 @@ function buildAnimalOption(animal, screen) {
 }
 
 async function showCreateNewUserScreen() {
-  isTimerActive = true;
-  startInactivityTimer();
+  startWatchingForInactivity();
 
   try {
     state.creationOptions = await getCreationOptions();
@@ -1410,12 +1375,8 @@ function hideExitDetails() {
 }
 
 async function saveAndExit() {
-  clearTimeout(inactivityTimeout);
-  clearTimeout(inactivityConfirmationTimeout);
-  const inactivityScreen = document.getElementById("inactivity-screen");
-  const isInactivityScreenVisible =
-    inactivityScreen.style.opacity === "1" &&
-    inactivityScreen.style.pointerEvents === "auto";
+  clearInactivityTimers();
+  const isInactivityScreenVisible = isInactivityScreenShowing();
 
   if (shouldShowExitPanelDetails() && !isInactivityScreenVisible) {
     firstTimeSaveAndExit();
@@ -1453,8 +1414,7 @@ async function saveAndExit() {
 }
 
 async function handleInactivitySignOut() {
-  clearTimeout(inactivityTimeout);
-  clearTimeout(inactivityConfirmationTimeout);
+  clearInactivityTimers();
 
   if (state.currentUser && state.currentGameState) {
     await saveAndExit();
