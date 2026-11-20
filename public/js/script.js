@@ -9,21 +9,15 @@ import {
   saveGame,
   createUser,
 } from "./api.js";
+import { state } from "./state.js";
 
 const isKiosk = document.body.dataset.device === "kiosk";
-let currentUser = null;
-let currentGameState = null;
-
-let creationOptions = [];
 
 let inactivityTimeout;
 let inactivityConfirmationTimeout;
 const INACTIVITY_THRESHOLD = 25000;
 const INACTIVITY_CONFIRMATION_THRESHOLD = 8000;
 let isTimerActive = false;
-
-let currentShuffledChoices = [];
-let currentCorrectAnswerIndex = null;
 
 const correctAnswerBacking = "/images/riddles/ui/answer_backing_correct.png";
 const incorrectAnswerBackings = [
@@ -152,7 +146,7 @@ function startInactivityConfirmationTimer() {
   clearTimeout(inactivityConfirmationTimeout);
 
   inactivityConfirmationTimeout = setTimeout(
-    currentUser ? saveAndExit : startOver,
+    state.currentUser ? saveAndExit : startOver,
     INACTIVITY_CONFIRMATION_THRESHOLD,
   );
 }
@@ -192,14 +186,17 @@ function showFirstCouplet() {
 }
 
 function incrementRiddleQueueCursor() {
-  currentGameState.queueCursor++;
-  if (currentGameState.queueCursor >= currentGameState.riddleQueue.length) {
-    currentGameState.queueCursor = 0;
+  state.currentGameState.queueCursor++;
+  if (
+    state.currentGameState.queueCursor >=
+    state.currentGameState.riddleQueue.length
+  ) {
+    state.currentGameState.queueCursor = 0;
   }
 
-  currentGameState.currentShuffledChoices = [];
-  currentGameState.currentCorrectAnswerIndex = null;
-  currentGameState.currentGuesses = [];
+  state.currentGameState.currentShuffledChoices = [];
+  state.currentGameState.currentCorrectAnswerIndex = null;
+  state.currentGameState.currentGuesses = [];
 }
 
 function updateRiddleElements(riddle) {
@@ -207,23 +204,20 @@ function updateRiddleElements(riddle) {
   const shuffledChoices = shuffleAnswerChoices(riddle.answerChoices);
   const correctAnswerIndex = findCorrectAnswerIndex(shuffledChoices);
 
-  currentGameState.currentShuffledChoices = shuffledChoices;
-  currentGameState.currentCorrectAnswerIndex = correctAnswerIndex;
+  state.currentGameState.currentShuffledChoices = shuffledChoices;
+  state.currentGameState.currentCorrectAnswerIndex = correctAnswerIndex;
 
   updateSelectionIcons(shuffledChoices);
   updateSelectionTexts(shuffledChoices);
   updateIconBackings(correctAnswerIndex);
   attachClickHandlers(correctAnswerIndex);
-
-  currentShuffledChoices = shuffledChoices;
-  currentCorrectAnswerIndex = correctAnswerIndex;
 }
 
 function restoreRiddleState(riddle) {
   updateRiddleContent(riddle);
 
-  const shuffledChoices = currentGameState.currentShuffledChoices;
-  const correctAnswerIndex = currentGameState.currentCorrectAnswerIndex;
+  const shuffledChoices = state.currentGameState.currentShuffledChoices;
+  const correctAnswerIndex = state.currentGameState.currentCorrectAnswerIndex;
 
   updateSelectionIcons(shuffledChoices);
   updateSelectionTexts(shuffledChoices);
@@ -232,14 +226,11 @@ function restoreRiddleState(riddle) {
 
   restoreIncorrectGuesses();
   restoreVisibleHints();
-
-  currentShuffledChoices = shuffledChoices;
-  currentCorrectAnswerIndex = correctAnswerIndex;
 }
 
 function restoreIncorrectGuesses() {
   setTimeout(() => {
-    currentGameState.currentGuesses.forEach((iconIndex) => {
+    state.currentGameState.currentGuesses.forEach((iconIndex) => {
       showIconBacking(iconIndex);
       const clickArea = document.getElementById(
         `option-click-area-${iconIndex + 1}`,
@@ -252,7 +243,7 @@ function restoreIncorrectGuesses() {
 function restoreVisibleHints() {
   setTimeout(() => {
     const hintOffset =
-      Math.min(currentGameState.currentGuesses.length, 3) * 222;
+      Math.min(state.currentGameState.currentGuesses.length, 3) * 222;
     selectionLayer.style.transform = `translateY(${276 + hintOffset}px)`;
   }, 2000);
 }
@@ -391,14 +382,14 @@ async function showRiddle() {
   closeRiddleContainerFromBottom();
 
   const currentRiddleId =
-    currentGameState.riddleQueue[currentGameState.queueCursor];
+    state.currentGameState.riddleQueue[state.currentGameState.queueCursor];
 
   try {
     const currentRiddle = await getRiddle(currentRiddleId);
 
     const isRejoining =
-      currentGameState.currentShuffledChoices &&
-      currentGameState.currentShuffledChoices.length > 0;
+      state.currentGameState.currentShuffledChoices &&
+      state.currentGameState.currentShuffledChoices.length > 0;
 
     if (isRejoining) {
       restoreRiddleState(currentRiddle);
@@ -406,9 +397,14 @@ async function showRiddle() {
       updateRiddleElements(currentRiddle);
     }
 
+    const correctChoice =
+      state.currentGameState.currentShuffledChoices[
+        state.currentGameState.currentCorrectAnswerIndex
+      ];
+
     setTimeout(() => {
       updateRiddleAnswer(
-        currentShuffledChoices[currentCorrectAnswerIndex].display,
+        correctChoice.display,
         currentRiddle.answerDetails,
         currentRiddle.answerImgPath,
       );
@@ -435,7 +431,7 @@ async function showRiddle() {
 }
 
 function getCurrentRiddleNumber() {
-  const { queueCursor, startingIndex, riddleQueue } = currentGameState;
+  const { queueCursor, startingIndex, riddleQueue } = state.currentGameState;
   return (
     ((queueCursor - startingIndex + riddleQueue.length) % riddleQueue.length) +
     1
@@ -444,13 +440,13 @@ function getCurrentRiddleNumber() {
 
 function decreaseHints() {
   const currentX = getTranslateX(hintCountForeground);
-  currentGameState.hintsRemaining--;
+  state.currentGameState.hintsRemaining--;
   hintCountForeground.style.transition = "transform 1s ease-in";
   hintCountForeground.style.transform = `translateX(${currentX - 47}px)`;
 }
 
 function resetHints() {
-  currentGameState.hintsRemaining = 7;
+  state.currentGameState.hintsRemaining = 7;
   hintCountForeground.style.transition = "transform 1s ease-in";
   hintCountForeground.style.transform = "translateX(0)";
 }
@@ -501,24 +497,24 @@ async function updateScoreText() {
 
   const scoreTextContainer = document.getElementById("score-text");
 
-  if (currentGameState.currentScore == 0) {
+  if (state.currentGameState.currentScore == 0) {
     scoreTextContainer.innerHTML = `<span class="small-score-text">You didn't solve any riddles this time.</span>`;
-  } else if (currentGameState.currentScore == 1) {
-    scoreTextContainer.innerHTML = `You solved <span class="red-text">${currentGameState.currentScore}</span> riddle!`;
+  } else if (state.currentGameState.currentScore == 1) {
+    scoreTextContainer.innerHTML = `You solved <span class="red-text">${state.currentGameState.currentScore}</span> riddle!`;
   } else {
-    scoreTextContainer.innerHTML = `You solved <span class="red-text">${currentGameState.currentScore}</span> riddles!`;
+    scoreTextContainer.innerHTML = `You solved <span class="red-text">${state.currentGameState.currentScore}</span> riddles!`;
   }
 
   const scoreComparisonTextContainer = document.getElementById(
     "score-comparison-text",
   );
-  if (currentGameState.currentScore > averageScore) {
+  if (state.currentGameState.currentScore > averageScore) {
     scoreComparisonTextContainer.innerHTML = `That's ${
-      currentGameState.currentScore - averageScore
+      state.currentGameState.currentScore - averageScore
     } more than the average score this week`;
-  } else if (currentGameState.currentScore < averageScore) {
+  } else if (state.currentGameState.currentScore < averageScore) {
     scoreComparisonTextContainer.innerHTML = `That's ${
-      averageScore - currentGameState.currentScore
+      averageScore - state.currentGameState.currentScore
     } less than the average score this week`;
   } else {
     scoreComparisonTextContainer.innerHTML = `That's the same as the average score this week`;
@@ -526,8 +522,9 @@ async function updateScoreText() {
 }
 
 function recordRiddleResult(wasAnsweredCorrectly) {
-  const riddleId = currentGameState.riddleQueue[currentGameState.queueCursor];
-  const hintsUsed = currentGameState.currentGuesses.length;
+  const riddleId =
+    state.currentGameState.riddleQueue[state.currentGameState.queueCursor];
+  const hintsUsed = state.currentGameState.currentGuesses.length;
 
   saveRiddleResult(riddleId, wasAnsweredCorrectly, hintsUsed).catch((error) =>
     console.error("Error saving riddle analytics:", error),
@@ -538,16 +535,16 @@ async function handleIncorrectGuess(clickedArea, iconIndex) {
   disableAllInput();
   replaceElementToRemoveListeners(clickedArea);
 
-  currentGameState.currentGuesses.push(iconIndex);
+  state.currentGameState.currentGuesses.push(iconIndex);
   decreaseHints();
   showIconBacking(iconIndex);
 
   if (
-    currentGameState.currentGuesses.length >= 3 ||
-    currentGameState.hintsRemaining <= 0
+    state.currentGameState.currentGuesses.length >= 3 ||
+    state.currentGameState.hintsRemaining <= 0
   ) {
     recordRiddleResult(false);
-    currentGameState.currentGuesses = [];
+    state.currentGameState.currentGuesses = [];
     setTimeout(async () => {
       riddleTextLayerBackground.style.transition = "transform 1s ease-in";
       riddleTextLayerBackground.style.transform = "translateY(0px)";
@@ -559,8 +556,9 @@ async function handleIncorrectGuess(clickedArea, iconIndex) {
       const playAgainSheet = document.getElementById("play-again-sheet");
       const nextRiddleSheet = document.getElementById("next-riddle-sheet");
 
-      if (currentGameState.hintsRemaining <= 0) {
-        currentGameState.startingIndex = currentGameState.queueCursor;
+      if (state.currentGameState.hintsRemaining <= 0) {
+        state.currentGameState.startingIndex =
+          state.currentGameState.queueCursor;
         await updateScoreText();
         updateStatusWheel("GAME OVER", false, "red-text");
 
@@ -570,15 +568,15 @@ async function handleIncorrectGuess(clickedArea, iconIndex) {
         nextRiddleSheet.style.display = "none";
         resetHints();
 
-        currentUser.scores.push(currentGameState.currentScore);
-        currentGameState.currentScore = 0;
+        state.currentUser.scores.push(state.currentGameState.currentScore);
+        state.currentGameState.currentScore = 0;
 
         try {
           await saveGame(
-            currentUser.id,
-            currentUser.scores,
-            currentUser.hasViewedExitPanel,
-            currentGameState,
+            state.currentUser.id,
+            state.currentUser.scores,
+            state.currentUser.hasViewedExitPanel,
+            state.currentGameState,
           );
         } catch (error) {
           console.error("Error saving user data:", error);
@@ -610,9 +608,9 @@ function handleCorrectGuess(clickedArea, iconIndex) {
   disableAllInput();
   replaceElementToRemoveListeners(clickedArea);
 
-  currentGameState.currentScore++;
+  state.currentGameState.currentScore++;
   recordRiddleResult(true);
-  currentGameState.currentGuesses = [];
+  state.currentGameState.currentGuesses = [];
   showIconBacking(iconIndex);
 
   setTimeout(() => {
@@ -855,7 +853,9 @@ function updateAnimalOptions(colorId) {
   const animalOptionsContainer = document.getElementById(
     "animal-options-container",
   );
-  const option = creationOptions.find((option) => option.color.id === colorId);
+  const option = state.creationOptions.find(
+    (option) => option.color.id === colorId,
+  );
   const animals = option ? option.animals : [];
 
   animalOptionsContainer.style.transition = "opacity 300ms ease-out";
@@ -915,8 +915,8 @@ async function showCreateNewUserScreen() {
   startInactivityTimer();
 
   try {
-    creationOptions = await getCreationOptions();
-    renderColorOptions(creationOptions);
+    state.creationOptions = await getCreationOptions();
+    renderColorOptions(state.creationOptions);
   } catch (error) {
     console.error("Error fetching possible user combinations:", error);
   }
@@ -1344,11 +1344,11 @@ function startOver() {
 }
 
 function markExitPanelViewed() {
-  currentUser.hasViewedExitPanel = true;
+  state.currentUser.hasViewedExitPanel = true;
 }
 
 function shouldShowExitPanelDetails() {
-  return currentUser && !currentUser.hasViewedExitPanel;
+  return state.currentUser && !state.currentUser.hasViewedExitPanel;
 }
 
 function firstTimeSaveAndExit() {
@@ -1420,13 +1420,13 @@ async function saveAndExit() {
   if (shouldShowExitPanelDetails() && !isInactivityScreenVisible) {
     firstTimeSaveAndExit();
   } else {
-    if (currentUser && currentGameState) {
+    if (state.currentUser && state.currentGameState) {
       try {
         await saveGame(
-          currentUser.id,
-          currentUser.scores,
-          currentUser.hasViewedExitPanel,
-          currentGameState,
+          state.currentUser.id,
+          state.currentUser.scores,
+          state.currentUser.hasViewedExitPanel,
+          state.currentGameState,
         );
 
         setUser(null);
@@ -1456,7 +1456,7 @@ async function handleInactivitySignOut() {
   clearTimeout(inactivityTimeout);
   clearTimeout(inactivityConfirmationTimeout);
 
-  if (currentUser && currentGameState) {
+  if (state.currentUser && state.currentGameState) {
     await saveAndExit();
   } else {
     startOver();
@@ -1465,12 +1465,12 @@ async function handleInactivitySignOut() {
 
 function setUser(userData) {
   if (!userData) {
-    currentUser = null;
-    currentGameState = null;
+    state.currentUser = null;
+    state.currentGameState = null;
     return;
   }
 
-  currentUser = userData.user;
-  currentGameState = userData.gameState;
-  setHints(currentGameState.hintsRemaining);
+  state.currentUser = userData.user;
+  state.currentGameState = userData.gameState;
+  setHints(state.currentGameState.hintsRemaining);
 }
