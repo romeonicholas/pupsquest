@@ -32,3 +32,27 @@ export function getRejoinOptions(colorId) {
 export function getUser(colorId, animalId) {
   return getJson(`/api/users?colorId=${colorId}&animalId=${animalId}`);
 }
+
+async function postJson(url, body) {
+  const response = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  if (!response.ok) {
+    const errorBody = await response.json().catch(() => ({}));
+    throw new Error(
+      errorBody.error || `POST ${url} failed with status ${response.status}`,
+    );
+  }
+
+  return response.json();
+}
+
+export function saveRiddleResult(riddleId, wasAnsweredCorrectly, hintsUsed) {
+  return postJson("/api/analytics/riddle", {
+    riddleId,
+    wasAnsweredCorrectly,
+    hintsUsed,
+  });
+}

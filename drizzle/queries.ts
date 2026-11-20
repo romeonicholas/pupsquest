@@ -284,7 +284,7 @@ export async function addRiddleAnalytics(
     .values({
       riddleId,
       wasAnswered: true,
-      wasAnsweredCorrectly: wasAnsweredCorrectly,
+      wasAnsweredCorrectly,
       hintsUsed,
     })
     .returning();

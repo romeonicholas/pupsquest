@@ -5,6 +5,7 @@ import {
   getCreationOptions,
   getRejoinOptions,
   getUser,
+  saveRiddleResult,
 } from "./api.js";
 
 const isKiosk = document.body.dataset.device === "kiosk";
@@ -526,11 +527,9 @@ function recordRiddleResult(wasAnsweredCorrectly) {
   const riddleId = currentGameState.riddleQueue[currentGameState.queueCursor];
   const hintsUsed = currentGameState.currentGuesses.length;
 
-  fetch("/api/analytics/riddle", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ riddleId, wasAnsweredCorrectly, hintsUsed }),
-  }).catch((error) => console.error("Error saving riddle analytics:", error));
+  saveRiddleResult(riddleId, wasAnsweredCorrectly, hintsUsed).catch((error) =>
+    console.error("Error saving riddle analytics:", error),
+  );
 }
 
 async function handleIncorrectGuess(clickedArea, iconIndex) {
