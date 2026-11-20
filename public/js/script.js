@@ -1,3 +1,5 @@
+import { getRiddle } from "./api.js";
+
 const isKiosk = document.body.dataset.device === "kiosk";
 let currentUser = null;
 let currentGameState = null;
@@ -397,13 +399,7 @@ async function showRiddle() {
     currentGameState.riddleQueue[currentGameState.queueCursor];
 
   try {
-    const response = await fetch(`/api/riddles/${currentRiddleId}`);
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch riddle: ${response.status}`);
-    }
-
-    const currentRiddle = await response.json();
+    const currentRiddle = await getRiddle(currentRiddleId);
 
     const isRejoining =
       currentGameState.currentShuffledChoices &&
