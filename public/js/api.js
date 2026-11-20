@@ -25,3 +25,7 @@ export function getCreationOptions() {
 export function getRejoinOptions(colorId) {
   return getJson(`/api/users/rejoin-options?colorId=${colorId}`);
 }
+
+export function getUser(colorId, animalId) {
+  return getJson(`/api/users?colorId=${colorId}&animalId=${animalId}`);
+}

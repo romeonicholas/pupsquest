@@ -4,6 +4,7 @@ import {
   getUsedColors,
   getCreationOptions,
   getRejoinOptions,
+  getUser,
 } from "./api.js";
 
 const isKiosk = document.body.dataset.device === "kiosk";
@@ -1305,24 +1306,9 @@ async function loginUser() {
       throw new Error("Please select both a color and an animal.");
     }
 
-    const response = await fetch(
-      `/api/users/?colorId=${selectedColorId}&animalId=${selectedAnimalId}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      },
-    );
+    const user = await getUser(selectedColorId, selectedAnimalId);
 
-    if (!response.ok) {
-      const errorData = await response
-        .json()
-        .catch(() => ({ error: "Unknown error" }));
-      throw new Error(errorData.error || `Server error: ${response.status}`);
-    }
-
-    return await response.json();
+    return user;
   } catch (error) {
     console.error("Error logging in user:", error);
     showErrorScreenAndReload(error);
