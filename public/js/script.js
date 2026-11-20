@@ -90,6 +90,10 @@ const actions = {
   },
   "dismiss-inactivity": () => dismissInactivityScreen(),
   "handle-inactivity-sign-out": () => handleInactivitySignOut(),
+  "show-color-picker": () => showColorPicker(),
+  "confirm-animal": () => confirmAnimal(),
+  "transition-to-riddles": () => transitionToRiddleScreen(),
+  "show-riddle": () => showRiddle(),
 };
 
 document.addEventListener("click", (event) => {
