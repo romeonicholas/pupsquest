@@ -10,6 +10,10 @@ const INACTIVITY_THRESHOLD = 25000;
 const INACTIVITY_CONFIRMATION_THRESHOLD = 8000;
 let isTimerActive = false;
 
+let currentRiddle = null;
+let currentShuffledChoices = [];
+let currentCorrectAnswerIndex = null;
+
 const correctAnswerBacking = "/images/riddles/ui/answer_backing_correct.png";
 const incorrectAnswerBackings = [
   "/images/riddles/ui/answer_backing_wrong_1.png",
