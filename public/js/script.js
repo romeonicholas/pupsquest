@@ -88,6 +88,8 @@ const actions = {
     returnToStartScreen();
     setUsePhoneScreenToDisplayNone();
   },
+  "dismiss-inactivity": () => dismissInactivityScreen(),
+  "handle-inactivity-sign-out": () => handleInactivitySignOut(),
 };
 
 document.addEventListener("click", (event) => {
