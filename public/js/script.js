@@ -750,7 +750,7 @@ function returnToStartScreen() {
   startScreen.style.transform = "translateY(0)";
   startScreen.style.opacity = "0";
 
-  startScreen.offsetHeight;
+  void startScreen.offsetHeight;
 
   setTimeout(() => {
     startScreen.style.transition = "opacity 500ms ease-in";
@@ -867,7 +867,7 @@ function updateAnimalOptions(colorId) {
     animalOptionsContainer.replaceChildren(
       ...animals.map((animal) => buildAnimalOption(animal, "create")),
     );
-    animalOptionsContainer.offsetHeight;
+    void animalOptionsContainer.offsetHeight;
     animalOptionsContainer.style.transition = "opacity 300ms ease-in";
     animalOptionsContainer.style.opacity = "1";
   }, 200);
@@ -1228,7 +1228,7 @@ async function updateRejoinAnimalContainer(colorId) {
         ...animals.map((animal) => buildAnimalOption(animal, "rejoin")),
       );
 
-      animalOptionsContainer.offsetHeight;
+      void animalOptionsContainer.offsetHeight;
       animalOptionsContainer.style.transition = "opacity 300ms ease-in";
       animalOptionsContainer.style.opacity = "1";
 
