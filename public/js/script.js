@@ -94,6 +94,9 @@ const actions = {
   "confirm-animal": () => confirmAnimal(),
   "transition-to-riddles": () => transitionToRiddleScreen(),
   "show-riddle": () => showRiddle(),
+  "rejoin-select-color": (button) =>
+    rejoinSelectColor(button.dataset.color, Number(button.dataset.colorId)),
+  "confirm-rejoin-animal": () => confirmRejoinAnimal(),
 };
 
 document.addEventListener("click", (event) => {
