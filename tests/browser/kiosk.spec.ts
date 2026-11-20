@@ -370,9 +370,15 @@ test("user can't load animals for a grayed out color on rejoin", async ({
   await page.goto("/kiosk");
   await page.locator("#museum-rejoin-game-button").tap();
 
-  await page
-    .locator('[data-action="rejoin-select-color"][data-color="orange"]')
-    .tap({ force: true });
+  const orangeButton = page.locator(
+    '[data-action="rejoin-select-color"][data-color="orange"]',
+  );
+  await expect(orangeButton).toBeVisible();
+  await expect(
+    page.locator('.color-unavailability-indicator[data-color-id="6"]'),
+  ).toHaveClass(/active/);
+
+  await orangeButton.tap({ force: true });
 
   await expect(page.locator("#rejoin-orange-selected")).not.toHaveClass(
     /selected/,
