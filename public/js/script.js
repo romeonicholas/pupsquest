@@ -1498,12 +1498,12 @@ async function saveAndExit() {
   }
 }
 
-function handleInactivitySignOut() {
+async function handleInactivitySignOut() {
   clearTimeout(inactivityTimeout);
   clearTimeout(inactivityConfirmationTimeout);
 
   if (currentUser && currentGameState) {
-    saveAndExit();
+    await saveAndExit();
   } else {
     startOver();
   }
