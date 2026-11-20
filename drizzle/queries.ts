@@ -279,12 +279,17 @@ export async function addRiddleAnalytics(
   wasAnsweredCorrectly: boolean,
   hintsUsed: number,
 ) {
-  await db.insert(riddleAnalytics).values({
-    riddleId,
-    wasAnswered: true,
-    wasAnsweredCorrectly: wasAnsweredCorrectly,
-    hintsUsed,
-  });
+  const [savedResult] = await db
+    .insert(riddleAnalytics)
+    .values({
+      riddleId,
+      wasAnswered: true,
+      wasAnsweredCorrectly: wasAnsweredCorrectly,
+      hintsUsed,
+    })
+    .returning();
+
+  return savedResult;
 }
 
 export async function addUserColors(colors: { name: string; hex: string }[]) {
