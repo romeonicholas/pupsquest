@@ -1,20 +1,19 @@
-export async function getRiddle(riddleId) {
-  const response = await fetch(`/api/riddles/${riddleId}`);
-
+async function getJson(url) {
+  const response = await fetch(url);
   if (!response.ok) {
-    throw new Error(`Failed to fetch riddle: ${response.status}`);
+    throw new Error(`GET ${url} failed with status ${response.status}`);
   }
-
   return response.json();
 }
 
-export async function getAverageScore() {
-  const response = await fetch("/api/stats/average-score");
-  const data = await response.json();
-  return Math.round(data.averageScore);
+export function getRiddle(riddleId) {
+  return getJson(`/api/riddles/${riddleId}`);
 }
 
-export async function getUsedColors() {
-  const response = await fetch("/api/colors/used");
-  return response.json();
+export function getAverageScore() {
+  return getJson("/api/stats/average-score");
+}
+
+export function getUsedColors() {
+  return getJson("/api/colors/used");
 }
