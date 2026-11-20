@@ -170,4 +170,20 @@ router.get("/api/animals/existing/html", async (req, res) => {
   }
 });
 
+router.get("/api/users/rejoin-options", async (req, res) => {
+  const colorId = parseId(req.query.colorId);
+
+  if (colorId == null) {
+    return res.status(400).json({ error: "Missing or invalid colorId" });
+  }
+
+  try {
+    const animals = await getAllAnimalsFromUsersWithColor(colorId);
+    res.json(animals);
+  } catch (error) {
+    logger.error({ err: error }, "Error fetching rejoin options");
+    res.status(500).json({ error: "Failed to fetch rejoin options" });
+  }
+});
+
 export default router;
