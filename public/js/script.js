@@ -10,16 +10,17 @@ import {
   createUser,
 } from "./api.js";
 import { state } from "./state.js";
+import {
+  setUpInactivity,
+  startWatchingForInactivity,
+  stopWatchingForInactivity,
+  clearInactivityTimers,
+  isInactivityScreenShowing,
+  hideInactivityScreen,
+  dismissInactivityScreen,
+} from "./inactivity.js";
 
 const isKiosk = document.body.dataset.device === "kiosk";
-
-let inactivityTimeout;
-let inactivityConfirmationTimeout;
-const INACTIVITY_THRESHOLD = 25000;
-const INACTIVITY_CONFIRMATION_THRESHOLD = 8000;
-let isWatchingForInactivity = false;
-let onNoResponse = () => {};
-let isInactivityEnabled = false;
 
 const correctAnswerBacking = "/images/riddles/ui/answer_backing_correct.png";
 const incorrectAnswerBackings = [
@@ -135,75 +136,6 @@ setUpInactivity({
   isKiosk,
   onNoResponse: () => (state.currentUser ? saveAndExit() : startOver()),
 });
-
-function restartInactivityTimer() {
-  if (!isWatchingForInactivity || !isInactivityEnabled) {
-    return;
-  }
-  clearTimeout(inactivityTimeout);
-  inactivityTimeout = setTimeout(showInactivityScreen, INACTIVITY_THRESHOLD);
-}
-
-function startInactivityConfirmationTimer() {
-  clearTimeout(inactivityConfirmationTimeout);
-
-  inactivityConfirmationTimeout = setTimeout(
-    onNoResponse,
-    INACTIVITY_CONFIRMATION_THRESHOLD,
-  );
-}
-
-function showInactivityScreen() {
-  const inactivityScreen = document.getElementById("inactivity-screen");
-  inactivityScreen.style.opacity = "1";
-  inactivityScreen.style.pointerEvents = "auto";
-  startInactivityConfirmationTimer();
-}
-
-function hideInactivityScreen() {
-  const inactivityScreen = document.getElementById("inactivity-screen");
-  inactivityScreen.style.opacity = "0";
-  inactivityScreen.style.pointerEvents = "none";
-}
-
-function dismissInactivityScreen() {
-  hideInactivityScreen();
-  clearTimeout(inactivityConfirmationTimeout);
-  restartInactivityTimer();
-}
-
-function startWatchingForInactivity() {
-  isWatchingForInactivity = true;
-  restartInactivityTimer();
-}
-
-function stopWatchingForInactivity() {
-  isWatchingForInactivity = false;
-  clearInactivityTimers();
-}
-
-function clearInactivityTimers() {
-  clearTimeout(inactivityTimeout);
-  clearTimeout(inactivityConfirmationTimeout);
-}
-
-function isInactivityScreenShowing() {
-  const inactivityScreen = document.getElementById("inactivity-screen");
-  return (
-    inactivityScreen.style.opacity === "1" &&
-    inactivityScreen.style.pointerEvents === "auto"
-  );
-}
-
-function setUpInactivity(options) {
-  isInactivityEnabled = options.isKiosk;
-  onNoResponse = options.onNoResponse;
-
-  document.addEventListener("mousemove", restartInactivityTimer);
-  document.addEventListener("keydown", restartInactivityTimer);
-  document.addEventListener("scroll", restartInactivityTimer);
-  document.addEventListener("touchstart", restartInactivityTimer);
-}
 
 function showErrorScreenAndReload(error) {
   console.error("An error occurred:", error);
