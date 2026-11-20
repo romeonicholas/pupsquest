@@ -171,6 +171,12 @@ function startWatchingForInactivity() {
   startInactivityTimer();
 }
 
+function stopWatchingForInactivity() {
+  isTimerActive = false;
+  clearTimeout(inactivityTimeout);
+  clearTimeout(inactivityConfirmationTimeout);
+}
+
 function showErrorScreenAndReload(error) {
   console.error("An error occurred:", error);
   const errorScreen = document.getElementById("error-screen");
@@ -742,8 +748,7 @@ function lowerStartScreen() {
 }
 
 function returnToStartScreen() {
-  clearTimeout(inactivityTimeout);
-  isTimerActive = false;
+  stopWatchingForInactivity();
   const startScreen = document.getElementById("start-screen");
   startScreen.style.display = "block";
 
