@@ -31,9 +31,9 @@ describe("routes with ids in params/body fail for bad ids", () => {
   }
 
   for (const id of idsToReject) {
-    it(`GET /api/animals/existing/html with colorId ${id}`, async () => {
+    it(`GET /api/users/rejoin-options with colorId ${id}`, async () => {
       await request(app)
-        .get(`/api/animals/existing/html?colorId=${id}`)
+        .get(`/api/users/rejoin-options?colorId=${id}`)
         .expect(400);
     });
   }

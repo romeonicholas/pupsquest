@@ -1,27 +1,12 @@
 <div id="start-screen">
   <% if (isKiosk) { %>
     <img src="/images/start_screen.png" />
-    <button
-      id="museum-new-game-button"
-      onclick="lowerStartScreen(); showCreateNewUserScreen();"
-    ></button>
-    <button
-      id="museum-rejoin-game-button"
-      onclick="lowerStartScreen(); showRejoinGameScreen();"
-    ></button>
-    <button
-      id="use-phone-button"
-      onclick="lowerStartScreen(); showUsePhoneScreen();"
-    ></button>
+    <button id="museum-new-game-button" data-action="new-game"></button>
+    <button id="museum-rejoin-game-button" data-action="rejoin-game"></button>
+    <button id="use-phone-button" data-action="use-phone"></button>
   <% } else { %>
     <img src="/images/visitor_start_screen.png" />
-    <button
-      id="visitor-new-game-button"
-      onclick="lowerStartScreen(); showCreateNewUserScreen();"
-    ></button>
-    <button
-      id="visitor-rejoin-game-button"
-      onclick="lowerStartScreen(); showRejoinGameScreen();"
-    ></button>
+    <button id="visitor-new-game-button" data-action="new-game"></button>
+    <button id="visitor-rejoin-game-button" data-action="rejoin-game"></button>
   <% } %>
 </div>

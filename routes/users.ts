@@ -1,4 +1,4 @@
-import { Router, type Response } from "express";
+import { Router } from "express";
 import {
   updateUserAndGameState,
   getUserAndGameState,
@@ -100,63 +100,29 @@ router.post("/api/users", async (req, res) => {
   }
 });
 
-function renderPartial(res: Response, template: string, data: any) {
-  return new Promise<string>((resolve, reject) => {
-    res.render(template, data, (err, html) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(html);
-      }
-    });
-  });
-}
-
-router.get("/api/users/create-html", async (req, res) => {
+router.get("/api/users/creation-options", async (req, res) => {
   try {
-    const combinations = await getColorsAndAnimalsForUserCreation();
-
-    const colors = combinations.map((combination) => combination.color);
-    const colorPickerHtml = await renderPartial(res, "partials/color_picker", {
-      colors,
-    });
-
-    const animalOptionsHtmlByColorId: Record<number, string> = {};
-    for (const combination of combinations) {
-      const animalOptionsHtml = await renderPartial(
-        res,
-        "partials/animal_options",
-        {
-          animals: combination.animals,
-          isRejoin: false,
-        },
-      );
-      animalOptionsHtmlByColorId[combination.color.id] = animalOptionsHtml;
-    }
-
-    res.json({
-      colorPickerHtml: colorPickerHtml,
-      animalOptionsByColorId: animalOptionsHtmlByColorId,
-    });
+    const options = await getColorsAndAnimalsForUserCreation();
+    res.json(options);
   } catch (error) {
-    logger.error({ err: error }, "Error generating user creation HTML");
-    res.status(500).json({ error: "Failed to generate user creation HTML" });
+    logger.error({ err: error }, "Error fetching user creation options");
+    res.status(500).json({ error: "Failed to fetch user creation options" });
   }
 });
 
-router.get("/api/animals/existing/html", async (req, res) => {
+router.get("/api/users/rejoin-options", async (req, res) => {
   const colorId = parseId(req.query.colorId);
 
   if (colorId == null) {
-    return res.status(400).send("<p>Error: Missing colorId</p>");
+    return res.status(400).json({ error: "Missing or invalid colorId" });
   }
 
   try {
     const animals = await getAllAnimalsFromUsersWithColor(colorId);
-    res.render("partials/animal_options", { animals, isRejoin: true });
+    res.json(animals);
   } catch (error) {
-    logger.error({ err: error }, "Error fetching animals");
-    res.status(500).send("<p>Error loading animals</p>");
+    logger.error({ err: error }, "Error fetching rejoin options");
+    res.status(500).json({ error: "Failed to fetch rejoin options" });
   }
 });
 

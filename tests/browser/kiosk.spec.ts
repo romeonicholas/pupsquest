@@ -246,6 +246,22 @@ test("when 25 seconds go by without interaction, show inactivity screen", async 
   );
 });
 
+test("sign out from inactivity screen", async ({ page }) => {
+  await page.clock.install();
+  await createUserAndStartRiddles(page, "kiosk");
+
+  const inactivityScreen = page.locator("#inactivity-screen");
+
+  await page.clock.fastForward(25_000);
+
+  await expect(inactivityScreen).toHaveCSS("opacity", "1");
+
+  await page.locator("#inactivity-sign-out").tap();
+
+  await expect(inactivityScreen).toHaveCSS("opacity", "0");
+  await expect(page.locator("#museum-new-game-button")).toBeInViewport();
+});
+
 test("8 seconds after inactivity screen appears, user gets saved and signed out", async ({
   page,
 }) => {
@@ -342,6 +358,31 @@ test("user can't rejoin with a color that has no animals", async ({ page }) => {
       await expect(indicator).toHaveClass(/active/);
     }
   }
+});
+
+test("user can't load animals for a grayed out color on rejoin", async ({
+  page,
+}) => {
+  await page.route("**/api/colors/used", (route) =>
+    route.fulfill({ json: [1] }),
+  );
+
+  await page.goto("/kiosk");
+  await page.locator("#museum-rejoin-game-button").tap();
+
+  const orangeButton = page.locator(
+    '[data-action="rejoin-select-color"][data-color="orange"]',
+  );
+  await expect(orangeButton).toBeVisible();
+  await expect(
+    page.locator('.color-unavailability-indicator[data-color-id="6"]'),
+  ).toHaveClass(/active/);
+
+  await orangeButton.tap({ force: true });
+
+  await expect(page.locator("#rejoin-orange-selected")).not.toHaveClass(
+    /selected/,
+  );
 });
 
 test("the error screen appears if saving fails, and the site reloads", async ({

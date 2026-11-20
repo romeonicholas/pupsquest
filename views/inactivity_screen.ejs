@@ -1,8 +1,8 @@
 <div id="inactivity-screen">
   <img id="inactivity-screen-modal" src="/images/inactivity_notice.png" />
+  <button id="inactivity-stay-here" data-action="dismiss-inactivity"></button>
   <button
-    id="inactivity-stay-here"
-    onclick="dismissInactivityScreen()"
+    id="inactivity-sign-out"
+    data-action="handle-inactivity-sign-out"
   ></button>
-  <button id="inactivity-sign-out" onclick="handleInactivitySignOut()"></button>
 </div>

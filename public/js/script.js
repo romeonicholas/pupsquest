@@ -2,13 +2,17 @@ const isKiosk = document.body.dataset.device === "kiosk";
 let currentUser = null;
 let currentGameState = null;
 
-let animalOptionsHtml = {};
+let creationOptions = [];
 
 let inactivityTimeout;
 let inactivityConfirmationTimeout;
 const INACTIVITY_THRESHOLD = 25000;
 const INACTIVITY_CONFIRMATION_THRESHOLD = 8000;
 let isTimerActive = false;
+
+let currentRiddle = null;
+let currentShuffledChoices = [];
+let currentCorrectAnswerIndex = null;
 
 const correctAnswerBacking = "/images/riddles/ui/answer_backing_correct.png";
 const incorrectAnswerBackings = [
@@ -63,6 +67,57 @@ const nextRiddleButton = document.getElementById("next-riddle-button");
 const riddleContainer = document.getElementById("riddle-container");
 const riddleTextLayerBackground = document.getElementById("riddle-text");
 const selectionLayer = document.getElementById("selection-layer");
+
+const actions = {
+  "save-and-exit": () => saveAndExit(),
+  "cancel-exit": () => cancelExit(),
+  "start-over": () => startOver(),
+  "new-game": () => {
+    lowerStartScreen();
+    showCreateNewUserScreen();
+  },
+  "rejoin-game": () => {
+    lowerStartScreen();
+    showRejoinGameScreen();
+  },
+  "use-phone": () => {
+    lowerStartScreen();
+    showUsePhoneScreen();
+  },
+  "return-to-start": () => {
+    returnToStartScreen();
+    setUsePhoneScreenToDisplayNone();
+  },
+  "dismiss-inactivity": () => dismissInactivityScreen(),
+  "handle-inactivity-sign-out": () => handleInactivitySignOut(),
+  "show-color-picker": () => showColorPicker(),
+  "confirm-animal": () => confirmAnimal(),
+  "transition-to-riddles": () => transitionToRiddleScreen(),
+  "show-riddle": () => showRiddle(),
+  "rejoin-select-color": (button) =>
+    rejoinSelectColor(button.dataset.color, Number(button.dataset.colorId)),
+  "confirm-rejoin-animal": () => confirmRejoinAnimal(),
+  "select-color": (button) =>
+    selectColor(button.dataset.color, Number(button.dataset.colorId)),
+  "select-animal": (button) =>
+    selectAnimal(button.dataset.animalName, button.dataset.imgPath),
+  "select-rejoin-animal": (button) =>
+    selectRejoinAnimal(button.dataset.animalName, button.dataset.imgPath),
+};
+
+document.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-action]");
+  if (!button) return;
+
+  const action = actions[button.dataset.action];
+  if (action) {
+    action(button);
+  } else {
+    console.warn(
+      `Action ${button.dataset.action} doesn't exist, nothing was done`,
+    );
+  }
+});
 
 function scaleContainer() {
   const container = document.getElementById("container");
@@ -780,25 +835,103 @@ function showUsePhoneScreen() {
   document.getElementById("use-phone-screen").style.display = "block";
 }
 
-function updateColorOptions(colorOptionsHtml) {
-  const colorPicker = document.getElementById("color-picker");
-  colorPicker.innerHTML = colorOptionsHtml;
+function renderColorOptions(colorOptions) {
+  const colorOptionsContainer = document.getElementById(
+    "color-options-container",
+  );
+  const colorNamesContainer = document.getElementById("color-text-container");
+  const colorOptionTemplate = document.getElementById("color-option-template");
+  const colorNameTemplate = document.getElementById("color-name-template");
+
+  colorOptionsContainer.replaceChildren();
+  colorNamesContainer.replaceChildren();
+
+  for (const { color } of colorOptions) {
+    const key = color.name.toLowerCase();
+
+    const colorOption = colorOptionTemplate.content
+      .querySelector(".color-option")
+      .cloneNode(true);
+    colorOption.id = `option-${key}`;
+    colorOption.style.backgroundColor = color.hex;
+
+    const colorButton = colorOption.querySelector(".color-button");
+    colorButton.id = `button-${key}`;
+    colorButton.dataset.color = key;
+    colorButton.dataset.colorId = color.id;
+
+    const colorCheckmark = colorOption.querySelector(".color-selection-icon");
+    colorCheckmark.id = `${key}-selected`;
+    colorCheckmark.dataset.color = color.name;
+    colorCheckmark.dataset.id = color.id;
+
+    colorOptionsContainer.append(colorOption);
+
+    const colorNameLabel = colorNameTemplate.content
+      .querySelector(".color-text")
+      .cloneNode(true);
+    colorNameLabel.textContent = color.name;
+    colorNamesContainer.append(colorNameLabel);
+  }
 }
 
 function updateAnimalOptions(colorId) {
   const animalOptionsContainer = document.getElementById(
     "animal-options-container",
   );
+  const option = creationOptions.find((option) => option.color.id === colorId);
+  const animals = option ? option.animals : [];
 
   animalOptionsContainer.style.transition = "opacity 300ms ease-out";
   animalOptionsContainer.style.opacity = "0";
 
   setTimeout(() => {
-    animalOptionsContainer.innerHTML = animalOptionsHtml[colorId] || "";
+    animalOptionsContainer.replaceChildren(
+      ...animals.map((animal) => buildAnimalOption(animal, "create")),
+    );
     animalOptionsContainer.offsetHeight;
     animalOptionsContainer.style.transition = "opacity 300ms ease-in";
     animalOptionsContainer.style.opacity = "1";
   }, 200);
+}
+
+function buildAnimalOption(animal, screen) {
+  const isRejoinScreen = screen === "rejoin";
+
+  const animalOptionTemplate = document.getElementById(
+    "animal-option-template",
+  );
+  const key = animal.name.toLowerCase();
+  const animalOption = animalOptionTemplate.content
+    .querySelector(".animal-option")
+    .cloneNode(true);
+
+  const animalIcon = animalOption.querySelector(".animal-icon");
+  animalIcon.src = animal.imgPath;
+
+  const animalCheckmark = animalOption.querySelector(".animal-selection-icon");
+  animalCheckmark.id = `${key}-selected`;
+  animalCheckmark.dataset.animal = animal.id;
+
+  const animalNameLabel = animalOption.querySelector(".animal-icon-text");
+  animalNameLabel.textContent = animal.name;
+
+  const animalButton = animalOption.querySelector(".animal-button");
+  animalButton.id = `button-${key}`;
+  animalButton.dataset.action = "select-animal";
+  animalButton.dataset.animalName = animal.name;
+  animalButton.dataset.imgPath = animal.imgPath;
+
+  if (isRejoinScreen) {
+    animalCheckmark.id = `rejoin-${key}-selected`;
+    animalCheckmark.classList.replace(
+      "animal-selection-icon",
+      "rejoin-animal-selection-icon",
+    );
+    animalButton.dataset.action = "select-rejoin-animal";
+  }
+
+  return animalOption;
 }
 
 async function showCreateNewUserScreen() {
@@ -806,11 +939,9 @@ async function showCreateNewUserScreen() {
   startInactivityTimer();
 
   try {
-    const result = await fetch("/api/users/create-html");
-    const data = await result.json();
-
-    updateColorOptions(data.colorPickerHtml);
-    animalOptionsHtml = data.animalOptionsByColorId;
+    const response = await fetch("/api/users/creation-options");
+    creationOptions = await response.json();
+    renderColorOptions(creationOptions);
   } catch (error) {
     console.error("Error fetching possible user combinations:", error);
   }
@@ -1115,18 +1246,19 @@ async function updateRejoinAnimalContainer(colorId) {
 
     setTimeout(async () => {
       const response = await fetch(
-        `/api/animals/existing/html?colorId=${colorId}`,
+        `/api/users/rejoin-options?colorId=${colorId}`,
       );
-      const html = await response.text();
+      const animals = await response.json();
 
-      animalOptionsContainer.innerHTML = html;
+      animalOptionsContainer.replaceChildren(
+        ...animals.map((animal) => buildAnimalOption(animal, "rejoin")),
+      );
+
       animalOptionsContainer.offsetHeight;
       animalOptionsContainer.style.transition = "opacity 300ms ease-in";
       animalOptionsContainer.style.opacity = "1";
 
-      const animalsExist =
-        animalOptionsContainer.querySelectorAll(".animal-option").length > 0;
-      if (!animalsExist) {
+      if (animals.length === 0) {
         noAnimalsMessage.style.transition = "opacity 300ms ease-in";
         noAnimalsMessage.style.opacity = "1";
       }
