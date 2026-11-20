@@ -9,7 +9,7 @@
   <button
     id="save-exit-button"
     class="exit-button"
-    onclick="saveAndExit()"
+    data-action="save-and-exit"
   ></button>
   <button
     id="start-over-button"
@@ -18,5 +18,5 @@
   ></button>
 
   <button id="cancel-button" onclick="cancelExit()"></button>
-  <button id="sign-out-button" onclick="saveAndExit()"></button>
+  <button id="sign-out-button" data-action="save-and-exit"></button>
 </div>

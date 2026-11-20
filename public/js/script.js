@@ -68,6 +68,15 @@ const riddleContainer = document.getElementById("riddle-container");
 const riddleTextLayerBackground = document.getElementById("riddle-text");
 const selectionLayer = document.getElementById("selection-layer");
 
+document.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-action]");
+  if (!button) return;
+
+  if (button.dataset.action === "save-and-exit") {
+    saveAndExit();
+  }
+});
+
 function scaleContainer() {
   const container = document.getElementById("container");
   if (container) {
