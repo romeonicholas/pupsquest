@@ -19,7 +19,6 @@ const INACTIVITY_THRESHOLD = 25000;
 const INACTIVITY_CONFIRMATION_THRESHOLD = 8000;
 let isTimerActive = false;
 
-let currentRiddle = null;
 let currentShuffledChoices = [];
 let currentCorrectAnswerIndex = null;
 
@@ -29,10 +28,6 @@ const incorrectAnswerBackings = [
   "/images/riddles/ui/answer_backing_wrong_2.png",
   "/images/riddles/ui/answer_backing_wrong_3.png",
 ];
-
-const badgeBase = document.getElementById("badge-base");
-const badgeIcon = document.getElementById("badge-icon");
-const colorAnimalText = document.getElementById("color-animal-text");
 
 const riddleScreen = document.getElementById("riddle-screen");
 const statusWheelContainer = document.getElementById("status-wheel-container");
@@ -51,11 +46,6 @@ const iconBack2 = document.getElementById("icon-back-2");
 const iconBack3 = document.getElementById("icon-back-3");
 const iconBack4 = document.getElementById("icon-back-4");
 
-const clickAreaOption1 = document.getElementById("option-click-area-1");
-const clickAreaOption2 = document.getElementById("option-click-area-2");
-const clickAreaOption3 = document.getElementById("option-click-area-3");
-const clickAreaOption4 = document.getElementById("option-click-area-4");
-
 const optionText1 = document.getElementById("option-text-1");
 const optionText2 = document.getElementById("option-text-2");
 const optionText3 = document.getElementById("option-text-3");
@@ -70,9 +60,6 @@ const answerImg = document.getElementById("answer-img");
 
 const hintCountForeground = document.getElementById("hint-count-foreground");
 
-const backToStartButton = document.getElementById("back-to-start-button");
-
-const nextRiddleButton = document.getElementById("next-riddle-button");
 const riddleContainer = document.getElementById("riddle-container");
 const riddleTextLayerBackground = document.getElementById("riddle-text");
 const selectionLayer = document.getElementById("selection-layer");
@@ -227,7 +214,6 @@ function updateRiddleElements(riddle) {
 
   currentShuffledChoices = shuffledChoices;
   currentCorrectAnswerIndex = correctAnswerIndex;
-  currentRiddle = riddle;
 }
 
 function restoreRiddleState(riddle) {
@@ -246,7 +232,6 @@ function restoreRiddleState(riddle) {
 
   currentShuffledChoices = shuffledChoices;
   currentCorrectAnswerIndex = correctAnswerIndex;
-  currentRiddle = riddle;
 }
 
 function restoreIncorrectGuesses() {
