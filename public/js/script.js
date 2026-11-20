@@ -886,14 +886,18 @@ function updateAnimalOptions(colorId) {
   animalOptionsContainer.style.opacity = "0";
 
   setTimeout(() => {
-    animalOptionsContainer.replaceChildren(...animals.map(buildAnimalOption));
+    animalOptionsContainer.replaceChildren(
+      ...animals.map((animal) => buildAnimalOption(animal, "create")),
+    );
     animalOptionsContainer.offsetHeight;
     animalOptionsContainer.style.transition = "opacity 300ms ease-in";
     animalOptionsContainer.style.opacity = "1";
   }, 200);
 }
 
-function buildAnimalOption(animal) {
+function buildAnimalOption(animal, screen) {
+  const isRejoinScreen = screen === "rejoin";
+
   const animalOptionTemplate = document.getElementById(
     "animal-option-template",
   );
@@ -918,37 +922,14 @@ function buildAnimalOption(animal) {
   animalButton.dataset.animalName = animal.name;
   animalButton.dataset.imgPath = animal.imgPath;
 
-  return animalOption;
-}
-
-function buildRejoinAnimalOption(animal) {
-  const animalOptionTemplate = document.getElementById(
-    "animal-option-template",
-  );
-  const key = animal.name.toLowerCase();
-  const animalOption = animalOptionTemplate.content
-    .querySelector(".animal-option")
-    .cloneNode(true);
-
-  const animalIcon = animalOption.querySelector(".animal-icon");
-  animalIcon.src = animal.imgPath;
-
-  const animalCheckmark = animalOption.querySelector(".animal-selection-icon");
-  animalCheckmark.id = `rejoin-${key}-selected`;
-  animalCheckmark.dataset.animal = animal.id;
-  animalCheckmark.classList.replace(
-    "animal-selection-icon",
-    "rejoin-animal-selection-icon",
-  );
-
-  const animalNameLabel = animalOption.querySelector(".animal-icon-text");
-  animalNameLabel.textContent = animal.name;
-
-  const animalButton = animalOption.querySelector(".animal-button");
-  animalButton.id = `button-${key}`;
-  animalButton.dataset.action = "select-rejoin-animal";
-  animalButton.dataset.animalName = animal.name;
-  animalButton.dataset.imgPath = animal.imgPath;
+  if (isRejoinScreen) {
+    animalCheckmark.id = `rejoin-${key}-selected`;
+    animalCheckmark.classList.replace(
+      "animal-selection-icon",
+      "rejoin-animal-selection-icon",
+    );
+    animalButton.dataset.action = "select-rejoin-animal";
+  }
 
   return animalOption;
 }
@@ -1270,7 +1251,7 @@ async function updateRejoinAnimalContainer(colorId) {
       const animals = await response.json();
 
       animalOptionsContainer.replaceChildren(
-        ...animals.map(buildRejoinAnimalOption),
+        ...animals.map((animal) => buildAnimalOption(animal, "rejoin")),
       );
 
       animalOptionsContainer.offsetHeight;
