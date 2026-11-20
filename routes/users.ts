@@ -144,6 +144,16 @@ router.get("/api/users/create-html", async (req, res) => {
   }
 });
 
+router.get("/api/users/creation-options", async (req, res) => {
+  try {
+    const options = await getColorsAndAnimalsForUserCreation();
+    res.json(options);
+  } catch (error) {
+    logger.error({ err: error }, "Error fetching user creation options");
+    res.status(500).json({ error: "Failed to fetch user creation options" });
+  }
+});
+
 router.get("/api/animals/existing/html", async (req, res) => {
   const colorId = parseId(req.query.colorId);
 
