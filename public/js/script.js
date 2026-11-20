@@ -393,7 +393,7 @@ function transitionToRiddleScreen() {
   nextRiddleSheet.style.visibility = "hidden";
 
   setTimeout(() => {
-    showRiddle();
+    void showRiddle();
   }, 50);
 }
 
