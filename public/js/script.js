@@ -18,7 +18,7 @@ let inactivityConfirmationTimeout;
 const INACTIVITY_THRESHOLD = 25000;
 const INACTIVITY_CONFIRMATION_THRESHOLD = 8000;
 let isTimerActive = false;
-const onNoResponse = () => {};
+let onNoResponse = () => {};
 
 const correctAnswerBacking = "/images/riddles/ui/answer_backing_correct.png";
 const incorrectAnswerBackings = [
