@@ -113,6 +113,39 @@ describe("GET /api/animals/existing/html", () => {
   });
 });
 
+describe("GET /api/users/rejoin-options", () => {
+  it("gets animals in use for a color id, including when none are", async () => {
+    await request(app)
+      .post("/api/users")
+      .send({ colorId: 6, animalId: 4 })
+      .expect(201);
+    await request(app)
+      .post("/api/users")
+      .send({ colorId: 6, animalId: 11 })
+      .expect(201);
+    await request(app)
+      .post("/api/users")
+      .send({ colorId: 8, animalId: 18 })
+      .expect(201);
+
+    const res = await request(app)
+      .get("/api/users/rejoin-options?colorId=6")
+      .expect(200);
+
+    const animalIds = res.body.map((animal: { id: number }) => animal.id);
+    expect(animalIds).toHaveLength(2);
+    expect(animalIds).toEqual(expect.arrayContaining([4, 11]));
+  });
+
+  it("returns empty list when no animals are linked to that color", async () => {
+    const res = await request(app)
+      .get("/api/users/rejoin-options?colorId=7")
+      .expect(200);
+
+    expect(res.body).toEqual([]);
+  });
+});
+
 describe("GET /api/users/create-html", () => {
   it("returns the animal/color selection template with four colors", async () => {
     const res = await request(app).get("/api/users/create-html").expect(200);
