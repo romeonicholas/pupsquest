@@ -166,6 +166,11 @@ function dismissInactivityScreen() {
   startInactivityTimer();
 }
 
+function startWatchingForInactivity() {
+  isTimerActive = true;
+  startInactivityTimer();
+}
+
 function showErrorScreenAndReload(error) {
   console.error("An error occurred:", error);
   const errorScreen = document.getElementById("error-screen");
@@ -783,8 +788,7 @@ async function showRejoinGameScreen() {
     console.error("Error fetching used colors:", error);
   }
 
-  isTimerActive = true;
-  startInactivityTimer();
+  startWatchingForInactivity();
 
   document.getElementById("rejoin-screen").style.display = "block";
   document.getElementById("user-panel").style.display = "block";
@@ -800,8 +804,7 @@ async function showRejoinGameScreen() {
 }
 
 function showUsePhoneScreen() {
-  isTimerActive = true;
-  startInactivityTimer();
+  startWatchingForInactivity();
 
   document.getElementById("rejoin-screen").style.display = "none";
   document.getElementById("user-panel").style.display = "none";
@@ -911,8 +914,7 @@ function buildAnimalOption(animal, screen) {
 }
 
 async function showCreateNewUserScreen() {
-  isTimerActive = true;
-  startInactivityTimer();
+  startWatchingForInactivity();
 
   try {
     state.creationOptions = await getCreationOptions();
