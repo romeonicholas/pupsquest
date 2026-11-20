@@ -18,6 +18,7 @@ let inactivityConfirmationTimeout;
 const INACTIVITY_THRESHOLD = 25000;
 const INACTIVITY_CONFIRMATION_THRESHOLD = 8000;
 let isTimerActive = false;
+const onNoResponse = () => {};
 
 const correctAnswerBacking = "/images/riddles/ui/answer_backing_correct.png";
 const incorrectAnswerBackings = [
@@ -129,10 +130,9 @@ document.addEventListener("contextmenu", function (e) {
   e.preventDefault();
 });
 
-document.addEventListener("mousemove", startInactivityTimer);
-document.addEventListener("keydown", startInactivityTimer);
-document.addEventListener("scroll", startInactivityTimer);
-document.addEventListener("touchstart", startInactivityTimer);
+setUpInactivity({
+  onNoResponse: () => (state.currentUser ? saveAndExit() : startOver()),
+});
 
 function startInactivityTimer() {
   if (!isTimerActive || !isKiosk) {
@@ -146,7 +146,7 @@ function startInactivityConfirmationTimer() {
   clearTimeout(inactivityConfirmationTimeout);
 
   inactivityConfirmationTimeout = setTimeout(
-    state.currentUser ? saveAndExit : startOver,
+    onNoResponse,
     INACTIVITY_CONFIRMATION_THRESHOLD,
   );
 }
@@ -187,6 +187,15 @@ function isInactivityScreenShowing() {
     inactivityScreen.style.opacity === "1" &&
     inactivityScreen.style.pointerEvents === "auto"
   );
+}
+
+function setUpInactivity(options) {
+  onNoResponse = options.onNoResponse;
+
+  document.addEventListener("mousemove", startInactivityTimer);
+  document.addEventListener("keydown", startInactivityTimer);
+  document.addEventListener("scroll", startInactivityTimer);
+  document.addEventListener("touchstart", startInactivityTimer);
 }
 
 function showErrorScreenAndReload(error) {
