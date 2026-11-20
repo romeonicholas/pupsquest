@@ -7,6 +7,7 @@ import {
   getUser,
   saveRiddleResult,
   saveGame,
+  createUser,
 } from "./api.js";
 
 const isKiosk = document.body.dataset.device === "kiosk";
@@ -1119,7 +1120,7 @@ async function confirmAnimal() {
   confirmationPanel.style.transition = "transform 1200ms ease-in";
   confirmationPanel.style.transform = "translateY(-1470px)";
 
-  setUser(await createUser());
+  setUser(await createUserFromSelection());
 
   const riddleScreen = document.getElementById("riddle-screen");
   riddleScreen.style.display = "block";
@@ -1127,7 +1128,7 @@ async function confirmAnimal() {
   setSaveAndExitButtonToActive();
 }
 
-async function createUser() {
+async function createUserFromSelection() {
   try {
     const selectedColorId = getSelectedColorId();
     const selectedAnimalId = getSelectedAnimalId();
@@ -1136,30 +1137,11 @@ async function createUser() {
       throw new Error("Please select both a color and an animal.");
     }
 
-    const userData = {
-      colorId: parseInt(selectedColorId),
-      animalId: parseInt(selectedAnimalId),
-      isKiosk: isKiosk,
-    };
-
-    const response = await fetch("/api/users", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(userData),
-    });
-
-    if (!response.ok) {
-      const errorData = await response
-        .json()
-        .catch(() => ({ error: "Unknown error" }));
-      throw new Error(errorData.error || `Server error: ${response.status}`);
-    }
-
-    const newUser = await response.json();
-
-    return newUser;
+    return await createUser(
+      Number(selectedColorId),
+      Number(selectedAnimalId),
+      isKiosk,
+    );
   } catch (error) {
     console.error("Error creating user:", error);
     // showErrorScreenAndReload(error);

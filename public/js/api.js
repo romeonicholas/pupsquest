@@ -65,3 +65,7 @@ export function saveGame(userId, scores, hasViewedExitPanel, gameState) {
     gameState,
   });
 }
+
+export function createUser(colorId, animalId, isKiosk) {
+  return postJson("/api/users", { colorId, animalId, isKiosk });
+}
