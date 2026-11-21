@@ -10,6 +10,7 @@ import riddlesRouter from "./routes/riddles.ts";
 import colorsRouter from "./routes/colors.ts";
 import analyticsRouter from "./routes/analytics.ts";
 import usersRouter from "./routes/users.ts";
+import browserErrorsRouter from "./routes/browser-errors.ts";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -39,6 +40,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(healthRouter);
+app.use(browserErrorsRouter);
 app.use(analyticsRouter);
 app.use(colorsRouter);
 app.use(riddlesRouter);
