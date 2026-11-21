@@ -823,7 +823,7 @@ function showColorPicker() {
   }, 800);
 }
 
-function addPrefix(name, prefix) {
+function addPrefix(name, prefix = "") {
   if (prefix) {
     return `${prefix}-${name}`;
   }
@@ -868,31 +868,26 @@ async function selectColor(colorDisplayName, colorId) {
   }
 }
 
-function clearAnimalSelectionIndicators(prefix = "") {
-  const selector = prefix
-    ? `.${prefix}-animal-selection-icon`
-    : `.animal-selection-icon`;
+function clearAnimalSelectionIndicators(prefix) {
+  const selector = addPrefix("animal-selection-icon", prefix);
 
   document.querySelectorAll(selector).forEach((el) => {
     el.classList.remove("selected");
   });
 }
 
-function updateAnimalSelection(animalDisplayName, prefix = "") {
+function updateAnimalSelection(animalDisplayName, prefix) {
   clearAnimalSelectionIndicators(prefix);
-  const prefixStr = prefix ? `${prefix}-` : "";
-
   const animalSelectionIndicator = document.getElementById(
-    `${prefixStr}${animalDisplayName.toLowerCase()}-selected`,
+    addPrefix(`${animalDisplayName.toLowerCase()}-selected`, prefix),
   );
 
   animalSelectionIndicator?.classList.add("selected");
 }
 
-function getSelectedColor(prefix = "") {
-  const prefixStr = prefix ? `${prefix}-` : "";
+function getSelectedColor(prefix) {
   const selectedColorIcon = document.querySelector(
-    `.${prefixStr}color-selection-icon.selected`,
+    addPrefix(`color-selection-icon.selected`, prefix),
   );
   const color = selectedColorIcon
     ? selectedColorIcon.getAttribute("data-color")
@@ -901,12 +896,8 @@ function getSelectedColor(prefix = "") {
   return color;
 }
 
-function getSelectedColorId(prefix = "") {
-  const prefixStr = prefix ? `${prefix}-` : "";
-  const selector = prefix
-    ? `.${prefixStr}color-selection-icon.selected`
-    : `.color-selection-icon.selected`;
-
+function getSelectedColorId(prefix) {
+  const selector = addPrefix(`color-selection-icon.selected`, prefix);
   const selectedColorIcon = document.querySelector(selector);
 
   const colorId = selectedColorIcon
@@ -928,11 +919,7 @@ function selectAnimal(animalDisplayName, animalImgPath) {
 }
 
 function getSelectedAnimalId(prefix = "") {
-  const prefixStr = prefix ? `${prefix}-` : "";
-  const selector = prefix
-    ? `.${prefixStr}animal-selection-icon.selected`
-    : `.animal-selection-icon.selected`;
-
+  const selector = addPrefix(`.animal-selection-icon.selected`, prefix);
   const selectedAnimalIcon = document.querySelector(selector);
   return selectedAnimalIcon?.getAttribute("data-animal") || null;
 }
