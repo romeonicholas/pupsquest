@@ -177,6 +177,15 @@ setUpCreateScreen({
   onUserCreated: (newUser) => setHints(newUser.gameState.hintsRemaining),
 });
 
+let onUserRejoined = () => {};
+
+setUpRejoinScreen({
+  onUserRejoined: (existingUser) => {
+    setHints(existingUser.gameState.hintsRemaining);
+    transitionToRiddleScreen();
+  },
+});
+
 function closeRiddleContainerFromBottom() {
   selectionLayer.style.transform = "translateY(0)";
   riddleContainer.style.transform = "translateY(-1290px)";
@@ -656,6 +665,10 @@ function getTranslateY(element) {
   return translateY;
 }
 
+function setUpRejoinScreen(options) {
+  onUserRejoined = options.onUserRejoined;
+}
+
 async function showRejoinGameScreen() {
   try {
     const usedColors = await getUsedColors();
@@ -762,8 +775,6 @@ async function confirmRejoinAnimal() {
   }
 
   setUser(existingUser);
-  setHints(existingUser.gameState.hintsRemaining);
-
   showExitOption("save-exit");
 
   const riddleScreenConfirmationDummy = document.getElementById(
@@ -771,7 +782,7 @@ async function confirmRejoinAnimal() {
   );
   riddleScreenConfirmationDummy.style.display = "none";
 
-  transitionToRiddleScreen();
+  onUserRejoined(existingUser);
 }
 
 async function loginUser() {
