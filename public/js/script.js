@@ -25,6 +25,11 @@ import {
   cancelExit,
   hideExitDetails,
 } from "./exit.js";
+import {
+  lowerStartScreen,
+  returnToStartScreen,
+  hideUsePhoneScreen,
+} from "./start.js";
 
 const isKiosk = document.body.dataset.device === "kiosk";
 
@@ -705,36 +710,6 @@ function setSaveAndExitButtonToActive() {
   startOverButton.style.display = "none";
   const saveExitButton = document.getElementById("save-exit-button");
   saveExitButton.style.display = "block";
-}
-
-function lowerStartScreen() {
-  const startScreen = document.getElementById("start-screen");
-  startScreen.style.transition = "transform 1800ms ease-in";
-  startScreen.style.transform = "translateY(1920px)";
-}
-
-function returnToStartScreen() {
-  stopWatchingForInactivity();
-  const startScreen = document.getElementById("start-screen");
-  startScreen.style.display = "block";
-
-  startScreen.style.transition = "none";
-  startScreen.style.transform = "translateY(0)";
-  startScreen.style.opacity = "0";
-
-  void startScreen.offsetHeight;
-
-  setTimeout(() => {
-    startScreen.style.transition = "opacity 500ms ease-in";
-    startScreen.style.opacity = "1";
-
-    hideInactivityScreen();
-  }, 10);
-}
-
-function hideUsePhoneScreen() {
-  const usePhoneScreen = document.getElementById("use-phone-screen");
-  usePhoneScreen.style.display = "none";
 }
 
 async function showRejoinGameScreen() {
