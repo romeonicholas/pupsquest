@@ -3,6 +3,7 @@ import { state, setUser } from "../state.js";
 import { isKiosk } from "../device.js";
 import { startWatchingForInactivity } from "../inactivity.js";
 import { showExitOption } from "../exit.js";
+import { showErrorScreenAndReload } from "../errors.js";
 import {
   setStatusText,
   updateStatusWheel,
@@ -144,8 +145,7 @@ async function createUserFromSelection() {
       isKiosk,
     );
   } catch (error) {
-    console.error("Error creating user:", error);
-    // showErrorScreenAndReload(error);
+    showErrorScreenAndReload(error);
     return null;
   }
 }

@@ -47,7 +47,9 @@ import {
   hideExitDetails,
   showExitOption,
 } from "./exit.js";
-import { showErrorScreenAndReload } from "./errors.js";
+import { showErrorScreenAndReload, setUpErrorReporting } from "./errors.js";
+
+setUpErrorReporting();
 
 const actions = {
   "new-game": async () => {

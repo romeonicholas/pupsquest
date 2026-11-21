@@ -11,7 +11,7 @@
   },
   "scripts": {
     "start": "node server.ts",
-    "start:online": "node drizzle/migrate.ts && node drizzle/seeds/index.ts && node server.ts",
+    "start:online": "node drizzle/migrate.ts && node drizzle/seeds/index.ts && exec node server.ts",
     "dev": "node --watch server.ts",
     "test": "vitest run",
     "test:browser": "playwright test",
