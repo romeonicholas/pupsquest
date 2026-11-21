@@ -19,6 +19,12 @@ import {
   hideInactivityScreen,
   dismissInactivityScreen,
 } from "./inactivity.js";
+import {
+  shouldShowExitPanelDetails,
+  firstTimeSaveAndExit,
+  cancelExit,
+  hideExitDetails,
+} from "./exit.js";
 
 const isKiosk = document.body.dataset.device === "kiosk";
 
@@ -1306,51 +1312,6 @@ function startOver() {
     setStartOverButtonToActive();
     enableAllInput();
   }, 600);
-}
-
-function moveScreensForExitPanel(transform, transition) {
-  const screensMovedByExitPanel = [
-    "user-panel",
-    "riddle-screen",
-    "create-new-user-screen",
-  ];
-
-  for (const id of screensMovedByExitPanel) {
-    const screen = document.getElementById(id);
-    screen.style.transition = transition;
-    screen.style.transform = transform;
-  }
-}
-
-function setExitButtonsDisplay(display) {
-  document.getElementById("cancel-button").style.display = display;
-  document.getElementById("sign-out-button").style.display = display;
-}
-
-function markExitPanelViewed() {
-  state.currentUser.hasViewedExitPanel = true;
-}
-
-function shouldShowExitPanelDetails() {
-  return state.currentUser && !state.currentUser.hasViewedExitPanel;
-}
-
-function firstTimeSaveAndExit() {
-  moveScreensForExitPanel("translateY(380px)", "transform 800ms ease-in");
-  setExitButtonsDisplay("block");
-  markExitPanelViewed();
-}
-
-function cancelExit() {
-  moveScreensForExitPanel("translateY(0px)", "transform 800ms ease-in");
-  setExitButtonsDisplay("none");
-}
-
-function hideExitDetails() {
-  setTimeout(() => {
-    moveScreensForExitPanel("translateY(0px)", "none");
-    setExitButtonsDisplay("none");
-  }, 500);
 }
 
 async function saveAndExit() {
