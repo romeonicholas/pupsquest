@@ -637,7 +637,7 @@ function getTranslateY(element) {
 }
 
 function updateStatusWheel(wheelText, instant = false, additionalClass) {
-  setNextStatusText(wheelText);
+  setStatusText("next", wheelText);
   let currentStatusText = document.querySelector(".current-text");
   let nextStatusText = document.querySelector(".next-text");
 
@@ -1050,19 +1050,13 @@ async function createUserFromSelection() {
   }
 }
 
-function setCurrentStatusText(statusText) {
-  const currentStatusText = document.querySelector(
-    ".current-text .status-text",
-  );
-  currentStatusText.innerText = statusText;
-}
+function setStatusText(position, text) {
+  const statusText = document.querySelector(`.${position}-text .status-text`);
 
-function setNextStatusText(nextText) {
-  const nextStatusText = document.querySelector(".next-text .status-text");
-  if (nextStatusText) {
-    nextStatusText.innerText = nextText;
+  if (statusText) {
+    statusText.innerText = text;
   } else {
-    console.error("Could not find .status-text inside .next-text");
+    console.error(`Could not find .status-text inside .${position}-text`);
   }
 }
 
@@ -1089,7 +1083,7 @@ function resetCreateNewUserScreen() {
 
   moveBadgeContainer("translateY(0px)", "none");
 
-  setCurrentStatusText("WELCOME");
+  setStatusText("current", "WELCOME");
 }
 
 async function rejoinSelectColor(colorDisplayName, colorId) {
@@ -1227,7 +1221,7 @@ function resetRejoinScreen() {
   rejoinConfirmationPanel.style.transitionDelay = "0ms";
   rejoinConfirmationPanel.style.transform = "translateY(0px)";
 
-  setCurrentStatusText("ENTER CODE");
+  setStatusText("current", "ENTER CODE");
 }
 
 function resetRiddleScreen() {
