@@ -1347,22 +1347,9 @@ function cancelExit() {
 }
 
 function hideExitDetails() {
-  const userPanel = document.getElementById("user-panel");
-  const riddleScreen = document.getElementById("riddle-screen");
-  const createNewUserScreen = document.getElementById("create-new-user-screen");
-
   setTimeout(() => {
-    userPanel.style.transition = "none";
-    userPanel.style.transform = "translateY(0px)";
-    riddleScreen.style.transition = "none";
-    riddleScreen.style.transform = "translateY(0px)";
-    createNewUserScreen.style.transition = "none";
-    createNewUserScreen.style.transform = "translateY(0px)";
-
-    const cancelButton = document.getElementById("cancel-button");
-    cancelButton.style.display = "none";
-    const signOutButton = document.getElementById("sign-out-button");
-    signOutButton.style.display = "none";
+    moveScreensForExitPanel("translateY(0px)", "none");
+    setExitButtonsDisplay("none");
   }, 500);
 }
 
