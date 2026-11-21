@@ -165,6 +165,10 @@ setUpInactivity({
   onNoResponse: () => (state.currentUser ? saveAndExit() : startOver()),
 });
 
+setUpCreateScreen({
+  onUserCreated: (newUser) => setHints(newUser.gameState.hintsRemaining),
+});
+
 function showErrorScreenAndReload(error) {
   console.error("An error occurred:", error);
   const errorScreen = document.getElementById("error-screen");
@@ -684,6 +688,12 @@ async function showRejoinGameScreen() {
   showExitOption("start-over");
 }
 
+let onUserCreated = () => {};
+
+function setUpCreateScreen(options) {
+  onUserCreated = options.onUserCreated;
+}
+
 function renderColorOptions(colorOptions) {
   const colorOptionsContainer = document.getElementById(
     "color-options-container",
@@ -835,7 +845,7 @@ async function confirmAnimal() {
   const newUser = await createUserFromSelection();
   setUser(newUser);
   if (newUser) {
-    setHints(newUser.gameState.hintsRemaining);
+    onUserCreated(newUser);
   }
 
   const riddleScreen = document.getElementById("riddle-screen");
