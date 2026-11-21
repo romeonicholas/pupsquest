@@ -1308,6 +1308,25 @@ function startOver() {
   }, 600);
 }
 
+function moveScreensForExitPanel(translateY, transition) {
+  screensMovedByExitPanel = [
+    "user-panel",
+    "riddle-screen",
+    "create-new-user-screen",
+  ];
+
+  for (const id of screensMovedByExitPanel) {
+    const screen = document.getElementById(id);
+    screen.style.transition = transition;
+    screen.style.transform = `translateY(${translateY})`;
+  }
+}
+
+function setExitButtonsDisplay(display) {
+  document.getElementById("cancel-button").style.display = display;
+  document.getElementById("sign-out-button").style.display = display;
+}
+
 function markExitPanelViewed() {
   state.currentUser.hasViewedExitPanel = true;
 }
@@ -1317,22 +1336,8 @@ function shouldShowExitPanelDetails() {
 }
 
 function firstTimeSaveAndExit() {
-  const userPanel = document.getElementById("user-panel");
-  const riddleScreen = document.getElementById("riddle-screen");
-  const createNewUserScreen = document.getElementById("create-new-user-screen");
-
-  userPanel.style.transition = "transform 800ms ease-in";
-  userPanel.style.transform = "translateY(380px)";
-  riddleScreen.style.transition = "transform 800ms ease-in";
-  riddleScreen.style.transform = "translateY(380px)";
-  createNewUserScreen.style.transition = "transform 800ms ease-in";
-  createNewUserScreen.style.transform = "translateY(380px)";
-
-  const cancelButton = document.getElementById("cancel-button");
-  const signOutButton = document.getElementById("sign-out-button");
-  cancelButton.style.display = "block";
-  signOutButton.style.display = "block";
-
+  moveScreensForExitPanel("translateY(380px)", "transform 800ms ease-in");
+  setExitButtonsDisplay("block");
   markExitPanelViewed();
 }
 
