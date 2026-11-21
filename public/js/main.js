@@ -171,7 +171,7 @@ async function saveAndExit() {
         showErrorScreenAndReload(error);
       }
     } else {
-      console.error("No user or game state to save.");
+      startOver();
     }
   }
 }
