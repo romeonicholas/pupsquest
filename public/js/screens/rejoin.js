@@ -1,0 +1,199 @@
+import { getUsedColors, getRejoinOptions, getUser } from "../api.js";
+import { setUser } from "../state.js";
+import { startWatchingForInactivity } from "../inactivity.js";
+import { showExitOption } from "../exit.js";
+import { showErrorScreenAndReload } from "../errors.js";
+import {
+  setStatusText,
+  updateStatusWheel,
+  moveBadgeContainer,
+  updateBadgeColor,
+  updateBadgeText,
+  updateBadgeIcon,
+  resetBadge,
+} from "../user-panel.js";
+import {
+  clearColorSelectionIndicators,
+  showColorSelectionIndicator,
+  clearAnimalSelectionIndicators,
+  updateAnimalSelection,
+  getSelectedColor,
+  getSelectedColorId,
+  getSelectedAnimalId,
+  buildAnimalOption,
+} from "../picker.js";
+
+let onUserRejoined = () => {};
+
+export function setUpRejoinScreen(options) {
+  onUserRejoined = options.onUserRejoined;
+}
+
+export async function showRejoinGameScreen() {
+  try {
+    const usedColors = await getUsedColors();
+    const indicators = document.querySelectorAll(
+      ".color-unavailability-indicator",
+    );
+    indicators.forEach((indicator) => {
+      const colorId = parseInt(indicator.getAttribute("data-color-id"), 10);
+      if (!usedColors.includes(colorId)) {
+        indicator.classList.add("active");
+      } else {
+        indicator.classList.remove("active");
+      }
+    });
+  } catch (error) {
+    console.error("Error fetching used colors:", error);
+  }
+
+  startWatchingForInactivity();
+
+  document.getElementById("rejoin-screen").style.display = "block";
+  document.getElementById("user-panel").style.display = "block";
+  document.getElementById("exit-container").style.display = "block";
+
+  resetBadge();
+  moveBadgeContainer("translateY(465px)", "none");
+  let isInstant = true;
+  updateStatusWheel("ENTER CODE", isInstant);
+  showExitOption("start-over");
+}
+
+export async function rejoinSelectColor(colorDisplayName, colorId) {
+  showColorSelectionIndicator(colorDisplayName, "rejoin");
+  updateBadgeColor(colorDisplayName);
+
+  const rejoinColorPicker = document.getElementById("rejoin-color-picker");
+  rejoinColorPicker.style.transform = "translateY(-1265px)";
+
+  await updateRejoinAnimalContainer(colorId);
+}
+
+async function updateRejoinAnimalContainer(colorId) {
+  const animalOptionsContainer = document.getElementById(
+    "rejoin-animal-options-container",
+  );
+  animalOptionsContainer.style.transition = "opacity 300ms ease-out";
+  animalOptionsContainer.style.opacity = "0";
+
+  const noAnimalsMessage = document.querySelector(".no-animals-message.rejoin");
+  noAnimalsMessage.style.transition = "opacity 300ms ease-out";
+  noAnimalsMessage.style.opacity = "0";
+
+  setTimeout(async () => {
+    try {
+      const animals = await getRejoinOptions(colorId);
+
+      animalOptionsContainer.replaceChildren(
+        ...animals.map((animal) => buildAnimalOption(animal, "rejoin")),
+      );
+
+      void animalOptionsContainer.offsetHeight;
+      animalOptionsContainer.style.transition = "opacity 300ms ease-in";
+      animalOptionsContainer.style.opacity = "1";
+
+      if (animals.length === 0) {
+        noAnimalsMessage.style.transition = "opacity 300ms ease-in";
+        noAnimalsMessage.style.opacity = "1";
+      }
+
+      const scrollableContainer = document.getElementById(
+        "scrollable-container",
+      );
+      scrollableContainer.scrollTop = 0;
+    } catch (error) {
+      showErrorScreenAndReload(error);
+    }
+  }, 200);
+}
+
+export function selectRejoinAnimal(animalDisplayName, animalImgPath) {
+  updateAnimalSelection(animalDisplayName, "rejoin");
+  updateBadgeIcon(animalImgPath);
+  const color = getSelectedColor("rejoin");
+  updateBadgeText(color, animalDisplayName);
+
+  const confirmationPanel = document.getElementById(
+    "rejoin-confirmation-panel",
+  );
+  confirmationPanel.style.transition = "transform 300ms ease-in";
+  confirmationPanel.style.transform = "translateY(-165px)";
+}
+
+export async function confirmRejoinAnimal() {
+  const rejoinConfirmationPanel = document.getElementById(
+    "rejoin-confirmation-panel",
+  );
+  rejoinConfirmationPanel.style.transitionDelay = "50ms";
+  rejoinConfirmationPanel.style.transition = "transform 1s ease-in";
+  rejoinConfirmationPanel.style.transform = "translateY(-1200px)";
+
+  const existingUser = await loginUser();
+  if (!existingUser) {
+    return;
+  }
+
+  setUser(existingUser);
+  showExitOption("save-exit");
+
+  const riddleScreenConfirmationDummy = document.getElementById(
+    "riddle-screen-confirmation-dummy",
+  );
+  riddleScreenConfirmationDummy.style.display = "none";
+
+  onUserRejoined(existingUser);
+}
+
+async function loginUser() {
+  try {
+    const selectedColorId = getSelectedColorId("rejoin");
+    const selectedAnimalId = getSelectedAnimalId("rejoin");
+
+    if (!selectedColorId || !selectedAnimalId) {
+      throw new Error("Please select both a color and an animal.");
+    }
+
+    const user = await getUser(selectedColorId, selectedAnimalId);
+
+    return user;
+  } catch (error) {
+    console.error("Error logging in user:", error);
+    showErrorScreenAndReload(error);
+    return null;
+  }
+}
+
+export function resetRejoinScreen() {
+  const rejoinUserPanelShadow = document.querySelector(
+    "#rejoin-screen .user-panel-shadow",
+  );
+  rejoinUserPanelShadow.style.display = "block";
+
+  const rejoinScreen = document.getElementById("rejoin-screen");
+  rejoinScreen.style.display = "none";
+
+  resetBadge();
+  clearColorSelectionIndicators("rejoin");
+  clearAnimalSelectionIndicators("rejoin");
+
+  const rejoinColorPicker = document.getElementById("rejoin-color-picker");
+  rejoinColorPicker.style.transform = "translateY(0px)";
+
+  const noAnimalsMessage = document.querySelector(".no-animals-message.rejoin");
+  noAnimalsMessage.style.opacity = "0";
+
+  const rejoinAnimalOptionsContainer = document.getElementById(
+    "rejoin-animal-options-container",
+  );
+  rejoinAnimalOptionsContainer.innerHTML = "";
+
+  const rejoinConfirmationPanel = document.getElementById(
+    "rejoin-confirmation-panel",
+  );
+
+  rejoinConfirmationPanel.style.transitionDelay = "0ms";
+  rejoinConfirmationPanel.style.transform = "translateY(0px)";
+
+  setStatusText("current", "ENTER CODE");
+}
