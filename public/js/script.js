@@ -30,6 +30,15 @@ import {
   showUsePhoneScreen,
   hideUsePhoneScreen,
 } from "./start.js";
+import {
+  setStatusText,
+  updateStatusWheel,
+  moveBadgeContainer,
+  updateBadgeColor,
+  updateBadgeText,
+  updateBadgeIcon,
+  resetBadge,
+} from "./user-panel.js";
 
 const isKiosk = document.body.dataset.device === "kiosk";
 
@@ -41,7 +50,6 @@ const incorrectAnswerBackings = [
 ];
 
 const riddleScreen = document.getElementById("riddle-screen");
-const statusWheelContainer = document.getElementById("status-wheel-container");
 const riddleHeadline = document.getElementById("riddle-headline");
 const couplet1 = document.querySelector(".couplet-1");
 const couplet2 = document.querySelector(".couplet-2");
@@ -636,52 +644,6 @@ function getTranslateY(element) {
   return translateY;
 }
 
-function updateStatusWheel(wheelText, instant = false, additionalClass) {
-  setStatusText("next", wheelText);
-  let currentStatusText = document.querySelector(".current-text");
-  let nextStatusText = document.querySelector(".next-text");
-
-  if (instant) {
-    currentStatusText.style.transition = "none";
-    nextStatusText.style.transition = "none";
-  } else {
-    currentStatusText.style.transition = "transform 800ms ease-in";
-    nextStatusText.style.transition = "transform 800ms ease-in";
-  }
-
-  if (additionalClass) {
-    nextStatusText.classList.add(additionalClass);
-  }
-
-  currentStatusText.classList.remove("current-text");
-  currentStatusText.classList.add("previous-text");
-  nextStatusText.classList.remove("next-text");
-  nextStatusText.classList.add("current-text");
-
-  currentStatusText = nextStatusText;
-  nextStatusText = document.createElement("div");
-  nextStatusText.className = "status-text-wrapper next-text";
-  nextStatusText.innerHTML = '<span class="status-text"></span>';
-  statusWheelContainer.appendChild(nextStatusText);
-
-  removeOldStatusTexts();
-}
-
-function removeOldStatusTexts() {
-  setTimeout(() => {
-    const previousTexts = document.querySelectorAll(".previous-text");
-    previousTexts.forEach((element) => {
-      element.remove();
-    });
-  }, 1000);
-}
-
-function moveBadgeContainer(transform, transition) {
-  const badgeContainer = document.getElementById("badge-container");
-  badgeContainer.style.transform = transform;
-  badgeContainer.style.transition = transition;
-}
-
 async function showRejoinGameScreen() {
   try {
     const usedColors = await getUsedColors();
@@ -879,22 +841,6 @@ function showColorSelectionIndicator(colorDisplayName, prefix = "") {
   selectedColorIcon.classList.add("selected");
 }
 
-function updateBadgeColor(colorDisplayName) {
-  const badgeBase = document.getElementById("badge-base");
-  badgeBase.src = `/images/users/badges/${colorDisplayName}.png`;
-}
-
-function resetBadge() {
-  const badgeBase = document.getElementById("badge-base");
-  badgeBase.src = "/images/users/badges/gray.png";
-
-  const badgeIcons = document.querySelectorAll(".badge-icon");
-  badgeIcons.forEach((icon) => icon.classList.remove("visible"));
-
-  const badgeTextContainer = document.getElementById("badge-text-container");
-  badgeTextContainer.classList.remove("visible");
-}
-
 function hideConfirmationPanel() {
   const confirmationPanel = document.getElementById("confirmation-panel");
   confirmationPanel.style.transition = "transform 300ms ease-in";
@@ -939,27 +885,6 @@ function updateAnimalSelection(animalDisplayName, prefix = "") {
   animalSelectionIndicator?.classList.add("selected");
 }
 
-let currentBadgeIndex = 1;
-
-function updateBadgeIcon(animalImgPath) {
-  const currentIcon = document.getElementById(
-    `badge-icon-${currentBadgeIndex}`,
-  );
-  const nextIndex = currentBadgeIndex === 1 ? 2 : 1;
-  const nextIcon = document.getElementById(`badge-icon-${nextIndex}`);
-
-  nextIcon.src = animalImgPath;
-
-  if (currentIcon.classList.contains("visible")) {
-    currentIcon.classList.remove("visible");
-    nextIcon.classList.add("visible");
-  } else {
-    nextIcon.classList.add("visible");
-  }
-
-  currentBadgeIndex = nextIndex;
-}
-
 function getSelectedColor(prefix = "") {
   const prefixStr = prefix ? `${prefix}-` : "";
   const selectedColorIcon = document.querySelector(
@@ -985,14 +910,6 @@ function getSelectedColorId(prefix = "") {
     : null;
 
   return colorId;
-}
-
-function updateBadgeText(color, animalDisplayName) {
-  const badgeText = document.getElementById("color-animal-text");
-  badgeText.innerText = `${color} ${animalDisplayName}`;
-
-  const badgeTextContainer = document.getElementById("badge-text-container");
-  badgeTextContainer.classList.add("visible");
 }
 
 function selectAnimal(animalDisplayName, animalImgPath) {
@@ -1050,16 +967,6 @@ async function createUserFromSelection() {
   }
 }
 
-function setStatusText(position, text) {
-  const statusText = document.querySelector(`.${position}-text .status-text`);
-
-  if (statusText) {
-    statusText.innerText = text;
-  } else {
-    console.error(`Could not find .status-text inside .${position}-text`);
-  }
-}
-
 function resetCreateNewUserScreen() {
   const createNewUserScreen = document.getElementById("create-new-user-screen");
   createNewUserScreen.style.display = "none";
@@ -1082,7 +989,6 @@ function resetCreateNewUserScreen() {
   confirmationPanel.style.transform = "translateY(0px)";
 
   moveBadgeContainer("translateY(0px)", "none");
-
   setStatusText("current", "WELCOME");
 }
 
