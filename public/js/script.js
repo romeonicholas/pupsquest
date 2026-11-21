@@ -414,7 +414,7 @@ async function showRiddle() {
       enableAllInput();
     }, 2000);
   } catch (error) {
-    showErrorScreenAndReload();
+    showErrorScreenAndReload(error);
   }
 }
 
