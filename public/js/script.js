@@ -44,6 +44,7 @@ import {
   confirmRejoinAnimal,
   resetRejoinScreen,
 } from "./screens/rejoin.js";
+import { enableAllInput, disableAllInput } from "./input.js";
 
 const correctAnswerBacking = "/images/riddles/ui/answer_backing_correct.png";
 const incorrectAnswerBackings = [
@@ -465,20 +466,6 @@ function showIconBacking(iconIndex) {
     "transform 1s cubic-bezier(0.54, -0.16, 0.735, 0.045)";
 
   clickedIcon.style.transform = `translateY(${currentY + 234}px)`;
-}
-
-function disableAllInput() {
-  const container = document.getElementById("container");
-  if (container) {
-    container.style.pointerEvents = "none";
-  }
-}
-
-function enableAllInput() {
-  const container = document.getElementById("container");
-  if (container) {
-    container.style.pointerEvents = "auto";
-  }
 }
 
 async function updateScoreText() {
