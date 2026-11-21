@@ -72,7 +72,7 @@ jobs:
           path: test-results/
 
   publish:
-    needs: check
+    needs: [check, browser]
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
     timeout-minutes: 15
