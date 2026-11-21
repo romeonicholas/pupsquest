@@ -823,7 +823,7 @@ function showColorPicker() {
   }, 800);
 }
 
-function addPrefix(name, prefix = "") {
+function addPrefix(prefix, name) {
   if (prefix) {
     return `${prefix}-${name}`;
   }
@@ -832,15 +832,14 @@ function addPrefix(name, prefix = "") {
 
 function clearColorSelectionIndicators(prefix) {
   const selectionIcons = document.querySelectorAll(
-    `.${addPrefix("color-selection-icon", prefix)}`,
+    `.${addPrefix(prefix, "color-selection-icon")}`,
   );
   selectionIcons.forEach((icon) => icon.classList.remove("selected"));
 }
 
 function showColorSelectionIndicator(colorDisplayName, prefix) {
   const selectedColorIcon = document.getElementById(
-    addPrefix(`${colorDisplayName}-selected`),
-    prefix,
+    addPrefix(prefix, `${colorDisplayName}-selected`),
   );
   selectedColorIcon.classList.add("selected");
 }
@@ -869,7 +868,7 @@ async function selectColor(colorDisplayName, colorId) {
 }
 
 function clearAnimalSelectionIndicators(prefix) {
-  const selector = addPrefix(".animal-selection-icon", prefix);
+  const selector = `.${addPrefix(prefix, "animal-selection-icon")}`;
 
   document.querySelectorAll(selector).forEach((el) => {
     el.classList.remove("selected");
@@ -879,7 +878,7 @@ function clearAnimalSelectionIndicators(prefix) {
 function updateAnimalSelection(animalDisplayName, prefix) {
   clearAnimalSelectionIndicators(prefix);
   const animalSelectionIndicator = document.getElementById(
-    addPrefix(`${animalDisplayName.toLowerCase()}-selected`, prefix),
+    addPrefix(prefix, `${animalDisplayName.toLowerCase()}-selected`),
   );
 
   animalSelectionIndicator?.classList.add("selected");
@@ -887,7 +886,7 @@ function updateAnimalSelection(animalDisplayName, prefix) {
 
 function getSelectedColor(prefix) {
   const selectedColorIcon = document.querySelector(
-    addPrefix(`.color-selection-icon.selected`, prefix),
+    `.${addPrefix(prefix, "color-selection-icon")}.selected`,
   );
   const color = selectedColorIcon
     ? selectedColorIcon.getAttribute("data-color")
@@ -897,7 +896,7 @@ function getSelectedColor(prefix) {
 }
 
 function getSelectedColorId(prefix) {
-  const selector = addPrefix(`.color-selection-icon`, prefix).selected;
+  const selector = `.${addPrefix(prefix, "color-selection-icon")}.selected`;
   const selectedColorIcon = document.querySelector(selector);
 
   const colorId = selectedColorIcon
@@ -919,7 +918,7 @@ function selectAnimal(animalDisplayName, animalImgPath) {
 }
 
 function getSelectedAnimalId(prefix) {
-  const selector = `.${addPrefix("animal-selection-icon", prefix)}.selected`;
+  const selector = `.${addPrefix(prefix, "animal-selection-icon")}.selected`;
   const selectedAnimalIcon = document.querySelector(selector);
   return selectedAnimalIcon?.getAttribute("data-animal") || null;
 }
