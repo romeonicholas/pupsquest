@@ -732,10 +732,14 @@ function returnToStartScreen() {
   }, 10);
 }
 
+function hideUsePhoneScreen() {
+  const usePhoneScreen = document.getElementById("use-phone-screen");
+  usePhoneScreen.style.display = "none";
+}
+
 function setUsePhoneScreenToDisplayNone() {
   setTimeout(() => {
-    const usePhoneScreen = document.getElementById("use-phone-screen");
-    usePhoneScreen.style.display = "none";
+    hideUsePhoneScreen;
   }, 600);
 }
 
@@ -1306,7 +1310,7 @@ function startOver() {
   disableAllInput();
 
   setTimeout(() => {
-    document.getElementById("use-phone-screen").style.display = "none";
+    hideUsePhoneScreen();
     resetCreateNewUserScreen();
     resetRejoinScreen();
     setStartOverButtonToActive();
@@ -1335,7 +1339,7 @@ async function saveAndExit() {
         disableAllInput();
 
         setTimeout(() => {
-          document.getElementById("use-phone-screen").style.display = "none";
+          hideUsePhoneScreen();
           resetRiddleScreen();
           resetCreateNewUserScreen();
           resetRejoinScreen();
