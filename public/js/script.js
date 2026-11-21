@@ -688,6 +688,12 @@ function removeOldStatusTexts() {
   }, 1000);
 }
 
+function moveBadgeContainer(transform, transition) {
+  const badgeContainer = document.getElementById("badge-container");
+  badgeContainer.style.transform = transform;
+  badgeContainer.style.transition = transition;
+}
+
 async function showRejoinGameScreen() {
   try {
     const usedColors = await getUsedColors();
@@ -713,9 +719,7 @@ async function showRejoinGameScreen() {
   document.getElementById("exit-container").style.display = "block";
 
   resetBadge();
-  const badgeContainer = document.getElementById("badge-container");
-  badgeContainer.style.transition = "none";
-  badgeContainer.style.transform = "translateY(465px)";
+  moveBadgeContainer("translateY(465px)", "none");
   let isInstant = true;
   updateStatusWheel("ENTER CODE", isInstant);
   showExitOption("start-over");
@@ -865,9 +869,7 @@ function showColorPicker() {
 
   setTimeout(() => {
     updateStatusWheel("CODE NAME");
-    const badgeContainer = document.getElementById("badge-container");
-    badgeContainer.style.transition = "transform 800ms ease-in";
-    badgeContainer.style.transform = "translateY(465px)";
+    moveBadgeContainer("translateY(465px)", "transform 800ms ease-in");
   }, 800);
 }
 
@@ -1075,13 +1077,13 @@ function resetCreateNewUserScreen() {
     "user-creation-instructions",
   );
   const colorPicker = document.getElementById("color-picker");
-  const badgeContainer = document.getElementById("badge-container");
   const confirmationPanel = document.getElementById("confirmation-panel");
 
   userCreationInstructions.style.transform = "translateY(0px)";
   colorPicker.style.transform = "translateY(0px)";
-  badgeContainer.style.transform = "translateY(0px)";
   confirmationPanel.style.transform = "translateY(0px)";
+
+  moveBadgeContainer("translateY(0px)", "none");
 
   const statusTextCurrent = document.querySelector(".current-text");
   statusTextCurrent.firstChild.innerText = "WELCOME";
