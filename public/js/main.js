@@ -19,7 +19,6 @@ import {
   showUsePhoneScreen,
   hideUsePhoneScreen,
 } from "./screens/start.js";
-import { isKiosk } from "./device.js";
 import {
   setUpCreateScreen,
   showCreateNewUserScreen,
@@ -115,7 +114,6 @@ document.addEventListener("contextmenu", function (e) {
 });
 
 setUpInactivity({
-  isKiosk,
   onNoResponse: () => handleInactivitySignOut(),
 });
 
