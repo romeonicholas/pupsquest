@@ -730,8 +730,7 @@ async function updateRejoinAnimalContainer(colorId) {
       );
       scrollableContainer.scrollTop = 0;
     } catch (error) {
-      console.error("Error updating animal container:", error);
-      animalOptionsContainer.style.opacity = "1";
+      showErrorScreenAndReload(error);
     }
   }, 200);
 }
