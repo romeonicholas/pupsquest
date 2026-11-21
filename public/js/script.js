@@ -757,10 +757,12 @@ async function confirmRejoinAnimal() {
   rejoinConfirmationPanel.style.transform = "translateY(-1200px)";
 
   const existingUser = await loginUser();
-  setUser(existingUser);
-  if (existingUser) {
-    setHints(existingUser.gameState.hintsRemaining);
+  if (!existingUser) {
+    return;
   }
+
+  setUser(existingUser);
+  setHints(existingUser.gameState.hintsRemaining);
 
   showExitOption("save-exit");
 
