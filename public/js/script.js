@@ -2,14 +2,12 @@ import {
   getRiddle,
   getAverageScore,
   getUsedColors,
-  getCreationOptions,
   getRejoinOptions,
   getUser,
   saveRiddleResult,
   saveGame,
-  createUser,
 } from "./api.js";
-import { state } from "./state.js";
+import { state, setUser } from "./state.js";
 import {
   setUpInactivity,
   startWatchingForInactivity,
@@ -39,8 +37,26 @@ import {
   updateBadgeIcon,
   resetBadge,
 } from "./user-panel.js";
-
-const isKiosk = document.body.dataset.device === "kiosk";
+import {
+  clearColorSelectionIndicators,
+  showColorSelectionIndicator,
+  clearAnimalSelectionIndicators,
+  updateAnimalSelection,
+  getSelectedColor,
+  getSelectedColorId,
+  getSelectedAnimalId,
+  buildAnimalOption,
+} from "./picker.js";
+import { isKiosk } from "./device.js";
+import {
+  setUpCreateScreen,
+  showCreateNewUserScreen,
+  showColorPicker,
+  selectColor,
+  selectAnimal,
+  confirmAnimal,
+  resetCreateNewUserScreen,
+} from "./create.js";
 
 const correctAnswerBacking = "/images/riddles/ui/answer_backing_correct.png";
 const incorrectAnswerBackings = [
@@ -154,6 +170,10 @@ document.addEventListener("contextmenu", function (e) {
 setUpInactivity({
   isKiosk,
   onNoResponse: () => (state.currentUser ? saveAndExit() : startOver()),
+});
+
+setUpCreateScreen({
+  onUserCreated: (newUser) => setHints(newUser.gameState.hintsRemaining),
 });
 
 function showErrorScreenAndReload(error) {
@@ -675,323 +695,6 @@ async function showRejoinGameScreen() {
   showExitOption("start-over");
 }
 
-function renderColorOptions(colorOptions) {
-  const colorOptionsContainer = document.getElementById(
-    "color-options-container",
-  );
-  const colorNamesContainer = document.getElementById("color-text-container");
-  const colorOptionTemplate = document.getElementById("color-option-template");
-  const colorNameTemplate = document.getElementById("color-name-template");
-
-  colorOptionsContainer.replaceChildren();
-  colorNamesContainer.replaceChildren();
-
-  for (const { color } of colorOptions) {
-    const key = color.name.toLowerCase();
-
-    const colorOption = colorOptionTemplate.content
-      .querySelector(".color-option")
-      .cloneNode(true);
-    colorOption.id = `option-${key}`;
-    colorOption.style.backgroundColor = color.hex;
-
-    const colorButton = colorOption.querySelector(".color-button");
-    colorButton.id = `button-${key}`;
-    colorButton.dataset.color = key;
-    colorButton.dataset.colorId = color.id;
-
-    const colorCheckmark = colorOption.querySelector(".color-selection-icon");
-    colorCheckmark.id = `${key}-selected`;
-    colorCheckmark.dataset.color = color.name;
-    colorCheckmark.dataset.id = color.id;
-
-    colorOptionsContainer.append(colorOption);
-
-    const colorNameLabel = colorNameTemplate.content
-      .querySelector(".color-text")
-      .cloneNode(true);
-    colorNameLabel.textContent = color.name;
-    colorNamesContainer.append(colorNameLabel);
-  }
-}
-
-function updateAnimalOptions(colorId) {
-  const animalOptionsContainer = document.getElementById(
-    "animal-options-container",
-  );
-  const option = state.creationOptions.find(
-    (option) => option.color.id === colorId,
-  );
-  const animals = option ? option.animals : [];
-
-  animalOptionsContainer.style.transition = "opacity 300ms ease-out";
-  animalOptionsContainer.style.opacity = "0";
-
-  setTimeout(() => {
-    animalOptionsContainer.replaceChildren(
-      ...animals.map((animal) => buildAnimalOption(animal, "create")),
-    );
-    void animalOptionsContainer.offsetHeight;
-    animalOptionsContainer.style.transition = "opacity 300ms ease-in";
-    animalOptionsContainer.style.opacity = "1";
-  }, 200);
-}
-
-function buildAnimalOption(animal, screen) {
-  const isRejoinScreen = screen === "rejoin";
-
-  const animalOptionTemplate = document.getElementById(
-    "animal-option-template",
-  );
-  const key = animal.name.toLowerCase();
-  const animalOption = animalOptionTemplate.content
-    .querySelector(".animal-option")
-    .cloneNode(true);
-
-  const animalIcon = animalOption.querySelector(".animal-icon");
-  animalIcon.src = animal.imgPath;
-
-  const animalCheckmark = animalOption.querySelector(".animal-selection-icon");
-  animalCheckmark.id = `${key}-selected`;
-  animalCheckmark.dataset.animal = animal.id;
-
-  const animalNameLabel = animalOption.querySelector(".animal-icon-text");
-  animalNameLabel.textContent = animal.name;
-
-  const animalButton = animalOption.querySelector(".animal-button");
-  animalButton.id = `button-${key}`;
-  animalButton.dataset.action = "select-animal";
-  animalButton.dataset.animalName = animal.name;
-  animalButton.dataset.imgPath = animal.imgPath;
-
-  if (isRejoinScreen) {
-    animalCheckmark.id = `rejoin-${key}-selected`;
-    animalCheckmark.classList.replace(
-      "animal-selection-icon",
-      "rejoin-animal-selection-icon",
-    );
-    animalButton.dataset.action = "select-rejoin-animal";
-  }
-
-  return animalOption;
-}
-
-async function showCreateNewUserScreen() {
-  startWatchingForInactivity();
-
-  try {
-    state.creationOptions = await getCreationOptions();
-    renderColorOptions(state.creationOptions);
-  } catch (error) {
-    console.error("Error fetching possible user combinations:", error);
-  }
-
-  const createNewUserScreen = document.getElementById("create-new-user-screen");
-  createNewUserScreen.style.display = "block";
-
-  const userPanel = document.getElementById("user-panel");
-  userPanel.style.display = "block";
-
-  let isInstant = true;
-  updateStatusWheel("WELCOME", isInstant);
-
-  const exitContainer = document.getElementById("exit-container");
-  exitContainer.style.display = "block";
-
-  const riddleScreenConfirmationDummy = document.getElementById(
-    "riddle-screen-confirmation-dummy",
-  );
-  riddleScreenConfirmationDummy.style.display = "block";
-
-  showExitOption("start-over");
-}
-
-function showColorPicker() {
-  const userCreationInstructions = document.getElementById(
-    "user-creation-instructions",
-  );
-  const colorPicker = document.getElementById("color-picker");
-
-  userCreationInstructions.style.transition = "transform 800ms ease-in";
-  userCreationInstructions.style.transform = "translateY(1270px)";
-  colorPicker.style.transition = "transform 800ms ease-in";
-  colorPicker.style.transform = "translateY(1337px)";
-
-  setTimeout(() => {
-    updateStatusWheel("CODE NAME");
-    moveBadgeContainer("translateY(465px)", "transform 800ms ease-in");
-  }, 800);
-}
-
-function clearColorSelectionIndicators(prefix = "") {
-  const prefixStr = prefix ? `${prefix}-` : "";
-
-  const selectionIcons = document.querySelectorAll(
-    `.${prefixStr}color-selection-icon`,
-  );
-  selectionIcons.forEach((icon) => icon.classList.remove("selected"));
-}
-
-function showColorSelectionIndicator(colorDisplayName, prefix = "") {
-  const prefixStr = prefix ? `${prefix}-` : "";
-
-  const selectedColorIcon = document.getElementById(
-    `${prefixStr}${colorDisplayName}-selected`,
-  );
-  selectedColorIcon.classList.add("selected");
-}
-
-function hideConfirmationPanel() {
-  const confirmationPanel = document.getElementById("confirmation-panel");
-  confirmationPanel.style.transition = "transform 300ms ease-in";
-  confirmationPanel.style.transform = "translateY(0px)";
-}
-
-async function selectColor(colorDisplayName, colorId) {
-  const userCreationInstructions = document.getElementById(
-    "user-creation-instructions",
-  );
-  resetBadge();
-  hideConfirmationPanel();
-  clearColorSelectionIndicators();
-  showColorSelectionIndicator(colorDisplayName);
-  updateBadgeColor(colorDisplayName);
-  updateAnimalOptions(colorId);
-
-  if (userCreationInstructions.style.transform !== "translateY(2210px)") {
-    userCreationInstructions.style.transition = "transform 800ms ease-in";
-    userCreationInstructions.style.transform = "translateY(2210px)";
-  }
-}
-
-function clearAnimalSelectionIndicators(prefix = "") {
-  const selector = prefix
-    ? `.${prefix}-animal-selection-icon`
-    : `.animal-selection-icon`;
-
-  document.querySelectorAll(selector).forEach((el) => {
-    el.classList.remove("selected");
-  });
-}
-
-function updateAnimalSelection(animalDisplayName, prefix = "") {
-  clearAnimalSelectionIndicators(prefix);
-  const prefixStr = prefix ? `${prefix}-` : "";
-
-  const animalSelectionIndicator = document.getElementById(
-    `${prefixStr}${animalDisplayName.toLowerCase()}-selected`,
-  );
-
-  animalSelectionIndicator?.classList.add("selected");
-}
-
-function getSelectedColor(prefix = "") {
-  const prefixStr = prefix ? `${prefix}-` : "";
-  const selectedColorIcon = document.querySelector(
-    `.${prefixStr}color-selection-icon.selected`,
-  );
-  const color = selectedColorIcon
-    ? selectedColorIcon.getAttribute("data-color")
-    : "unknown";
-
-  return color;
-}
-
-function getSelectedColorId(prefix = "") {
-  const prefixStr = prefix ? `${prefix}-` : "";
-  const selector = prefix
-    ? `.${prefixStr}color-selection-icon.selected`
-    : `.color-selection-icon.selected`;
-
-  const selectedColorIcon = document.querySelector(selector);
-
-  const colorId = selectedColorIcon
-    ? selectedColorIcon.getAttribute("data-id")
-    : null;
-
-  return colorId;
-}
-
-function selectAnimal(animalDisplayName, animalImgPath) {
-  updateAnimalSelection(animalDisplayName);
-  updateBadgeIcon(animalImgPath);
-  const color = getSelectedColor();
-  updateBadgeText(color, animalDisplayName);
-
-  const confirmationPanel = document.getElementById("confirmation-panel");
-  confirmationPanel.style.transition = "transform 300ms ease-in";
-  confirmationPanel.style.transform = "translateY(-165px)";
-}
-
-function getSelectedAnimalId(prefix = "") {
-  const prefixStr = prefix ? `${prefix}-` : "";
-  const selector = prefix
-    ? `.${prefixStr}animal-selection-icon.selected`
-    : `.animal-selection-icon.selected`;
-
-  const selectedAnimalIcon = document.querySelector(selector);
-  return selectedAnimalIcon?.getAttribute("data-animal") || null;
-}
-
-async function confirmAnimal() {
-  const confirmationPanel = document.getElementById("confirmation-panel");
-  confirmationPanel.style.transition = "transform 1200ms ease-in";
-  confirmationPanel.style.transform = "translateY(-1470px)";
-
-  setUser(await createUserFromSelection());
-
-  const riddleScreen = document.getElementById("riddle-screen");
-  riddleScreen.style.display = "block";
-
-  showExitOption("save-exit");
-}
-
-async function createUserFromSelection() {
-  try {
-    const selectedColorId = getSelectedColorId();
-    const selectedAnimalId = getSelectedAnimalId();
-
-    if (!selectedColorId || !selectedAnimalId) {
-      throw new Error("Please select both a color and an animal.");
-    }
-
-    return await createUser(
-      Number(selectedColorId),
-      Number(selectedAnimalId),
-      isKiosk,
-    );
-  } catch (error) {
-    console.error("Error creating user:", error);
-    // showErrorScreenAndReload(error);
-    return null;
-  }
-}
-
-function resetCreateNewUserScreen() {
-  const createNewUserScreen = document.getElementById("create-new-user-screen");
-  createNewUserScreen.style.display = "none";
-
-  resetBadge();
-  clearColorSelectionIndicators();
-  clearAnimalSelectionIndicators();
-
-  const noAnimalsMessage = document.querySelector(".no-animals-message.new");
-  noAnimalsMessage.style.opacity = "0";
-
-  const userCreationInstructions = document.getElementById(
-    "user-creation-instructions",
-  );
-  const colorPicker = document.getElementById("color-picker");
-  const confirmationPanel = document.getElementById("confirmation-panel");
-
-  userCreationInstructions.style.transform = "translateY(0px)";
-  colorPicker.style.transform = "translateY(0px)";
-  confirmationPanel.style.transform = "translateY(0px)";
-
-  moveBadgeContainer("translateY(0px)", "none");
-  setStatusText("current", "WELCOME");
-}
-
 async function rejoinSelectColor(colorDisplayName, colorId) {
   showColorSelectionIndicator(colorDisplayName, "rejoin");
   updateBadgeColor(colorDisplayName);
@@ -1064,8 +767,11 @@ async function confirmRejoinAnimal() {
   rejoinConfirmationPanel.style.transition = "transform 1s ease-in";
   rejoinConfirmationPanel.style.transform = "translateY(-1200px)";
 
-  const userData = await loginUser();
-  setUser(userData);
+  const existingUser = await loginUser();
+  setUser(existingUser);
+  if (existingUser) {
+    setHints(existingUser.gameState.hintsRemaining);
+  }
 
   showExitOption("save-exit");
 
@@ -1205,16 +911,4 @@ async function handleInactivitySignOut() {
   } else {
     startOver();
   }
-}
-
-function setUser(userData) {
-  if (!userData) {
-    state.currentUser = null;
-    state.currentGameState = null;
-    return;
-  }
-
-  state.currentUser = userData.user;
-  state.currentGameState = userData.gameState;
-  setHints(state.currentGameState.hintsRemaining);
 }
