@@ -10,9 +10,11 @@ import {
   riddles,
   riddleAnalytics,
 } from "./schema.ts";
-import { eq, and, notInArray, sql, lte, inArray } from "drizzle-orm";
+import { eq, and, notInArray, sql, lte, inArray, count, lt } from "drizzle-orm";
 
 export async function getColorsWithAvailableAnimals() {
+  const numberOfAnimals = await db.$count(userAnimals);
+
   const colors = await db
     .select({
       id: userColors.id,
@@ -20,10 +22,9 @@ export async function getColorsWithAvailableAnimals() {
       hex: userColors.hex,
     })
     .from(userColors)
-    .where(
-      sql`(select count(*) from ${users} where ${users.userColor} = ${userColors.id})
-          < (select count(*) from ${userAnimals})`,
-    )
+    .leftJoin(users, eq(users.userColor, userColors.id))
+    .groupBy(userColors.id)
+    .having(lt(count(users.id), numberOfAnimals))
     .orderBy(sql`RANDOM()`)
     .limit(4);
 
