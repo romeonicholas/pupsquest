@@ -44,7 +44,7 @@ import {
   showRiddle,
   setHints,
   resetRiddleScreen,
-} from "./riddle.js";
+} from "./screens/riddle.js";
 
 const actions = {
   "save-and-exit": () => saveAndExit(),
