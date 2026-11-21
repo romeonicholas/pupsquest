@@ -1,9 +1,6 @@
 import { expect, type Page, type Locator } from "@playwright/test";
 
-export async function createUserAndStartRiddles(
-  page: Page,
-  device: "kiosk" | "phone",
-) {
+export async function createNewUser(page: Page, device: "kiosk" | "phone") {
   if (device === "phone") {
     await page.goto("/");
     await page.locator("#visitor-new-game-button").tap();
@@ -37,11 +34,20 @@ export async function createUserAndStartRiddles(
     .tap();
   await page.locator("#transition-to-riddles-button").tap();
 
+  return { colorName, animalName };
+}
+
+export async function createUserAndStartRiddles(
+  page: Page,
+  device: "kiosk" | "phone",
+) {
+  const user = await createNewUser(page, device);
+
   await expect(page.locator("#status-wheel-container")).toContainText(
     "RIDDLE 1",
   );
 
-  return { colorName, animalName };
+  return user;
 }
 
 async function answerWasTapped(page: Page, option: number) {

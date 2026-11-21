@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import {
+  createNewUser,
   createUserAndStartRiddles,
   findAvailableAnswerOption,
   waitUntilTappable,
@@ -451,4 +452,14 @@ test("don't show the riddle screen when erroring on rejoin", async ({
 
   await expect(page.locator("#error-screen")).toBeVisible();
   await expect(page.locator("#riddle-screen")).toBeHidden();
+});
+
+test("show an error on failed riddle fetch", async ({ page }) => {
+  await page.route("**/api/riddles/**", (route) =>
+    route.fulfill({ status: 500 }),
+  );
+
+  await createNewUser(page, "kiosk");
+
+  await expect(page.locator("#error-screen")).toBeVisible();
 });
