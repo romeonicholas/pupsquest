@@ -12,7 +12,7 @@ import {
 } from "./schema.ts";
 import { eq, and, notInArray, sql, lte, inArray } from "drizzle-orm";
 
-export async function get4UserColors() {
+export async function getColorsWithAvailableAnimals() {
   const colors = await db
     .select({
       id: userColors.id,
@@ -20,6 +20,10 @@ export async function get4UserColors() {
       hex: userColors.hex,
     })
     .from(userColors)
+    .where(
+      sql`(select count(*) from ${users} where ${users.userColor} = ${userColors.id})
+          < (select count(*) from ${userAnimals})`,
+    )
     .orderBy(sql`RANDOM()`)
     .limit(4);
 
@@ -219,7 +223,7 @@ export async function getAllAnimalsFromUsersWithColor(colorId: number) {
 }
 
 export async function getColorsAndAnimalsForUserCreation() {
-  const colors = await get4UserColors();
+  const colors = await getColorsWithAvailableAnimals();
 
   const possibleUserCombinations = [];
   for (const color of colors) {
