@@ -134,20 +134,7 @@ export async function rejoinsAs(
 ) {
   await page.locator("#museum-rejoin-game-button").tap();
 
-  await expect(
-    page
-      .locator(".rejoin-color-option", {
-        has: page.locator(`#rejoin-${colorName}-selected`),
-      })
-      .locator(".color-unavailability-indicator"),
-  ).not.toHaveClass(/active/);
-
-  await page
-    .locator(".rejoin-color-option", {
-      has: page.locator(`#rejoin-${colorName}-selected`),
-    })
-    .locator("button")
-    .tap();
+  await selectRejoinColor(page, colorName);
 
   await page
     .locator("#rejoin-animal-options-container .animal-option", {
@@ -161,4 +148,16 @@ export async function rejoinsAs(
   await expect(page.locator("#status-wheel-container")).toContainText(
     "RIDDLE 1",
   );
+}
+
+export async function selectRejoinColor(page: Page, colorName: string) {
+  const colorOption = page.locator(".rejoin-color-option", {
+    has: page.locator(`#rejoin-${colorName}-selected`),
+  });
+
+  await expect(
+    colorOption.locator(".color-unavailability-indicator"),
+  ).not.toHaveClass(/active/);
+
+  await colorOption.locator("button").tap();
 }

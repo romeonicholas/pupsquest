@@ -7,6 +7,7 @@ import {
   tapAnswer,
   playUntilGameOver,
   rejoinsAs,
+  selectRejoinColor,
 } from "./helpers.ts";
 
 test.use({ viewport: { width: 1080, height: 1920 }, hasTouch: true });
@@ -418,16 +419,7 @@ test("show the error screen if animals can't be loaded on the rejoin screen", as
   );
 
   await page.locator("#museum-rejoin-game-button").tap();
-
-  const colorOption = page.locator(".rejoin-color-option", {
-    has: page.locator(`#rejoin-${colorName}-selected`),
-  });
-
-  await expect(
-    colorOption.locator(".color-unavailability-indicator"),
-  ).not.toHaveClass(/active/);
-
-  await colorOption.locator("button").tap();
+  await selectRejoinColor(page, colorName);
 
   await expect(page.locator("#error-screen")).toBeVisible();
 });
@@ -447,16 +439,7 @@ test("don't show the riddle screen when erroring on rejoin", async ({
   );
 
   await page.locator("#museum-rejoin-game-button").tap();
-
-  const colorOption = page.locator(".rejoin-color-option", {
-    has: page.locator(`#rejoin-${colorName}-selected`),
-  });
-
-  await expect(
-    colorOption.locator(".color-unavailability-indicator"),
-  ).not.toHaveClass(/active/);
-
-  await colorOption.locator("button").tap();
+  await selectRejoinColor(page, colorName);
 
   const animalOption = page.locator(
     "#rejoin-animal-options-container .animal-option",
