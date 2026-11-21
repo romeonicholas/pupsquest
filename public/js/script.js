@@ -1308,7 +1308,7 @@ function startOver() {
   }, 600);
 }
 
-function moveScreensForExitPanel(translateY, transition) {
+function moveScreensForExitPanel(transform, transition) {
   const screensMovedByExitPanel = [
     "user-panel",
     "riddle-screen",
@@ -1318,7 +1318,7 @@ function moveScreensForExitPanel(translateY, transition) {
   for (const id of screensMovedByExitPanel) {
     const screen = document.getElementById(id);
     screen.style.transition = transition;
-    screen.style.transform = `translateY(${translateY})`;
+    screen.style.transform = transform;
   }
 }
 
