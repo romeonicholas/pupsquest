@@ -505,6 +505,14 @@ function recordRiddleResult(wasAnsweredCorrectly) {
   );
 }
 
+function slideToRevealAnswer() {
+  riddleTextLayerBackground.style.transition = "transform 1s ease-in";
+  riddleTextLayerBackground.style.transform = "translateY(0px)";
+
+  selectionLayer.style.transition = "transform 1s ease-in";
+  selectionLayer.style.transform = "translateY(1298px)";
+}
+
 async function handleIncorrectGuess(clickedArea, iconIndex) {
   disableAllInput();
   replaceElementToRemoveListeners(clickedArea);
@@ -520,11 +528,7 @@ async function handleIncorrectGuess(clickedArea, iconIndex) {
     recordRiddleResult(false);
     state.currentGameState.currentGuesses = [];
     setTimeout(async () => {
-      riddleTextLayerBackground.style.transition = "transform 1s ease-in";
-      riddleTextLayerBackground.style.transform = "translateY(0px)";
-
-      selectionLayer.style.transition = "transform 1s ease-in";
-      selectionLayer.style.transform = "translateY(1298px)";
+      slideToRevealAnswer();
 
       const gameOver = document.getElementById("game-over");
       const playAgainSheet = document.getElementById("play-again-sheet");
@@ -587,11 +591,7 @@ function handleCorrectGuess(clickedArea, iconIndex) {
   showIconBacking(iconIndex);
 
   setTimeout(() => {
-    riddleTextLayerBackground.style.transition = "transform 1s ease-in";
-    riddleTextLayerBackground.style.transform = "translateY(0px)";
-
-    selectionLayer.style.transition = "transform 1s ease-in";
-    selectionLayer.style.transform = "translateY(1298px)";
+    slideToRevealAnswer();
 
     riddleAnswer.style.display = "flex";
     answerCorrectText.style.display = "block";
