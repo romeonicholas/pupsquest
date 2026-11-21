@@ -13,10 +13,8 @@ import { state } from "./state.js";
 import {
   setUpInactivity,
   startWatchingForInactivity,
-  stopWatchingForInactivity,
   clearInactivityTimers,
   isInactivityScreenShowing,
-  hideInactivityScreen,
   dismissInactivityScreen,
 } from "./inactivity.js";
 import {
