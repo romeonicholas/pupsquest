@@ -830,18 +830,17 @@ function addPrefix(name, prefix) {
   return name;
 }
 
-function clearColorSelectionIndicators(prefix = "") {
+function clearColorSelectionIndicators(prefix) {
   const selectionIcons = document.querySelectorAll(
     `.${addPrefix("color-selection-icon", prefix)}`,
   );
   selectionIcons.forEach((icon) => icon.classList.remove("selected"));
 }
 
-function showColorSelectionIndicator(colorDisplayName, prefix = "") {
-  const prefixStr = prefix ? `${prefix}-` : "";
-
+function showColorSelectionIndicator(colorDisplayName, prefix) {
   const selectedColorIcon = document.getElementById(
-    `${prefixStr}${colorDisplayName}-selected`,
+    addPrefix(`${colorDisplayName}-selected`),
+    prefix,
   );
   selectedColorIcon.classList.add("selected");
 }
