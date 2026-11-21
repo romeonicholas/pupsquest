@@ -414,8 +414,7 @@ async function showRiddle() {
       enableAllInput();
     }, 2000);
   } catch (error) {
-    console.error("Error fetching riddle:", error);
-    enableAllInput();
+    showErrorScreenAndReload();
   }
 }
 
