@@ -26,6 +26,7 @@ import {
 import {
   lowerStartScreen,
   returnToStartScreen,
+  showUsePhoneScreen,
   hideUsePhoneScreen,
 } from "./start.js";
 
@@ -741,15 +742,6 @@ async function showRejoinGameScreen() {
   let isInstant = true;
   updateStatusWheel("ENTER CODE", isInstant);
   setStartOverButtonToActive();
-}
-
-function showUsePhoneScreen() {
-  startWatchingForInactivity();
-
-  document.getElementById("rejoin-screen").style.display = "none";
-  document.getElementById("user-panel").style.display = "none";
-  document.getElementById("exit-container").style.display = "none";
-  document.getElementById("use-phone-screen").style.display = "block";
 }
 
 function renderColorOptions(colorOptions) {

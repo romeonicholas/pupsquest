@@ -1,6 +1,7 @@
 import {
   stopWatchingForInactivity,
   hideInactivityScreen,
+  startWatchingForInactivity,
 } from "./inactivity.js";
 
 export function lowerStartScreen() {
@@ -26,6 +27,15 @@ export function returnToStartScreen() {
 
     hideInactivityScreen();
   }, 10);
+}
+
+export function showUsePhoneScreen() {
+  startWatchingForInactivity();
+
+  document.getElementById("rejoin-screen").style.display = "none";
+  document.getElementById("user-panel").style.display = "none";
+  document.getElementById("exit-container").style.display = "none";
+  document.getElementById("use-phone-screen").style.display = "block";
 }
 
 export function hideUsePhoneScreen() {
