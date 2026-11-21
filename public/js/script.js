@@ -22,8 +22,7 @@ import {
   firstTimeSaveAndExit,
   cancelExit,
   hideExitDetails,
-  setStartOverButtonToActive,
-  setSaveAndExitButtonToActive,
+  showExitOption,
 } from "./exit.js";
 import {
   lowerStartScreen,
@@ -719,7 +718,7 @@ async function showRejoinGameScreen() {
   badgeContainer.style.transform = "translateY(465px)";
   let isInstant = true;
   updateStatusWheel("ENTER CODE", isInstant);
-  setStartOverButtonToActive();
+  showExitOption("start-over");
 }
 
 function renderColorOptions(colorOptions) {
@@ -850,7 +849,7 @@ async function showCreateNewUserScreen() {
   );
   riddleScreenConfirmationDummy.style.display = "block";
 
-  setStartOverButtonToActive();
+  showExitOption("start-over");
 }
 
 function showColorPicker() {
@@ -1037,7 +1036,7 @@ async function confirmAnimal() {
   const riddleScreen = document.getElementById("riddle-screen");
   riddleScreen.style.display = "block";
 
-  setSaveAndExitButtonToActive();
+  showExitOption("save-exit");
 }
 
 async function createUserFromSelection() {
@@ -1163,7 +1162,7 @@ async function confirmRejoinAnimal() {
   const userData = await loginUser();
   setUser(userData);
 
-  setSaveAndExitButtonToActive();
+  showExitOption("save-exit");
 
   const riddleScreenConfirmationDummy = document.getElementById(
     "riddle-screen-confirmation-dummy",
@@ -1250,7 +1249,7 @@ function startOver() {
     hideUsePhoneScreen();
     resetCreateNewUserScreen();
     resetRejoinScreen();
-    setStartOverButtonToActive();
+    showExitOption("start-over");
     enableAllInput();
   }, 600);
 }
@@ -1280,7 +1279,7 @@ async function saveAndExit() {
           resetRiddleScreen();
           resetCreateNewUserScreen();
           resetRejoinScreen();
-          setStartOverButtonToActive();
+          showExitOption("start-over");
           hideExitDetails();
           enableAllInput();
         }, 600);

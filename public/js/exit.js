@@ -45,26 +45,12 @@ export function hideExitDetails() {
   }, 500);
 }
 
-export function setStartOverButtonToActive() {
-  const startOverPanel = document.getElementById("start-over-panel");
-  startOverPanel.classList.add("visible");
-  const saveExitPanel = document.getElementById("save-exit-panel");
-  saveExitPanel.classList.remove("visible");
+export function showExitOption(toShowPrefix) {
+  const toHidePrefix =
+    toShowPrefix === "start-over" ? "save-exit" : "start-over";
+  document.getElementById(`${toShowPrefix}-panel`).classList.add("visible");
+  document.getElementById(`${toShowPrefix}-button`).style.display = "block";
 
-  const startOverButton = document.getElementById("start-over-button");
-  startOverButton.style.display = "block";
-  const saveExitButton = document.getElementById("save-exit-button");
-  saveExitButton.style.display = "none";
-}
-
-export function setSaveAndExitButtonToActive() {
-  const startOverPanel = document.getElementById("start-over-panel");
-  startOverPanel.classList.remove("visible");
-  const saveExitPanel = document.getElementById("save-exit-panel");
-  saveExitPanel.classList.add("visible");
-
-  const startOverButton = document.getElementById("start-over-button");
-  startOverButton.style.display = "none";
-  const saveExitButton = document.getElementById("save-exit-button");
-  saveExitButton.style.display = "block";
+  document.getElementById(`${toHidePrefix}-panel`).classList.remove("visible");
+  document.getElementById(`${toHidePrefix}-button`).style.display = "none";
 }
