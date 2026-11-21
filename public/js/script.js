@@ -1342,21 +1342,8 @@ function firstTimeSaveAndExit() {
 }
 
 function cancelExit() {
-  const userPanel = document.getElementById("user-panel");
-  const riddleScreen = document.getElementById("riddle-screen");
-  const createNewUserScreen = document.getElementById("create-new-user-screen");
-
-  userPanel.style.transition = "transform 800ms ease-in";
-  userPanel.style.transform = "translateY(0px)";
-  riddleScreen.style.transition = "transform 800ms ease-in";
-  riddleScreen.style.transform = "translateY(0px)";
-  createNewUserScreen.style.transition = "transform 800ms ease-in";
-  createNewUserScreen.style.transform = "translateY(0px)";
-
-  const cancelButton = document.getElementById("cancel-button");
-  cancelButton.style.display = "none";
-  const signOutButton = document.getElementById("sign-out-button");
-  signOutButton.style.display = "none";
+  moveScreensForExitPanel("translateY(0px)", "transform 800ms ease-in");
+  setExitButtonsDisplay("none");
 }
 
 function hideExitDetails() {
