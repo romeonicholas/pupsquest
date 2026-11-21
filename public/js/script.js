@@ -833,7 +833,11 @@ async function confirmAnimal() {
   confirmationPanel.style.transition = "transform 1200ms ease-in";
   confirmationPanel.style.transform = "translateY(-1470px)";
 
-  setUser(await createUserFromSelection());
+  const newUser = await createUserFromSelection();
+  setUser(newUser);
+  if (newUser) {
+    setHints(newUser.gameState.hintsRemaining);
+  }
 
   const riddleScreen = document.getElementById("riddle-screen");
   riddleScreen.style.display = "block";
@@ -959,8 +963,11 @@ async function confirmRejoinAnimal() {
   rejoinConfirmationPanel.style.transition = "transform 1s ease-in";
   rejoinConfirmationPanel.style.transform = "translateY(-1200px)";
 
-  const userData = await loginUser();
-  setUser(userData);
+  const existingUser = await loginUser();
+  setUser(existingUser);
+  if (existingUser) {
+    setHints(existingUser.gameState.hintsRemaining);
+  }
 
   showExitOption("save-exit");
 
@@ -1111,5 +1118,4 @@ function setUser(userData) {
 
   state.currentUser = userData.user;
   state.currentGameState = userData.gameState;
-  setHints(state.currentGameState.hintsRemaining);
 }
