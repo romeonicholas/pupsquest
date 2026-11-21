@@ -168,7 +168,6 @@ async function saveAndExit() {
         setUser(null);
         returnToStartAndResetScreens();
       } catch (error) {
-        console.error("Error saving user data:", error);
         showErrorScreenAndReload(error);
       }
     } else {
