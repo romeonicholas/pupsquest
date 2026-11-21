@@ -33,6 +33,31 @@ jobs:
       - run: npm run typecheck
       - run: npm run lint
       - run: npm test
+
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      db:
+        image: postgres:18
+        env:
+          POSTGRES_USER: pupsquest
+          POSTGRES_PASSWORD: pupsquest
+          POSTGRES_DB: pupsquest
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -h localhost -U pupsquest"
+          --health-interval 1s
+          --health-retries 30
+
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
       - uses: actions/cache@v6
         with:
           path: ~/.cache/ms-playwright
