@@ -2,5 +2,12 @@
   "$schema": "./node_modules/oxlint/configuration_schema.json",
   "rules": {
     "typescript/no-floating-promises": "error"
-  }
+  },
+  "overrides": [
+    {
+      "files": ["public/js/**/*.js"],
+      "env": { "browser": true },
+      "rules": { "no-undef": "error" }
+    }
+  ]
 }
