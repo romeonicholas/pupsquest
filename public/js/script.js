@@ -56,7 +56,7 @@ import {
   selectAnimal,
   confirmAnimal,
   resetCreateNewUserScreen,
-} from "./create.js";
+} from "./screens/create.js";
 
 const correctAnswerBacking = "/images/riddles/ui/answer_backing_correct.png";
 const incorrectAnswerBackings = [
@@ -706,20 +706,18 @@ async function rejoinSelectColor(colorDisplayName, colorId) {
 }
 
 async function updateRejoinAnimalContainer(colorId) {
-  try {
-    const animalOptionsContainer = document.getElementById(
-      "rejoin-animal-options-container",
-    );
-    animalOptionsContainer.style.transition = "opacity 300ms ease-out";
-    animalOptionsContainer.style.opacity = "0";
+  const animalOptionsContainer = document.getElementById(
+    "rejoin-animal-options-container",
+  );
+  animalOptionsContainer.style.transition = "opacity 300ms ease-out";
+  animalOptionsContainer.style.opacity = "0";
 
-    const noAnimalsMessage = document.querySelector(
-      ".no-animals-message.rejoin",
-    );
-    noAnimalsMessage.style.transition = "opacity 300ms ease-out";
-    noAnimalsMessage.style.opacity = "0";
+  const noAnimalsMessage = document.querySelector(".no-animals-message.rejoin");
+  noAnimalsMessage.style.transition = "opacity 300ms ease-out";
+  noAnimalsMessage.style.opacity = "0";
 
-    setTimeout(async () => {
+  setTimeout(async () => {
+    try {
       const animals = await getRejoinOptions(colorId);
 
       animalOptionsContainer.replaceChildren(
@@ -739,11 +737,11 @@ async function updateRejoinAnimalContainer(colorId) {
         "scrollable-container",
       );
       scrollableContainer.scrollTop = 0;
-    }, 200);
-  } catch (error) {
-    console.error("Error updating animal container:", error);
-    animalOptionsContainer.style.opacity = "1";
-  }
+    } catch (error) {
+      console.error("Error updating animal container:", error);
+      animalOptionsContainer.style.opacity = "1";
+    }
+  }, 200);
 }
 
 function selectRejoinAnimal(animalDisplayName, animalImgPath) {
