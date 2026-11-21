@@ -1062,6 +1062,11 @@ async function createUserFromSelection() {
   }
 }
 
+function setCurrentStatusText(statusText) {
+  const statusTextCurrent = document.querySelector(".current-text");
+  statusTextCurrent.firstChild.innerText = statusText;
+}
+
 function resetCreateNewUserScreen() {
   const createNewUserScreen = document.getElementById("create-new-user-screen");
   createNewUserScreen.style.display = "none";
@@ -1085,8 +1090,7 @@ function resetCreateNewUserScreen() {
 
   moveBadgeContainer("translateY(0px)", "none");
 
-  const statusTextCurrent = document.querySelector(".current-text");
-  statusTextCurrent.firstChild.innerText = "WELCOME";
+  setCurrentStatusText("WELCOME");
 }
 
 async function rejoinSelectColor(colorDisplayName, colorId) {
@@ -1224,8 +1228,7 @@ function resetRejoinScreen() {
   rejoinConfirmationPanel.style.transitionDelay = "0ms";
   rejoinConfirmationPanel.style.transform = "translateY(0px)";
 
-  const statusTextCurrent = document.querySelector(".current-text");
-  statusTextCurrent.firstChild.innerText = "ENTER CODE";
+  setCurrentStatusText("ENTER CODE");
 }
 
 function resetRiddleScreen() {
