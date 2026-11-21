@@ -56,7 +56,7 @@ import {
   selectAnimal,
   confirmAnimal,
   resetCreateNewUserScreen,
-} from "./create.js";
+} from "./screens/create.js";
 
 const correctAnswerBacking = "/images/riddles/ui/answer_backing_correct.png";
 const incorrectAnswerBackings = [

@@ -1,8 +1,8 @@
-import { getCreationOptions, createUser } from "./api.js";
-import { state, setUser } from "./state.js";
-import { isKiosk } from "./device.js";
-import { startWatchingForInactivity } from "./inactivity.js";
-import { showExitOption } from "./exit.js";
+import { getCreationOptions, createUser } from "../api.js";
+import { state, setUser } from "../state.js";
+import { isKiosk } from "../device.js";
+import { startWatchingForInactivity } from "../inactivity.js";
+import { showExitOption } from "../exit.js";
 import {
   setStatusText,
   updateStatusWheel,
@@ -11,7 +11,7 @@ import {
   updateBadgeText,
   updateBadgeIcon,
   resetBadge,
-} from "./user-panel.js";
+} from "../user-panel.js";
 import {
   clearColorSelectionIndicators,
   showColorSelectionIndicator,
@@ -21,7 +21,7 @@ import {
   getSelectedColorId,
   getSelectedAnimalId,
   buildAnimalOption,
-} from "./picker.js";
+} from "../picker.js";
 
 let onUserCreated = () => {};
 
