@@ -1,5 +1,39 @@
 import { saveGame } from "./api.js";
+
 import { state, setUser } from "./state.js";
+
+import { enableAllInput, disableAllInput } from "./input.js";
+
+import {
+  lowerStartScreen,
+  returnToStartScreen,
+  showUsePhoneScreen,
+  hideUsePhoneScreen,
+} from "./screens/start.js";
+import {
+  setUpCreateScreen,
+  showCreateNewUserScreen,
+  showColorPicker,
+  selectColor,
+  selectAnimal,
+  confirmAnimal,
+  resetCreateNewUserScreen,
+} from "./screens/create.js";
+import {
+  setUpRejoinScreen,
+  showRejoinGameScreen,
+  rejoinSelectColor,
+  selectRejoinAnimal,
+  confirmRejoinAnimal,
+  resetRejoinScreen,
+} from "./screens/rejoin.js";
+import {
+  transitionToRiddleScreen,
+  showRiddle,
+  setHints,
+  resetRiddleScreen,
+} from "./screens/riddle.js";
+
 import {
   setUpInactivity,
   clearInactivityTimers,
@@ -13,43 +47,9 @@ import {
   hideExitDetails,
   showExitOption,
 } from "./exit.js";
-import {
-  lowerStartScreen,
-  returnToStartScreen,
-  showUsePhoneScreen,
-  hideUsePhoneScreen,
-} from "./screens/start.js";
-import { isKiosk } from "./device.js";
-import {
-  setUpCreateScreen,
-  showCreateNewUserScreen,
-  showColorPicker,
-  selectColor,
-  selectAnimal,
-  confirmAnimal,
-  resetCreateNewUserScreen,
-} from "./screens/create.js";
 import { showErrorScreenAndReload } from "./errors.js";
-import {
-  setUpRejoinScreen,
-  showRejoinGameScreen,
-  rejoinSelectColor,
-  selectRejoinAnimal,
-  confirmRejoinAnimal,
-  resetRejoinScreen,
-} from "./screens/rejoin.js";
-import { enableAllInput, disableAllInput } from "./input.js";
-import {
-  transitionToRiddleScreen,
-  showRiddle,
-  setHints,
-  resetRiddleScreen,
-} from "./screens/riddle.js";
 
 const actions = {
-  "save-and-exit": () => saveAndExit(),
-  "cancel-exit": () => cancelExit(),
-  "start-over": () => startOver(),
   "new-game": async () => {
     lowerStartScreen();
     await showCreateNewUserScreen();
@@ -66,21 +66,29 @@ const actions = {
     returnToStartScreen();
     setTimeout(hideUsePhoneScreen, 600);
   },
-  "dismiss-inactivity": () => dismissInactivityScreen(),
-  "handle-inactivity-sign-out": () => handleInactivitySignOut(),
+
   "show-color-picker": () => showColorPicker(),
-  "confirm-animal": () => confirmAnimal(),
-  "transition-to-riddles": () => transitionToRiddleScreen(),
-  "show-riddle": () => showRiddle(),
-  "rejoin-select-color": (button) =>
-    rejoinSelectColor(button.dataset.color, Number(button.dataset.colorId)),
-  "confirm-rejoin-animal": () => confirmRejoinAnimal(),
   "select-color": (button) =>
     selectColor(button.dataset.color, Number(button.dataset.colorId)),
   "select-animal": (button) =>
     selectAnimal(button.dataset.animalName, button.dataset.imgPath),
+  "confirm-animal": () => confirmAnimal(),
+  "transition-to-riddles": () => transitionToRiddleScreen(),
+
+  "rejoin-select-color": (button) =>
+    rejoinSelectColor(button.dataset.color, Number(button.dataset.colorId)),
   "select-rejoin-animal": (button) =>
     selectRejoinAnimal(button.dataset.animalName, button.dataset.imgPath),
+  "confirm-rejoin-animal": () => confirmRejoinAnimal(),
+
+  "show-riddle": () => showRiddle(),
+
+  "start-over": () => startOver(),
+  "save-and-exit": () => saveAndExit(),
+  "cancel-exit": () => cancelExit(),
+
+  "dismiss-inactivity": () => dismissInactivityScreen(),
+  "handle-inactivity-sign-out": () => handleInactivitySignOut(),
 };
 
 document.addEventListener("click", (event) => {
@@ -115,8 +123,7 @@ document.addEventListener("contextmenu", function (e) {
 });
 
 setUpInactivity({
-  isKiosk,
-  onNoResponse: () => (state.currentUser ? saveAndExit() : startOver()),
+  onNoResponse: () => handleInactivitySignOut(),
 });
 
 setUpCreateScreen({
@@ -130,7 +137,7 @@ setUpRejoinScreen({
   },
 });
 
-function startOver() {
+function returnToStartAndResetScreens() {
   returnToStartScreen();
   disableAllInput();
 
@@ -138,9 +145,15 @@ function startOver() {
     hideUsePhoneScreen();
     resetCreateNewUserScreen();
     resetRejoinScreen();
+    resetRiddleScreen();
+    hideExitDetails();
     showExitOption("start-over");
     enableAllInput();
   }, 600);
+}
+
+function startOver() {
+  returnToStartAndResetScreens();
 }
 
 async function saveAndExit() {
@@ -160,24 +173,12 @@ async function saveAndExit() {
         );
 
         setUser(null);
-        returnToStartScreen();
-        disableAllInput();
-
-        setTimeout(() => {
-          hideUsePhoneScreen();
-          resetRiddleScreen();
-          resetCreateNewUserScreen();
-          resetRejoinScreen();
-          showExitOption("start-over");
-          hideExitDetails();
-          enableAllInput();
-        }, 600);
+        returnToStartAndResetScreens();
       } catch (error) {
-        console.error("Error saving user data:", error);
         showErrorScreenAndReload(error);
       }
     } else {
-      console.error("No user or game state to save.");
+      startOver();
     }
   }
 }

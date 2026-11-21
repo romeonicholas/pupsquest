@@ -1,3 +1,5 @@
+import { isKiosk } from "./device.js";
+
 const INACTIVITY_THRESHOLD = 25000;
 const INACTIVITY_CONFIRMATION_THRESHOLD = 8000;
 
@@ -5,12 +7,11 @@ let inactivityTimeout;
 let inactivityConfirmationTimeout;
 
 let isWatchingForInactivity = false;
-let isInactivityEnabled = false;
+const isInactivityEnabled = isKiosk;
 
 let onNoResponse = () => {};
 
 export function setUpInactivity(options) {
-  isInactivityEnabled = options.isKiosk;
   onNoResponse = options.onNoResponse;
 
   document.addEventListener("mousemove", restartInactivityTimer);
