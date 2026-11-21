@@ -636,11 +636,6 @@ function getTranslateY(element) {
   return translateY;
 }
 
-function setNextStatusText(nextText) {
-  const nextStatusText = document.querySelector(".next-text .status-text");
-  nextStatusText.innerText = nextText;
-}
-
 function updateStatusWheel(wheelText, instant = false, additionalClass) {
   setNextStatusText(wheelText);
   let currentStatusText = document.querySelector(".current-text");
