@@ -1,18 +1,9 @@
 import { saveGame } from "./api.js";
+
 import { state, setUser } from "./state.js";
-import {
-  setUpInactivity,
-  clearInactivityTimers,
-  isInactivityScreenShowing,
-  dismissInactivityScreen,
-} from "./inactivity.js";
-import {
-  shouldShowExitPanelDetails,
-  firstTimeSaveAndExit,
-  cancelExit,
-  hideExitDetails,
-  showExitOption,
-} from "./exit.js";
+
+import { enableAllInput, disableAllInput } from "./input.js";
+
 import {
   lowerStartScreen,
   returnToStartScreen,
@@ -28,7 +19,6 @@ import {
   confirmAnimal,
   resetCreateNewUserScreen,
 } from "./screens/create.js";
-import { showErrorScreenAndReload } from "./errors.js";
 import {
   setUpRejoinScreen,
   showRejoinGameScreen,
@@ -37,7 +27,6 @@ import {
   confirmRejoinAnimal,
   resetRejoinScreen,
 } from "./screens/rejoin.js";
-import { enableAllInput, disableAllInput } from "./input.js";
 import {
   transitionToRiddleScreen,
   showRiddle,
@@ -45,10 +34,22 @@ import {
   resetRiddleScreen,
 } from "./screens/riddle.js";
 
+import {
+  setUpInactivity,
+  clearInactivityTimers,
+  isInactivityScreenShowing,
+  dismissInactivityScreen,
+} from "./inactivity.js";
+import {
+  shouldShowExitPanelDetails,
+  firstTimeSaveAndExit,
+  cancelExit,
+  hideExitDetails,
+  showExitOption,
+} from "./exit.js";
+import { showErrorScreenAndReload } from "./errors.js";
+
 const actions = {
-  "save-and-exit": () => saveAndExit(),
-  "cancel-exit": () => cancelExit(),
-  "start-over": () => startOver(),
   "new-game": async () => {
     lowerStartScreen();
     await showCreateNewUserScreen();
@@ -65,21 +66,29 @@ const actions = {
     returnToStartScreen();
     setTimeout(hideUsePhoneScreen, 600);
   },
-  "dismiss-inactivity": () => dismissInactivityScreen(),
-  "handle-inactivity-sign-out": () => handleInactivitySignOut(),
+
   "show-color-picker": () => showColorPicker(),
-  "confirm-animal": () => confirmAnimal(),
-  "transition-to-riddles": () => transitionToRiddleScreen(),
-  "show-riddle": () => showRiddle(),
-  "rejoin-select-color": (button) =>
-    rejoinSelectColor(button.dataset.color, Number(button.dataset.colorId)),
-  "confirm-rejoin-animal": () => confirmRejoinAnimal(),
   "select-color": (button) =>
     selectColor(button.dataset.color, Number(button.dataset.colorId)),
   "select-animal": (button) =>
     selectAnimal(button.dataset.animalName, button.dataset.imgPath),
+  "confirm-animal": () => confirmAnimal(),
+  "transition-to-riddles": () => transitionToRiddleScreen(),
+
+  "rejoin-select-color": (button) =>
+    rejoinSelectColor(button.dataset.color, Number(button.dataset.colorId)),
   "select-rejoin-animal": (button) =>
     selectRejoinAnimal(button.dataset.animalName, button.dataset.imgPath),
+  "confirm-rejoin-animal": () => confirmRejoinAnimal(),
+
+  "show-riddle": () => showRiddle(),
+
+  "start-over": () => startOver(),
+  "save-and-exit": () => saveAndExit(),
+  "cancel-exit": () => cancelExit(),
+
+  "dismiss-inactivity": () => dismissInactivityScreen(),
+  "handle-inactivity-sign-out": () => handleInactivitySignOut(),
 };
 
 document.addEventListener("click", (event) => {
