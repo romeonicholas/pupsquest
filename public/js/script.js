@@ -823,11 +823,16 @@ function showColorPicker() {
   }, 800);
 }
 
-function clearColorSelectionIndicators(prefix = "") {
-  const prefixStr = prefix ? `${prefix}-` : "";
+function addPrefix(name, prefix) {
+  if (prefix) {
+    return `${prefix}-${name}`;
+  }
+  return name;
+}
 
+function clearColorSelectionIndicators(prefix = "") {
   const selectionIcons = document.querySelectorAll(
-    `.${prefixStr}color-selection-icon`,
+    `.${addPrefix("color-selection-icon", prefix)}`,
   );
   selectionIcons.forEach((icon) => icon.classList.remove("selected"));
 }
