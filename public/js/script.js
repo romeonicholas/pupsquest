@@ -636,20 +636,13 @@ function getTranslateY(element) {
   return translateY;
 }
 
-function updateNextStatusText(nextText) {
-  const nextStatusText = document.querySelector(".next-text");
-  const spanElement = nextStatusText.querySelector(".status-text");
-
-  if (spanElement) {
-    spanElement.innerText = nextText;
-  } else {
-    console.error("Could not find .status-text inside nextStatusText");
-  }
-  nextStatusText.firstChild.innerText = nextText;
+function setNextStatusText(nextText) {
+  const nextStatusText = document.querySelector(".next-text .status-text");
+  nextStatusText.innerText = nextText;
 }
 
 function updateStatusWheel(wheelText, instant = false, additionalClass) {
-  updateNextStatusText(wheelText);
+  setNextStatusText(wheelText);
   let currentStatusText = document.querySelector(".current-text");
   let nextStatusText = document.querySelector(".next-text");
 
@@ -1063,8 +1056,19 @@ async function createUserFromSelection() {
 }
 
 function setCurrentStatusText(statusText) {
-  const statusTextCurrent = document.querySelector(".current-text");
-  statusTextCurrent.firstChild.innerText = statusText;
+  const currentStatusText = document.querySelector(
+    ".current-text .status-text",
+  );
+  currentStatusText.innerText = statusText;
+}
+
+function setNextStatusText(nextText) {
+  const nextStatusText = document.querySelector(".next-text .status-text");
+  if (nextStatusText) {
+    nextStatusText.innerText = nextText;
+  } else {
+    console.error("Could not find .status-text inside .next-text");
+  }
 }
 
 function resetCreateNewUserScreen() {
