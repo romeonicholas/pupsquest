@@ -2,7 +2,7 @@ import {
   stopWatchingForInactivity,
   hideInactivityScreen,
   startWatchingForInactivity,
-} from "./inactivity.js";
+} from "../inactivity.js";
 
 export function lowerStartScreen() {
   const startScreen = document.getElementById("start-screen");

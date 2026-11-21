@@ -27,7 +27,7 @@ import {
   returnToStartScreen,
   showUsePhoneScreen,
   hideUsePhoneScreen,
-} from "./start.js";
+} from "./screens/start.js";
 import {
   setStatusText,
   updateStatusWheel,
