@@ -355,7 +355,6 @@ function transitionToRiddleScreen() {
   );
   rejoinUserPanelShadow.style.display = "none";
 
-  const riddleScreen = document.getElementById("riddle-screen");
   riddleScreen.style.display = "block";
 
   const nextRiddleSheet = document.getElementById("next-riddle-sheet");
@@ -564,7 +563,6 @@ async function handleIncorrectGuess(clickedArea, iconIndex) {
         playAgainSheet.style.display = "none";
         nextRiddleSheet.style.display = "block";
 
-        const answerChoiceText = document.getElementById("answer-choice-text");
         answerChoiceText.innerText = `${answerChoiceText.innerText}.`;
       }
       enableAllInput();
@@ -598,7 +596,6 @@ function handleCorrectGuess(clickedArea, iconIndex) {
     riddleAnswer.style.display = "flex";
     answerCorrectText.style.display = "block";
 
-    const answerChoiceText = document.getElementById("answer-choice-text");
     answerChoiceText.innerText = `${answerChoiceText.innerText}!`;
 
     enableAllInput();
