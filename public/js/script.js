@@ -57,6 +57,7 @@ import {
   confirmAnimal,
   resetCreateNewUserScreen,
 } from "./screens/create.js";
+import { showErrorScreenAndReload } from "./errors.js";
 
 const correctAnswerBacking = "/images/riddles/ui/answer_backing_correct.png";
 const incorrectAnswerBackings = [
@@ -175,15 +176,6 @@ setUpInactivity({
 setUpCreateScreen({
   onUserCreated: (newUser) => setHints(newUser.gameState.hintsRemaining),
 });
-
-function showErrorScreenAndReload(error) {
-  console.error("An error occurred:", error);
-  const errorScreen = document.getElementById("error-screen");
-  errorScreen.style.display = "block";
-  setTimeout(() => {
-    window.location.reload();
-  }, 6000);
-}
 
 function closeRiddleContainerFromBottom() {
   selectionLayer.style.transform = "translateY(0)";
