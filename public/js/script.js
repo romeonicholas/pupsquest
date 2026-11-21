@@ -49,8 +49,7 @@ import {
   getSelectedAnimalId,
   buildAnimalOption,
 } from "./picker.js";
-
-const isKiosk = document.body.dataset.device === "kiosk";
+import { isKiosk } from "./device.js";
 
 const correctAnswerBacking = "/images/riddles/ui/answer_backing_correct.png";
 const incorrectAnswerBackings = [
