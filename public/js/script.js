@@ -59,20 +59,9 @@ const couplet1 = document.querySelector(".couplet-1");
 const couplet2 = document.querySelector(".couplet-2");
 const couplet3 = document.querySelector(".couplet-3");
 
-const iconFront1 = document.getElementById("icon-front-1");
-const iconFront2 = document.getElementById("icon-front-2");
-const iconFront3 = document.getElementById("icon-front-3");
-const iconFront4 = document.getElementById("icon-front-4");
-
-const iconBack1 = document.getElementById("icon-back-1");
-const iconBack2 = document.getElementById("icon-back-2");
-const iconBack3 = document.getElementById("icon-back-3");
-const iconBack4 = document.getElementById("icon-back-4");
-
-const optionText1 = document.getElementById("option-text-1");
-const optionText2 = document.getElementById("option-text-2");
-const optionText3 = document.getElementById("option-text-3");
-const optionText4 = document.getElementById("option-text-4");
+const iconFronts = buildNumberedRiddleElements("icon-front");
+const iconBacks = buildNumberedRiddleElements("icon-back");
+const optionTexts = buildNumberedRiddleElements("option-text");
 
 const riddleAnswer = document.getElementById("riddle-answer");
 const answerCorrectText = document.getElementById("answer-correct-text");
@@ -171,6 +160,16 @@ setUpRejoinScreen({
   },
 });
 
+function buildNumberedRiddleElements(prefix) {
+  const riddleElements = [];
+  for (let number = 1; number <= 4; number++) {
+    const id = `${prefix}-${number}`;
+    riddleElements.push(document.getElementById(id));
+  }
+
+  return riddleElements;
+}
+
 function closeRiddleContainerFromBottom() {
   selectionLayer.style.transform = "translateY(0)";
   riddleContainer.style.transform = "translateY(-1290px)";
@@ -264,28 +263,24 @@ function findCorrectAnswerIndex(shuffledChoices) {
 }
 
 function updateSelectionIcons(shuffledChoices) {
-  const icons = [iconFront1, iconFront2, iconFront3, iconFront4];
-  icons.forEach((icon, index) => {
+  iconFronts.forEach((icon, index) => {
     icon.src = shuffledChoices[index].imgPath;
   });
 }
 
 function updateSelectionTexts(shuffledChoices) {
-  const texts = [optionText1, optionText2, optionText3, optionText4];
-  texts.forEach((text, index) => {
+  optionTexts.forEach((text, index) => {
     text.innerText = shuffledChoices[index].display;
   });
 }
 
 function updateIconBackings(correctAnswerIndex) {
-  const iconBackings = [iconBack1, iconBack2, iconBack3, iconBack4];
-
   const shuffledIncorrectBackings = [...incorrectAnswerBackings].sort(
     () => Math.random() - 0.5,
   );
   let incorrectIconIndex = 0;
 
-  iconBackings.forEach((iconBacking, index) => {
+  iconBacks.forEach((iconBacking, index) => {
     if (index === correctAnswerIndex) {
       iconBacking.src = correctAnswerBacking;
     } else {
@@ -342,8 +337,7 @@ function replaceElementToRemoveListeners(element) {
 }
 
 function resetIconPositions() {
-  const icons = [iconFront1, iconFront2, iconFront3, iconFront4];
-  icons.forEach((icon) => {
+  iconFronts.forEach((icon) => {
     icon.style.transition = "none";
     icon.style.transform = "translateY(0)";
   });
@@ -459,8 +453,7 @@ function showNextHint() {
 }
 
 function showIconBacking(iconIndex) {
-  const icons = [iconFront1, iconFront2, iconFront3, iconFront4];
-  const clickedIcon = icons[iconIndex];
+  const clickedIcon = iconFronts[iconIndex];
   const currentY = getTranslateY(clickedIcon);
   clickedIcon.style.transition =
     "transform 1s cubic-bezier(0.54, -0.16, 0.735, 0.045)";
