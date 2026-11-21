@@ -8,7 +8,7 @@ const MAX_LENGTH = 2000;
 router.post("/api/browser-errors", (req, res) => {
   const message = req.body?.message;
 
-  if (!message) {
+  if (typeof message !== "string" || !message) {
     return res.status(400).json({ error: "Missing error message" });
   }
 
