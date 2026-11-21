@@ -116,10 +116,12 @@ export async function confirmAnimal() {
   confirmationPanel.style.transform = "translateY(-1470px)";
 
   const newUser = await createUserFromSelection();
-  setUser(newUser);
-  if (newUser) {
-    onUserCreated(newUser);
+  if (!newUser) {
+    return;
   }
+
+  setUser(newUser);
+  onUserCreated(newUser);
 
   const riddleScreen = document.getElementById("riddle-screen");
   riddleScreen.style.display = "block";
