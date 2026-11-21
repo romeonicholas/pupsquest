@@ -48,6 +48,7 @@ export function hideExitDetails() {
 export function showExitOption(toShowPrefix) {
   const toHidePrefix =
     toShowPrefix === "start-over" ? "save-exit" : "start-over";
+
   document.getElementById(`${toShowPrefix}-panel`).classList.add("visible");
   document.getElementById(`${toShowPrefix}-button`).style.display = "block";
 

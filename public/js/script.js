@@ -30,6 +30,15 @@ import {
   showUsePhoneScreen,
   hideUsePhoneScreen,
 } from "./start.js";
+import {
+  setStatusText,
+  updateStatusWheel,
+  moveBadgeContainer,
+  updateBadgeColor,
+  updateBadgeText,
+  updateBadgeIcon,
+  resetBadge,
+} from "./user-panel.js";
 
 const isKiosk = document.body.dataset.device === "kiosk";
 
@@ -41,7 +50,6 @@ const incorrectAnswerBackings = [
 ];
 
 const riddleScreen = document.getElementById("riddle-screen");
-const statusWheelContainer = document.getElementById("status-wheel-container");
 const riddleHeadline = document.getElementById("riddle-headline");
 const couplet1 = document.querySelector(".couplet-1");
 const couplet2 = document.querySelector(".couplet-2");
@@ -636,58 +644,6 @@ function getTranslateY(element) {
   return translateY;
 }
 
-function updateNextStatusText(nextText) {
-  const nextStatusText = document.querySelector(".next-text");
-  const spanElement = nextStatusText.querySelector(".status-text");
-
-  if (spanElement) {
-    spanElement.innerText = nextText;
-  } else {
-    console.error("Could not find .status-text inside nextStatusText");
-  }
-  nextStatusText.firstChild.innerText = nextText;
-}
-
-function updateStatusWheel(wheelText, instant = false, additionalClass) {
-  updateNextStatusText(wheelText);
-  let currentStatusText = document.querySelector(".current-text");
-  let nextStatusText = document.querySelector(".next-text");
-
-  if (instant) {
-    currentStatusText.style.transition = "none";
-    nextStatusText.style.transition = "none";
-  } else {
-    currentStatusText.style.transition = "transform 800ms ease-in";
-    nextStatusText.style.transition = "transform 800ms ease-in";
-  }
-
-  if (additionalClass) {
-    nextStatusText.classList.add(additionalClass);
-  }
-
-  currentStatusText.classList.remove("current-text");
-  currentStatusText.classList.add("previous-text");
-  nextStatusText.classList.remove("next-text");
-  nextStatusText.classList.add("current-text");
-
-  currentStatusText = nextStatusText;
-  nextStatusText = document.createElement("div");
-  nextStatusText.className = "status-text-wrapper next-text";
-  nextStatusText.innerHTML = '<span class="status-text"></span>';
-  statusWheelContainer.appendChild(nextStatusText);
-
-  removeOldStatusTexts();
-}
-
-function removeOldStatusTexts() {
-  setTimeout(() => {
-    const previousTexts = document.querySelectorAll(".previous-text");
-    previousTexts.forEach((element) => {
-      element.remove();
-    });
-  }, 1000);
-}
-
 async function showRejoinGameScreen() {
   try {
     const usedColors = await getUsedColors();
@@ -713,9 +669,7 @@ async function showRejoinGameScreen() {
   document.getElementById("exit-container").style.display = "block";
 
   resetBadge();
-  const badgeContainer = document.getElementById("badge-container");
-  badgeContainer.style.transition = "none";
-  badgeContainer.style.transform = "translateY(465px)";
+  moveBadgeContainer("translateY(465px)", "none");
   let isInstant = true;
   updateStatusWheel("ENTER CODE", isInstant);
   showExitOption("start-over");
@@ -865,9 +819,7 @@ function showColorPicker() {
 
   setTimeout(() => {
     updateStatusWheel("CODE NAME");
-    const badgeContainer = document.getElementById("badge-container");
-    badgeContainer.style.transition = "transform 800ms ease-in";
-    badgeContainer.style.transform = "translateY(465px)";
+    moveBadgeContainer("translateY(465px)", "transform 800ms ease-in");
   }, 800);
 }
 
@@ -887,22 +839,6 @@ function showColorSelectionIndicator(colorDisplayName, prefix = "") {
     `${prefixStr}${colorDisplayName}-selected`,
   );
   selectedColorIcon.classList.add("selected");
-}
-
-function updateBadgeColor(colorDisplayName) {
-  const badgeBase = document.getElementById("badge-base");
-  badgeBase.src = `/images/users/badges/${colorDisplayName}.png`;
-}
-
-function resetBadge() {
-  const badgeBase = document.getElementById("badge-base");
-  badgeBase.src = "/images/users/badges/gray.png";
-
-  const badgeIcons = document.querySelectorAll(".badge-icon");
-  badgeIcons.forEach((icon) => icon.classList.remove("visible"));
-
-  const badgeTextContainer = document.getElementById("badge-text-container");
-  badgeTextContainer.classList.remove("visible");
 }
 
 function hideConfirmationPanel() {
@@ -949,27 +885,6 @@ function updateAnimalSelection(animalDisplayName, prefix = "") {
   animalSelectionIndicator?.classList.add("selected");
 }
 
-let currentBadgeIndex = 1;
-
-function updateBadgeIcon(animalImgPath) {
-  const currentIcon = document.getElementById(
-    `badge-icon-${currentBadgeIndex}`,
-  );
-  const nextIndex = currentBadgeIndex === 1 ? 2 : 1;
-  const nextIcon = document.getElementById(`badge-icon-${nextIndex}`);
-
-  nextIcon.src = animalImgPath;
-
-  if (currentIcon.classList.contains("visible")) {
-    currentIcon.classList.remove("visible");
-    nextIcon.classList.add("visible");
-  } else {
-    nextIcon.classList.add("visible");
-  }
-
-  currentBadgeIndex = nextIndex;
-}
-
 function getSelectedColor(prefix = "") {
   const prefixStr = prefix ? `${prefix}-` : "";
   const selectedColorIcon = document.querySelector(
@@ -995,14 +910,6 @@ function getSelectedColorId(prefix = "") {
     : null;
 
   return colorId;
-}
-
-function updateBadgeText(color, animalDisplayName) {
-  const badgeText = document.getElementById("color-animal-text");
-  badgeText.innerText = `${color} ${animalDisplayName}`;
-
-  const badgeTextContainer = document.getElementById("badge-text-container");
-  badgeTextContainer.classList.add("visible");
 }
 
 function selectAnimal(animalDisplayName, animalImgPath) {
@@ -1075,16 +982,14 @@ function resetCreateNewUserScreen() {
     "user-creation-instructions",
   );
   const colorPicker = document.getElementById("color-picker");
-  const badgeContainer = document.getElementById("badge-container");
   const confirmationPanel = document.getElementById("confirmation-panel");
 
   userCreationInstructions.style.transform = "translateY(0px)";
   colorPicker.style.transform = "translateY(0px)";
-  badgeContainer.style.transform = "translateY(0px)";
   confirmationPanel.style.transform = "translateY(0px)";
 
-  const statusTextCurrent = document.querySelector(".current-text");
-  statusTextCurrent.firstChild.innerText = "WELCOME";
+  moveBadgeContainer("translateY(0px)", "none");
+  setStatusText("current", "WELCOME");
 }
 
 async function rejoinSelectColor(colorDisplayName, colorId) {
@@ -1222,8 +1127,7 @@ function resetRejoinScreen() {
   rejoinConfirmationPanel.style.transitionDelay = "0ms";
   rejoinConfirmationPanel.style.transform = "translateY(0px)";
 
-  const statusTextCurrent = document.querySelector(".current-text");
-  statusTextCurrent.firstChild.innerText = "ENTER CODE";
+  setStatusText("current", "ENTER CODE");
 }
 
 function resetRiddleScreen() {
