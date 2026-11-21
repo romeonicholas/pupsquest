@@ -130,7 +130,7 @@ setUpRejoinScreen({
   },
 });
 
-function startOver() {
+function returnToStartAndResetScreens() {
   returnToStartScreen();
   disableAllInput();
 
@@ -138,9 +138,15 @@ function startOver() {
     hideUsePhoneScreen();
     resetCreateNewUserScreen();
     resetRejoinScreen();
+    resetRiddleScreen();
+    hideExitDetails();
     showExitOption("start-over");
     enableAllInput();
   }, 600);
+}
+
+function startOver() {
+  returnToStartAndResetScreens();
 }
 
 async function saveAndExit() {
@@ -160,18 +166,7 @@ async function saveAndExit() {
         );
 
         setUser(null);
-        returnToStartScreen();
-        disableAllInput();
-
-        setTimeout(() => {
-          hideUsePhoneScreen();
-          resetRiddleScreen();
-          resetCreateNewUserScreen();
-          resetRejoinScreen();
-          showExitOption("start-over");
-          hideExitDetails();
-          enableAllInput();
-        }, 600);
+        returnToStartAndResetScreens();
       } catch (error) {
         console.error("Error saving user data:", error);
         showErrorScreenAndReload(error);
