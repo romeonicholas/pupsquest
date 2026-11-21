@@ -9,7 +9,7 @@ import {
   saveGame,
   createUser,
 } from "./api.js";
-import { state } from "./state.js";
+import { state, setUser } from "./state.js";
 import {
   setUpInactivity,
   startWatchingForInactivity,
@@ -1107,15 +1107,4 @@ async function handleInactivitySignOut() {
   } else {
     startOver();
   }
-}
-
-function setUser(userData) {
-  if (!userData) {
-    state.currentUser = null;
-    state.currentGameState = null;
-    return;
-  }
-
-  state.currentUser = userData.user;
-  state.currentGameState = userData.gameState;
 }
