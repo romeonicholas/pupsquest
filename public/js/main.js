@@ -116,7 +116,7 @@ document.addEventListener("contextmenu", function (e) {
 
 setUpInactivity({
   isKiosk,
-  onNoResponse: () => (state.currentUser ? saveAndExit() : startOver()),
+  onNoResponse: () => handleInactivitySignOut(),
 });
 
 setUpCreateScreen({
