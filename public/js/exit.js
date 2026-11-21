@@ -44,3 +44,13 @@ export function hideExitDetails() {
     setExitButtonsDisplay("none");
   }, 500);
 }
+
+export function showExitOption(toShowPrefix) {
+  const toHidePrefix =
+    toShowPrefix === "start-over" ? "save-exit" : "start-over";
+  document.getElementById(`${toShowPrefix}-panel`).classList.add("visible");
+  document.getElementById(`${toShowPrefix}-button`).style.display = "block";
+
+  document.getElementById(`${toHidePrefix}-panel`).classList.remove("visible");
+  document.getElementById(`${toHidePrefix}-button`).style.display = "none";
+}

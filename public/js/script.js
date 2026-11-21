@@ -13,10 +13,8 @@ import { state } from "./state.js";
 import {
   setUpInactivity,
   startWatchingForInactivity,
-  stopWatchingForInactivity,
   clearInactivityTimers,
   isInactivityScreenShowing,
-  hideInactivityScreen,
   dismissInactivityScreen,
 } from "./inactivity.js";
 import {
@@ -24,7 +22,14 @@ import {
   firstTimeSaveAndExit,
   cancelExit,
   hideExitDetails,
+  showExitOption,
 } from "./exit.js";
+import {
+  lowerStartScreen,
+  returnToStartScreen,
+  showUsePhoneScreen,
+  hideUsePhoneScreen,
+} from "./start.js";
 
 const isKiosk = document.body.dataset.device === "kiosk";
 
@@ -88,7 +93,7 @@ const actions = {
   },
   "return-to-start": () => {
     returnToStartScreen();
-    setUsePhoneScreenToDisplayNone();
+    setTimeout(hideUsePhoneScreen, 600);
   },
   "dismiss-inactivity": () => dismissInactivityScreen(),
   "handle-inactivity-sign-out": () => handleInactivitySignOut(),
@@ -683,62 +688,6 @@ function removeOldStatusTexts() {
   }, 1000);
 }
 
-function setStartOverButtonToActive() {
-  const startOverPanel = document.getElementById("start-over-panel");
-  startOverPanel.classList.add("visible");
-  const saveExitPanel = document.getElementById("save-exit-panel");
-  saveExitPanel.classList.remove("visible");
-
-  const startOverButton = document.getElementById("start-over-button");
-  startOverButton.style.display = "block";
-  const saveExitButton = document.getElementById("save-exit-button");
-  saveExitButton.style.display = "none";
-}
-
-function setSaveAndExitButtonToActive() {
-  const startOverPanel = document.getElementById("start-over-panel");
-  startOverPanel.classList.remove("visible");
-  const saveExitPanel = document.getElementById("save-exit-panel");
-  saveExitPanel.classList.add("visible");
-
-  const startOverButton = document.getElementById("start-over-button");
-  startOverButton.style.display = "none";
-  const saveExitButton = document.getElementById("save-exit-button");
-  saveExitButton.style.display = "block";
-}
-
-function lowerStartScreen() {
-  const startScreen = document.getElementById("start-screen");
-  startScreen.style.transition = "transform 1800ms ease-in";
-  startScreen.style.transform = "translateY(1920px)";
-}
-
-function returnToStartScreen() {
-  stopWatchingForInactivity();
-  const startScreen = document.getElementById("start-screen");
-  startScreen.style.display = "block";
-
-  startScreen.style.transition = "none";
-  startScreen.style.transform = "translateY(0)";
-  startScreen.style.opacity = "0";
-
-  void startScreen.offsetHeight;
-
-  setTimeout(() => {
-    startScreen.style.transition = "opacity 500ms ease-in";
-    startScreen.style.opacity = "1";
-
-    hideInactivityScreen();
-  }, 10);
-}
-
-function setUsePhoneScreenToDisplayNone() {
-  setTimeout(() => {
-    const usePhoneScreen = document.getElementById("use-phone-screen");
-    usePhoneScreen.style.display = "none";
-  }, 600);
-}
-
 async function showRejoinGameScreen() {
   try {
     const usedColors = await getUsedColors();
@@ -769,16 +718,7 @@ async function showRejoinGameScreen() {
   badgeContainer.style.transform = "translateY(465px)";
   let isInstant = true;
   updateStatusWheel("ENTER CODE", isInstant);
-  setStartOverButtonToActive();
-}
-
-function showUsePhoneScreen() {
-  startWatchingForInactivity();
-
-  document.getElementById("rejoin-screen").style.display = "none";
-  document.getElementById("user-panel").style.display = "none";
-  document.getElementById("exit-container").style.display = "none";
-  document.getElementById("use-phone-screen").style.display = "block";
+  showExitOption("start-over");
 }
 
 function renderColorOptions(colorOptions) {
@@ -909,7 +849,7 @@ async function showCreateNewUserScreen() {
   );
   riddleScreenConfirmationDummy.style.display = "block";
 
-  setStartOverButtonToActive();
+  showExitOption("start-over");
 }
 
 function showColorPicker() {
@@ -1096,7 +1036,7 @@ async function confirmAnimal() {
   const riddleScreen = document.getElementById("riddle-screen");
   riddleScreen.style.display = "block";
 
-  setSaveAndExitButtonToActive();
+  showExitOption("save-exit");
 }
 
 async function createUserFromSelection() {
@@ -1222,7 +1162,7 @@ async function confirmRejoinAnimal() {
   const userData = await loginUser();
   setUser(userData);
 
-  setSaveAndExitButtonToActive();
+  showExitOption("save-exit");
 
   const riddleScreenConfirmationDummy = document.getElementById(
     "riddle-screen-confirmation-dummy",
@@ -1306,10 +1246,10 @@ function startOver() {
   disableAllInput();
 
   setTimeout(() => {
-    document.getElementById("use-phone-screen").style.display = "none";
+    hideUsePhoneScreen();
     resetCreateNewUserScreen();
     resetRejoinScreen();
-    setStartOverButtonToActive();
+    showExitOption("start-over");
     enableAllInput();
   }, 600);
 }
@@ -1335,11 +1275,11 @@ async function saveAndExit() {
         disableAllInput();
 
         setTimeout(() => {
-          document.getElementById("use-phone-screen").style.display = "none";
+          hideUsePhoneScreen();
           resetRiddleScreen();
           resetCreateNewUserScreen();
           resetRejoinScreen();
-          setStartOverButtonToActive();
+          showExitOption("start-over");
           hideExitDetails();
           enableAllInput();
         }, 600);
