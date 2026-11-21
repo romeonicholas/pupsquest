@@ -1309,7 +1309,7 @@ function startOver() {
 }
 
 function moveScreensForExitPanel(translateY, transition) {
-  screensMovedByExitPanel = [
+  const screensMovedByExitPanel = [
     "user-panel",
     "riddle-screen",
     "create-new-user-screen",
