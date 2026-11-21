@@ -88,7 +88,7 @@ const actions = {
   },
   "return-to-start": () => {
     returnToStartScreen();
-    setUsePhoneScreenToDisplayNone();
+    setTimeout(hideUsePhoneScreen, 600);
   },
   "dismiss-inactivity": () => dismissInactivityScreen(),
   "handle-inactivity-sign-out": () => handleInactivitySignOut(),
@@ -735,12 +735,6 @@ function returnToStartScreen() {
 function hideUsePhoneScreen() {
   const usePhoneScreen = document.getElementById("use-phone-screen");
   usePhoneScreen.style.display = "none";
-}
-
-function setUsePhoneScreenToDisplayNone() {
-  setTimeout(() => {
-    hideUsePhoneScreen;
-  }, 600);
 }
 
 async function showRejoinGameScreen() {
