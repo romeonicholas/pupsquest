@@ -1,6 +1,9 @@
 import { expect, type Page, type Locator } from "@playwright/test";
 
-export async function createNewUser(page: Page, device: "kiosk" | "phone") {
+export async function selectNewUserColorAndAnimal(
+  page: Page,
+  device: "kiosk" | "phone",
+) {
   if (device === "phone") {
     await page.goto("/");
     await page.locator("#visitor-new-game-button").tap();
@@ -29,12 +32,18 @@ export async function createNewUser(page: Page, device: "kiosk" | "phone") {
 
   await expect(page.locator("#color-animal-text")).toContainText(animalName);
 
+  return { colorName, animalName };
+}
+
+export async function createNewUser(page: Page, device: "kiosk" | "phone") {
+  const user = await selectNewUserColorAndAnimal(page, device);
+
   await page
     .locator("#create-new-user-screen #animal-confirmation-button")
     .tap();
   await page.locator("#transition-to-riddles-button").tap();
 
-  return { colorName, animalName };
+  return user;
 }
 
 export async function createUserAndStartRiddles(

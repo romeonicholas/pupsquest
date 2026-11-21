@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import {
+  selectNewUserColorAndAnimal,
   createNewUser,
   createUserAndStartRiddles,
   findAvailableAnswerOption,
@@ -462,4 +463,18 @@ test("show an error on failed riddle fetch", async ({ page }) => {
   await createNewUser(page, "kiosk");
 
   await expect(page.locator("#error-screen")).toBeVisible();
+});
+
+test("show an error if user creation fails, don't show riddle screen", async ({
+  page,
+}) => {
+  await page.route("**/api/users", (route) => route.fulfill({ status: 500 }));
+
+  await selectNewUserColorAndAnimal(page, "kiosk");
+  await page
+    .locator("#create-new-user-screen #animal-confirmation-button")
+    .tap();
+
+  await expect(page.locator("#error-screen")).toBeVisible();
+  await expect(page.locator("#riddle-screen")).toBeHidden();
 });
