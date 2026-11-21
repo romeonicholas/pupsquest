@@ -7,7 +7,6 @@ import {
   tapAnswer,
   playUntilGameOver,
   rejoinsAs,
-  selectRejoinColor,
 } from "./helpers.ts";
 
 test.use({ viewport: { width: 1080, height: 1920 }, hasTouch: true });
@@ -431,4 +430,42 @@ test("show the error screen if animals can't be loaded on the rejoin screen", as
   await colorOption.locator("button").tap();
 
   await expect(page.locator("#error-screen")).toBeVisible();
+});
+
+test("don't show the riddle screen when erroring on rejoin", async ({
+  page,
+}) => {
+  const { colorName, animalName } = await createUserAndStartRiddles(
+    page,
+    "kiosk",
+  );
+  await page.locator("#save-exit-button").tap();
+  await page.locator("#sign-out-button").tap();
+
+  await page.route("**/api/users?colorId=**", (route) =>
+    route.fulfill({ status: 500 }),
+  );
+
+  await page.locator("#museum-rejoin-game-button").tap();
+
+  const colorOption = page.locator(".rejoin-color-option", {
+    has: page.locator(`#rejoin-${colorName}-selected`),
+  });
+
+  await expect(
+    colorOption.locator(".color-unavailability-indicator"),
+  ).not.toHaveClass(/active/);
+
+  await colorOption.locator("button").tap();
+
+  const animalOption = page.locator(
+    "#rejoin-animal-options-container .animal-option",
+    { hasText: animalName },
+  );
+
+  await animalOption.locator(".animal-button").tap();
+  await page.locator("#rejoin-screen #animal-confirmation-button").tap();
+
+  await expect(page.locator("#error-screen")).toBeVisible();
+  await expect(page.locator("#riddle-screen")).toBeHidden();
 });
