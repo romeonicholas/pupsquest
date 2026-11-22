@@ -129,12 +129,12 @@ setUpInactivity({
 });
 
 setUpCreateScreen({
-  onUserCreated: (newUser) => setHints(newUser.gameState.hintsRemaining),
+  onUserCreated: (newUser) => setHints(newUser.gameState.hintsRemaining, true),
 });
 
 setUpRejoinScreen({
   onUserRejoined: (existingUser) => {
-    setHints(existingUser.gameState.hintsRemaining);
+    setHints(existingUser.gameState.hintsRemaining, true);
     transitionToRiddleScreen();
   },
 });

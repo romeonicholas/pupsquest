@@ -9,6 +9,8 @@ import { updateStatusWheel } from "../user-panel.js";
 import { showErrorScreenAndReload } from "../errors.js";
 import { enableAllInput, disableAllInput } from "../input.js";
 
+const MAX_HINTS = 7;
+
 const correctAnswerBacking = "/images/riddles/ui/answer_backing_correct.png";
 const incorrectAnswerBackings = [
   "/images/riddles/ui/answer_backing_wrong_1.png",
@@ -247,6 +249,7 @@ export function transitionToRiddleScreen() {
 export async function showRiddle() {
   disableAllInput();
   resetIconPositions();
+  setHints(state.currentGameState.hintsRemaining, true);
   closeRiddleContainerFromBottom();
 
   const currentRiddleId =
@@ -305,21 +308,14 @@ function getCurrentRiddleNumber() {
   );
 }
 
-function decreaseHints() {
-  const currentX = getTranslateX(hintCountForeground);
-  state.currentGameState.hintsRemaining--;
-  hintCountForeground.style.transition = "transform 1s ease-in";
-  hintCountForeground.style.transform = `translateX(${currentX - 47}px)`;
-}
+export function setHints(hints, isInstant = false) {
+  if (isInstant) {
+    hintCountForeground.classList.add("instant");
+  } else {
+    hintCountForeground.classList.remove("instant");
+  }
 
-function resetHints() {
-  state.currentGameState.hintsRemaining = 7;
-  hintCountForeground.style.transition = "transform 1s ease-in";
-  hintCountForeground.style.transform = "translateX(0)";
-}
-
-export function setHints(hints) {
-  hintCountForeground.style.transform = `translateX(${-(7 - hints) * 47}px)`;
+  hintCountForeground.style.setProperty("--hints-used", MAX_HINTS - hints);
 }
 
 function showNextHint() {
@@ -396,7 +392,9 @@ async function handleIncorrectGuess(clickedArea, iconIndex) {
   replaceElementToRemoveListeners(clickedArea);
 
   state.currentGameState.currentGuesses.push(iconIndex);
-  decreaseHints();
+  state.currentGameState.hintsRemaining--;
+
+  setHints(state.currentGameState.hintsRemaining);
   showIconBacking(iconIndex);
 
   if (
@@ -422,8 +420,8 @@ async function handleIncorrectGuess(clickedArea, iconIndex) {
         gameOver.style.display = "flex";
         playAgainSheet.style.display = "block";
         nextRiddleSheet.style.display = "none";
-        resetHints();
 
+        state.currentGameState.hintsRemaining = MAX_HINTS;
         state.currentUser.scores.push(state.currentGameState.currentScore);
         state.currentGameState.currentScore = 0;
 
@@ -480,17 +478,6 @@ function handleCorrectGuess(clickedArea, iconIndex) {
   }, 1500);
 
   incrementRiddleQueueCursor();
-}
-
-function getTranslateX(element) {
-  const style = window.getComputedStyle(element);
-  const matrix = style.transform;
-
-  if (matrix === "none") return 0;
-
-  const values = matrix.match(/matrix.*\((.+)\)/)[1].split(", ");
-  const translateX = Math.round(parseFloat(values[4]));
-  return translateX;
 }
 
 function getTranslateY(element) {

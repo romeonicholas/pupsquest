@@ -467,6 +467,13 @@ button {
   position: absolute;
   top: 0px;
   left: 0px;
+  --hints-used: 0;
+  transform: translateX(calc(var(--hints-used) * -47px));
+  transition: transform 1s ease-in;
+}
+
+#hint-count-foreground.instant {
+  transition: none;
 }
 
 #riddle-answer {
