@@ -97,7 +97,7 @@ export async function restingPosition(locator: Locator) {
   let previous = await locator.boundingBox();
 
   while (true) {
-    await locator.page().waitForTimeout(300);
+    await locator.page().waitForTimeout(50);
     const current = await locator.boundingBox();
 
     if (current?.x === previous?.x && current?.y === previous?.y) {
