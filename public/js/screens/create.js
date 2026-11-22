@@ -82,8 +82,7 @@ export async function showColorPicker() {
 
 function hideConfirmationPanel() {
   const confirmationPanel = document.getElementById("confirmation-panel");
-  confirmationPanel.style.transition = "transform 300ms ease-in";
-  confirmationPanel.style.transform = "translateY(0px)";
+  confirmationPanel.classList.remove("shown", "confirmed");
 }
 
 export async function selectColor(colorDisplayName, colorId) {
@@ -108,14 +107,12 @@ export function selectAnimal(animalDisplayName, animalImgPath) {
   updateBadgeText(color, animalDisplayName);
 
   const confirmationPanel = document.getElementById("confirmation-panel");
-  confirmationPanel.style.transition = "transform 300ms ease-in";
-  confirmationPanel.style.transform = "translateY(-165px)";
+  confirmationPanel.classList.add("shown");
 }
 
 export async function confirmAnimal() {
   const confirmationPanel = document.getElementById("confirmation-panel");
-  confirmationPanel.style.transition = "transform 1200ms ease-in";
-  confirmationPanel.style.transform = "translateY(-1470px)";
+  confirmationPanel.classList.add("confirmed");
 
   const newUser = await createUserFromSelection();
   if (!newUser) {
@@ -167,7 +164,7 @@ export function resetCreateNewUserScreen() {
 
   userCreationInstructions.classList.remove("at-color-picker", "at-animals");
   colorPicker.classList.remove("shown");
-  confirmationPanel.style.transform = "translateY(0px)";
+  confirmationPanel.classList.remove("shown", "confirmed");
 
   const shouldLower = false;
   const isInstant = true;

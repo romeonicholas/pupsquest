@@ -939,6 +939,16 @@ button {
   position: absolute;
   top: 1900px;
   z-index: 6;
+  transition: transform 300ms ease-in;
+}
+
+#confirmation-panel.shown {
+  transform: translateY(-165px);
+}
+
+#confirmation-panel.confirmed {
+  transform: translateY(-1470px);
+  transition: transform 1200ms ease-in;
 }
 
 #rejoin-confirmation-panel {
