@@ -26,6 +26,7 @@ import {
 import { wait } from "../transitions.js";
 
 const COLOR_PICKER_SLIDE_MS = 800;
+const ANIMAL_SWAP_DELAY_MS = 200;
 
 let onUserCreated = () => {};
 
@@ -94,7 +95,7 @@ export async function selectColor(colorDisplayName, colorId) {
   clearColorSelectionIndicators();
   showColorSelectionIndicator(colorDisplayName);
   updateBadgeColor(colorDisplayName);
-  updateAnimalOptions(colorId);
+  void updateAnimalOptions(colorId);
 
   userCreationInstructions.classList.remove("at-color-picker");
   userCreationInstructions.classList.add("at-animals");
@@ -234,7 +235,7 @@ function renderColorOptions(colorOptions) {
   }
 }
 
-function updateAnimalOptions(colorId) {
+async function updateAnimalOptions(colorId) {
   const animalOptionsContainer = document.getElementById(
     "animal-options-container",
   );
@@ -243,15 +244,11 @@ function updateAnimalOptions(colorId) {
   );
   const animals = option ? option.animals : [];
 
-  animalOptionsContainer.style.transition = "opacity 300ms ease-out";
-  animalOptionsContainer.style.opacity = "0";
+  animalOptionsContainer.classList.add("faded");
+  await wait(ANIMAL_SWAP_DELAY_MS);
 
-  setTimeout(() => {
-    animalOptionsContainer.replaceChildren(
-      ...animals.map((animal) => buildAnimalOption(animal, "create")),
-    );
-    void animalOptionsContainer.offsetHeight;
-    animalOptionsContainer.style.transition = "opacity 300ms ease-in";
-    animalOptionsContainer.style.opacity = "1";
-  }, 200);
+  animalOptionsContainer.replaceChildren(
+    ...animals.map((animal) => buildAnimalOption(animal, "create")),
+  );
+  animalOptionsContainer.classList.remove("faded");
 }

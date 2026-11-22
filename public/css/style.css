@@ -855,6 +855,12 @@ button {
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
+  transition: opacity 300ms ease-in;
+}
+
+#animal-options-container.faded {
+  opacity: 0;
+  transition: opacity 300ms ease-out; /* create.js: ANIMAL_SWAP_DELAY_MS */
 }
 
 #scrollable-container {
