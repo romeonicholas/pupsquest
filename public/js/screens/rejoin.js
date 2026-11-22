@@ -66,7 +66,7 @@ export async function rejoinSelectColor(colorDisplayName, colorId) {
   updateBadgeColor(colorDisplayName);
 
   const rejoinColorPicker = document.getElementById("rejoin-color-picker");
-  rejoinColorPicker.style.transform = "translateY(-1265px)";
+  rejoinColorPicker.classList.add("raised");
 
   await updateRejoinAnimalContainer(colorId);
 }
@@ -179,7 +179,7 @@ export function resetRejoinScreen() {
   clearAnimalSelectionIndicators("rejoin");
 
   const rejoinColorPicker = document.getElementById("rejoin-color-picker");
-  rejoinColorPicker.style.transform = "translateY(0px)";
+  rejoinColorPicker.classList.remove("raised");
 
   const noAnimalsMessage = document.querySelector(".no-animals-message.rejoin");
   noAnimalsMessage.style.opacity = "0";

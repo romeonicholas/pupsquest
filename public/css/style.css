@@ -688,6 +688,10 @@ button {
   z-index: 6;
 }
 
+#rejoin-color-picker.raised {
+  transform: translateY(-1265px);
+}
+
 #color-picker.shown {
   transform: translateY(1337px);
 }
