@@ -50,6 +50,7 @@ body {
   align-items: flex-start;
   justify-content: center;
   background: #5e5e5e;
+  --motion-scale: 1;
 }
 
 #container {
