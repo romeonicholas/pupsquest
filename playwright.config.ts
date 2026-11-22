@@ -15,6 +15,7 @@ export default defineConfig({
         "postgres://pupsquest:pupsquest@localhost:5432/pupsquest_browser",
       PORT: "3001",
       APP_MODE: "museum",
+      FAST_ANIMATIONS: "true",
     },
   },
 });

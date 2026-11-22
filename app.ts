@@ -61,7 +61,12 @@ function renderGame(req: Request, res: Response, isKiosk: boolean) {
     logger.info({ ipAddress: req.ip }, "Kiosk connected to server");
   }
 
-  res.render("index", { isKiosk, isMuseum: config.mode === "museum", date });
+  res.render("index", {
+    isKiosk,
+    isMuseum: config.mode === "museum",
+    fastAnimations: config.fastAnimations,
+    date,
+  });
 }
 
 app.get("/", (req, res) => renderGame(req, res, false));
