@@ -1,6 +1,6 @@
 import { state } from "./state.js";
 
-function moveScreensForExitPanel(transform, transition) {
+function revealExitPanel(shouldReveal) {
   const screensMovedByExitPanel = [
     "user-panel",
     "riddle-screen",
@@ -9,8 +9,11 @@ function moveScreensForExitPanel(transform, transition) {
 
   for (const id of screensMovedByExitPanel) {
     const screen = document.getElementById(id);
-    screen.style.transition = transition;
-    screen.style.transform = transform;
+    if (shouldReveal) {
+      screen.classList.add("moved-for-exit-panel");
+    } else {
+      screen.classList.remove("moved-for-exit-panel");
+    }
   }
 }
 
@@ -28,21 +31,19 @@ export function shouldShowExitPanelDetails() {
 }
 
 export function firstTimeSaveAndExit() {
-  moveScreensForExitPanel("translateY(380px)", "transform 800ms ease-in");
+  revealExitPanel(true);
   setExitButtonsDisplay("block");
   markExitPanelViewed();
 }
 
 export function cancelExit() {
-  moveScreensForExitPanel("translateY(0px)", "transform 800ms ease-in");
+  revealExitPanel(false);
   setExitButtonsDisplay("none");
 }
 
 export function hideExitDetails() {
-  setTimeout(() => {
-    moveScreensForExitPanel("translateY(0px)", "none");
-    setExitButtonsDisplay("none");
-  }, 500);
+  revealExitPanel(false);
+  setExitButtonsDisplay("none");
 }
 
 export function showExitOption(toShowPrefix) {

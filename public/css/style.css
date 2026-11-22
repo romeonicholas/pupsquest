@@ -616,6 +616,16 @@ button {
   z-index: 40;
 }
 
+#user-panel,
+#riddle-screen,
+#create-new-user-screen {
+  transition: transform 800ms ease-in;
+}
+
+.moved-for-exit-panel {
+  transform: translateY(380px);
+}
+
 .colors-container {
   display: flex;
   justify-content: space-around;
