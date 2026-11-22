@@ -52,13 +52,13 @@ function buildNumberedRiddleElements(prefix) {
 }
 
 function closeRiddleContainerFromBottom() {
-  selectionLayer.style.transform = "translateY(0)";
+  clearSelectionLayerPosition();
   riddleContainer.classList.add("closed");
   riddleTextLayerBackground.classList.add("raised");
 }
 
 function showFirstCouplet() {
-  selectionLayer.style.transform = "translateY(276px)";
+  selectionLayer.classList.add("showing-riddle");
 }
 
 function incrementRiddleQueueCursor() {
@@ -118,9 +118,7 @@ function restoreIncorrectGuesses() {
 
 function restoreVisibleHints() {
   setTimeout(() => {
-    const hintOffset =
-      Math.min(state.currentGameState.currentGuesses.length, 3) * 222;
-    selectionLayer.style.transform = `translateY(${276 + hintOffset}px)`;
+    showHints(Math.min(state.currentGameState.currentGuesses.length, 3));
   }, 2000);
 }
 
@@ -319,10 +317,7 @@ export function setHints(hints, isInstant = false) {
 }
 
 function showNextHint() {
-  const currentY = getTranslateY(selectionLayer);
-  selectionLayer.style.transition =
-    "transform 1s cubic-bezier(0.54, -0.16, 0.735, 0.045)";
-  selectionLayer.style.transform = `translateY(${currentY + 222}px)`;
+  showHints(state.currentGameState.currentGuesses.length);
 }
 
 function showIconBacking(iconIndex) {
@@ -378,9 +373,8 @@ function recordRiddleResult(wasAnsweredCorrectly) {
 
 function slideToRevealAnswer() {
   riddleTextLayerBackground.classList.remove("raised");
-
-  selectionLayer.style.transition = "transform 1s ease-in";
-  selectionLayer.style.transform = "translateY(1298px)";
+  clearSelectionLayerPosition();
+  selectionLayer.classList.add("revealing-answer");
 }
 
 async function handleIncorrectGuess(clickedArea, iconIndex) {
@@ -476,20 +470,9 @@ function handleCorrectGuess(clickedArea, iconIndex) {
   incrementRiddleQueueCursor();
 }
 
-function getTranslateY(element) {
-  const style = window.getComputedStyle(element);
-  const matrix = style.transform;
-
-  if (matrix === "none") return 0;
-
-  const values = matrix.match(/matrix.*\((.+)\)/)[1].split(", ");
-  const translateY = Math.round(parseFloat(values[5]));
-  return translateY;
-}
-
 export function resetRiddleScreen() {
   riddleScreen.style.display = "none";
-  selectionLayer.style.transform = "translateY(0px)";
+  clearSelectionLayerPosition();
   riddleTextLayerBackground.classList.remove("raised");
   riddleContainer.classList.remove("closed");
   riddleAnswer.style.display = "none";
@@ -500,4 +483,18 @@ export function resetRiddleScreen() {
   playAgainSheet.style.display = "none";
   const nextRiddleSheet = document.getElementById("next-riddle-sheet");
   nextRiddleSheet.style.display = "block";
+}
+
+function clearSelectionLayerPosition() {
+  selectionLayer.classList.remove(
+    "showing-riddle",
+    "with-hints",
+    "revealing-answer",
+  );
+  selectionLayer.style.setProperty("--hints-shown", 0);
+}
+
+function showHints(count) {
+  selectionLayer.style.setProperty("--hints-shown", count);
+  selectionLayer.classList.add("showing-riddle", "with-hints");
 }

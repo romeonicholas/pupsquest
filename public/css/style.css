@@ -376,8 +376,23 @@ button {
   top: 1280px;
   width: 100%;
   position: relative;
-  transition: transform 800ms ease-in;
   z-index: 77;
+  --hints-shown: 0;
+  transition: transform 1s ease-in;
+}
+
+#selection-layer.showing-riddle {
+  transform: translateY(276px);
+}
+
+#selection-layer.showing-riddle.with-hints {
+  transform: translateY(calc(276px + var(--hints-shown) * 222px));
+  transition: transform 1s cubic-bezier(0.54, -0.16, 0.735, 0.045);
+}
+
+#selection-layer.revealing-answer {
+  transform: translateY(1298px);
+  transition: transform 1s ease-in;
 }
 
 #riddle-headline {
