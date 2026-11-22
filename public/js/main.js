@@ -139,19 +139,17 @@ setUpRejoinScreen({
   },
 });
 
-function returnToStartAndResetScreens() {
-  returnToStartScreen();
+async function returnToStartAndResetScreens() {
   disableAllInput();
+  await returnToStartScreen();
 
-  setTimeout(() => {
-    hideUsePhoneScreen();
-    resetCreateNewUserScreen();
-    resetRejoinScreen();
-    resetRiddleScreen();
-    hideExitDetails();
-    showExitOption("start-over");
-    enableAllInput();
-  }, 600);
+  hideUsePhoneScreen();
+  resetCreateNewUserScreen();
+  resetRejoinScreen();
+  resetRiddleScreen();
+  hideExitDetails();
+  showExitOption("start-over");
+  enableAllInput();
 }
 
 function startOver() {

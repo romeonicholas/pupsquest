@@ -3,6 +3,9 @@ import {
   hideInactivityScreen,
   startWatchingForInactivity,
 } from "../inactivity.js";
+import { wait } from "../transitions.js";
+
+const START_SCREEN_FADE_MS = 500;
 
 export function lowerStartScreen() {
   const startScreen = document.getElementById("start-screen");
@@ -20,6 +23,7 @@ export function returnToStartScreen() {
   startScreen.classList.remove("hidden-for-return");
 
   hideInactivityScreen();
+  return wait(START_SCREEN_FADE_MS);
 }
 
 export function showUsePhoneScreen() {

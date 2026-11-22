@@ -83,7 +83,7 @@ button {
 
   transition:
     transform 1800ms ease-in,
-    opacity 500ms ease-in;
+    opacity 500ms ease-in; /* start.js: START_SCREEN_FADE_MS */
 }
 
 #start-screen.lowered {
