@@ -267,7 +267,11 @@ button {
   width: 355px;
   height: 1003px;
   justify-content: center;
-  transition: transform 1s ease-in;
+  transition: transform 800ms ease-in; /* user-panel.js: STATUS_WHEEL_TURN_MS */
+}
+
+.status-text-wrapper.instant {
+  transition: none;
 }
 
 .status-text {

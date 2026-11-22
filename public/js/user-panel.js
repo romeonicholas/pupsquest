@@ -1,3 +1,7 @@
+import { wait } from "./transitions.js";
+
+const STATUS_WHEEL_TURN_MS = 800;
+
 const statusWheelContainer = document.getElementById("status-wheel-container");
 
 export function setStatusText(position, text) {
@@ -16,11 +20,11 @@ export function updateStatusWheel(wheelText, instant = false, additionalClass) {
   let nextStatusText = document.querySelector(".next-text");
 
   if (instant) {
-    currentStatusText.style.transition = "none";
-    nextStatusText.style.transition = "none";
+    currentStatusText.classList.add("instant");
+    nextStatusText.classList.add("instant");
   } else {
-    currentStatusText.style.transition = "transform 800ms ease-in";
-    nextStatusText.style.transition = "transform 800ms ease-in";
+    currentStatusText.classList.remove("instant");
+    nextStatusText.classList.remove("instant");
   }
 
   if (additionalClass) {
@@ -41,13 +45,13 @@ export function updateStatusWheel(wheelText, instant = false, additionalClass) {
   removeOldStatusTexts();
 }
 
-function removeOldStatusTexts() {
-  setTimeout(() => {
-    const previousTexts = document.querySelectorAll(".previous-text");
-    previousTexts.forEach((element) => {
-      element.remove();
-    });
-  }, 1000);
+async function removeOldStatusTexts() {
+  await wait(STATUS_WHEEL_TURN_MS);
+
+  const previousTexts = document.querySelectorAll(".previous-text");
+  previousTexts.forEach((element) => {
+    element.remove();
+  });
 }
 
 export function moveBadgeContainer(transform, transition) {
