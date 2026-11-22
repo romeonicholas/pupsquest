@@ -14,6 +14,8 @@ const MAX_HINTS = 7;
 
 const RIDDLE_CLOSE_MS = 1000;
 const PAUSE_BEFORE_COUPLET_MS = 1000;
+const HINT_SLIDE_MS = 1000;
+const ANSWER_REVEAL_DELAY_MS = 1500;
 
 const correctAnswerBacking = "/images/riddles/ui/answer_backing_correct.png";
 const incorrectAnswerBackings = [
@@ -393,61 +395,59 @@ async function handleIncorrectGuess(clickedArea, iconIndex) {
   ) {
     recordRiddleResult(false);
     state.currentGameState.currentGuesses = [];
-    setTimeout(async () => {
-      slideToRevealAnswer();
 
-      const gameOver = document.getElementById("game-over");
-      const playAgainSheet = document.getElementById("play-again-sheet");
-      const nextRiddleSheet = document.getElementById("next-riddle-sheet");
+    await wait(ANSWER_REVEAL_DELAY_MS);
+    slideToRevealAnswer();
 
-      if (state.currentGameState.hintsRemaining <= 0) {
-        state.currentGameState.startingIndex =
-          state.currentGameState.queueCursor;
-        await updateScoreText();
-        updateStatusWheel("GAME OVER", false, "red-text");
+    const gameOver = document.getElementById("game-over");
+    const playAgainSheet = document.getElementById("play-again-sheet");
+    const nextRiddleSheet = document.getElementById("next-riddle-sheet");
 
-        riddleAnswer.style.display = "none";
-        gameOver.style.display = "flex";
-        playAgainSheet.style.display = "block";
-        nextRiddleSheet.style.display = "none";
+    if (state.currentGameState.hintsRemaining <= 0) {
+      state.currentGameState.startingIndex = state.currentGameState.queueCursor;
+      await updateScoreText();
+      updateStatusWheel("GAME OVER", false, "red-text");
 
-        state.currentGameState.hintsRemaining = MAX_HINTS;
-        state.currentUser.scores.push(state.currentGameState.currentScore);
-        state.currentGameState.currentScore = 0;
+      riddleAnswer.style.display = "none";
+      gameOver.style.display = "flex";
+      playAgainSheet.style.display = "block";
+      nextRiddleSheet.style.display = "none";
 
-        try {
-          await saveGame(
-            state.currentUser.id,
-            state.currentUser.scores,
-            state.currentUser.hasViewedExitPanel,
-            state.currentGameState,
-          );
-        } catch (error) {
-          console.error("Error saving user data:", error);
-          showErrorScreenAndReload(error);
-        }
-      } else {
-        gameOver.style.display = "none";
-        riddleAnswer.style.display = "flex";
-        answerIncorrectText.style.display = "block";
-        playAgainSheet.style.display = "none";
-        nextRiddleSheet.style.display = "block";
+      state.currentGameState.hintsRemaining = MAX_HINTS;
+      state.currentUser.scores.push(state.currentGameState.currentScore);
+      state.currentGameState.currentScore = 0;
 
-        answerChoiceText.innerText = `${answerChoiceText.innerText}.`;
+      try {
+        await saveGame(
+          state.currentUser.id,
+          state.currentUser.scores,
+          state.currentUser.hasViewedExitPanel,
+          state.currentGameState,
+        );
+      } catch (error) {
+        console.error("Error saving user data:", error);
+        showErrorScreenAndReload(error);
       }
-      enableAllInput();
-    }, 1500);
+    } else {
+      gameOver.style.display = "none";
+      riddleAnswer.style.display = "flex";
+      answerIncorrectText.style.display = "block";
+      playAgainSheet.style.display = "none";
+      nextRiddleSheet.style.display = "block";
+
+      answerChoiceText.innerText = `${answerChoiceText.innerText}.`;
+    }
+    enableAllInput();
 
     incrementRiddleQueueCursor();
   } else {
     showNextHint();
-    setTimeout(() => {
-      enableAllInput();
-    }, 1000);
+    await wait(HINT_SLIDE_MS);
+    enableAllInput();
   }
 }
 
-function handleCorrectGuess(clickedArea, iconIndex) {
+async function handleCorrectGuess(clickedArea, iconIndex) {
   disableAllInput();
   replaceElementToRemoveListeners(clickedArea);
 
@@ -456,18 +456,17 @@ function handleCorrectGuess(clickedArea, iconIndex) {
   state.currentGameState.currentGuesses = [];
   showIconBacking(iconIndex);
 
-  setTimeout(() => {
-    slideToRevealAnswer();
-
-    riddleAnswer.style.display = "flex";
-    answerCorrectText.style.display = "block";
-
-    answerChoiceText.innerText = `${answerChoiceText.innerText}!`;
-
-    enableAllInput();
-  }, 1500);
-
   incrementRiddleQueueCursor();
+
+  await wait(ANSWER_REVEAL_DELAY_MS);
+  slideToRevealAnswer();
+
+  riddleAnswer.style.display = "flex";
+  answerCorrectText.style.display = "block";
+
+  answerChoiceText.innerText = `${answerChoiceText.innerText}!`;
+
+  enableAllInput();
 }
 
 export function resetRiddleScreen() {
