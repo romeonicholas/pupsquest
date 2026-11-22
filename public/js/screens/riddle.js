@@ -395,6 +395,7 @@ async function handleIncorrectGuess(clickedArea, iconIndex) {
   ) {
     recordRiddleResult(false);
     state.currentGameState.currentGuesses = [];
+    incrementRiddleQueueCursor();
 
     await wait(ANSWER_REVEAL_DELAY_MS);
     slideToRevealAnswer();
@@ -438,8 +439,6 @@ async function handleIncorrectGuess(clickedArea, iconIndex) {
       answerChoiceText.innerText = `${answerChoiceText.innerText}.`;
     }
     enableAllInput();
-
-    incrementRiddleQueueCursor();
   } else {
     showNextHint();
     await wait(HINT_SLIDE_MS);
