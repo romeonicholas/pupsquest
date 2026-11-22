@@ -210,6 +210,28 @@ function renderColorOptions(colorOptions) {
     colorNameLabel.textContent = color.name;
     colorNamesContainer.append(colorNameLabel);
   }
+
+  for (
+    let emptyColorSlot = colorOptions.length;
+    emptyColorSlot < 4;
+    emptyColorSlot++
+  ) {
+    const placeholder = colorOptionTemplate.content
+      .querySelector(".color-option")
+      .cloneNode(true);
+    placeholder.classList.add("placeholder");
+
+    const placeholderButton = placeholder.querySelector(".color-button");
+    placeholderButton.removeAttribute("data-action");
+    placeholderButton.disabled = true;
+
+    colorOptionsContainer.append(placeholder);
+
+    const emptyNameLabel = colorNameTemplate.content
+      .querySelector(".color-text")
+      .cloneNode(true);
+    colorNamesContainer.append(emptyNameLabel);
+  }
 }
 
 function updateAnimalOptions(colorId) {

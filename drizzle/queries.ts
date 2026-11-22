@@ -26,7 +26,7 @@ export async function getColorsWithAvailableAnimals() {
     .groupBy(userColors.id)
     .having(lt(count(users.id), numberOfAnimals))
     .orderBy(sql`RANDOM()`)
-    .limit(4);
+    .limit(2);
 
   return colors;
 }
