@@ -115,20 +115,17 @@ export function selectRejoinAnimal(animalDisplayName, animalImgPath) {
   const color = getSelectedColor("rejoin");
   updateBadgeText(color, animalDisplayName);
 
-  const confirmationPanel = document.getElementById(
+  const rejoinConfirmationPanel = document.getElementById(
     "rejoin-confirmation-panel",
   );
-  confirmationPanel.style.transition = "transform 300ms ease-in";
-  confirmationPanel.style.transform = "translateY(-165px)";
+  rejoinConfirmationPanel.classList.add("shown");
 }
 
 export async function confirmRejoinAnimal() {
   const rejoinConfirmationPanel = document.getElementById(
     "rejoin-confirmation-panel",
   );
-  rejoinConfirmationPanel.style.transitionDelay = "50ms";
-  rejoinConfirmationPanel.style.transition = "transform 1s ease-in";
-  rejoinConfirmationPanel.style.transform = "translateY(-1200px)";
+  rejoinConfirmationPanel.classList.add("confirmed");
 
   const existingUser = await loginUser();
   if (!existingUser) {
@@ -192,9 +189,7 @@ export function resetRejoinScreen() {
   const rejoinConfirmationPanel = document.getElementById(
     "rejoin-confirmation-panel",
   );
-
-  rejoinConfirmationPanel.style.transitionDelay = "0ms";
-  rejoinConfirmationPanel.style.transform = "translateY(0px)";
+  rejoinConfirmationPanel.classList.remove("shown", "confirmed");
 
   setStatusText("current", "ENTER CODE");
 }

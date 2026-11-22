@@ -965,6 +965,16 @@ button {
   position: absolute;
   top: 1900px;
   z-index: 6;
+  transition: transform 300ms ease-in;
+}
+
+#rejoin-confirmation-panel.shown {
+  transform: translateY(-165px);
+}
+
+#rejoin-confirmation-panel.confirmed {
+  transform: translateY(-1200px);
+  transition: transform 1000ms ease-in 50ms;
 }
 
 #animal-confirmation-button {
