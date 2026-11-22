@@ -60,10 +60,11 @@ export async function createUserAndStartRiddles(
 }
 
 async function answerWasTapped(page: Page, option: number) {
-  const back = await page.locator(`#icon-back-${option}`).boundingBox();
-  const front = await page.locator(`#icon-front-${option}`).boundingBox();
+  const classes = await page
+    .locator(`#icon-front-${option}`)
+    .getAttribute("class");
 
-  return Math.abs(front!.y - back!.y) > 1;
+  return classes!.includes("dropped");
 }
 
 export async function findAvailableAnswerOption(
