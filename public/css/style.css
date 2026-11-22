@@ -188,6 +188,15 @@ button {
   top: -340px;
   left: 561px;
   z-index: 79;
+  transition: transform 800ms ease-in;
+}
+
+#badge-container.lowered {
+  transform: translateY(465px);
+}
+
+#badge-container.instant {
+  transition: none;
 }
 
 #badge-icon-container {

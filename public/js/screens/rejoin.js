@@ -6,7 +6,7 @@ import { showErrorScreenAndReload } from "../errors.js";
 import {
   setStatusText,
   updateStatusWheel,
-  moveBadgeContainer,
+  lowerBadge,
   updateBadgeColor,
   updateBadgeText,
   updateBadgeIcon,
@@ -54,8 +54,9 @@ export async function showRejoinGameScreen() {
   document.getElementById("exit-container").style.display = "block";
 
   resetBadge();
-  moveBadgeContainer("translateY(465px)", "none");
-  let isInstant = true;
+  const shouldLower = true;
+  const isInstant = true;
+  lowerBadge(shouldLower, isInstant);
   updateStatusWheel("ENTER CODE", isInstant);
   showExitOption("start-over");
 }

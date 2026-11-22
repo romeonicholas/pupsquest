@@ -7,7 +7,7 @@ import { showErrorScreenAndReload } from "../errors.js";
 import {
   setStatusText,
   updateStatusWheel,
-  moveBadgeContainer,
+  lowerBadge,
   updateBadgeColor,
   updateBadgeText,
   updateBadgeIcon,
@@ -23,6 +23,9 @@ import {
   getSelectedAnimalId,
   buildAnimalOption,
 } from "../picker.js";
+import { wait } from "../transitions.js";
+
+const COLOR_PICKER_SLIDE_MS = 800;
 
 let onUserCreated = () => {};
 
@@ -60,7 +63,7 @@ export async function showCreateNewUserScreen() {
   showExitOption("start-over");
 }
 
-export function showColorPicker() {
+export async function showColorPicker() {
   const userCreationInstructions = document.getElementById(
     "user-creation-instructions",
   );
@@ -71,10 +74,12 @@ export function showColorPicker() {
   colorPicker.style.transition = "transform 800ms ease-in";
   colorPicker.style.transform = "translateY(1337px)";
 
-  setTimeout(() => {
-    updateStatusWheel("CODE NAME");
-    moveBadgeContainer("translateY(465px)", "transform 800ms ease-in");
-  }, 800);
+  await wait(COLOR_PICKER_SLIDE_MS);
+
+  updateStatusWheel("CODE NAME");
+  const shouldLower = true;
+  const isInstant = false;
+  lowerBadge(shouldLower, isInstant);
 }
 
 function hideConfirmationPanel() {
@@ -168,7 +173,9 @@ export function resetCreateNewUserScreen() {
   colorPicker.style.transform = "translateY(0px)";
   confirmationPanel.style.transform = "translateY(0px)";
 
-  moveBadgeContainer("translateY(0px)", "none");
+  const shouldLower = false;
+  const isInstant = true;
+  lowerBadge(shouldLower, isInstant);
   setStatusText("current", "WELCOME");
 }
 

@@ -42,7 +42,7 @@ export function updateStatusWheel(wheelText, instant = false, additionalClass) {
   nextStatusText.innerHTML = '<span class="status-text"></span>';
   statusWheelContainer.appendChild(nextStatusText);
 
-  removeOldStatusTexts();
+  void removeOldStatusTexts();
 }
 
 async function removeOldStatusTexts() {
@@ -54,10 +54,20 @@ async function removeOldStatusTexts() {
   });
 }
 
-export function moveBadgeContainer(transform, transition) {
+export function lowerBadge(shouldLower, isInstant) {
   const badgeContainer = document.getElementById("badge-container");
-  badgeContainer.style.transform = transform;
-  badgeContainer.style.transition = transition;
+
+  if (isInstant) {
+    badgeContainer.classList.add("instant");
+  } else {
+    badgeContainer.classList.remove("instant");
+  }
+
+  if (shouldLower) {
+    badgeContainer.classList.add("lowered");
+  } else {
+    badgeContainer.classList.remove("lowered");
+  }
 }
 
 export function updateBadgeColor(colorDisplayName) {
