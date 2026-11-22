@@ -8,6 +8,14 @@ import { state } from "../state.js";
 import { updateStatusWheel } from "../user-panel.js";
 import { showErrorScreenAndReload } from "../errors.js";
 import { enableAllInput, disableAllInput } from "../input.js";
+import { wait } from "../transitions.js";
+
+const MAX_HINTS = 7;
+
+const RIDDLE_CLOSE_MS = 1000;
+const PAUSE_BEFORE_COUPLET_MS = 1000;
+const HINT_SLIDE_MS = 1000;
+const ANSWER_REVEAL_DELAY_MS = 1500;
 
 const correctAnswerBacking = "/images/riddles/ui/answer_backing_correct.png";
 const incorrectAnswerBackings = [
@@ -50,13 +58,13 @@ function buildNumberedRiddleElements(prefix) {
 }
 
 function closeRiddleContainerFromBottom() {
-  selectionLayer.style.transform = "translateY(0)";
-  riddleContainer.style.transform = "translateY(-1290px)";
-  riddleTextLayerBackground.style.transform = "translateY(-1294px)";
+  clearSelectionLayerPosition();
+  riddleContainer.classList.add("closed");
+  riddleTextLayerBackground.classList.add("raised");
 }
 
 function showFirstCouplet() {
-  selectionLayer.style.transform = "translateY(276px)";
+  selectionLayer.classList.add("showing-riddle");
 }
 
 function incrementRiddleQueueCursor() {
@@ -97,29 +105,20 @@ function restoreRiddleState(riddle) {
   updateSelectionTexts(shuffledChoices);
   updateIconBackings(correctAnswerIndex);
   attachClickHandlers(correctAnswerIndex);
-
-  restoreIncorrectGuesses();
-  restoreVisibleHints();
 }
 
 function restoreIncorrectGuesses() {
-  setTimeout(() => {
-    state.currentGameState.currentGuesses.forEach((iconIndex) => {
-      showIconBacking(iconIndex);
-      const clickArea = document.getElementById(
-        `option-click-area-${iconIndex + 1}`,
-      );
-      replaceElementToRemoveListeners(clickArea);
-    });
-  }, 2000);
+  state.currentGameState.currentGuesses.forEach((iconIndex) => {
+    showIconBacking(iconIndex);
+    const clickArea = document.getElementById(
+      `option-click-area-${iconIndex + 1}`,
+    );
+    replaceElementToRemoveListeners(clickArea);
+  });
 }
 
 function restoreVisibleHints() {
-  setTimeout(() => {
-    const hintOffset =
-      Math.min(state.currentGameState.currentGuesses.length, 3) * 222;
-    selectionLayer.style.transform = `translateY(${276 + hintOffset}px)`;
-  }, 2000);
+  showHints(Math.min(state.currentGameState.currentGuesses.length, 3));
 }
 
 function updateRiddleContent(riddle) {
@@ -217,8 +216,8 @@ function replaceElementToRemoveListeners(element) {
 
 function resetIconPositions() {
   iconFronts.forEach((icon) => {
-    icon.style.transition = "none";
-    icon.style.transform = "translateY(0)";
+    icon.classList.add("instant");
+    icon.classList.remove("dropped");
   });
 }
 
@@ -239,14 +238,14 @@ export function transitionToRiddleScreen() {
   const nextRiddleSheet = document.getElementById("next-riddle-sheet");
   nextRiddleSheet.style.visibility = "hidden";
 
-  setTimeout(() => {
-    void showRiddle();
-  }, 50);
+  void riddleScreen.offsetHeight;
+  return showRiddle();
 }
 
 export async function showRiddle() {
   disableAllInput();
   resetIconPositions();
+  setHints(state.currentGameState.hintsRemaining, true);
   closeRiddleContainerFromBottom();
 
   const currentRiddleId =
@@ -270,28 +269,32 @@ export async function showRiddle() {
         state.currentGameState.currentCorrectAnswerIndex
       ];
 
-    setTimeout(() => {
-      updateRiddleAnswer(
-        correctChoice.display,
-        currentRiddle.answerDetails,
-        currentRiddle.answerImgPath,
-      );
-      updateStatusWheel(`RIDDLE ${getCurrentRiddleNumber()}`);
-      const nextRiddleSheet = document.getElementById("next-riddle-sheet");
-      nextRiddleSheet.style.visibility = "visible";
+    await wait(RIDDLE_CLOSE_MS);
 
-      const rejoinScreen = document.getElementById("rejoin-screen");
-      rejoinScreen.style.display = "none";
-    }, 1000);
+    updateRiddleAnswer(
+      correctChoice.display,
+      currentRiddle.answerDetails,
+      currentRiddle.answerImgPath,
+    );
+    updateStatusWheel(`RIDDLE ${getCurrentRiddleNumber()}`);
+    const nextRiddleSheet = document.getElementById("next-riddle-sheet");
+    nextRiddleSheet.style.visibility = "visible";
 
-    setTimeout(() => {
-      if (!isRejoining) {
-        showFirstCouplet();
-      }
-      const gameOver = document.getElementById("game-over");
-      gameOver.style.display = "none";
-      enableAllInput();
-    }, 2000);
+    const rejoinScreen = document.getElementById("rejoin-screen");
+    rejoinScreen.style.display = "none";
+
+    await wait(PAUSE_BEFORE_COUPLET_MS);
+
+    if (isRejoining) {
+      restoreIncorrectGuesses();
+      restoreVisibleHints();
+    } else {
+      showFirstCouplet();
+    }
+
+    const gameOver = document.getElementById("game-over");
+    gameOver.style.display = "none";
+    enableAllInput();
   } catch (error) {
     showErrorScreenAndReload(error);
   }
@@ -305,37 +308,24 @@ function getCurrentRiddleNumber() {
   );
 }
 
-function decreaseHints() {
-  const currentX = getTranslateX(hintCountForeground);
-  state.currentGameState.hintsRemaining--;
-  hintCountForeground.style.transition = "transform 1s ease-in";
-  hintCountForeground.style.transform = `translateX(${currentX - 47}px)`;
-}
+export function setHints(hints, isInstant = false) {
+  if (isInstant) {
+    hintCountForeground.classList.add("instant");
+  } else {
+    hintCountForeground.classList.remove("instant");
+  }
 
-function resetHints() {
-  state.currentGameState.hintsRemaining = 7;
-  hintCountForeground.style.transition = "transform 1s ease-in";
-  hintCountForeground.style.transform = "translateX(0)";
-}
-
-export function setHints(hints) {
-  hintCountForeground.style.transform = `translateX(${-(7 - hints) * 47}px)`;
+  hintCountForeground.style.setProperty("--hints-used", MAX_HINTS - hints);
 }
 
 function showNextHint() {
-  const currentY = getTranslateY(selectionLayer);
-  selectionLayer.style.transition =
-    "transform 1s cubic-bezier(0.54, -0.16, 0.735, 0.045)";
-  selectionLayer.style.transform = `translateY(${currentY + 222}px)`;
+  showHints(state.currentGameState.currentGuesses.length);
 }
 
 function showIconBacking(iconIndex) {
   const clickedIcon = iconFronts[iconIndex];
-  const currentY = getTranslateY(clickedIcon);
-  clickedIcon.style.transition =
-    "transform 1s cubic-bezier(0.54, -0.16, 0.735, 0.045)";
-
-  clickedIcon.style.transform = `translateY(${currentY + 234}px)`;
+  clickedIcon.classList.remove("instant");
+  clickedIcon.classList.add("dropped");
 }
 
 async function updateScoreText() {
@@ -384,11 +374,9 @@ function recordRiddleResult(wasAnsweredCorrectly) {
 }
 
 function slideToRevealAnswer() {
-  riddleTextLayerBackground.style.transition = "transform 1s ease-in";
-  riddleTextLayerBackground.style.transform = "translateY(0px)";
-
-  selectionLayer.style.transition = "transform 1s ease-in";
-  selectionLayer.style.transform = "translateY(1298px)";
+  riddleTextLayerBackground.classList.remove("raised");
+  clearSelectionLayerPosition();
+  selectionLayer.classList.add("revealing-answer");
 }
 
 async function handleIncorrectGuess(clickedArea, iconIndex) {
@@ -396,7 +384,9 @@ async function handleIncorrectGuess(clickedArea, iconIndex) {
   replaceElementToRemoveListeners(clickedArea);
 
   state.currentGameState.currentGuesses.push(iconIndex);
-  decreaseHints();
+  state.currentGameState.hintsRemaining--;
+
+  setHints(state.currentGameState.hintsRemaining);
   showIconBacking(iconIndex);
 
   if (
@@ -405,61 +395,58 @@ async function handleIncorrectGuess(clickedArea, iconIndex) {
   ) {
     recordRiddleResult(false);
     state.currentGameState.currentGuesses = [];
-    setTimeout(async () => {
-      slideToRevealAnswer();
-
-      const gameOver = document.getElementById("game-over");
-      const playAgainSheet = document.getElementById("play-again-sheet");
-      const nextRiddleSheet = document.getElementById("next-riddle-sheet");
-
-      if (state.currentGameState.hintsRemaining <= 0) {
-        state.currentGameState.startingIndex =
-          state.currentGameState.queueCursor;
-        await updateScoreText();
-        updateStatusWheel("GAME OVER", false, "red-text");
-
-        riddleAnswer.style.display = "none";
-        gameOver.style.display = "flex";
-        playAgainSheet.style.display = "block";
-        nextRiddleSheet.style.display = "none";
-        resetHints();
-
-        state.currentUser.scores.push(state.currentGameState.currentScore);
-        state.currentGameState.currentScore = 0;
-
-        try {
-          await saveGame(
-            state.currentUser.id,
-            state.currentUser.scores,
-            state.currentUser.hasViewedExitPanel,
-            state.currentGameState,
-          );
-        } catch (error) {
-          console.error("Error saving user data:", error);
-          showErrorScreenAndReload(error);
-        }
-      } else {
-        gameOver.style.display = "none";
-        riddleAnswer.style.display = "flex";
-        answerIncorrectText.style.display = "block";
-        playAgainSheet.style.display = "none";
-        nextRiddleSheet.style.display = "block";
-
-        answerChoiceText.innerText = `${answerChoiceText.innerText}.`;
-      }
-      enableAllInput();
-    }, 1500);
-
     incrementRiddleQueueCursor();
+
+    await wait(ANSWER_REVEAL_DELAY_MS);
+    slideToRevealAnswer();
+
+    const gameOver = document.getElementById("game-over");
+    const playAgainSheet = document.getElementById("play-again-sheet");
+    const nextRiddleSheet = document.getElementById("next-riddle-sheet");
+
+    if (state.currentGameState.hintsRemaining <= 0) {
+      state.currentGameState.startingIndex = state.currentGameState.queueCursor;
+      await updateScoreText();
+      updateStatusWheel("GAME OVER", false, "red-text");
+
+      riddleAnswer.style.display = "none";
+      gameOver.style.display = "flex";
+      playAgainSheet.style.display = "block";
+      nextRiddleSheet.style.display = "none";
+
+      state.currentGameState.hintsRemaining = MAX_HINTS;
+      state.currentUser.scores.push(state.currentGameState.currentScore);
+      state.currentGameState.currentScore = 0;
+
+      try {
+        await saveGame(
+          state.currentUser.id,
+          state.currentUser.scores,
+          state.currentUser.hasViewedExitPanel,
+          state.currentGameState,
+        );
+      } catch (error) {
+        console.error("Error saving user data:", error);
+        showErrorScreenAndReload(error);
+      }
+    } else {
+      gameOver.style.display = "none";
+      riddleAnswer.style.display = "flex";
+      answerIncorrectText.style.display = "block";
+      playAgainSheet.style.display = "none";
+      nextRiddleSheet.style.display = "block";
+
+      answerChoiceText.innerText = `${answerChoiceText.innerText}.`;
+    }
+    enableAllInput();
   } else {
     showNextHint();
-    setTimeout(() => {
-      enableAllInput();
-    }, 1000);
+    await wait(HINT_SLIDE_MS);
+    enableAllInput();
   }
 }
 
-function handleCorrectGuess(clickedArea, iconIndex) {
+async function handleCorrectGuess(clickedArea, iconIndex) {
   disableAllInput();
   replaceElementToRemoveListeners(clickedArea);
 
@@ -468,47 +455,24 @@ function handleCorrectGuess(clickedArea, iconIndex) {
   state.currentGameState.currentGuesses = [];
   showIconBacking(iconIndex);
 
-  setTimeout(() => {
-    slideToRevealAnswer();
-
-    riddleAnswer.style.display = "flex";
-    answerCorrectText.style.display = "block";
-
-    answerChoiceText.innerText = `${answerChoiceText.innerText}!`;
-
-    enableAllInput();
-  }, 1500);
-
   incrementRiddleQueueCursor();
-}
 
-function getTranslateX(element) {
-  const style = window.getComputedStyle(element);
-  const matrix = style.transform;
+  await wait(ANSWER_REVEAL_DELAY_MS);
+  slideToRevealAnswer();
 
-  if (matrix === "none") return 0;
+  riddleAnswer.style.display = "flex";
+  answerCorrectText.style.display = "block";
 
-  const values = matrix.match(/matrix.*\((.+)\)/)[1].split(", ");
-  const translateX = Math.round(parseFloat(values[4]));
-  return translateX;
-}
+  answerChoiceText.innerText = `${answerChoiceText.innerText}!`;
 
-function getTranslateY(element) {
-  const style = window.getComputedStyle(element);
-  const matrix = style.transform;
-
-  if (matrix === "none") return 0;
-
-  const values = matrix.match(/matrix.*\((.+)\)/)[1].split(", ");
-  const translateY = Math.round(parseFloat(values[5]));
-  return translateY;
+  enableAllInput();
 }
 
 export function resetRiddleScreen() {
   riddleScreen.style.display = "none";
-  riddleTextLayerBackground.style.transform = "translateY(0px)";
-  selectionLayer.style.transform = "translateY(0px)";
-  riddleContainer.style.transform = "translateY(0px)";
+  clearSelectionLayerPosition();
+  riddleTextLayerBackground.classList.remove("raised");
+  riddleContainer.classList.remove("closed");
   riddleAnswer.style.display = "none";
 
   const gameOver = document.getElementById("game-over");
@@ -517,4 +481,18 @@ export function resetRiddleScreen() {
   playAgainSheet.style.display = "none";
   const nextRiddleSheet = document.getElementById("next-riddle-sheet");
   nextRiddleSheet.style.display = "block";
+}
+
+function clearSelectionLayerPosition() {
+  selectionLayer.classList.remove(
+    "showing-riddle",
+    "with-hints",
+    "revealing-answer",
+  );
+  selectionLayer.style.setProperty("--hints-shown", 0);
+}
+
+function showHints(count) {
+  selectionLayer.style.setProperty("--hints-shown", count);
+  selectionLayer.classList.add("showing-riddle", "with-hints");
 }

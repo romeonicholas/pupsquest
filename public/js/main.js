@@ -64,9 +64,9 @@ const actions = {
     lowerStartScreen();
     showUsePhoneScreen();
   },
-  "return-to-start": () => {
-    returnToStartScreen();
-    setTimeout(hideUsePhoneScreen, 600);
+  "return-to-start": async () => {
+    await returnToStartScreen();
+    hideUsePhoneScreen();
   },
 
   "show-color-picker": () => showColorPicker(),
@@ -129,33 +129,31 @@ setUpInactivity({
 });
 
 setUpCreateScreen({
-  onUserCreated: (newUser) => setHints(newUser.gameState.hintsRemaining),
+  onUserCreated: (newUser) => setHints(newUser.gameState.hintsRemaining, true),
 });
 
 setUpRejoinScreen({
   onUserRejoined: (existingUser) => {
-    setHints(existingUser.gameState.hintsRemaining);
-    transitionToRiddleScreen();
+    setHints(existingUser.gameState.hintsRemaining, true);
+    void transitionToRiddleScreen();
   },
 });
 
-function returnToStartAndResetScreens() {
-  returnToStartScreen();
+async function returnToStartAndResetScreens() {
   disableAllInput();
+  await returnToStartScreen();
 
-  setTimeout(() => {
-    hideUsePhoneScreen();
-    resetCreateNewUserScreen();
-    resetRejoinScreen();
-    resetRiddleScreen();
-    hideExitDetails();
-    showExitOption("start-over");
-    enableAllInput();
-  }, 600);
+  hideUsePhoneScreen();
+  resetCreateNewUserScreen();
+  resetRejoinScreen();
+  resetRiddleScreen();
+  hideExitDetails();
+  showExitOption("start-over");
+  enableAllInput();
 }
 
-function startOver() {
-  returnToStartAndResetScreens();
+async function startOver() {
+  await returnToStartAndResetScreens();
 }
 
 async function saveAndExit() {
@@ -175,12 +173,12 @@ async function saveAndExit() {
         );
 
         setUser(null);
-        returnToStartAndResetScreens();
+        await returnToStartAndResetScreens();
       } catch (error) {
         showErrorScreenAndReload(error);
       }
     } else {
-      startOver();
+      await startOver();
     }
   }
 }
@@ -191,6 +189,6 @@ async function handleInactivitySignOut() {
   if (state.currentUser && state.currentGameState) {
     await saveAndExit();
   } else {
-    startOver();
+    await startOver();
   }
 }

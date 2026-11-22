@@ -1,3 +1,7 @@
+import { wait } from "./transitions.js";
+
+const STATUS_WHEEL_TURN_MS = 800;
+
 const statusWheelContainer = document.getElementById("status-wheel-container");
 
 export function setStatusText(position, text) {
@@ -16,11 +20,11 @@ export function updateStatusWheel(wheelText, instant = false, additionalClass) {
   let nextStatusText = document.querySelector(".next-text");
 
   if (instant) {
-    currentStatusText.style.transition = "none";
-    nextStatusText.style.transition = "none";
+    currentStatusText.classList.add("instant");
+    nextStatusText.classList.add("instant");
   } else {
-    currentStatusText.style.transition = "transform 800ms ease-in";
-    nextStatusText.style.transition = "transform 800ms ease-in";
+    currentStatusText.classList.remove("instant");
+    nextStatusText.classList.remove("instant");
   }
 
   if (additionalClass) {
@@ -38,22 +42,32 @@ export function updateStatusWheel(wheelText, instant = false, additionalClass) {
   nextStatusText.innerHTML = '<span class="status-text"></span>';
   statusWheelContainer.appendChild(nextStatusText);
 
-  removeOldStatusTexts();
+  void removeOldStatusTexts();
 }
 
-function removeOldStatusTexts() {
-  setTimeout(() => {
-    const previousTexts = document.querySelectorAll(".previous-text");
-    previousTexts.forEach((element) => {
-      element.remove();
-    });
-  }, 1000);
+async function removeOldStatusTexts() {
+  await wait(STATUS_WHEEL_TURN_MS);
+
+  const previousTexts = document.querySelectorAll(".previous-text");
+  previousTexts.forEach((element) => {
+    element.remove();
+  });
 }
 
-export function moveBadgeContainer(transform, transition) {
+export function lowerBadge(shouldLower, isInstant) {
   const badgeContainer = document.getElementById("badge-container");
-  badgeContainer.style.transform = transform;
-  badgeContainer.style.transition = transition;
+
+  if (isInstant) {
+    badgeContainer.classList.add("instant");
+  } else {
+    badgeContainer.classList.remove("instant");
+  }
+
+  if (shouldLower) {
+    badgeContainer.classList.add("lowered");
+  } else {
+    badgeContainer.classList.remove("lowered");
+  }
 }
 
 export function updateBadgeColor(colorDisplayName) {

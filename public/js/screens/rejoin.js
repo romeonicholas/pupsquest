@@ -6,7 +6,7 @@ import { showErrorScreenAndReload } from "../errors.js";
 import {
   setStatusText,
   updateStatusWheel,
-  moveBadgeContainer,
+  lowerBadge,
   updateBadgeColor,
   updateBadgeText,
   updateBadgeIcon,
@@ -22,7 +22,10 @@ import {
   getSelectedAnimalId,
   buildAnimalOption,
 } from "../picker.js";
+import { wait } from "../transitions.js";
+import { disableAllInput, enableAllInput } from "../input.js";
 
+const REJOIN_ANIMAL_FADE_OUT_MS = 300;
 let onUserRejoined = () => {};
 
 export function setUpRejoinScreen(options) {
@@ -54,8 +57,9 @@ export async function showRejoinGameScreen() {
   document.getElementById("exit-container").style.display = "block";
 
   resetBadge();
-  moveBadgeContainer("translateY(465px)", "none");
-  let isInstant = true;
+  const shouldLower = true;
+  const isInstant = true;
+  lowerBadge(shouldLower, isInstant);
   updateStatusWheel("ENTER CODE", isInstant);
   showExitOption("start-over");
 }
@@ -65,7 +69,7 @@ export async function rejoinSelectColor(colorDisplayName, colorId) {
   updateBadgeColor(colorDisplayName);
 
   const rejoinColorPicker = document.getElementById("rejoin-color-picker");
-  rejoinColorPicker.style.transform = "translateY(-1265px)";
+  rejoinColorPicker.classList.add("raised");
 
   await updateRejoinAnimalContainer(colorId);
 }
@@ -74,38 +78,33 @@ async function updateRejoinAnimalContainer(colorId) {
   const animalOptionsContainer = document.getElementById(
     "rejoin-animal-options-container",
   );
-  animalOptionsContainer.style.transition = "opacity 300ms ease-out";
-  animalOptionsContainer.style.opacity = "0";
-
   const noAnimalsMessage = document.querySelector(".no-animals-message.rejoin");
-  noAnimalsMessage.style.transition = "opacity 300ms ease-out";
-  noAnimalsMessage.style.opacity = "0";
 
-  setTimeout(async () => {
-    try {
-      const animals = await getRejoinOptions(colorId);
+  animalOptionsContainer.classList.add("faded");
+  noAnimalsMessage.classList.remove("visible");
 
-      animalOptionsContainer.replaceChildren(
-        ...animals.map((animal) => buildAnimalOption(animal, "rejoin")),
-      );
+  disableAllInput();
 
-      void animalOptionsContainer.offsetHeight;
-      animalOptionsContainer.style.transition = "opacity 300ms ease-in";
-      animalOptionsContainer.style.opacity = "1";
+  try {
+    await wait(REJOIN_ANIMAL_FADE_OUT_MS);
+    const animals = await getRejoinOptions(colorId);
 
-      if (animals.length === 0) {
-        noAnimalsMessage.style.transition = "opacity 300ms ease-in";
-        noAnimalsMessage.style.opacity = "1";
-      }
+    animalOptionsContainer.replaceChildren(
+      ...animals.map((animal) => buildAnimalOption(animal, "rejoin")),
+    );
 
-      const scrollableContainer = document.getElementById(
-        "scrollable-container",
-      );
-      scrollableContainer.scrollTop = 0;
-    } catch (error) {
-      showErrorScreenAndReload(error);
+    animalOptionsContainer.classList.remove("faded");
+
+    if (animals.length === 0) {
+      noAnimalsMessage.classList.add("visible");
     }
-  }, 200);
+
+    document.getElementById("scrollable-container").scrollTop = 0;
+  } catch (error) {
+    showErrorScreenAndReload(error);
+  }
+
+  enableAllInput();
 }
 
 export function selectRejoinAnimal(animalDisplayName, animalImgPath) {
@@ -114,20 +113,17 @@ export function selectRejoinAnimal(animalDisplayName, animalImgPath) {
   const color = getSelectedColor("rejoin");
   updateBadgeText(color, animalDisplayName);
 
-  const confirmationPanel = document.getElementById(
+  const rejoinConfirmationPanel = document.getElementById(
     "rejoin-confirmation-panel",
   );
-  confirmationPanel.style.transition = "transform 300ms ease-in";
-  confirmationPanel.style.transform = "translateY(-165px)";
+  rejoinConfirmationPanel.classList.add("shown");
 }
 
 export async function confirmRejoinAnimal() {
   const rejoinConfirmationPanel = document.getElementById(
     "rejoin-confirmation-panel",
   );
-  rejoinConfirmationPanel.style.transitionDelay = "50ms";
-  rejoinConfirmationPanel.style.transition = "transform 1s ease-in";
-  rejoinConfirmationPanel.style.transform = "translateY(-1200px)";
+  rejoinConfirmationPanel.classList.add("confirmed");
 
   const existingUser = await loginUser();
   if (!existingUser) {
@@ -178,10 +174,10 @@ export function resetRejoinScreen() {
   clearAnimalSelectionIndicators("rejoin");
 
   const rejoinColorPicker = document.getElementById("rejoin-color-picker");
-  rejoinColorPicker.style.transform = "translateY(0px)";
+  rejoinColorPicker.classList.remove("raised");
 
   const noAnimalsMessage = document.querySelector(".no-animals-message.rejoin");
-  noAnimalsMessage.style.opacity = "0";
+  noAnimalsMessage.classList.remove("visible");
 
   const rejoinAnimalOptionsContainer = document.getElementById(
     "rejoin-animal-options-container",
@@ -191,9 +187,7 @@ export function resetRejoinScreen() {
   const rejoinConfirmationPanel = document.getElementById(
     "rejoin-confirmation-panel",
   );
-
-  rejoinConfirmationPanel.style.transitionDelay = "0ms";
-  rejoinConfirmationPanel.style.transform = "translateY(0px)";
+  rejoinConfirmationPanel.classList.remove("shown", "confirmed");
 
   setStatusText("current", "ENTER CODE");
 }

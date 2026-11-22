@@ -7,7 +7,7 @@ import { showErrorScreenAndReload } from "../errors.js";
 import {
   setStatusText,
   updateStatusWheel,
-  moveBadgeContainer,
+  lowerBadge,
   updateBadgeColor,
   updateBadgeText,
   updateBadgeIcon,
@@ -23,6 +23,11 @@ import {
   getSelectedAnimalId,
   buildAnimalOption,
 } from "../picker.js";
+import { wait } from "../transitions.js";
+import { disableAllInput, enableAllInput } from "../input.js";
+
+const COLOR_PICKER_SLIDE_MS = 800;
+const ANIMAL_SWAP_DELAY_MS = 300;
 
 let onUserCreated = () => {};
 
@@ -60,27 +65,26 @@ export async function showCreateNewUserScreen() {
   showExitOption("start-over");
 }
 
-export function showColorPicker() {
+export async function showColorPicker() {
   const userCreationInstructions = document.getElementById(
     "user-creation-instructions",
   );
   const colorPicker = document.getElementById("color-picker");
 
-  userCreationInstructions.style.transition = "transform 800ms ease-in";
-  userCreationInstructions.style.transform = "translateY(1270px)";
-  colorPicker.style.transition = "transform 800ms ease-in";
-  colorPicker.style.transform = "translateY(1337px)";
+  userCreationInstructions.classList.add("at-color-picker");
+  colorPicker.classList.add("shown");
 
-  setTimeout(() => {
-    updateStatusWheel("CODE NAME");
-    moveBadgeContainer("translateY(465px)", "transform 800ms ease-in");
-  }, 800);
+  await wait(COLOR_PICKER_SLIDE_MS);
+
+  updateStatusWheel("CODE NAME");
+  const shouldLower = true;
+  const isInstant = false;
+  lowerBadge(shouldLower, isInstant);
 }
 
 function hideConfirmationPanel() {
   const confirmationPanel = document.getElementById("confirmation-panel");
-  confirmationPanel.style.transition = "transform 300ms ease-in";
-  confirmationPanel.style.transform = "translateY(0px)";
+  confirmationPanel.classList.remove("shown", "confirmed");
 }
 
 export async function selectColor(colorDisplayName, colorId) {
@@ -92,12 +96,10 @@ export async function selectColor(colorDisplayName, colorId) {
   clearColorSelectionIndicators();
   showColorSelectionIndicator(colorDisplayName);
   updateBadgeColor(colorDisplayName);
-  updateAnimalOptions(colorId);
+  void updateAnimalOptions(colorId);
 
-  if (userCreationInstructions.style.transform !== "translateY(2210px)") {
-    userCreationInstructions.style.transition = "transform 800ms ease-in";
-    userCreationInstructions.style.transform = "translateY(2210px)";
-  }
+  userCreationInstructions.classList.remove("at-color-picker");
+  userCreationInstructions.classList.add("at-animals");
 }
 
 export function selectAnimal(animalDisplayName, animalImgPath) {
@@ -107,14 +109,12 @@ export function selectAnimal(animalDisplayName, animalImgPath) {
   updateBadgeText(color, animalDisplayName);
 
   const confirmationPanel = document.getElementById("confirmation-panel");
-  confirmationPanel.style.transition = "transform 300ms ease-in";
-  confirmationPanel.style.transform = "translateY(-165px)";
+  confirmationPanel.classList.add("shown");
 }
 
 export async function confirmAnimal() {
   const confirmationPanel = document.getElementById("confirmation-panel");
-  confirmationPanel.style.transition = "transform 1200ms ease-in";
-  confirmationPanel.style.transform = "translateY(-1470px)";
+  confirmationPanel.classList.add("confirmed");
 
   const newUser = await createUserFromSelection();
   if (!newUser) {
@@ -164,11 +164,13 @@ export function resetCreateNewUserScreen() {
   const colorPicker = document.getElementById("color-picker");
   const confirmationPanel = document.getElementById("confirmation-panel");
 
-  userCreationInstructions.style.transform = "translateY(0px)";
-  colorPicker.style.transform = "translateY(0px)";
-  confirmationPanel.style.transform = "translateY(0px)";
+  userCreationInstructions.classList.remove("at-color-picker", "at-animals");
+  colorPicker.classList.remove("shown");
+  confirmationPanel.classList.remove("shown", "confirmed");
 
-  moveBadgeContainer("translateY(0px)", "none");
+  const shouldLower = false;
+  const isInstant = true;
+  lowerBadge(shouldLower, isInstant);
   setStatusText("current", "WELCOME");
 }
 
@@ -234,7 +236,7 @@ function renderColorOptions(colorOptions) {
   }
 }
 
-function updateAnimalOptions(colorId) {
+async function updateAnimalOptions(colorId) {
   const animalOptionsContainer = document.getElementById(
     "animal-options-container",
   );
@@ -243,15 +245,13 @@ function updateAnimalOptions(colorId) {
   );
   const animals = option ? option.animals : [];
 
-  animalOptionsContainer.style.transition = "opacity 300ms ease-out";
-  animalOptionsContainer.style.opacity = "0";
+  disableAllInput();
+  animalOptionsContainer.classList.add("faded");
+  await wait(ANIMAL_SWAP_DELAY_MS);
 
-  setTimeout(() => {
-    animalOptionsContainer.replaceChildren(
-      ...animals.map((animal) => buildAnimalOption(animal, "create")),
-    );
-    void animalOptionsContainer.offsetHeight;
-    animalOptionsContainer.style.transition = "opacity 300ms ease-in";
-    animalOptionsContainer.style.opacity = "1";
-  }, 200);
+  animalOptionsContainer.replaceChildren(
+    ...animals.map((animal) => buildAnimalOption(animal, "create")),
+  );
+  animalOptionsContainer.classList.remove("faded");
+  enableAllInput();
 }

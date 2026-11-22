@@ -80,6 +80,19 @@ button {
   left: 0;
   height: 2020px;
   z-index: 100;
+
+  transition:
+    transform 1800ms ease-in,
+    opacity 500ms ease-in; /* start.js: START_SCREEN_FADE_MS */
+}
+
+#start-screen.lowered {
+  transform: translateY(1920px);
+}
+
+#start-screen.hidden-for-return {
+  opacity: 0;
+  transition: none;
 }
 
 #museum-new-game-button {
@@ -175,6 +188,15 @@ button {
   top: -340px;
   left: 561px;
   z-index: 79;
+  transition: transform 800ms ease-in;
+}
+
+#badge-container.lowered {
+  transform: translateY(465px);
+}
+
+#badge-container.instant {
+  transition: none;
 }
 
 #badge-icon-container {
@@ -254,7 +276,11 @@ button {
   width: 355px;
   height: 1003px;
   justify-content: center;
-  transition: transform 1s ease-in;
+  transition: transform 800ms ease-in; /* user-panel.js: STATUS_WHEEL_TURN_MS */
+}
+
+.status-text-wrapper.instant {
+  transition: none;
 }
 
 .status-text {
@@ -334,16 +360,39 @@ button {
 #riddle-container {
   position: absolute;
   width: 100%;
-  transition: transform 1s ease-in;
+  transition: transform 1s ease-in; /* riddle.js: RIDDLE_CLOSE_MS */
   z-index: 75;
+}
+
+#riddle-container.closed {
+  transform: translateY(-1290px);
+}
+
+#riddle-text.raised {
+  transform: translateY(-1294px);
 }
 
 #selection-layer {
   top: 1280px;
   width: 100%;
   position: relative;
-  transition: transform 800ms ease-in;
   z-index: 77;
+  --hints-shown: 0;
+  transition: transform 1s ease-in;
+}
+
+#selection-layer.showing-riddle {
+  transform: translateY(276px);
+}
+
+#selection-layer.showing-riddle.with-hints {
+  transform: translateY(calc(276px + var(--hints-shown) * 222px));
+  transition: transform 1s cubic-bezier(0.54, -0.16, 0.735, 0.045);
+}
+
+#selection-layer.revealing-answer {
+  transform: translateY(1298px);
+  transition: transform 1s ease-in;
 }
 
 #riddle-headline {
@@ -403,6 +452,15 @@ button {
 .icon-front {
   position: absolute;
   z-index: 75;
+  transition: transform 1s cubic-bezier(0.54, -0.16, 0.735, 0.045);
+}
+
+.icon-front.dropped {
+  transform: translateY(234px);
+}
+
+.icon-front.instant {
+  transition: none;
 }
 
 .option-text {
@@ -441,6 +499,13 @@ button {
   position: absolute;
   top: 0px;
   left: 0px;
+  --hints-used: 0;
+  transform: translateX(calc(var(--hints-used) * -47px));
+  transition: transform 1s ease-in;
+}
+
+#hint-count-foreground.instant {
+  transition: none;
 }
 
 #riddle-answer {
@@ -603,6 +668,16 @@ button {
   z-index: 40;
 }
 
+#user-panel,
+#riddle-screen,
+#create-new-user-screen {
+  transition: transform 800ms ease-in;
+}
+
+.moved-for-exit-panel {
+  transform: translateY(380px);
+}
+
 .colors-container {
   display: flex;
   justify-content: space-around;
@@ -618,6 +693,15 @@ button {
   top: -341px;
   left: 0px;
   z-index: 5;
+  transition: transform 800ms ease-in;
+}
+
+#user-creation-instructions.at-color-picker {
+  transform: translateY(1270px);
+}
+
+#user-creation-instructions.at-animals {
+  transform: translateY(2210px);
 }
 
 #color-picker-panel {
@@ -631,6 +715,7 @@ button {
   top: -1337px;
   left: 0px;
   width: 100%;
+  transition: transform 800ms ease-in;
 }
 
 #rejoin-color-picker {
@@ -640,6 +725,14 @@ button {
   transition: transform 1200ms ease-in;
   transition-delay: 300ms;
   z-index: 6;
+}
+
+#rejoin-color-picker.raised {
+  transform: translateY(-1265px);
+}
+
+#color-picker.shown {
+  transform: translateY(1337px);
 }
 
 #color-options-container {
@@ -805,6 +898,12 @@ button {
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
+  transition: opacity 300ms ease-out;
+}
+
+#animal-options-container.faded {
+  opacity: 0;
+  transition: opacity 300ms ease-in; /* create.js: ANIMAL_SWAP_DELAY_MS */
 }
 
 #scrollable-container {
@@ -828,6 +927,16 @@ button {
   align-content: flex-start;
   padding-top: 70px;
   padding-bottom: 180px;
+  transition: opacity 300ms ease-out;
+}
+
+#rejoin-animal-options-container.faded {
+  opacity: 0;
+  transition: opacity 300ms ease-in; /* rejoin.js: REJOIN_ANIMAL_FADE_OUT_MS */
+}
+
+.no-animals-message.visible {
+  opacity: 1;
 }
 
 .animal-option {
@@ -889,12 +998,32 @@ button {
   position: absolute;
   top: 1900px;
   z-index: 6;
+  transition: transform 300ms ease-in;
+}
+
+#confirmation-panel.shown {
+  transform: translateY(-165px);
+}
+
+#confirmation-panel.confirmed {
+  transform: translateY(-1470px);
+  transition: transform 1200ms ease-in;
 }
 
 #rejoin-confirmation-panel {
   position: absolute;
   top: 1900px;
   z-index: 6;
+  transition: transform 300ms ease-in;
+}
+
+#rejoin-confirmation-panel.shown {
+  transform: translateY(-165px);
+}
+
+#rejoin-confirmation-panel.confirmed {
+  transform: translateY(-1200px);
+  transition: transform 1000ms ease-in 50ms;
 }
 
 #animal-confirmation-button {
