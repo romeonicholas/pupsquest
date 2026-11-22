@@ -69,10 +69,8 @@ export async function showColorPicker() {
   );
   const colorPicker = document.getElementById("color-picker");
 
-  userCreationInstructions.style.transition = "transform 800ms ease-in";
-  userCreationInstructions.style.transform = "translateY(1270px)";
-  colorPicker.style.transition = "transform 800ms ease-in";
-  colorPicker.style.transform = "translateY(1337px)";
+  userCreationInstructions.classList.add("at-color-picker");
+  colorPicker.classList.add("shown");
 
   await wait(COLOR_PICKER_SLIDE_MS);
 
@@ -99,10 +97,8 @@ export async function selectColor(colorDisplayName, colorId) {
   updateBadgeColor(colorDisplayName);
   updateAnimalOptions(colorId);
 
-  if (userCreationInstructions.style.transform !== "translateY(2210px)") {
-    userCreationInstructions.style.transition = "transform 800ms ease-in";
-    userCreationInstructions.style.transform = "translateY(2210px)";
-  }
+  userCreationInstructions.classList.remove("at-color-picker");
+  userCreationInstructions.classList.add("at-animals");
 }
 
 export function selectAnimal(animalDisplayName, animalImgPath) {
@@ -169,8 +165,8 @@ export function resetCreateNewUserScreen() {
   const colorPicker = document.getElementById("color-picker");
   const confirmationPanel = document.getElementById("confirmation-panel");
 
-  userCreationInstructions.style.transform = "translateY(0px)";
-  colorPicker.style.transform = "translateY(0px)";
+  userCreationInstructions.classList.remove("at-color-picker", "at-animals");
+  colorPicker.classList.remove("shown");
   confirmationPanel.style.transform = "translateY(0px)";
 
   const shouldLower = false;

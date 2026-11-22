@@ -654,6 +654,15 @@ button {
   top: -341px;
   left: 0px;
   z-index: 5;
+  transition: transform 800ms ease-in;
+}
+
+#user-creation-instructions.at-color-picker {
+  transform: translateY(1270px);
+}
+
+#user-creation-instructions.at-animals {
+  transform: translateY(2210px);
 }
 
 #color-picker-panel {
@@ -667,6 +676,7 @@ button {
   top: -1337px;
   left: 0px;
   width: 100%;
+  transition: transform 800ms ease-in;
 }
 
 #rejoin-color-picker {
@@ -676,6 +686,10 @@ button {
   transition: transform 1200ms ease-in;
   transition-delay: 300ms;
   z-index: 6;
+}
+
+#color-picker.shown {
+  transform: translateY(1337px);
 }
 
 #color-options-container {
