@@ -177,7 +177,7 @@ export function resetRejoinScreen() {
   rejoinColorPicker.classList.remove("raised");
 
   const noAnimalsMessage = document.querySelector(".no-animals-message.rejoin");
-  noAnimalsMessage.style.opacity = "0";
+  noAnimalsMessage.classList.remove("visible");
 
   const rejoinAnimalOptionsContainer = document.getElementById(
     "rejoin-animal-options-container",
