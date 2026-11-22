@@ -429,6 +429,15 @@ button {
 .icon-front {
   position: absolute;
   z-index: 75;
+  transition: transform 1s cubic-bezier(0.54, -0.16, 0.735, 0.045);
+}
+
+.icon-front.dropped {
+  transform: translateY(234px);
+}
+
+.icon-front.instant {
+  transition: none;
 }
 
 .option-text {

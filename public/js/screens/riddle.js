@@ -219,8 +219,8 @@ function replaceElementToRemoveListeners(element) {
 
 function resetIconPositions() {
   iconFronts.forEach((icon) => {
-    icon.style.transition = "none";
-    icon.style.transform = "translateY(0)";
+    icon.classList.add("instant");
+    icon.classList.remove("dropped");
   });
 }
 
@@ -327,11 +327,8 @@ function showNextHint() {
 
 function showIconBacking(iconIndex) {
   const clickedIcon = iconFronts[iconIndex];
-  const currentY = getTranslateY(clickedIcon);
-  clickedIcon.style.transition =
-    "transform 1s cubic-bezier(0.54, -0.16, 0.735, 0.045)";
-
-  clickedIcon.style.transform = `translateY(${currentY + 234}px)`;
+  clickedIcon.classList.remove("instant");
+  clickedIcon.classList.add("dropped");
 }
 
 async function updateScoreText() {
