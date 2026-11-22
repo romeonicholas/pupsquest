@@ -158,9 +158,6 @@ export function resetCreateNewUserScreen() {
   clearColorSelectionIndicators();
   clearAnimalSelectionIndicators();
 
-  const noAnimalsMessage = document.querySelector(".no-animals-message.new");
-  noAnimalsMessage.style.opacity = "0";
-
   const userCreationInstructions = document.getElementById(
     "user-creation-instructions",
   );
