@@ -135,7 +135,7 @@ setUpCreateScreen({
 setUpRejoinScreen({
   onUserRejoined: (existingUser) => {
     setHints(existingUser.gameState.hintsRemaining, true);
-    transitionToRiddleScreen();
+    void transitionToRiddleScreen();
   },
 });
 

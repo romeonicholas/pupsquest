@@ -360,7 +360,7 @@ button {
 #riddle-container {
   position: absolute;
   width: 100%;
-  transition: transform 1s ease-in;
+  transition: transform 1s ease-in; /* riddle.js: RIDDLE_CLOSE_MS */
   z-index: 75;
 }
 

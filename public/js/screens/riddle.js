@@ -8,8 +8,12 @@ import { state } from "../state.js";
 import { updateStatusWheel } from "../user-panel.js";
 import { showErrorScreenAndReload } from "../errors.js";
 import { enableAllInput, disableAllInput } from "../input.js";
+import { wait } from "../transitions.js";
 
 const MAX_HINTS = 7;
+
+const RIDDLE_CLOSE_MS = 1000;
+const PAUSE_BEFORE_COUPLET_MS = 1000;
 
 const correctAnswerBacking = "/images/riddles/ui/answer_backing_correct.png";
 const incorrectAnswerBackings = [
@@ -99,27 +103,20 @@ function restoreRiddleState(riddle) {
   updateSelectionTexts(shuffledChoices);
   updateIconBackings(correctAnswerIndex);
   attachClickHandlers(correctAnswerIndex);
-
-  restoreIncorrectGuesses();
-  restoreVisibleHints();
 }
 
 function restoreIncorrectGuesses() {
-  setTimeout(() => {
-    state.currentGameState.currentGuesses.forEach((iconIndex) => {
-      showIconBacking(iconIndex);
-      const clickArea = document.getElementById(
-        `option-click-area-${iconIndex + 1}`,
-      );
-      replaceElementToRemoveListeners(clickArea);
-    });
-  }, 2000);
+  state.currentGameState.currentGuesses.forEach((iconIndex) => {
+    showIconBacking(iconIndex);
+    const clickArea = document.getElementById(
+      `option-click-area-${iconIndex + 1}`,
+    );
+    replaceElementToRemoveListeners(clickArea);
+  });
 }
 
 function restoreVisibleHints() {
-  setTimeout(() => {
-    showHints(Math.min(state.currentGameState.currentGuesses.length, 3));
-  }, 2000);
+  showHints(Math.min(state.currentGameState.currentGuesses.length, 3));
 }
 
 function updateRiddleContent(riddle) {
@@ -239,9 +236,8 @@ export function transitionToRiddleScreen() {
   const nextRiddleSheet = document.getElementById("next-riddle-sheet");
   nextRiddleSheet.style.visibility = "hidden";
 
-  setTimeout(() => {
-    void showRiddle();
-  }, 50);
+  void riddleScreen.offsetHeight;
+  return showRiddle();
 }
 
 export async function showRiddle() {
@@ -271,28 +267,32 @@ export async function showRiddle() {
         state.currentGameState.currentCorrectAnswerIndex
       ];
 
-    setTimeout(() => {
-      updateRiddleAnswer(
-        correctChoice.display,
-        currentRiddle.answerDetails,
-        currentRiddle.answerImgPath,
-      );
-      updateStatusWheel(`RIDDLE ${getCurrentRiddleNumber()}`);
-      const nextRiddleSheet = document.getElementById("next-riddle-sheet");
-      nextRiddleSheet.style.visibility = "visible";
+    await wait(RIDDLE_CLOSE_MS);
 
-      const rejoinScreen = document.getElementById("rejoin-screen");
-      rejoinScreen.style.display = "none";
-    }, 1000);
+    updateRiddleAnswer(
+      correctChoice.display,
+      currentRiddle.answerDetails,
+      currentRiddle.answerImgPath,
+    );
+    updateStatusWheel(`RIDDLE ${getCurrentRiddleNumber()}`);
+    const nextRiddleSheet = document.getElementById("next-riddle-sheet");
+    nextRiddleSheet.style.visibility = "visible";
 
-    setTimeout(() => {
-      if (!isRejoining) {
-        showFirstCouplet();
-      }
-      const gameOver = document.getElementById("game-over");
-      gameOver.style.display = "none";
-      enableAllInput();
-    }, 2000);
+    const rejoinScreen = document.getElementById("rejoin-screen");
+    rejoinScreen.style.display = "none";
+
+    await wait(PAUSE_BEFORE_COUPLET_MS);
+
+    if (isRejoining) {
+      restoreIncorrectGuesses();
+      restoreVisibleHints();
+    } else {
+      showFirstCouplet();
+    }
+
+    const gameOver = document.getElementById("game-over");
+    gameOver.style.display = "none";
+    enableAllInput();
   } catch (error) {
     showErrorScreenAndReload(error);
   }
