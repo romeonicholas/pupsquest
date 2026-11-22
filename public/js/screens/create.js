@@ -24,9 +24,10 @@ import {
   buildAnimalOption,
 } from "../picker.js";
 import { wait } from "../transitions.js";
+import { disableAllInput, enableAllInput } from "../input.js";
 
 const COLOR_PICKER_SLIDE_MS = 800;
-const ANIMAL_SWAP_DELAY_MS = 200;
+const ANIMAL_SWAP_DELAY_MS = 300;
 
 let onUserCreated = () => {};
 
@@ -244,6 +245,7 @@ async function updateAnimalOptions(colorId) {
   );
   const animals = option ? option.animals : [];
 
+  disableAllInput();
   animalOptionsContainer.classList.add("faded");
   await wait(ANIMAL_SWAP_DELAY_MS);
 
@@ -251,4 +253,5 @@ async function updateAnimalOptions(colorId) {
     ...animals.map((animal) => buildAnimalOption(animal, "create")),
   );
   animalOptionsContainer.classList.remove("faded");
+  enableAllInput();
 }
