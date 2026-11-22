@@ -116,10 +116,12 @@ export async function confirmAnimal() {
   const confirmationPanel = document.getElementById("confirmation-panel");
   confirmationPanel.classList.add("confirmed");
 
+  disableAllInput();
   const newUser = await createUserFromSelection();
   if (!newUser) {
     return;
   }
+  enableAllInput();
 
   setUser(newUser);
   onUserCreated(newUser);
