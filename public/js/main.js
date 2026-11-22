@@ -64,9 +64,9 @@ const actions = {
     lowerStartScreen();
     showUsePhoneScreen();
   },
-  "return-to-start": () => {
-    returnToStartScreen();
-    setTimeout(hideUsePhoneScreen, 600);
+  "return-to-start": async () => {
+    await returnToStartScreen();
+    hideUsePhoneScreen();
   },
 
   "show-color-picker": () => showColorPicker(),
@@ -152,8 +152,8 @@ async function returnToStartAndResetScreens() {
   enableAllInput();
 }
 
-function startOver() {
-  returnToStartAndResetScreens();
+async function startOver() {
+  await returnToStartAndResetScreens();
 }
 
 async function saveAndExit() {
@@ -173,12 +173,12 @@ async function saveAndExit() {
         );
 
         setUser(null);
-        returnToStartAndResetScreens();
+        await returnToStartAndResetScreens();
       } catch (error) {
         showErrorScreenAndReload(error);
       }
     } else {
-      startOver();
+      await startOver();
     }
   }
 }
@@ -189,6 +189,6 @@ async function handleInactivitySignOut() {
   if (state.currentUser && state.currentGameState) {
     await saveAndExit();
   } else {
-    startOver();
+    await startOver();
   }
 }
