@@ -16,9 +16,6 @@
   </div>
 
   <div id="animal-options-instructions">Now choose your animal name</div>
-
-  <%- include('partials/no_animal_options', {isRejoin: false}) %>
-
   <div id="animal-options-container"></div>
 
   <div id="confirmation-panel">
@@ -26,7 +23,10 @@
       id="confirmation-panel-image"
       src="/images/userCreation/confirmation_panel.png"
     />
-    <button id="animal-confirmation-button" data-action="confirm-animal"></button>
+    <button
+      id="animal-confirmation-button"
+      data-action="confirm-animal"
+    ></button>
     <button
       id="transition-to-riddles-button"
       data-action="transition-to-riddles"
@@ -60,5 +60,4 @@
       <button class="animal-button"></button>
     </div>
   </template>
-
 </div>

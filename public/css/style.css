@@ -664,6 +664,10 @@ button {
   left: 805px;
 }
 
+#color-options-container .placeholder {
+  background-color: #868686;
+}
+
 #rejoin-color-options-container {
   position: absolute;
   top: 735px;

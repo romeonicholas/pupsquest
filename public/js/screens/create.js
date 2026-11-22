@@ -37,7 +37,7 @@ export async function showCreateNewUserScreen() {
     state.creationOptions = await getCreationOptions();
     renderColorOptions(state.creationOptions);
   } catch (error) {
-    console.error("Error fetching possible user combinations:", error);
+    showErrorScreenAndReload(error);
   }
 
   const createNewUserScreen = document.getElementById("create-new-user-screen");
@@ -158,9 +158,6 @@ export function resetCreateNewUserScreen() {
   clearColorSelectionIndicators();
   clearAnimalSelectionIndicators();
 
-  const noAnimalsMessage = document.querySelector(".no-animals-message.new");
-  noAnimalsMessage.style.opacity = "0";
-
   const userCreationInstructions = document.getElementById(
     "user-creation-instructions",
   );
@@ -212,6 +209,28 @@ function renderColorOptions(colorOptions) {
       .cloneNode(true);
     colorNameLabel.textContent = color.name;
     colorNamesContainer.append(colorNameLabel);
+  }
+
+  for (
+    let emptyColorSlot = colorOptions.length;
+    emptyColorSlot < 4;
+    emptyColorSlot++
+  ) {
+    const placeholder = colorOptionTemplate.content
+      .querySelector(".color-option")
+      .cloneNode(true);
+    placeholder.classList.add("placeholder");
+
+    const placeholderButton = placeholder.querySelector(".color-button");
+    placeholderButton.removeAttribute("data-action");
+    placeholderButton.disabled = true;
+
+    colorOptionsContainer.append(placeholder);
+
+    const emptyNameLabel = colorNameTemplate.content
+      .querySelector(".color-text")
+      .cloneNode(true);
+    colorNamesContainer.append(emptyNameLabel);
   }
 }
 
