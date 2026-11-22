@@ -22,7 +22,10 @@ import {
   getSelectedAnimalId,
   buildAnimalOption,
 } from "../picker.js";
+import { wait } from "../transitions.js";
+import { disableAllInput, enableAllInput } from "../input.js";
 
+const REJOIN_ANIMAL_FADE_OUT_MS = 300;
 let onUserRejoined = () => {};
 
 export function setUpRejoinScreen(options) {
@@ -75,38 +78,33 @@ async function updateRejoinAnimalContainer(colorId) {
   const animalOptionsContainer = document.getElementById(
     "rejoin-animal-options-container",
   );
-  animalOptionsContainer.style.transition = "opacity 300ms ease-out";
-  animalOptionsContainer.style.opacity = "0";
-
   const noAnimalsMessage = document.querySelector(".no-animals-message.rejoin");
-  noAnimalsMessage.style.transition = "opacity 300ms ease-out";
-  noAnimalsMessage.style.opacity = "0";
 
-  setTimeout(async () => {
-    try {
-      const animals = await getRejoinOptions(colorId);
+  animalOptionsContainer.classList.add("faded");
+  noAnimalsMessage.classList.remove("visible");
 
-      animalOptionsContainer.replaceChildren(
-        ...animals.map((animal) => buildAnimalOption(animal, "rejoin")),
-      );
+  disableAllInput();
 
-      void animalOptionsContainer.offsetHeight;
-      animalOptionsContainer.style.transition = "opacity 300ms ease-in";
-      animalOptionsContainer.style.opacity = "1";
+  try {
+    await wait(REJOIN_ANIMAL_FADE_OUT_MS);
+    const animals = await getRejoinOptions(colorId);
 
-      if (animals.length === 0) {
-        noAnimalsMessage.style.transition = "opacity 300ms ease-in";
-        noAnimalsMessage.style.opacity = "1";
-      }
+    animalOptionsContainer.replaceChildren(
+      ...animals.map((animal) => buildAnimalOption(animal, "rejoin")),
+    );
 
-      const scrollableContainer = document.getElementById(
-        "scrollable-container",
-      );
-      scrollableContainer.scrollTop = 0;
-    } catch (error) {
-      showErrorScreenAndReload(error);
+    animalOptionsContainer.classList.remove("faded");
+
+    if (animals.length === 0) {
+      noAnimalsMessage.classList.add("visible");
     }
-  }, 200);
+
+    document.getElementById("scrollable-container").scrollTop = 0;
+  } catch (error) {
+    showErrorScreenAndReload(error);
+  }
+
+  enableAllInput();
 }
 
 export function selectRejoinAnimal(animalDisplayName, animalImgPath) {

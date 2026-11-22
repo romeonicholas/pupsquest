@@ -888,6 +888,16 @@ button {
   align-content: flex-start;
   padding-top: 70px;
   padding-bottom: 180px;
+  transition: opacity 300ms ease-out;
+}
+
+#rejoin-animal-options-container.faded {
+  opacity: 0;
+  transition: opacity 300ms ease-in; /* rejoin.js: REJOIN_ANIMAL_FADE_OUT_MS */
+}
+
+.no-animals-message.visible {
+  opacity: 1;
 }
 
 .animal-option {
