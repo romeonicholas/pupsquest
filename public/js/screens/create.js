@@ -37,7 +37,7 @@ export async function showCreateNewUserScreen() {
     state.creationOptions = await getCreationOptions();
     renderColorOptions(state.creationOptions);
   } catch (error) {
-    console.error("Error fetching possible user combinations:", error);
+    showErrorScreenAndReload(error);
   }
 
   const createNewUserScreen = document.getElementById("create-new-user-screen");
