@@ -53,8 +53,8 @@ function buildNumberedRiddleElements(prefix) {
 
 function closeRiddleContainerFromBottom() {
   selectionLayer.style.transform = "translateY(0)";
-  riddleContainer.style.transform = "translateY(-1290px)";
-  riddleTextLayerBackground.style.transform = "translateY(-1294px)";
+  riddleContainer.classList.add("closed");
+  riddleTextLayerBackground.classList.add("raised");
 }
 
 function showFirstCouplet() {
@@ -377,8 +377,7 @@ function recordRiddleResult(wasAnsweredCorrectly) {
 }
 
 function slideToRevealAnswer() {
-  riddleTextLayerBackground.style.transition = "transform 1s ease-in";
-  riddleTextLayerBackground.style.transform = "translateY(0px)";
+  riddleTextLayerBackground.classList.remove("raised");
 
   selectionLayer.style.transition = "transform 1s ease-in";
   selectionLayer.style.transform = "translateY(1298px)";
@@ -490,9 +489,9 @@ function getTranslateY(element) {
 
 export function resetRiddleScreen() {
   riddleScreen.style.display = "none";
-  riddleTextLayerBackground.style.transform = "translateY(0px)";
   selectionLayer.style.transform = "translateY(0px)";
-  riddleContainer.style.transform = "translateY(0px)";
+  riddleTextLayerBackground.classList.remove("raised");
+  riddleContainer.classList.remove("closed");
   riddleAnswer.style.display = "none";
 
   const gameOver = document.getElementById("game-over");

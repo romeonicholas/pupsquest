@@ -364,6 +364,14 @@ button {
   z-index: 75;
 }
 
+#riddle-container.closed {
+  transform: translateY(-1290px);
+}
+
+#riddle-text.raised {
+  transform: translateY(-1294px);
+}
+
 #selection-layer {
   top: 1280px;
   width: 100%;
